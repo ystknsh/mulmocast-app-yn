@@ -1,5 +1,5 @@
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
 
 const app = express();
 
@@ -13,7 +13,6 @@ const hello = async (req: express.Request, res: express.Response) => {
   });
   res.end();
 };
-
 
 app.get("/test", hello);
 app.post("/test", hello);
