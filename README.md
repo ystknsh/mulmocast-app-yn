@@ -1,8 +1,22 @@
-# run
 
+# Mulmo app
+
+
+
+## 🚀 Assets
+
+- Vue 3
+- Tailwind CSS
+- Express
+
+---
+
+## ▶️ Run
+
+```bash
 yarn install
-
 yarn run start
+```
 
 # info
 
