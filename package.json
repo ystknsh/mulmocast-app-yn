@@ -29,6 +29,7 @@
     "@electron/fuses": "^1.8.0",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
+    "@vitejs/plugin-vue": "^5.2.4",
     "electron": "36.2.1",
     "eslint": "^9.27.0",
     "eslint-plugin-import": "^2.31.0",
@@ -37,6 +38,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "vue": "^3.5.14"
   }
 }

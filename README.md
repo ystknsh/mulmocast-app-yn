@@ -6,7 +6,11 @@ yarn run start
 
 # info
 
+install
 https://www.electronforge.io/
+
+add vue
+https://www.electronforge.io/guides/framework-integration/vue-3
 
 # install command
 
