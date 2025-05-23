@@ -30,9 +30,10 @@
     "@electron/fuses": "^1.8.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/express": "^5.0.2",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
-    "@vitejs/plugin-vue": "^5.2.4",
     "electron": "36.2.1",
     "eslint": "^9.27.0",
     "eslint-plugin-import": "^2.31.0",
@@ -43,9 +44,11 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.5.0",
     "cors": "^2.8.5",
     "electron-squirrel-startup": "^1.0.1",
     "express": "^5.1.0",
-    "vue": "^3.5.14"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   }
 }
