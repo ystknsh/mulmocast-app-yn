@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "format": "prettier --write '{src/**/*,*}.{js,ts,vue,json}'",
+    "format": "prettier --write '{src/**/*,*}.{js,ts,tsx,json}'",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
