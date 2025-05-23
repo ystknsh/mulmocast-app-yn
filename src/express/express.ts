@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { apiRouter } from "./apis";
 
 const app = express();
 
@@ -16,6 +17,8 @@ const hello = async (req: express.Request, res: express.Response) => {
 
 app.get("/test", hello);
 app.post("/test", hello);
+
+app.use("/api", apiRouter);
 
 const port = 8085;
 
