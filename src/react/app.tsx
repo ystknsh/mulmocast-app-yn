@@ -1,13 +1,21 @@
 import { createRoot } from "react-dom/client";
+import { HashRouter, Routes, Route, Link } from "react-router";
 
-const hello = () => {
-  console.log("Hello");
-};
+import Home from "./home";
+import Test from "./test";
+
 const root = createRoot(document.body);
 root.render(
   <>
-    <h2>Hello from React!</h2>
-    <div className="bg-black text-white text-center">tailwind</div>
-    <button onClick={hello}>hello</button>
+    <HashRouter>
+      <div>
+        <Link to="/">Home</Link>
+        <Link to="/test">Test</Link>
+      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/test" element={<Test />} />
+      </Routes>
+    </HashRouter>
   </>,
 );
