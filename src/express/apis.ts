@@ -10,7 +10,6 @@ const hello = async (req: express.Request, res: express.Response) => {
   res.json({
     message: "hello",
   });
-  res.end();
   return;
 };
 
@@ -83,11 +82,11 @@ const run = async (req: express.Request, res: express.Response) => {
   res.json({
     message: "hello",
   });
-  res.end();
   return;
 };
 
-const status = async (req: express.Request, res: express.Response) => {
+const streamFunc = async (req: express.Request, res: express.Response) => {
+  console.log("stream");
   const { processId } = req.params;
   if (!processId || !tasks[processId]) {
     res.status(404).send({ message: "Agent not found" });
@@ -97,11 +96,9 @@ const status = async (req: express.Request, res: express.Response) => {
   const task = tasks[processId];
 
   if (!task.isRunning) {
-    console.log("not running");
     res.json({
-      message: "hello",
+      message: "not un",
     });
-    res.end();
     return;
   }
   const unregister = task.addProgressListener((count) => {
@@ -112,7 +109,6 @@ const status = async (req: express.Request, res: express.Response) => {
   res.json({
     message: "finished",
   });
-  res.end();
   return;
 };
 
@@ -121,9 +117,10 @@ apiRouter.post("/mulmo/create", hello);
 apiRouter.post("/mulmo/:processId/run", run);
 // { processId }
 
-apiRouter.get("/mulmo/:processId/status", status);
+apiRouter.get("/mulmo/:processId/status", hello);
 // { status }
 
-apiRouter.get("/mulmo/:processId/stream", hello);
+apiRouter.get("/mulmo/:processId/stream", streamFunc);
+// apiRouter.get("/mulmo/:processId/stream", hello);
 
 apiRouter.delete("/mulmo/:processId", hello);

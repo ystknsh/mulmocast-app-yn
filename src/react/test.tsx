@@ -1,8 +1,8 @@
 import React from "react";
 
 const stream = async () => {
-  // console.log("test");
-  const url = "http://localhost:8085/api/mulmo/123/status";
+  console.log("stream");
+  const url = "http://localhost:8085/api/mulmo/123/stream?" + Date.now();
   const data = {};
   const response = await fetch(url, {
     // method: "POST",
