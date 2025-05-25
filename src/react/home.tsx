@@ -1,10 +1,8 @@
-import React from "react";
-
 const hello = () => {
   console.log("Hello");
 };
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <>
       <h2>Hello from React!</h2>
