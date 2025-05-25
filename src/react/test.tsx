@@ -3,13 +3,13 @@ import React from "react";
 const stream = async () => {
   console.log("stream");
   const url = "http://localhost:8085/api/mulmo/123/stream?" + Date.now();
-  const data = {};
+  const __data = {};
   const response = await fetch(url, {
     // method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    // body: JSON.stringify(data),
+    // body: JSON.stringify(__data),
   });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);

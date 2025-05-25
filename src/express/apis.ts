@@ -2,7 +2,7 @@ import express from "express";
 
 export const apiRouter = express.Router();
 
-const tasks = {};
+const tasks: Record<string, Status> = {};
 
 const hello = async (req: express.Request, res: express.Response) => {
   const { processId } = req.params;
@@ -101,7 +101,7 @@ const streamFunc = async (req: express.Request, res: express.Response) => {
     });
     return;
   }
-  const unregister = task.addProgressListener((count) => {
+  const __unregister = task.addProgressListener((count: number) => {
     console.log(`data: ${count}\n\n`);
   });
 
