@@ -13,7 +13,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit -p ./src/react/tsconfig.json && tsc --noEmit -p ./src/express/tsconfig.json"
   },
   "keywords": [],
   "author": {
