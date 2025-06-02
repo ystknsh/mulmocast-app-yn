@@ -1,8 +1,8 @@
 import js from "@eslint/js";
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
+import vue from "eslint-plugin-vue";
+import vueParser from "vue-eslint-parser";
 import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
@@ -76,39 +76,94 @@ export default [
       },
     },
   },
-  // Browser environment configuration (React)
+  // Vue configuration
   {
-    files: ["src/react/**/*.{js,jsx,ts,tsx}"],
+    files: ["src/client/**/*.vue"],
     languageOptions: {
-      ...baseLanguageOptions,
+      parser: vueParser,
       parserOptions: {
-        ...baseLanguageOptions.parserOptions,
-        ecmaFeatures: {
-          jsx: true,
-        },
+        parser: typescriptParser,
+        ecmaVersion: "latest",
+        sourceType: "module",
+        extraFileExtensions: [".vue"],
       },
       globals: {
         ...globals.browser,
       },
     },
     plugins: {
+      vue,
       "@typescript-eslint": typescript,
-      react,
-      "react-hooks": reactHooks,
+      import: importPlugin,
+      prettier,
+    },
+    rules: {
+      ...vue.configs["flat/recommended"].rules,
+      ...typescript.configs.recommended.rules,
+      ...baseRules,
+      "vue/multi-word-component-names": "off",
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "always",
+            normal: "never",
+            component: "always",
+          },
+          svg: "always",
+          math: "always",
+        },
+      ],
+    },
+    settings: {
+      "import/resolver": {
+        typescript: true,
+      },
+    },
+  },
+  // TypeScript files in Vue client
+  {
+    files: ["src/client/**/*.{js,ts}"],
+    languageOptions: {
+      ...baseLanguageOptions,
+      globals: {
+        ...globals.browser,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": typescript,
       import: importPlugin,
       prettier,
     },
     rules: {
       ...typescript.configs.recommended.rules,
-      ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
       ...baseRules,
-      "react/react-in-jsx-scope": "off",
     },
     settings: {
-      react: {
-        version: "detect",
+      "import/resolver": {
+        typescript: true,
       },
+    },
+  },
+  // Build configuration files
+  {
+    files: ["*.config.{js,ts,mjs}", "forge.config.ts"],
+    languageOptions: {
+      ...baseLanguageOptions,
+      globals: {
+        ...globals.node,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": typescript,
+      import: importPlugin,
+      prettier,
+    },
+    rules: {
+      ...typescript.configs.recommended.rules,
+      ...baseRules,
+    },
+    settings: {
       "import/resolver": {
         typescript: true,
       },

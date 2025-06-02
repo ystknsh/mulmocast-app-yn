@@ -1,15 +1,23 @@
-import React from "react";
+<template>
+  <div>
+    <h1 class="text-2xl font-bold mb-4">Test Page</h1>
+    <div class="space-x-4">
+      <Button @click="run">Run</Button>
+      <Button @click="stream">Stream</Button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Button } from "@/components/ui/button";
 
 const stream = async () => {
   console.log("stream");
   const url = "http://localhost:8085/api/mulmo/123/stream?" + Date.now();
-  const __data = {};
   const response = await fetch(url, {
-    // method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    // body: JSON.stringify(__data),
   });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -32,15 +40,4 @@ const run = async () => {
   }
   console.log(await response.json());
 };
-
-const Home: React.FC = () => {
-  return (
-    <>
-      <h2>Text</h2>
-      <button onClick={run}>run</button>
-      <button onClick={stream}>stream</button>
-    </>
-  );
-};
-
-export default Home;
+</script>
