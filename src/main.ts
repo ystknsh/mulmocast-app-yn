@@ -58,10 +58,9 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-
-ipcMain.handle('dialog:openFile', async () => {
+ipcMain.handle("dialog:openFile", async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ['openFile']
+    properties: ["openFile"],
   });
   if (canceled) return null;
   return filePaths[0];

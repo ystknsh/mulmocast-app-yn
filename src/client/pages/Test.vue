@@ -47,7 +47,7 @@ const run = async () => {
 const openFile = async () => {
   const filePath = await window.electronAPI.openFile();
   if (filePath) {
-    console.log('Selected file:', filePath);
+    console.log("Selected file:", filePath);
   }
-}
+};
 </script>
