@@ -7,12 +7,16 @@
     </div>
     <div class="space-x-4 mt-2 ml-2">
       <Button @click="openFile">File</Button>
+      <Button @click="run2">Run2</Button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { Button } from "@/components/ui/button";
+
+const filePath = ref<string | undefined>();
 
 const stream = async () => {
   console.log("stream");
@@ -45,9 +49,15 @@ const run = async () => {
 };
 
 const openFile = async () => {
-  const filePath = await window.electronAPI.openFile();
-  if (filePath) {
-    console.log("Selected file:", filePath);
+  filePath.value = await window.electronAPI.openFile();
+  if (filePath.value) {
+    console.log("Selected file:", filePath.value);
+  }
+};
+
+const run2 = async () => {
+  if (filePath.value) {
+    await window.electronAPI.mulmoTest({ file: filePath.value });
   }
 };
 </script>
