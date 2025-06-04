@@ -6,4 +6,5 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("electronAPI", {
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   mulmoTest: (option) => ipcRenderer.invoke("mulmo:test", option),
+  onProgress: (callback) => ipcRenderer.on("progress-update", callback),
 });
