@@ -2,7 +2,6 @@ import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 
-import { runExpresse } from "./express/express";
 import { mulmoTest } from "./mulmo/test";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -35,7 +34,6 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
-  runExpresse();
   createWindow();
 });
 

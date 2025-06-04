@@ -49,9 +49,9 @@ export default [
       "coverage/**",
     ],
   },
-  // Node.js environment configuration (Express & Main process)
+  // Node.js environment configuration (Mulmo & Main process)
   {
-    files: ["src/express/**/*.{js,ts}", "src/main.ts", "src/preload.ts", "src/mulmo/**/*.{js,ts}"],
+    files: ["src/main.ts", "src/preload.ts", "src/mulmo/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {
