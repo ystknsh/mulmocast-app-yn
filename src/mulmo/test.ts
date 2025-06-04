@@ -10,12 +10,14 @@ export const mulmoTest = async (option, webContents) => {
   // console.log(argv);
   const context = await initializeContext(argv);
   // console.log(context);
-  await images(context, [(log) => {
-    if (webContents) {
-      // console.log(log, webContents)
-      webContents.send("progress-update", log);
-    }
-  }]);
-  
+  await images(context, [
+    (log) => {
+      if (webContents) {
+        // console.log(log, webContents)
+        webContents.send("progress-update", log);
+      }
+    },
+  ]);
+
   // console.log(option);
 };
