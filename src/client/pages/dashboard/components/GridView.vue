@@ -90,17 +90,7 @@
 import { RouterLink } from "vue-router";
 import { Play, Eye, Calendar, Volume2, Pause, Activity, AlertTriangle } from "lucide-vue-next";
 
-type Item = {
-  id: number;
-  title: string;
-  type: "video" | "audio";
-  thumbnail?: string;
-  audioUrl?: string;
-  videoUrl?: string;
-  date: string;
-  sessionActive: boolean;
-  hasErrors: boolean;
-};
+import type { Item } from "@/types";
 
 defineProps<{
   items: Item[];
@@ -111,16 +101,7 @@ defineEmits<{
   "play-audio": [itemId: number, audioUrl: string];
 }>();
 
-const toggleVideoPlay = (event: MouseEvent) => {
-  const video = (event.currentTarget as HTMLElement)
-    .closest(".aspect-video")
-    ?.querySelector("video") as HTMLVideoElement;
-  if (video) {
-    if (video.paused) {
-      video.play();
-    } else {
-      video.pause();
-    }
-  }
+const toggleVideoPlay = (__event: MouseEvent) => {
+  // TODO: implement video play
 };
 </script>

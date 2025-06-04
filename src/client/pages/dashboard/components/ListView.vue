@@ -54,18 +54,7 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { Play, Eye, Calendar, Volume2, Activity, AlertTriangle } from "lucide-vue-next";
-
-type Item = {
-  id: number;
-  title: string;
-  type: "video" | "audio";
-  thumbnail?: string;
-  audioUrl?: string;
-  videoUrl?: string;
-  date: string;
-  sessionActive: boolean;
-  hasErrors: boolean;
-};
+import type { Item } from "@/types";
 
 defineProps<{
   items: Item[];

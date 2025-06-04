@@ -49,12 +49,13 @@ import { Grid, List, Plus } from "lucide-vue-next";
 import Header from "@/components/Header.vue";
 import ListView from "./components/ListView.vue";
 import GridView from "./components/GridView.vue";
+import type { Item } from "@/types";
 
 const viewMode = ref<"list" | "grid">("list");
 const playingAudio = ref<number | null>(null);
 
 // Sample data for projects
-const items = [
+const items: Item[] = [
   {
     id: 1,
     title: "Product Demo Video",
