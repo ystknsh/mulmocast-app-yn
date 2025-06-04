@@ -1,10 +1,12 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "./pages/Home.vue";
 import Test from "./pages/Test.vue";
+import Dashboard from "./pages/dashboard/index.vue";
 
 const routes = [
-  { path: "/", component: Home },
+  { path: "/", component: Dashboard },
   { path: "/test", component: Test },
+  // TODO: implement project detail page
+  { path: "/project/:id", component: Dashboard },
 ];
 
 const router = createRouter({
