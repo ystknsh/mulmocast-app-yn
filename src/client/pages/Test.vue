@@ -1,9 +1,12 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-4">Test Page</h1>
-    <div class="space-x-4">
+    <h1 class="text-2xl font-bold mb-4 ml-2">Test Page</h1>
+    <div class="space-x-4 ml-2">
       <Button @click="run">Run</Button>
       <Button @click="stream">Stream</Button>
+    </div>
+    <div class="space-x-4 mt-2 ml-2">
+      <Button @click="openFile">File</Button>
     </div>
   </div>
 </template>
@@ -40,4 +43,11 @@ const run = async () => {
   }
   console.log(await response.json());
 };
+
+const openFile = async () => {
+  const filePath = await window.electronAPI.openFile();
+  if (filePath) {
+    console.log('Selected file:', filePath);
+  }
+}
 </script>
