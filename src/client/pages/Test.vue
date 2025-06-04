@@ -12,6 +12,10 @@
 import { ref } from "vue";
 import { Button } from "@/components/ui/button";
 
+window.electronAPI.onProgress((event, message) => {
+  console.log("update:", message);
+});
+
 const filePath = ref<string | undefined>();
 
 const openFile = async () => {

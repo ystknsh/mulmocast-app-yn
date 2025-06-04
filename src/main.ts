@@ -58,6 +58,7 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle("dialog:openFile", async () => {
+  // console.log(app.getPath('userData'));
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ["openFile"],
   });
@@ -65,6 +66,7 @@ ipcMain.handle("dialog:openFile", async () => {
   return filePaths[0];
 });
 
-ipcMain.handle("mulmo:test", async (__event, option) => {
-  mulmoTest(option);
+ipcMain.handle("mulmo:test", async (event, option) => {
+  const webContents = event.sender;
+  mulmoTest(option, webContents);
 });
