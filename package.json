@@ -13,7 +13,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .js,.ts,.vue src",
     "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
-    "type-check": "tsc --noEmit -p ./src/client/tsconfig.json && tsc --noEmit -p ./src/express/tsconfig.json"
+    "type-check": "tsc --noEmit -p ./src/client/tsconfig.json"
   },
   "keywords": [],
   "author": {
@@ -34,7 +34,6 @@
     "@eslint/js": "^9.27.0",
     "@types/cors": "^2.8.18",
     "@types/electron-squirrel-startup": "^1.0.2",
-    "@types/express": "^5.0.2",
     "@types/node": "^22.15.29",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
@@ -63,7 +62,6 @@
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "electron-squirrel-startup": "^1.0.1",
-    "express": "^5.1.0",
     "lucide-vue-next": "^0.511.0",
     "mulmocast": "^0.0.10",
     "radix-vue": "^1.9.17",
