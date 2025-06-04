@@ -51,7 +51,7 @@ export default [
   },
   // Node.js environment configuration (Express & Main process)
   {
-    files: ["src/express/**/*.{js,ts}", "src/main.ts", "src/preload.ts"],
+    files: ["src/express/**/*.{js,ts}", "src/main.ts", "src/preload.ts", "src/mulmo/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {
