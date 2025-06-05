@@ -1,7 +1,7 @@
-export type Item = {
+export type Project = {
   id: number;
   title: string;
-  type: "video" | "audio";
+  type: "video" | "audio" | "podcast" | "presentation";
   thumbnail?: string;
   audioUrl?: string;
   videoUrl?: string;
