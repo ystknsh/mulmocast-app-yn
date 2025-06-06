@@ -1,5 +1,7 @@
-import { images } from "mulmocast/lib/actions/index";
-import { initializeContext } from "mulmocast/lib/cli/helpers";
+import { images, initializeContext, updateNpmRoot } from "mulmocast";
+import path from "path";
+
+updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
 export const mulmoTest = async (option, webContents) => {
   const argv = {
