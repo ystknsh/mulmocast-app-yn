@@ -6,6 +6,7 @@ import Project from "./pages/project/index.vue";
 const routes = [
   { path: "/", component: Dashboard },
   { path: "/test", component: Test },
+  { path: "/project", component: Project },
   { path: "/project/:id", component: Project },
 ];
 

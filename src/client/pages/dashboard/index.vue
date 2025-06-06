@@ -5,12 +5,14 @@
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center space-x-4">
-            <button
-              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              <Plus class="w-5 h-5" />
-              <span>Create New</span>
-            </button>
+            <RouterLink to="/project">
+              <button
+                class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                <Plus class="w-5 h-5" />
+                <span>Create New</span>
+              </button>
+            </RouterLink>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
               <button
                 @click="viewMode = 'list'"
@@ -52,6 +54,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
+import { RouterLink } from "vue-router";
 import Layout from "@/components/Layout.vue";
 import ListView from "./components/ListView.vue";
 import GridView from "./components/GridView.vue";

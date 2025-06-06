@@ -41,7 +41,7 @@
         </div>
 
         <!-- Header Section -->
-        <div class="flex items-center justify-between">
+        <div v-if="hasProjectData" class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <RouterLink to="/">
               <Button variant="ghost" size="sm">
@@ -84,10 +84,10 @@
           </CardContent>
         </Card>
 
-        <Separator :class="getTimelineFocusClass" />
+        <Separator v-if="hasProjectData" :class="getTimelineFocusClass" />
 
         <!-- MulmoScript Viewer Section -->
-        <Collapsible v-model:open="isScriptViewerOpen" :class="getTimelineFocusClass">
+        <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" :class="getTimelineFocusClass">
           <Card>
             <CardHeader>
               <div class="flex items-center justify-between">
@@ -144,7 +144,7 @@
         </Collapsible>
 
         <!-- Output Section -->
-        <Card>
+        <Card v-if="hasProjectData">
           <CardContent class="p-4">
             <div class="space-y-4">
               <!-- Select Presentation Style -->
@@ -179,7 +179,7 @@
         </Card>
 
         <!-- Beats Viewer Section -->
-        <Collapsible v-model:open="isBeatsViewerOpen">
+        <Collapsible v-if="beatsData.length > 0" v-model:open="isBeatsViewerOpen">
           <Card>
             <CardHeader>
               <div class="flex items-center justify-between">
@@ -209,8 +209,8 @@
           </Card>
         </Collapsible>
 
-        <!-- Product Section - Always visible -->
-        <Card class="mb-8">
+        <!-- Product Section -->
+        <Card v-if="hasProjectData" class="mb-8">
           <CardHeader>
             <CardTitle class="flex items-center space-x-2">
               <Play :size="20" />
@@ -227,7 +227,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import {
   ArrowLeft,
   Code2,
@@ -267,6 +268,10 @@ import BeatsViewer from "./components/BeatsViewer.vue";
 import ProductTabs from "./components/ProductTabs.vue";
 
 // State
+const route = useRoute();
+const projectId = computed(() => route.params.id || route.query.id);
+const isNewProject = computed(() => !projectId.value);
+const hasProjectData = computed(() => !isNewProject.value && mockProject.value.mulmoScript);
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
 const validationStatus = ref<"valid" | "warning" | "error">("valid");
@@ -279,6 +284,14 @@ const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
+
+// Load project data on mount
+onMounted(() => {
+  if (!isNewProject.value && projectId.value) {
+    // TODO: Load project data from API/store
+    // loadProject(projectId.value);
+  }
+});
 
 // Mock data
 const mockProject = ref({
