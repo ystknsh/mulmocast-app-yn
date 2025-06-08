@@ -3,71 +3,18 @@
     <!-- Chat history -->
     <div class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
       <!-- AI's first message -->
-      <div class="flex items-start space-x-3">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <Bot :size="16" class="text-blue-600" />
-        </div>
-        <div class="flex-1">
-          <div class="bg-gray-100 text-gray-800 p-3 rounded-lg inline-block max-w-md">
-            <p class="text-sm">Let's create scripts through conversation with AI Assistants</p>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">14:30</p>
-        </div>
-      </div>
-
+      <BotMessage message="Let's create scripts through conversation with AI Assistants" time="14:30" />
       <!-- User's message -->
-      <div class="flex items-start space-x-3 flex-row-reverse space-x-reverse">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-          <User :size="16" class="text-white" />
-        </div>
-        <div class="flex-1 text-right">
-          <div class="bg-blue-500 text-white p-3 rounded-lg inline-block max-w-md">
-            <p class="text-sm">AIについてのポッドキャストを作りたいです</p>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">14:31</p>
-        </div>
-      </div>
+      <UserMessage message="AIについてのポッドキャストを作りたいです" time="14:31" />
 
       <!-- AI's response -->
-      <div class="flex items-start space-x-3">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <Bot :size="16" class="text-blue-600" />
-        </div>
-        <div class="flex-1">
-          <div class="bg-gray-100 text-gray-800 p-3 rounded-lg inline-block max-w-md">
-            <p class="text-sm">
-              素晴らしいですね！AIポッドキャストについて、どのような聴衆を想定していますか？初心者向けですか、それとも技術者向けでしょうか？
-            </p>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">14:31</p>
-        </div>
-      </div>
-
+      <BotMessage message="素晴らしいですね！AIポッドキャストについて、どのような聴衆を想定していますか？初心者向けですか、それとも技術者向けでしょうか？" time="14:31" />
+      
       <!-- User's response -->
-      <div class="flex items-start space-x-3 flex-row-reverse space-x-reverse">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-          <User :size="16" class="text-white" />
-        </div>
-        <div class="flex-1 text-right">
-          <div class="bg-blue-500 text-white p-3 rounded-lg inline-block max-w-md">
-            <p class="text-sm">初心者向けで、15分程度の長さにしたいです</p>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">14:32</p>
-        </div>
-      </div>
+      <UserMessage message="初心者向けで、15分程度の長さにしたいです" time="14:32" />
 
       <!-- AI's latest response -->
-      <div class="flex items-start space-x-3">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <Bot :size="16" class="text-blue-600" />
-        </div>
-        <div class="flex-1">
-          <div class="bg-gray-100 text-gray-800 p-3 rounded-lg inline-block max-w-md">
-            <p class="text-sm">完璧です！初心者向けのAIポッドキャスト（15分）のMulmoScriptを作成します。</p>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">14:33</p>
-        </div>
-      </div>
+      <BotMessage message="完璧です！初心者向けのAIポッドキャスト（15分）のMulmoScriptを作成します。" time="14:33" />
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -122,6 +69,9 @@
 import { ref } from "vue";
 import { Bot, User, Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
+
+import BotMessage from "./BotMessage.vue";
+import UserMessage from "./UserMessage.vue";
 
 const message = ref("");
 const selectedTemplate = ref("solo-with-images");
