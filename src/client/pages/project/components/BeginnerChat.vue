@@ -2,22 +2,11 @@
   <div class="space-y-4">
     <!-- Chat history -->
     <div class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
-      <!-- AI's first message -->
-      <BotMessage message="Let's create scripts through conversation with AI Assistants" time="14:30" />
-      <!-- User's message -->
-      <UserMessage message="AIについてのポッドキャストを作りたいです" time="14:31" />
-
-      <!-- AI's response -->
-      <BotMessage
-        message="素晴らしいですね！AIポッドキャストについて、どのような聴衆を想定していますか？初心者向けですか、それとも技術者向けでしょうか？"
-        time="14:31"
-      />
-
-      <!-- User's response -->
-      <UserMessage message="初心者向けで、15分程度の長さにしたいです" time="14:32" />
-
-      <!-- AI's latest response -->
-      <BotMessage message="完璧です！初心者向けのAIポッドキャスト（15分）のMulmoScriptを作成します。" time="14:33" />
+      <div v-for="(message, key) in messages" :key="key">
+        <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
+        <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
+      </div>
+      <BotMessage v-if="isStreaming['llm']" :message="streamData['llm']" time="14:30" />
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -30,11 +19,16 @@
         >
           <input
             type="text"
-            v-model="message"
+            v-model="userInput"
+            :disabled="events.length == 0"
             placeholder="ex) Thank you very much! Please proceed with the creation."
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0"
           />
-          <Button size="sm" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 m-1 rounded-md">
+          <Button
+            size="sm"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 m-1 rounded-md"
+            @click="submitText(events[0])"
+          >
             <Send :size="16" />
           </Button>
         </div>
@@ -154,13 +148,16 @@ const run = async () => {
       agentFilters,
       config: {
         openAIAgent: {
-          apiKey: import.meta.env.VITE_OPEN_API_KEY,
+          apiKey: window.env.OPENAI_API_KEY,
         },
       },
     },
   );
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
+  graphai.registerCallback((log) => {
+    console.log(log);
+  });
   await graphai.run();
 };
 
