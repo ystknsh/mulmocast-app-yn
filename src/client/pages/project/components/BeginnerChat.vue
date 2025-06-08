@@ -8,8 +8,11 @@
       <UserMessage message="AIについてのポッドキャストを作りたいです" time="14:31" />
 
       <!-- AI's response -->
-      <BotMessage message="素晴らしいですね！AIポッドキャストについて、どのような聴衆を想定していますか？初心者向けですか、それとも技術者向けでしょうか？" time="14:31" />
-      
+      <BotMessage
+        message="素晴らしいですね！AIポッドキャストについて、どのような聴衆を想定していますか？初心者向けですか、それとも技術者向けでしょうか？"
+        time="14:31"
+      />
+
       <!-- User's response -->
       <UserMessage message="初心者向けで、15分程度の長さにしたいです" time="14:32" />
 
@@ -70,11 +73,98 @@ import { ref } from "vue";
 import { Bot, User, Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
+import { GraphAI } from "graphai";
+import { useStreamData } from "@/lib/stream";
+import { textInputEvent, useChatPlugin, useLogs } from "@/lib/graphai";
+
 import BotMessage from "./BotMessage.vue";
 import UserMessage from "./UserMessage.vue";
 
+import * as agents from "@graphai/vanilla";
+import { openAIAgent } from "@graphai/llm_agents";
+
 const message = ref("");
 const selectedTemplate = ref("solo-with-images");
+
+const graphChat: GraphData = {
+  version: 0.5,
+  loop: {
+    while: ":continue",
+  },
+  nodes: {
+    continue: {
+      value: true,
+    },
+    messages: {
+      value: [],
+      update: ":reducer.array",
+    },
+    userInput: {
+      agent: "eventAgent",
+      params: {
+        message: "You:",
+        isResult: true,
+      },
+    },
+    llm: {
+      agent: "openAIAgent",
+      isResult: true,
+      params: {
+        forWeb: true,
+        stream: true,
+        isResult: true,
+      },
+      inputs: { messages: ":messages", prompt: ":userInput.text" },
+    },
+    output: {
+      agent: "stringTemplateAgent",
+      inputs: {
+        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
+      },
+    },
+    reducer: {
+      agent: "pushAgent",
+      inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
+    },
+  },
+};
+
+const streamNodes = ["llm"];
+const outputNodes = ["llm", "userInput"];
+
+const { eventAgent, userInput, events, submitText } = textInputEvent();
+const { messages, chatMessagePlugin } = useChatPlugin();
+const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
+const agentFilters = [
+  {
+    name: "streamAgentFilter",
+    agent: streamAgentFilter,
+  },
+];
+
+const run = async () => {
+  const graphai = new GraphAI(
+    graphChat,
+    {
+      ...agents,
+      openAIAgent,
+      eventAgent,
+    },
+    {
+      agentFilters,
+      config: {
+        openAIAgent: {
+          apiKey: import.meta.env.VITE_OPEN_API_KEY,
+        },
+      },
+    },
+  );
+  graphai.registerCallback(streamPlugin(streamNodes));
+  graphai.registerCallback(chatMessagePlugin(outputNodes));
+  await graphai.run();
+};
+
+run();
 </script>
 
 <style scoped>

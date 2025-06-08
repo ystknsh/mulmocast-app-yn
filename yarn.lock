@@ -752,6 +752,23 @@
   dependencies:
     "@inquirer/input" "^4.1.6"
 
+"@graphai/llm_agents@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.1.tgz#69d637b8335e50c86f81f932b1a0c555c41cfe6a"
+  integrity sha512-ZvXtQlwwtMcbuLUwBBuKc7NXGFFAlPk70q0FpEZAvnMAbFAmYhdHxvK+P0lJ+4K2n+QDe0CbMxsup1Q2BG6rqQ==
+  dependencies:
+    "@graphai/anthropic_agent" "^2.0.2"
+    "@graphai/gemini_agent" "^2.0.0"
+    "@graphai/groq_agent" "^2.0.0"
+    "@graphai/openai_agent" "^2.0.3"
+    "@graphai/openai_fetch_agent" "^0.2.2"
+    "@graphai/replicate_agent" "^2.0.0"
+
+"@graphai/llm_utils@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-0.2.0.tgz#03de706c5dc91f4650fa540bb75a15646dc79d88"
+  integrity sha512-8QJxmrbXz2tMPfJVfx0OG4hQzMDLQbs2Mv7sMnYEDbOdZuS11l3kLZeDoA9KGGlts3cT15WjQ/V9tqhT7I24mA==
+
 "@graphai/llm_utils@^2.0.0", "@graphai/llm_utils@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-2.0.1.tgz#02e3c697db77009c0d4e4139edd973b1e2c58898"
@@ -764,6 +781,21 @@
   dependencies:
     "@graphai/llm_utils" "^2.0.1"
     openai "^4.103.0"
+
+"@graphai/openai_fetch_agent@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_fetch_agent/-/openai_fetch_agent-0.2.2.tgz#8434bbf7097e3ebc6119c35d3248722852496ef9"
+  integrity sha512-8uGhcuoBH7DPS7l8I70/nrCVMbCw52rBeUrbnJx2Q7s9/4uDaAERw5TEQInPk91/69lNaPW9Vga2mT5JM6baOQ==
+  dependencies:
+    "@graphai/llm_utils" "^0.2.0"
+
+"@graphai/replicate_agent@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphai/replicate_agent/-/replicate_agent-2.0.0.tgz#0e53f5d39ec8c4a006ca75b83d7492ce4d7a6598"
+  integrity sha512-6jEg1ZTAPaopA/Xnr2/gbeHP3jrxZP6B0S7P94DBZceA5OOs5CmAfVnG1Ikh3dltJP1HbAhOTdJpVl6hWN/4Yg==
+  dependencies:
+    "@graphai/llm_utils" "^2.0.0"
+    replicate "^1.0.1"
 
 "@graphai/stream_agent_filter@^2.0.2":
   version "2.0.2"
@@ -1177,6 +1209,11 @@
     semver "^7.7.2"
     tar-fs "^3.0.8"
     yargs "^17.7.2"
+
+"@receptron/event_agent_generator@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.6.tgz#267533315a53e84f419d3dd4856900ee11328960"
+  integrity sha512-BJpCMjPkhSMEE+zG2apop2ZnQT37Z83ew+1eBFdjRBCsWIGTgMsq4n8kQuIOS2xnKK4U4Y+3DICupM5z1HxzQw==
 
 "@rollup/rollup-android-arm-eabi@4.41.1":
   version "4.41.1"
@@ -2341,6 +2378,14 @@ buffer@^5.5.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
+
 bufferutil@^4.0.9:
   version "4.0.9"
   resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.9.tgz#6e81739ad48a95cad45a279588e13e95e24a800a"
@@ -3403,6 +3448,11 @@ eventemitter3@^5.0.1:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
   integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
+events@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
+  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
+
 execa@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-1.0.0.tgz#c6236a5bb4df6d6f15e88e7f017798216749ddd8"
@@ -4276,7 +4326,7 @@ iconv-lite@^0.6.2:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-ieee754@^1.1.13:
+ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -5840,6 +5890,11 @@ proc-log@^2.0.1:
   resolved "https://registry.yarnpkg.com/proc-log/-/proc-log-2.0.1.tgz#8f3f69a1f608de27878f91f5c688b225391cb685"
   integrity sha512-Kcmo2FhfDTXdcbfDH76N7uBYHINxc/8GW7UAVuVP9I+Va3uHSerrnKV6dLooga/gh7GlgzuCCr/eoldnL1muGw==
 
+process@^0.11.10:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
+  integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
+
 progress@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
@@ -6030,6 +6085,17 @@ read-pkg@^2.0.0:
     normalize-package-data "^2.3.2"
     path-type "^2.0.0"
 
+readable-stream@>=4.0.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.7.0.tgz#cedbd8a1146c13dfff8dab14068028d58c15ac91"
+  integrity sha512-oIGGmcpTLwPga8Bn6/Z75SVaH1z5dUut2ibSyAMVhmUggWpmDn2dapB0n7f8nwaSiRtepAsfJyfXIO5DCVAODg==
+  dependencies:
+    abort-controller "^3.0.0"
+    buffer "^6.0.3"
+    events "^3.3.0"
+    process "^0.11.10"
+    string_decoder "^1.3.0"
+
 readable-stream@^3.1.1, readable-stream@^3.4.0:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.2.tgz#56a9b36ea965c00c5a93ef31eb111a0f11056967"
@@ -6087,6 +6153,13 @@ reka-ui@^2.3.0:
     aria-hidden "^1.2.4"
     defu "^6.1.4"
     ohash "^2.0.11"
+
+replicate@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/replicate/-/replicate-1.0.1.tgz#c1f4bdd4fc29bbaf44af07662d23a858409421e9"
+  integrity sha512-EY+rK1YR5bKHcM9pd6WyaIbv6m2aRIvHfHDh51j/LahlHTLKemTYXF6ptif2sLa+YospupAsIoxw8Ndt5nI3vg==
+  optionalDependencies:
+    readable-stream ">=4.0.0"
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -6652,7 +6725,7 @@ string.prototype.trimstart@^1.0.8:
     define-properties "^1.2.1"
     es-object-atoms "^1.0.0"
 
-string_decoder@^1.1.1:
+string_decoder@^1.1.1, string_decoder@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.3.0.tgz#42f114594a46cf1a8e30b0a84f56c78c3edac21e"
   integrity sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==
