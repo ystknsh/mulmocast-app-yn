@@ -28,6 +28,12 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  ipcMain.on("request-env", (event) => {
+    event.reply("response-env", {
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    });
+  });
 };
 
 // This method will be called when Electron has finished
