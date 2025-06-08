@@ -7,4 +7,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   mulmoTest: (option) => ipcRenderer.invoke("mulmo:test", option),
   onProgress: (callback) => ipcRenderer.on("progress-update", callback),
+  getEnv: () =>
+    new Promise((resolve) => {
+      ipcRenderer.once("response-env", (_event, data) => resolve(data));
+      ipcRenderer.send("request-env");
+    }),
 });

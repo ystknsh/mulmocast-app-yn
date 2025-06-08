@@ -137,6 +137,7 @@ const agentFilters = [
 ];
 
 const run = async () => {
+  const env = await window.electronAPI.getEnv();
   const graphai = new GraphAI(
     graphChat,
     {
@@ -148,7 +149,7 @@ const run = async () => {
       agentFilters,
       config: {
         openAIAgent: {
-          apiKey: window.env.OPENAI_API_KEY,
+          apiKey: env.OPENAI_API_KEY,
         },
       },
     },
