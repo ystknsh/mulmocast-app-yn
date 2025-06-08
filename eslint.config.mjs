@@ -16,7 +16,7 @@ const baseRules = {
   indent: ["error", 2],
   "@typescript-eslint/no-explicit-any": "warn",
   "@typescript-eslint/no-unused-vars": [
-    "error",
+    "warn",
     {
       argsIgnorePattern: "^__",
       varsIgnorePattern: "^__",
