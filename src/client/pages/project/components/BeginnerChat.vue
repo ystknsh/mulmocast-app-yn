@@ -67,9 +67,9 @@ import { ref } from "vue";
 import { Bot, User, Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
-import { GraphAI } from "graphai";
+import { GraphAI, GraphData } from "graphai";
 import { useStreamData } from "@/lib/stream";
-import { textInputEvent, useChatPlugin, useLogs } from "@/lib/graphai";
+import { textInputEvent, useChatPlugin } from "@/lib/graphai";
 
 import BotMessage from "./BotMessage.vue";
 import UserMessage from "./UserMessage.vue";
@@ -77,7 +77,6 @@ import UserMessage from "./UserMessage.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 
-const message = ref("");
 const selectedTemplate = ref("solo-with-images");
 
 const graphChat: GraphData = {

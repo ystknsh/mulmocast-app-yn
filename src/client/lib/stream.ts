@@ -1,4 +1,4 @@
-import { GraphData, AgentFunctionContext, TransactionLog } from "graphai";
+import { AgentFunctionContext, TransactionLog } from "graphai";
 
 import { ref } from "vue";
 import { streamAgentFilterGenerator } from "@graphai/stream_agent_filter";

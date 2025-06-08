@@ -15,7 +15,6 @@ export const textInputEvent = () => {
       message: { role: "user", content: userInput.value },
     };
     event.onEnd(data);
-    /* eslint-disable @typescript-eslint/no-dynamic-delete */
     delete eventsObj.value[event.id];
     userInput.value = "";
   };
