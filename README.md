@@ -5,7 +5,7 @@
 
 ## 🚀 Assets
 
-- React
+- Vue 3
 - Tailwind CSS
 - Express
 
@@ -24,8 +24,8 @@ yarn run start
 install
 https://www.electronforge.io/
 
-add react
-https://www.electronforge.io/guides/framework-integration/react-with-typescript
+add vue-3
+https://www.electronforge.io/guides/framework-integration/vue-3
 
 tailwindcss
 https://tailwindcss.com/docs/installation/using-vite
