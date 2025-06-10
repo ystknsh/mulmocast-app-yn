@@ -77,10 +77,10 @@
 import { ref, onMounted, computed } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
-import Layout from "@/components/Layout.vue";
-import ListView from "./components/ListView.vue";
-import GridView from "./components/GridView.vue";
-import NewProjectDialog from "./components/NewProjectDialog.vue";
+import Layout from "@/components/layout.vue";
+import ListView from "./components/list_view.vue";
+import GridView from "./components/grid_view.vue";
+import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/projectApi";
 
 const router = useRouter();

@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Test from "./pages/Test.vue";
+import Test from "./pages/test.vue";
 import Dashboard from "./pages/dashboard/index.vue";
 import Project from "./pages/project/index.vue";
 
