@@ -9,7 +9,6 @@ export interface ElectronAPI {
     list: () => Promise<Project[]>;
     create: (name: string) => Promise<Project>;
     get: (name: string) => Promise<Project>;
-    update: (name: string, data: Partial<Project>) => Promise<Project>;
     delete: (name: string) => Promise<boolean>;
     getPath: (name: string) => Promise<string>;
   };

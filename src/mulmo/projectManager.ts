@@ -134,32 +134,6 @@ export class ProjectManager {
     }
   }
 
-  async updateProject(name: string, data: UpdateProjectData): Promise<ProjectMetadata> {
-    const projectPath = path.join(this.projectsPath, name);
-
-    if (!(await this.projectExists(projectPath))) {
-      throw new Error(`Project "${name}" not found`);
-    }
-
-    try {
-      const existingData = await this.getProjectMetadata(projectPath);
-      const updatedData = {
-        ...existingData,
-        ...data,
-        name, // Ensure name is not changed
-        path: projectPath, // Ensure path is not changed
-        updatedAt: new Date().toISOString(),
-      } as ProjectMetadata;
-
-      await this.saveProjectMetadata(projectPath, updatedData);
-
-      return updatedData;
-    } catch (error) {
-      console.error("Failed to update project:", error);
-      throw error;
-    }
-  }
-
   private async checkConfigFile(projectPath: string): Promise<boolean> {
     const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
 

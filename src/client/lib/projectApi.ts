@@ -20,10 +20,6 @@ export const projectApi = {
     return await window.electronAPI.project.get(name);
   },
 
-  async update(name: string, data: Partial<Project>): Promise<Project> {
-    return await window.electronAPI.project.update(name, data);
-  },
-
   async delete(name: string): Promise<boolean> {
     return await window.electronAPI.project.delete(name);
   },
