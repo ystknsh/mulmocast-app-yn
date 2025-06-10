@@ -39,11 +39,11 @@ export const ensureProjectsDirectory = async (): Promise<void> => {
   }
 };
 
-// Check if a config file exists
-const checkConfigFile = async (projectPath: string): Promise<boolean> => {
-  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+// Check if a meta data file exists
+const checkMetaFile = async (projectPath: string): Promise<boolean> => {
+  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   try {
-    await fs.access(configFilePath);
+    await fs.access(metaFilePath);
     return true;
   } catch {
     return false;
@@ -54,7 +54,7 @@ const checkConfigFile = async (projectPath: string): Promise<boolean> => {
 const projectExists = async (projectPath: string): Promise<boolean> => {
   try {
     const stats = await fs.stat(projectPath);
-    return stats.isDirectory() && (await checkConfigFile(projectPath));
+    return stats.isDirectory() && (await checkMetaFile(projectPath));
   } catch {
     return false;
   }
@@ -62,9 +62,9 @@ const projectExists = async (projectPath: string): Promise<boolean> => {
 
 // Get project metadata
 const getProjectMetadata = async (projectPath: string): Promise<Partial<ProjectMetadata>> => {
-  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   try {
-    const content = await fs.readFile(configFilePath, "utf-8");
+    const content = await fs.readFile(metaFilePath, "utf-8");
     return JSON.parse(content);
   } catch (error) {
     console.error("Failed to read project metadata:", error);
@@ -74,8 +74,8 @@ const getProjectMetadata = async (projectPath: string): Promise<Partial<ProjectM
 
 // Save project metadata
 const saveProjectMetadata = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
-  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-  await fs.writeFile(configFilePath, JSON.stringify(data, null, 2));
+  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  await fs.writeFile(metaFilePath, JSON.stringify(data, null, 2));
 };
 
 // Delete project directory
@@ -117,9 +117,9 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
           const projectPath = path.join(projectsPath, entry.name);
-          const hasConfigFile = await checkConfigFile(projectPath);
+          const hasMetaFile = await checkMetaFile(projectPath);
 
-          if (!hasConfigFile) return null;
+          if (!hasMetaFile) return null;
 
           const metadata = await getProjectMetadata(projectPath);
           return {
