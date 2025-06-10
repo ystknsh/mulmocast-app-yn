@@ -28,6 +28,12 @@ const baseRules = {
   semi: ["error", "always"],
 };
 
+const basePlugins = {
+  "@typescript-eslint": typescript,
+  import: importPlugin,
+  prettier,
+};
+
 const baseLanguageOptions = {
   parser: typescriptParser,
   parserOptions: {
@@ -54,9 +60,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...typescript.configs.recommended.rules,
@@ -123,9 +127,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...typescript.configs.recommended.rules,
