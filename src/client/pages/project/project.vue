@@ -260,13 +260,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)
-import Layout from "@/components/Layout.vue";
-import BeginnerChat from "./components/BeginnerChat.vue";
-import PromptGuide from "./components/PromptGuide.vue";
-import ScriptEditor from "./components/ScriptEditor.vue";
-import PresentationStyleSelector from "./components/PresentationStyleSelector.vue";
-import BeatsViewer from "./components/BeatsViewer.vue";
-import ProductTabs from "./components/ProductTabs.vue";
+import Layout from "@/components/layout.vue";
+import BeginnerChat from "./components/beginner_chat.vue";
+import PromptGuide from "./components/prompt_guide.vue";
+import ScriptEditor from "./components/script_editor.vue";
+import PresentationStyleSelector from "./components/presentation_style_selector.vue";
+import BeatsViewer from "./components/beats_viewer.vue";
+import ProductTabs from "./components/product_tabs.vue";
 
 // State
 const route = useRoute();

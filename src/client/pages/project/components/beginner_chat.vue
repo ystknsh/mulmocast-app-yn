@@ -71,8 +71,8 @@ import { GraphAI, GraphData } from "graphai";
 import { useStreamData } from "@/lib/stream";
 import { textInputEvent, useChatPlugin } from "@/lib/graphai";
 
-import BotMessage from "./BotMessage.vue";
-import UserMessage from "./UserMessage.vue";
+import BotMessage from "./bot_message.vue";
+import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
