@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/projectApi";
+import type { Project } from "./index";
 
 export interface ElectronAPI {
   openFile: () => Promise<string | null>;

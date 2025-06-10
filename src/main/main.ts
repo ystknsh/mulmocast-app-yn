@@ -3,7 +3,7 @@ import path from "node:path";
 import started from "electron-squirrel-startup";
 
 import { registerIPCHandler } from "./ipc_handler";
-import * as projectManager from "./mulmo/projectManager";
+import * as projectManager from "./projectManager";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {

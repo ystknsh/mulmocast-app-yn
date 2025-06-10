@@ -39,19 +39,11 @@ const baseLanguageOptions = {
 export default [
   js.configs.recommended,
   {
-    ignores: [
-      "node_modules/**",
-      ".vite/**",
-      "dist/**",
-      "build/**",
-      "out/**",
-      "*.min.js",
-      "coverage/**",
-    ],
+    ignores: ["node_modules/**", ".vite/**", "dist/**", "build/**", "out/**", "*.min.js", "coverage/**"],
   },
-  // Node.js environment configuration (Mulmo & Main process)
+  // Node.js environment configuration (Main & Preload)
   {
-    files: ["src/main.ts", "src/preload.ts", "src/ipc_handler.ts", "src/mulmo/**/*.{js,ts}"],
+    files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {
@@ -76,9 +68,9 @@ export default [
       },
     },
   },
-  // Vue configuration
+  // Vue configuration (Renderer process)
   {
-    files: ["src/client/**/*.vue"],
+    files: ["src/renderer/**/*.vue"],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -121,9 +113,9 @@ export default [
       },
     },
   },
-  // TypeScript files in Vue client
+  // TypeScript files in Renderer process
   {
-    files: ["src/client/**/*.{js,ts}"],
+    files: ["src/renderer/**/*.{js,ts}", "src/types/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {
