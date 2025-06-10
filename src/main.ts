@@ -3,6 +3,7 @@ import path from "node:path";
 import started from "electron-squirrel-startup";
 
 import { mulmoTest } from "./mulmo/test";
+import * as projectManager from "./mulmo/projectManager";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -39,7 +40,8 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", () => {
+app.on("ready", async () => {
+  await projectManager.ensureProjectsDirectory();
   createWindow();
 });
 
@@ -75,4 +77,17 @@ ipcMain.handle("dialog:openFile", async () => {
 ipcMain.handle("mulmo:test", async (event, option) => {
   const webContents = event.sender;
   mulmoTest(option, webContents);
+});
+
+// Project management handlers
+ipcMain.handle("project:list", () => projectManager.listProjects());
+
+ipcMain.handle("project:create", (_event, title: string) => projectManager.createProject(title));
+
+ipcMain.handle("project:get", (_event, name: string) => projectManager.getProject(name));
+
+ipcMain.handle("project:delete", (_event, name: string) => projectManager.deleteProject(name));
+
+ipcMain.handle("project:getPath", (_event, name: string) => {
+  return projectManager.getProjectPath(name);
 });
