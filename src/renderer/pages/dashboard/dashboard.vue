@@ -65,7 +65,6 @@
     <NewProjectDialog
       v-if="showNewProjectDialog"
       v-model="newProjectName"
-      :validation-error="projectValidationError"
       :creating="creating"
       @create="handleCreateProject"
       @cancel="handleCancelDialog"
@@ -74,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
@@ -102,34 +101,8 @@ const loadProjects = async () => {
   }
 };
 
-// Validation for project title
-const validateProjectTitle = (title: string): string => {
-  if (!title.trim()) {
-    return "Project title cannot be empty";
-  }
-
-  const isDuplicate = projects.value.some((p) => p.title?.toLowerCase() === title.trim().toLowerCase());
-
-  if (isDuplicate) {
-    return "A project with this title already exists";
-  }
-
-  return "";
-};
-
-const projectValidationError = computed(() => {
-  if (!newProjectName.value) return "";
-  return validateProjectTitle(newProjectName.value);
-});
-
 const handleCreateProject = async () => {
-  const title = newProjectName.value.trim();
-  const error = validateProjectTitle(title);
-
-  if (error) {
-    // Validation error is handled by the computed property
-    return;
-  }
+  const title = newProjectName.value.trim() || "[untitled]";
 
   try {
     creating.value = true;

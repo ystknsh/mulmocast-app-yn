@@ -82,18 +82,6 @@ const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
   }
 };
 
-// Validate project title
-const validateProjectTitle = (title: string): void => {
-  if (!title || typeof title !== "string") {
-    throw new Error("Project title is required");
-  }
-
-  const trimmed = title.trim();
-  if (!trimmed) {
-    throw new Error("Project title cannot be empty");
-  }
-};
-
 // Generate directory name
 const generateId = (): string => {
   return crypto.randomUUID().replace(/-/g, "").substring(0, 8);
@@ -131,8 +119,6 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
 
 // Create a new project
 export const createProject = async (title: string): Promise<ProjectMetadata> => {
-  validateProjectTitle(title);
-
   const projectsPath = getProjectsPath();
   const id = generateId();
   const projectPath = path.join(projectsPath, id);
