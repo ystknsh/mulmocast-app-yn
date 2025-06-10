@@ -273,8 +273,7 @@ const route = useRoute();
 const router = useRouter();
 const projectName = computed(() => route.query.name as string);
 const project = ref<Project | null>(null);
-const isNewProject = computed(() => !projectName.value);
-const hasProjectData = computed(() => !isNewProject.value && mockProject.value.mulmoScript);
+const hasProjectData = computed(() => mockProject.value.mulmoScript);
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
 const validationStatus = ref<"valid" | "warning" | "error">("valid");
@@ -290,14 +289,12 @@ const isPreviewAreaVisible = ref(false);
 
 // Load project data on mount
 onMounted(async () => {
-  if (!isNewProject.value && projectName.value) {
-    try {
-      project.value = await projectApi.get(projectName.value);
-      // TODO: Load mulmo script data from project
-    } catch (error) {
-      console.error("Failed to load project:", error);
-      router.push("/");
-    }
+  try {
+    project.value = await projectApi.get(projectName.value);
+    // TODO: Load mulmo script data from project
+  } catch (error) {
+    console.error("Failed to load project:", error);
+    router.push("/");
   }
 });
 
