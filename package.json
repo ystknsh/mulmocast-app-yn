@@ -14,7 +14,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .js,.ts,.vue src",
     "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
-    "type-check": "tsc --noEmit -p ./src/client/tsconfig.json"
+    "type-check": "tsc --noEmit -p ./src/renderer/tsconfig.json"
   },
   "keywords": [],
   "author": {
