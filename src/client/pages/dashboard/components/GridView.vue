@@ -67,7 +67,7 @@
       <div class="p-4">
         <div class="flex items-center justify-between mb-2">
           <h3 class="font-semibold text-gray-900 text-sm truncate">
-            {{ project.name }}
+            {{ project.title }}
           </h3>
           <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
             <Volume2 v-if="project.type === 'audio' || project.type === 'podcast'" class="w-4 h-4 text-blue-600" />

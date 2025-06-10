@@ -304,7 +304,7 @@ onMounted(async () => {
 // Mock data (will be replaced with actual project data)
 const mockProject = computed(() => ({
   id: 1,
-  title: project.value?.name || "Podcast: AI Technology Fundamentals",
+  title: project.value?.title || "Podcast: AI Technology Fundamentals",
   description: "A comprehensive guide to understanding artificial intelligence basics",
   status: "in_progress",
   mulmoScript: `{

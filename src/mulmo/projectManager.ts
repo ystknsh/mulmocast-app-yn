@@ -1,13 +1,15 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
+import dayjs from "dayjs";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
 const PROJECT_VERSION = "1.0.0";
 
 export type ProjectMetadata = {
-  name: string;
+  name: string; // Directory name (internal use)
+  title: string; // Display name
   path: string;
   createdAt: string;
   updatedAt: string;
@@ -16,183 +18,199 @@ export type ProjectMetadata = {
 };
 
 export type CreateProjectData = {
-  name: string;
+  title: string;
   [key: string]: any;
 };
 
 export type UpdateProjectData = Partial<Omit<ProjectMetadata, "name" | "path" | "createdAt">>;
 
-export class ProjectManager {
-  private readonly projectsPath: string;
+// Helper function to get projects path
+const getProjectsPath = (): string => {
+  return path.join(app.getPath("userData"), PROJECTS_DIR);
+};
 
-  constructor() {
-    this.projectsPath = path.join(app.getPath("userData"), PROJECTS_DIR);
-    this.ensureProjectsDirectory();
+// Ensure projects directory exists
+export const ensureProjectsDirectory = async (): Promise<void> => {
+  try {
+    const projectsPath = getProjectsPath();
+    await fs.mkdir(projectsPath, { recursive: true });
+  } catch (error) {
+    console.error("Failed to create projects directory:", error);
+  }
+};
+
+// Check if a config file exists
+const checkConfigFile = async (projectPath: string): Promise<boolean> => {
+  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  try {
+    await fs.access(configFilePath);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Check if a project exists
+const projectExists = async (projectPath: string): Promise<boolean> => {
+  try {
+    const stats = await fs.stat(projectPath);
+    return stats.isDirectory() && (await checkConfigFile(projectPath));
+  } catch {
+    return false;
+  }
+};
+
+// Get project metadata
+const getProjectMetadata = async (projectPath: string): Promise<Partial<ProjectMetadata>> => {
+  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  try {
+    const content = await fs.readFile(configFilePath, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error("Failed to read project metadata:", error);
+    return {};
+  }
+};
+
+// Save project metadata
+const saveProjectMetadata = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
+  const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  await fs.writeFile(configFilePath, JSON.stringify(data, null, 2));
+};
+
+// Delete project directory
+const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
+  try {
+    await fs.rm(projectPath, { recursive: true, force: true });
+  } catch {
+    // Ignore errors during cleanup
+  }
+};
+
+// Validate project title
+const validateProjectTitle = (title: string): void => {
+  if (!title || typeof title !== "string") {
+    throw new Error("Project title is required");
   }
 
-  private async ensureProjectsDirectory(): Promise<void> {
-    try {
-      await fs.mkdir(this.projectsPath, { recursive: true });
-    } catch (error) {
-      console.error("Failed to create projects directory:", error);
-    }
+  const trimmed = title.trim();
+  if (!trimmed) {
+    throw new Error("Project title cannot be empty");
+  }
+};
+
+// Generate directory name
+const generateDirectoryName = (): string => {
+  // Generate YYYYMMDD-random format
+  const dateStr = dayjs().format("YYYYMMDD");
+  const random = Math.random().toString(36).substring(2, 8).toLowerCase();
+  return `${dateStr}-${random}`;
+};
+
+// List all projects
+export const listProjects = async (): Promise<ProjectMetadata[]> => {
+  try {
+    const projectsPath = getProjectsPath();
+    const entries = await fs.readdir(projectsPath, { withFileTypes: true });
+    const projects = await Promise.all(
+      entries
+        .filter((entry) => entry.isDirectory())
+        .map(async (entry) => {
+          const projectPath = path.join(projectsPath, entry.name);
+          const hasConfigFile = await checkConfigFile(projectPath);
+
+          if (!hasConfigFile) return null;
+
+          const metadata = await getProjectMetadata(projectPath);
+          return {
+            name: entry.name,
+            path: projectPath,
+            ...metadata,
+          } as ProjectMetadata;
+        }),
+    );
+
+    return projects.filter((project): project is ProjectMetadata => project !== null);
+  } catch (error) {
+    console.error("Failed to list projects:", error);
+    return [];
+  }
+};
+
+// Create a new project
+export const createProject = async (title: string): Promise<ProjectMetadata> => {
+  validateProjectTitle(title);
+
+  const projectsPath = getProjectsPath();
+  const name = generateDirectoryName();
+  const projectPath = path.join(projectsPath, name);
+
+  try {
+    await fs.mkdir(projectPath, { recursive: true });
+
+    const initialData: ProjectMetadata = {
+      name,
+      title,
+      path: projectPath,
+      createdAt: dayjs().toISOString(),
+      updatedAt: dayjs().toISOString(),
+      version: PROJECT_VERSION,
+    };
+
+    await saveProjectMetadata(projectPath, initialData);
+
+    return initialData;
+  } catch (error) {
+    // Cleanup on failure
+    await deleteProjectDirectory(projectPath);
+    console.error("Failed to create project:", error);
+    throw error;
+  }
+};
+
+// Delete a project
+export const deleteProject = async (name: string): Promise<boolean> => {
+  const projectsPath = getProjectsPath();
+  const projectPath = path.join(projectsPath, name);
+
+  if (!(await projectExists(projectPath))) {
+    throw new Error(`Project "${name}" not found`);
   }
 
-  async listProjects(): Promise<ProjectMetadata[]> {
-    try {
-      const entries = await fs.readdir(this.projectsPath, { withFileTypes: true });
-      const projects = await Promise.all(
-        entries
-          .filter((entry) => entry.isDirectory())
-          .map(async (entry) => {
-            const projectPath = path.join(this.projectsPath, entry.name);
-            const hasConfigFile = await this.checkConfigFile(projectPath);
+  try {
+    await fs.rm(projectPath, { recursive: true, force: true });
+    return true;
+  } catch (error) {
+    console.error("Failed to delete project:", error);
+    throw error;
+  }
+};
 
-            if (!hasConfigFile) return null;
+// Get a specific project
+export const getProject = async (name: string): Promise<ProjectMetadata> => {
+  const projectsPath = getProjectsPath();
+  const projectPath = path.join(projectsPath, name);
 
-            const metadata = await this.getProjectMetadata(projectPath);
-            return {
-              name: entry.name,
-              path: projectPath,
-              ...metadata,
-            } as ProjectMetadata;
-          }),
-      );
-
-      return projects.filter((project): project is ProjectMetadata => project !== null);
-    } catch (error) {
-      console.error("Failed to list projects:", error);
-      return [];
-    }
+  if (!(await projectExists(projectPath))) {
+    throw new Error(`Project "${name}" not found`);
   }
 
-  async createProject(name: string): Promise<ProjectMetadata> {
-    this.validateProjectName(name);
-
-    const projectPath = path.join(this.projectsPath, name);
-
-    // Check if project already exists
-    if (await this.projectExists(projectPath)) {
-      throw new Error(`Project "${name}" already exists`);
-    }
-
-    try {
-      await fs.mkdir(projectPath, { recursive: true });
-
-      const initialData: ProjectMetadata = {
-        name,
-        path: projectPath,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        version: PROJECT_VERSION,
-      };
-
-      await this.saveProjectMetadata(projectPath, initialData);
-
-      return initialData;
-    } catch (error) {
-      // Cleanup on failure
-      await this.deleteProjectDirectory(projectPath);
-      console.error("Failed to create project:", error);
-      throw error;
-    }
+  try {
+    const metadata = await getProjectMetadata(projectPath);
+    return {
+      name,
+      title: metadata.title || name, // Fallback to name if title doesn't exist
+      path: projectPath,
+      ...metadata,
+    } as ProjectMetadata;
+  } catch (error) {
+    console.error("Failed to get project:", error);
+    throw error;
   }
+};
 
-  async deleteProject(name: string): Promise<boolean> {
-    const projectPath = path.join(this.projectsPath, name);
-
-    if (!(await this.projectExists(projectPath))) {
-      throw new Error(`Project "${name}" not found`);
-    }
-
-    try {
-      await fs.rm(projectPath, { recursive: true, force: true });
-      return true;
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-      throw error;
-    }
-  }
-
-  async getProject(name: string): Promise<ProjectMetadata> {
-    const projectPath = path.join(this.projectsPath, name);
-
-    if (!(await this.projectExists(projectPath))) {
-      throw new Error(`Project "${name}" not found`);
-    }
-
-    try {
-      const metadata = await this.getProjectMetadata(projectPath);
-      return {
-        name,
-        path: projectPath,
-        ...metadata,
-      } as ProjectMetadata;
-    } catch (error) {
-      console.error("Failed to get project:", error);
-      throw error;
-    }
-  }
-
-  private async checkConfigFile(projectPath: string): Promise<boolean> {
-    const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-
-    try {
-      await fs.access(configFilePath);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  private async projectExists(projectPath: string): Promise<boolean> {
-    try {
-      const stats = await fs.stat(projectPath);
-      return stats.isDirectory() && (await this.checkConfigFile(projectPath));
-    } catch {
-      return false;
-    }
-  }
-
-  private async getProjectMetadata(projectPath: string): Promise<Partial<ProjectMetadata>> {
-    const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-
-    try {
-      const content = await fs.readFile(configFilePath, "utf-8");
-      return JSON.parse(content);
-    } catch (error) {
-      console.error("Failed to read project metadata:", error);
-      return {};
-    }
-  }
-
-  private async saveProjectMetadata(projectPath: string, data: ProjectMetadata): Promise<void> {
-    const configFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-    await fs.writeFile(configFilePath, JSON.stringify(data, null, 2));
-  }
-
-  private async deleteProjectDirectory(projectPath: string): Promise<void> {
-    try {
-      await fs.rm(projectPath, { recursive: true, force: true });
-    } catch {
-      // Ignore errors during cleanup
-    }
-  }
-
-  private validateProjectName(name: string): void {
-    if (!name || typeof name !== "string") {
-      throw new Error("Project name is required");
-    }
-
-    const trimmed = name.trim();
-    if (!trimmed) {
-      throw new Error("Project name cannot be empty");
-    }
-  }
-
-  getProjectPath(name: string): string {
-    return path.join(this.projectsPath, name);
-  }
-}
-
-export const projectManager = new ProjectManager();
+// Get project path
+export const getProjectPath = (name: string): string => {
+  const projectsPath = getProjectsPath();
+  return path.join(projectsPath, name);
+};

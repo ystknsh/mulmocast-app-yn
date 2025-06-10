@@ -102,16 +102,16 @@ const loadProjects = async () => {
   }
 };
 
-// Validation for project name
-const validateProjectName = (name: string): string => {
-  if (!name.trim()) {
-    return "Project name cannot be empty";
+// Validation for project title
+const validateProjectTitle = (title: string): string => {
+  if (!title.trim()) {
+    return "Project title cannot be empty";
   }
 
-  const isDuplicate = projects.value.some((p) => p.name.toLowerCase() === name.trim().toLowerCase());
+  const isDuplicate = projects.value.some((p) => p.title?.toLowerCase() === title.trim().toLowerCase());
 
   if (isDuplicate) {
-    return "A project with this name already exists";
+    return "A project with this title already exists";
   }
 
   return "";
@@ -119,12 +119,12 @@ const validateProjectName = (name: string): string => {
 
 const projectValidationError = computed(() => {
   if (!newProjectName.value) return "";
-  return validateProjectName(newProjectName.value);
+  return validateProjectTitle(newProjectName.value);
 });
 
 const handleCreateProject = async () => {
-  const name = newProjectName.value.trim();
-  const error = validateProjectName(name);
+  const title = newProjectName.value.trim();
+  const error = validateProjectTitle(title);
 
   if (error) {
     // Validation error is handled by the computed property
@@ -133,7 +133,7 @@ const handleCreateProject = async () => {
 
   try {
     creating.value = true;
-    const project = await projectApi.create(name);
+    const project = await projectApi.create(title);
     // Close dialog and refresh project list
     showNewProjectDialog.value = false;
     newProjectName.value = "";
@@ -159,7 +159,7 @@ const handleOpenProject = (project: Project) => {
 };
 
 const handleDeleteProject = async (project: Project) => {
-  if (confirm(`Are you sure you want to delete "${project.name}"?`)) {
+  if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
     try {
       await projectApi.delete(project.name);
       await loadProjects();

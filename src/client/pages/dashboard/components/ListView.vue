@@ -21,7 +21,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-2">
-                <h3 class="font-semibold text-gray-900">{{ project.name }}</h3>
+                <h3 class="font-semibold text-gray-900">{{ project.title }}</h3>
                 <Volume2 v-if="project.type === 'audio' || project.type === 'podcast'" class="w-4 h-4 text-blue-600" />
                 <FileText v-if="project.type === 'presentation'" class="w-4 h-4 text-green-600" />
                 <div v-if="project.sessionActive" class="flex items-center space-x-1">
