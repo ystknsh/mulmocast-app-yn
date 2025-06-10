@@ -194,7 +194,6 @@ export const getProject = async (name: string): Promise<ProjectMetadata> => {
     const metadata = await getProjectMetadata(projectPath);
     return {
       name,
-      title: metadata.title || name, // Fallback to name if title doesn't exist
       path: projectPath,
       ...metadata,
     } as ProjectMetadata;
