@@ -12,7 +12,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["src/client/*"]
+      "@/*": ["src/renderer/*"],
+      "@/types/*": ["src/types/*"]
     }
   }
 }
