@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-4">
-    <RouterLink v-for="project in projects" :key="project.id" :to="`/project/${project.id}`">
+    <div v-for="project in projects" :key="project.name" @click="openProject(project)">
       <div
         class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
       >
@@ -21,7 +21,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-2">
-                <h3 class="font-semibold text-gray-900">{{ project.title }}</h3>
+                <h3 class="font-semibold text-gray-900">{{ project.name }}</h3>
                 <Volume2 v-if="project.type === 'audio' || project.type === 'podcast'" class="w-4 h-4 text-blue-600" />
                 <FileText v-if="project.type === 'presentation'" class="w-4 h-4 text-green-600" />
                 <div v-if="project.sessionActive" class="flex items-center space-x-1">
@@ -35,7 +35,7 @@
               </div>
               <div class="flex items-center space-x-1 text-sm text-gray-500 mt-1">
                 <Calendar class="w-4 h-4" />
-                <span>{{ project.date }}</span>
+                <span>{{ formatDate(project.updatedAt || project.createdAt) }}</span>
                 <span class="px-2 py-1 bg-gray-100 rounded text-xs">
                   {{
                     project.type === "video"
@@ -54,22 +54,37 @@
             <button class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
               <Eye class="w-5 h-5" />
             </button>
-            <button class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-              <Play class="w-5 h-5" />
+            <button
+              @click.stop="deleteProject(project)"
+              class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <Trash2 class="w-5 h-5" />
             </button>
           </div>
         </div>
       </div>
-    </RouterLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
-import { Play, Eye, Calendar, Volume2, Activity, AlertTriangle, FileText } from "lucide-vue-next";
-import type { Project } from "@/types";
+import { Trash2, Eye, Calendar, Volume2, Activity, AlertTriangle, FileText } from "lucide-vue-next";
+import type { Project } from "@/lib/projectApi";
+import { formatDate } from "@/lib/utils";
+const emit = defineEmits<{
+  open: [project: Project];
+  delete: [project: Project];
+}>();
 
 defineProps<{
   projects: Project[];
 }>();
+
+const openProject = (project: Project) => {
+  emit("open", project);
+};
+
+const deleteProject = (project: Project) => {
+  emit("delete", project);
+};
 </script>

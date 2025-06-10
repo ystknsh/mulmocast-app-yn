@@ -228,7 +228,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { projectApi, type Project } from "@/lib/projectApi";
 import {
   ArrowLeft,
   Code2,
@@ -269,8 +270,10 @@ import ProductTabs from "./components/ProductTabs.vue";
 
 // State
 const route = useRoute();
-const projectId = computed(() => route.params.id || route.query.id);
-const isNewProject = computed(() => !projectId.value);
+const router = useRouter();
+const projectName = computed(() => route.query.name as string);
+const project = ref<Project | null>(null);
+const isNewProject = computed(() => !projectName.value);
 const hasProjectData = computed(() => !isNewProject.value && mockProject.value.mulmoScript);
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
@@ -286,17 +289,22 @@ const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
 
 // Load project data on mount
-onMounted(() => {
-  if (!isNewProject.value && projectId.value) {
-    // TODO: Load project data from API/store
-    // loadProject(projectId.value);
+onMounted(async () => {
+  if (!isNewProject.value && projectName.value) {
+    try {
+      project.value = await projectApi.get(projectName.value);
+      // TODO: Load mulmo script data from project
+    } catch (error) {
+      console.error("Failed to load project:", error);
+      router.push("/");
+    }
   }
 });
 
-// Mock data
-const mockProject = ref({
+// Mock data (will be replaced with actual project data)
+const mockProject = computed(() => ({
   id: 1,
-  title: "Podcast: AI Technology Fundamentals",
+  title: project.value?.name || "Podcast: AI Technology Fundamentals",
   description: "A comprehensive guide to understanding artificial intelligence basics",
   status: "in_progress",
   mulmoScript: `{
@@ -323,7 +331,7 @@ const mockProject = ref({
     }
   ]
 }`,
-});
+}));
 
 // Sample beats data
 const beatsData = ref([

@@ -12,4 +12,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
       ipcRenderer.once("response-env", (_event, data) => resolve(data));
       ipcRenderer.send("request-env");
     }),
+  project: {
+    list: () => ipcRenderer.invoke("project:list"),
+    create: (name: string) => ipcRenderer.invoke("project:create", name),
+    get: (name: string) => ipcRenderer.invoke("project:get", name),
+    update: (name: string, data: any) => ipcRenderer.invoke("project:update", name, data),
+    delete: (name: string) => ipcRenderer.invoke("project:delete", name),
+    getPath: (name: string) => ipcRenderer.invoke("project:getPath", name),
+  },
 });
