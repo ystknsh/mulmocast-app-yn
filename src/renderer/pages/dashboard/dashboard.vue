@@ -81,7 +81,7 @@ import Layout from "@/components/layout.vue";
 import ListView from "./components/list_view.vue";
 import GridView from "./components/grid_view.vue";
 import NewProjectDialog from "./components/new_project_dialog.vue";
-import { projectApi, type Project } from "@/lib/projectApi";
+import { projectApi, type Project } from "@/lib/project_api";
 
 const router = useRouter();
 const viewMode = ref<"list" | "grid">("list");

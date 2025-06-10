@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { Trash2, Eye, Calendar, Volume2, Activity, AlertTriangle, FileText } from "lucide-vue-next";
-import type { Project } from "@/lib/projectApi";
+import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
 const emit = defineEmits<{
   open: [project: Project];
