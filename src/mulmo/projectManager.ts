@@ -17,11 +17,6 @@ export type ProjectMetadata = {
   [key: string]: any;
 };
 
-export type CreateProjectData = {
-  title: string;
-  [key: string]: any;
-};
-
 export type UpdateProjectData = Partial<Omit<ProjectMetadata, "name" | "path" | "createdAt">>;
 
 // Helper function to get projects path
