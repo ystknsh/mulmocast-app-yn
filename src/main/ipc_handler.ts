@@ -1,5 +1,5 @@
 import { ipcMain, dialog } from "electron";
-import { mulmoTest } from "./mulmo/test";
+import { mulmoTest, mulmoHandler } from "./mulmo/test";
 import * as projectManager from "./projectManager";
 
 export const registerIPCHandler = () => {
@@ -18,6 +18,10 @@ export const registerIPCHandler = () => {
   ipcMain.handle("mulmo:test", async (event, option) => {
     const webContents = event.sender;
     mulmoTest(option, webContents);
+  });
+
+  ipcMain.handle("mulmoHandler", async (__event, method, ...args) => {
+    return mulmoHandler(method, ...args);
   });
 
   // Project management handlers
