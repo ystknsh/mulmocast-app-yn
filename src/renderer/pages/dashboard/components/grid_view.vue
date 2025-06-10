@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Play, Eye, Calendar, Volume2, Pause, Activity, AlertTriangle, FileText, Trash2 } from "lucide-vue-next";
-import type { Project } from "@/lib/projectApi";
+import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
 const emit = defineEmits<{
   open: [project: Project];

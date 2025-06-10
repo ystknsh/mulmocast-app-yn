@@ -1,6 +1,7 @@
 import { ipcMain, dialog } from "electron";
 import { mulmoTest, mulmoHandler } from "./mulmo/test";
-import * as projectManager from "./projectManager";
+import * as projectManager from "./project_manager";
+
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process

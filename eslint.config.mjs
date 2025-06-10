@@ -7,6 +7,7 @@ import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
+import checkFile from "eslint-plugin-check-file";
 
 // Common base rules configuration
 const baseRules = {
@@ -26,6 +27,22 @@ const baseRules = {
   "linebreak-style": ["error", "unix"],
   quotes: "off",
   semi: ["error", "always"],
+  "check-file/filename-naming-convention": [
+    "error",
+    {
+      "src/**/*.{js,ts,vue}": "SNAKE_CASE",
+    },
+    {
+      ignoreMiddleExtensions: true,
+    },
+  ],
+};
+
+const basePlugins = {
+  "@typescript-eslint": typescript,
+  import: importPlugin,
+  prettier,
+  "check-file": checkFile,
 };
 
 const baseLanguageOptions = {
@@ -39,7 +56,16 @@ const baseLanguageOptions = {
 export default [
   js.configs.recommended,
   {
-    ignores: ["node_modules/**", ".vite/**", "dist/**", "build/**", "out/**", "*.min.js", "coverage/**"],
+    ignores: [
+      "node_modules/**",
+      ".vite/**",
+      "dist/**",
+      "build/**",
+      "out/**",
+      "*.min.js",
+      "coverage/**",
+      "src/renderer/components/ui/**",
+    ],
   },
   // Node.js environment configuration (Main & Preload)
   {
@@ -54,9 +80,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...typescript.configs.recommended.rules,
@@ -84,10 +108,7 @@ export default [
       },
     },
     plugins: {
-      vue,
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...vue.configs["flat/recommended"].rules,
@@ -123,9 +144,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...typescript.configs.recommended.rules,
@@ -147,9 +166,7 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": typescript,
-      import: importPlugin,
-      prettier,
+      ...basePlugins,
     },
     rules: {
       ...typescript.configs.recommended.rules,
