@@ -51,7 +51,7 @@ export default [
   },
   // Node.js environment configuration (Mulmo & Main process)
   {
-    files: ["src/main.ts", "src/preload.ts", "src/mulmo/**/*.{js,ts}"],
+    files: ["src/main.ts", "src/preload.ts", "src/ipc_handler.ts", "src/mulmo/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {

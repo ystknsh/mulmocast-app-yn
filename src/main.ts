@@ -1,9 +1,8 @@
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 
 import { registerIPCHandler } from "./ipc_handler";
-import { mulmoTest } from "./mulmo/test";
 import * as projectManager from "./mulmo/projectManager";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
