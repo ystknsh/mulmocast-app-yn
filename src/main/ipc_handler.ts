@@ -25,11 +25,11 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("project:create", (_event, title: string) => projectManager.createProject(title));
 
-  ipcMain.handle("project:get", (_event, name: string) => projectManager.getProject(name));
+  ipcMain.handle("project:get", (_event, id: string) => projectManager.getProject(id));
 
-  ipcMain.handle("project:delete", (_event, name: string) => projectManager.deleteProject(name));
+  ipcMain.handle("project:delete", (_event, id: string) => projectManager.deleteProject(id));
 
-  ipcMain.handle("project:getPath", (_event, name: string) => {
-    return projectManager.getProjectPath(name);
+  ipcMain.handle("project:getPath", (_event, id: string) => {
+    return projectManager.getProjectPath(id);
   });
 };

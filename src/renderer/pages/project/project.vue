@@ -271,7 +271,7 @@ import ProductTabs from "./components/product_tabs.vue";
 // State
 const route = useRoute();
 const router = useRouter();
-const projectName = computed(() => route.query.name as string);
+const projectId = computed(() => route.query.id as string);
 const project = ref<Project | null>(null);
 const hasProjectData = computed(() => mockProject.value.mulmoScript);
 const isDevMode = ref(false);
@@ -290,7 +290,7 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
-    project.value = await projectApi.get(projectName.value);
+    project.value = await projectApi.get(projectId.value);
     // TODO: Load mulmo script data from project
   } catch (error) {
     console.error("Failed to load project:", error);

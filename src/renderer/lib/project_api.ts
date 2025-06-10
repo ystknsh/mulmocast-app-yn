@@ -6,10 +6,10 @@ declare global {
     electronAPI: {
       project: {
         list: () => Promise<Project[]>;
-        create: (name: string) => Promise<Project>;
-        get: (name: string) => Promise<Project>;
-        delete: (name: string) => Promise<boolean>;
-        getPath: (name: string) => Promise<string>;
+        create: (title: string) => Promise<Project>;
+        get: (id: string) => Promise<Project>;
+        delete: (id: string) => Promise<boolean>;
+        getPath: (id: string) => Promise<string>;
       };
     };
   }
@@ -24,15 +24,15 @@ export const projectApi = {
     return await window.electronAPI.project.create(title);
   },
 
-  async get(name: string): Promise<Project> {
-    return await window.electronAPI.project.get(name);
+  async get(id: string): Promise<Project> {
+    return await window.electronAPI.project.get(id);
   },
 
-  async delete(name: string): Promise<boolean> {
-    return await window.electronAPI.project.delete(name);
+  async delete(id: string): Promise<boolean> {
+    return await window.electronAPI.project.delete(id);
   },
 
-  async getPath(name: string): Promise<string> {
-    return await window.electronAPI.project.getPath(name);
+  async getPath(id: string): Promise<string> {
+    return await window.electronAPI.project.getPath(id);
   },
 };

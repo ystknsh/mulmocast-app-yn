@@ -139,7 +139,7 @@ const handleCreateProject = async () => {
     newProjectName.value = "";
     await loadProjects();
     // Navigate to the new project
-    router.push(`/project?name=${encodeURIComponent(project.name)}`);
+    router.push(`/project?id=${encodeURIComponent(project.id)}`);
   } catch (error) {
     console.error("Failed to create project:", error);
     alert("Failed to create project. Please try again.");
@@ -155,13 +155,13 @@ const handleCancelDialog = () => {
 };
 
 const handleOpenProject = (project: Project) => {
-  router.push(`/project?name=${encodeURIComponent(project.name)}`);
+  router.push(`/project?id=${encodeURIComponent(project.id)}`);
 };
 
 const handleDeleteProject = async (project: Project) => {
   if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
     try {
-      await projectApi.delete(project.name);
+      await projectApi.delete(project.id);
       await loadProjects();
     } catch (error) {
       console.error("Failed to delete project:", error);
