@@ -29,7 +29,8 @@ export const ensureProjectBaseDirectory = async (): Promise<void> => {
 };
 
 // Check if a meta data file exists
-const checkMetaFile = async (projectPath: string): Promise<boolean> => {
+const checkMetaFile = async (projectId: string): Promise<boolean> => {
+  const projectPath = getProjectPath(projectId);
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   try {
     await fs.access(metaFilePath);
@@ -39,13 +40,15 @@ const checkMetaFile = async (projectPath: string): Promise<boolean> => {
   }
 };
 
-const getProjectMetadata = async (projectPath: string): Promise<ProjectMetadata> => {
+const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
+  const projectPath = getProjectPath(projectId);
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   const content = await fs.readFile(metaFilePath, "utf-8");
   return JSON.parse(content);
 };
 
-const getProjectScriptIfExists = async (projectPath: string): Promise<Project["script"] | null> => {
+const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
+  const projectPath = getProjectPath(projectId);
   const scriptFilePath = path.join(projectPath, SCRIPT_FILE_NAME);
   try {
     const content = await fs.readFile(scriptFilePath, "utf-8");
@@ -87,13 +90,12 @@ export const listProjects = async (): Promise<Project[]> => {
       entries
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
-          const projectPath = path.join(basePath, entry.name);
-          const hasMetaFile = await checkMetaFile(projectPath);
+          const hasMetaFile = await checkMetaFile(entry.name);
 
           if (!hasMetaFile) return null;
 
-          const metadata = await getProjectMetadata(projectPath);
-          const script = await getProjectScriptIfExists(projectPath);
+          const metadata = await getProjectMetadata(entry.name);
+          const script = await getProjectScriptIfExists(entry.name);
 
           return {
             metadata,
@@ -113,7 +115,7 @@ export const listProjects = async (): Promise<Project[]> => {
 export const createProject = async (title: string): Promise<Project> => {
   const id = generateId();
   const projectPath = getProjectPath(id);
-
+  console.log(projectPath);
   try {
     await fs.mkdir(projectPath, { recursive: true });
 
@@ -154,9 +156,6 @@ export const deleteProject = async (id: string): Promise<boolean> => {
 };
 
 export const getProject = async (id: string): Promise<ProjectMetadata> => {
-  const basePath = getBasePath();
-  const projectPath = path.join(basePath, id);
-
-  return await getProjectMetadata(projectPath);
+  return await getProjectMetadata(id);
 };
 
