@@ -69,22 +69,24 @@ export const listProjects = async (): Promise<Project[]> => {
   try {
     const basePath = getBasePath();
     const entries = await fs.readdir(basePath, { withFileTypes: true });
-    return (await Promise.all(
-      entries
-        .filter((entry) => entry.isDirectory())
-        .map(async (entry) => {
-          const projectId = entry.name;
-          const metadata = await getProjectMetadata(projectId);
-          if (metadata === null) {
-            return null;
-          }
-          const script = await getProjectScriptIfExists(projectId);
-          return {
-            metadata,
-            script,
-          };
-        }),
-    )).filter((project): project is Project => project !== null);
+    return (
+      await Promise.all(
+        entries
+          .filter((entry) => entry.isDirectory())
+          .map(async (entry) => {
+            const projectId = entry.name;
+            const metadata = await getProjectMetadata(projectId);
+            if (metadata === null) {
+              return null;
+            }
+            const script = await getProjectScriptIfExists(projectId);
+            return {
+              metadata,
+              script,
+            };
+          }),
+      )
+    ).filter((project): project is Project => project !== null);
   } catch (error) {
     console.error("Failed to list projects:", error);
     return [];
