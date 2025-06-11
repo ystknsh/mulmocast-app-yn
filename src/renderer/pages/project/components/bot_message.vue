@@ -13,5 +13,8 @@
 </template>
 <script setup lang="ts">
 import { Bot } from "lucide-vue-next";
-const props = defineProps(["message", "time"]);
+defineProps<{
+  message: string;
+  time: string;
+}>();
 </script>
