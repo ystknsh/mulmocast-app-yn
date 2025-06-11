@@ -82,9 +82,11 @@ const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
   }
 };
 
-// Generate directory name
+// Generate id
 const generateId = (): string => {
-  return crypto.randomUUID().replace(/-/g, "").substring(0, 12);
+  const dateStr = dayjs().format("YYYYMMDD");
+  const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8);
+  return `${dateStr}-${uuid}`;
 };
 
 // List all projects
