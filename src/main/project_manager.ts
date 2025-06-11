@@ -9,9 +9,13 @@ const META_DATA_FILE_NAME = "meta.json";
 const SCRIPT_FILE_NAME = "script.json";
 const PROJECT_VERSION = "1.0.0";
 
-// Helper function to get projects path
 const getBasePath = (): string => {
   return path.join(app.getPath("userData"), PROJECTS_DIR);
+};
+
+const getProjectPath = (projectId: string): string => {
+  const basePath = getBasePath();
+  return path.join(basePath, projectId);
 };
 
 // Ensurer projects directory exists
@@ -35,7 +39,6 @@ const checkMetaFile = async (projectPath: string): Promise<boolean> => {
   }
 };
 
-// Get project metadata
 const getProjectMetadata = async (projectPath: string): Promise<ProjectMetadata> => {
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   const content = await fs.readFile(metaFilePath, "utf-8");
@@ -52,13 +55,16 @@ const getProjectScriptIfExists = async (projectPath: string): Promise<Project["s
   }
 };
 
-// Save project metadata
 const saveProjectMetadata = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
   await fs.writeFile(metaFilePath, JSON.stringify(data, null, 2));
 };
 
-// Delete project directory
+const saveProjectScript = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
+  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+  await fs.writeFile(metaFilePath, JSON.stringify(data, null, 2));
+};
+
 const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
   try {
     await fs.rm(projectPath, { recursive: true, force: true });
@@ -67,14 +73,12 @@ const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
   }
 };
 
-// Generate id
 const generateId = (): string => {
   const dateStr = dayjs().format("YYYYMMDD");
   const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8);
   return `${dateStr}-${uuid}`;
 };
 
-// List all projects
 export const listProjects = async (): Promise<Project[]> => {
   try {
     const basePath = getBasePath();
@@ -107,9 +111,8 @@ export const listProjects = async (): Promise<Project[]> => {
 
 // Create a new project
 export const createProject = async (title: string): Promise<Project> => {
-  const basePath = getBasePath();
   const id = generateId();
-  const projectPath = path.join(basePath, id);
+  const projectPath = getProjectPath(id);
 
   try {
     await fs.mkdir(projectPath, { recursive: true });
@@ -138,10 +141,8 @@ export const createProject = async (title: string): Promise<Project> => {
   }
 };
 
-// Delete a project
 export const deleteProject = async (id: string): Promise<boolean> => {
-  const basePath = getBasePath();
-  const projectPath = path.join(basePath, id);
+  const projectPath = getProjectPath(id);
 
   try {
     await fs.rm(projectPath, { recursive: true, force: true });
@@ -152,7 +153,6 @@ export const deleteProject = async (id: string): Promise<boolean> => {
   }
 };
 
-// Get a specific project
 export const getProject = async (id: string): Promise<ProjectMetadata> => {
   const basePath = getBasePath();
   const projectPath = path.join(basePath, id);
@@ -160,8 +160,3 @@ export const getProject = async (id: string): Promise<ProjectMetadata> => {
   return await getProjectMetadata(projectPath);
 };
 
-// Get project path
-export const getProjectPath = (id: string): string => {
-  const basePath = getBasePath();
-  return path.join(basePath, id);
-};
