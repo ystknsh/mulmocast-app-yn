@@ -6,7 +6,6 @@ export type ProjectMetadata = {
   version: string;
   sessionActive: boolean; // TODO: Move to appropriate location later
   hasErrors: boolean; // TODO: Move to appropriate location later
-  [key: string]: any;
 };
 export type Project = ProjectMetadata & {
   script: {
