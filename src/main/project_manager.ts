@@ -92,7 +92,7 @@ export const listProjects = async (): Promise<Project[]> => {
           const script = await getProjectScriptIfExists(projectPath);
 
           return {
-            ...metadata,
+            metadata,
             script,
           };
         }),
@@ -120,6 +120,8 @@ export const createProject = async (title: string): Promise<ProjectMetadata> => 
       createdAt: dayjs().toISOString(),
       updatedAt: dayjs().toISOString(),
       version: PROJECT_VERSION,
+      sessionActive: false,
+      hasErrors: false,
     };
 
     await saveProjectMetadata(projectPath, initialData);

@@ -7,7 +7,8 @@ export type ProjectMetadata = {
   sessionActive: boolean; // TODO: Move to appropriate location later
   hasErrors: boolean; // TODO: Move to appropriate location later
 };
-export type Project = ProjectMetadata & {
+export type Project = {
+  metadata: ProjectMetadata;
   script: {
     [key: string]: any; //TODO: add definition for MulmoScript type
   } | null;

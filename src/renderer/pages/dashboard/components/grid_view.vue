@@ -2,7 +2,7 @@
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     <div
       v-for="project in projects"
-      :key="project.id"
+      :key="project.metadata.id"
       @click="openProject(project)"
       class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 group cursor-pointer"
     >
@@ -17,21 +17,23 @@
       <div class="p-4">
         <div class="flex items-center justify-between mb-2">
           <h3 class="font-semibold text-gray-900 text-sm truncate">
-            {{ project.title }}
+            {{ project.metadata.title }}
           </h3>
         </div>
         <div class="flex items-center justify-between text-xs text-gray-500">
           <div class="flex items-center space-x-1">
             <Calendar class="w-3 h-3" />
-            <span>{{ formatDate(project.updatedAt || project.createdAt) }}</span>
+            <span>{{ formatDate(project.metadata.updatedAt || project.metadata.createdAt) }}</span>
           </div>
           <div class="flex items-center space-x-1">
-            <span v-if="project.sessionActive" class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
+            <span v-if="project.metadata.sessionActive" class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
               Generating
             </span>
-            <span v-if="project.hasErrors" class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs"> Error </span>
+            <span v-if="project.metadata.hasErrors" class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">
+              Error
+            </span>
             <span class="px-2 py-1 bg-gray-100 rounded">
-              {{ project.version }}
+              {{ project.metadata.version }}
             </span>
           </div>
         </div>
