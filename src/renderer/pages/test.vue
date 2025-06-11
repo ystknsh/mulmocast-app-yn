@@ -7,6 +7,9 @@
       <Button @click="test">Test</Button>
     </div>
   </div>
+  <div>
+    <RouterLink to="/">Back</RouterLink>
+  </div>
 </template>
 
 <script setup lang="ts">
