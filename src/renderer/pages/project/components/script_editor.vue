@@ -21,8 +21,9 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
         <textarea
-          v-model="yamlContent"
+          v-model="yamlText"
           class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
+          @input="onYamlInput"
         ></textarea>
       </div>
     </TabsContent>
@@ -31,8 +32,9 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
         <textarea
-          v-model="jsonString"
+          v-model="jsonText"
           class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
+          @input="onJsonInput"
         ></textarea>
       </div>
     </TabsContent>
@@ -104,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { FileImage, Video } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -114,17 +116,51 @@ import YAML from "yaml";
 import { mulmoSample } from "./sample";
 
 interface Props {
-  mockProject: {
-    mulmoScript: string;
-  };
+  mulmoValue: Object;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+const emit = defineEmits(["update:mulmoValue"]);
 
-const jsonString = ref(JSON.stringify(mulmoSample, null, 2));
+const jsonText = ref("");
+const yamlText = ref("");
+const internalValue = ref({ ...mulmoSample });
 
-//const jsonData =
-const yamlContent = YAML.stringify(mulmoSample);
+const syncTextFromInternal = () => {
+  jsonText.value = JSON.stringify(internalValue.value, null, 2);
+  yamlText.value = YAML.stringify(internalValue.value);
+};
+
+watch(
+  () => props.mulmoValue,
+  (newVal) => {
+    internalValue.value = { ...newVal };
+    syncTextFromInternal();
+  },
+  { deep: true, immediate: true },
+);
+
+// syncTextFromInternal();
+
+const onJsonInput = () => {
+  try {
+    const parsed = JSON.parse(jsonText.value);
+    internalValue.value = parsed;
+    yamlText.value = YAML.stringify(parsed);
+    emit("update:mulmoValue", parsed);
+  } catch {}
+};
+
+const onYamlInput = () => {
+  try {
+    const parsed = YAML.parse(yamlText.value);
+    internalValue.value = parsed;
+    jsonText.value = JSON.stringify(parsed, null, 2);
+    emit("update:mulmoValue", parsed);
+  } catch {}
+};
+
+// end of mulmo editor
 
 const mediaBeats = mulmoSample.beats;
 
