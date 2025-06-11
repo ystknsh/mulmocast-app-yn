@@ -17,8 +17,7 @@
         <div
           class="chat-input-container border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2 transition-colors duration-200 flex justify-between"
         >
-          <input
-            type="text"
+          <textarea
             v-model="userInput"
             :disabled="events.length == 0"
             placeholder="ex) Thank you very much! Please proceed with the creation."
@@ -44,14 +43,16 @@
           <!-- Template dropdown and create button -->
           <div class="template-dropdown-container flex items-center gap-4">
             <select
-              v-model="selectedTemplate"
+              v-model="selectedTemplateFileName"
               class="template-dropdown border-2 border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
             >
-              <option value="solo-with-images">一人でプレゼン。画像生成あり。imagePromptなし</option>
-              <option value="dialogue-custom-images">二人の会話。画像生成あり。imagePromptあり。</option>
-              <option value="storytelling">一人で読む物語（紙芝居、絵本）</option>
-              <option value="business-only">ビジネスプレゼン（画像生成なし）</option>
+              <option v-for="(template, k) in templates" :key="k" :value="template.filename">
+                {{ template.title }}
+              </option>
             </select>
+            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="copy">
+              Copy
+            </Button>
             <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
               Create Script
             </Button>
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
@@ -76,8 +77,13 @@ import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
+import type { MulmoScriptTemplate } from "mulmocast";
 
-const selectedTemplate = ref("solo-with-images");
+const emit = defineEmits<{
+  "update:updateMulmoScript": [value: any];
+}>();
+
+const selectedTemplateFileName = ref("");
 
 const graphChat: GraphData = {
   version: 0.5,
@@ -162,16 +168,36 @@ const run = async () => {
       },
     },
   );
-  graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
+  // graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
   graphai.registerCallback((log) => {
     console.log(log);
+    if (log.nodeId === "json" && log.state === "completed") {
+      console.log(log.result.json);
+      emit("update:updateMulmoScript", log.result.json);
+    }
   });
   await graphai.run();
 };
 
-run();
+// TODO MulmoScriptTemplateFile
+const templates = ref<MulmoScriptTemplate & { filename: string }[]>([]);
+onMounted(async () => {
+  run();
+  templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
+  selectedTemplateFileName.value = templates.value[0].filename;
+});
+const selectTemplate = computed(() => {
+  return templates.value.find((template) => template.filename === selectedTemplateFileName.value);
+});
+
+const copy = async () => {
+  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
+  if (selectTemplate.value) {
+    userInput.value = selectTemplate.value.systemPrompt;
+  }
+};
 </script>
 
 <style scoped>

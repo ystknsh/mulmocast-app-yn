@@ -8,8 +8,8 @@ const META_DATA_FILE_NAME = "meta.json";
 const PROJECT_VERSION = "1.0.0";
 
 export type ProjectMetadata = {
-  name: string; // Directory name (internal use)
-  title: string; // Display name
+  id: string;
+  title: string;
   path: string;
   createdAt: string;
   updatedAt: string;
@@ -82,24 +82,11 @@ const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
   }
 };
 
-// Validate project title
-const validateProjectTitle = (title: string): void => {
-  if (!title || typeof title !== "string") {
-    throw new Error("Project title is required");
-  }
-
-  const trimmed = title.trim();
-  if (!trimmed) {
-    throw new Error("Project title cannot be empty");
-  }
-};
-
-// Generate directory name
-const generateDirectoryName = (): string => {
-  // Generate YYYYMMDD-random format
+// Generate id
+const generateId = (): string => {
   const dateStr = dayjs().format("YYYYMMDD");
-  const random = Math.random().toString(36).substring(2, 8).toLowerCase();
-  return `${dateStr}-${random}`;
+  const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8);
+  return `${dateStr}-${uuid}`;
 };
 
 // List all projects
@@ -118,10 +105,10 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
 
           const metadata = await getProjectMetadata(projectPath);
           return {
-            name: entry.name,
+            id: entry.name,
             path: projectPath,
             ...metadata,
-          } as ProjectMetadata;
+          };
         }),
     );
 
@@ -134,17 +121,15 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
 
 // Create a new project
 export const createProject = async (title: string): Promise<ProjectMetadata> => {
-  validateProjectTitle(title);
-
   const projectsPath = getProjectsPath();
-  const name = generateDirectoryName();
-  const projectPath = path.join(projectsPath, name);
+  const id = generateId();
+  const projectPath = path.join(projectsPath, id);
 
   try {
     await fs.mkdir(projectPath, { recursive: true });
 
     const initialData: ProjectMetadata = {
-      name,
+      id,
       title,
       path: projectPath,
       createdAt: dayjs().toISOString(),
@@ -164,12 +149,12 @@ export const createProject = async (title: string): Promise<ProjectMetadata> => 
 };
 
 // Delete a project
-export const deleteProject = async (name: string): Promise<boolean> => {
+export const deleteProject = async (id: string): Promise<boolean> => {
   const projectsPath = getProjectsPath();
-  const projectPath = path.join(projectsPath, name);
+  const projectPath = path.join(projectsPath, id);
 
   if (!(await projectExists(projectPath))) {
-    throw new Error(`Project "${name}" not found`);
+    throw new Error(`Project "${id}" not found`);
   }
 
   try {
@@ -182,18 +167,18 @@ export const deleteProject = async (name: string): Promise<boolean> => {
 };
 
 // Get a specific project
-export const getProject = async (name: string): Promise<ProjectMetadata> => {
+export const getProject = async (id: string): Promise<ProjectMetadata> => {
   const projectsPath = getProjectsPath();
-  const projectPath = path.join(projectsPath, name);
+  const projectPath = path.join(projectsPath, id);
 
   if (!(await projectExists(projectPath))) {
-    throw new Error(`Project "${name}" not found`);
+    throw new Error(`Project "${id}" not found`);
   }
 
   try {
     const metadata = await getProjectMetadata(projectPath);
     return {
-      name,
+      id,
       path: projectPath,
       ...metadata,
     } as ProjectMetadata;
@@ -204,7 +189,7 @@ export const getProject = async (name: string): Promise<ProjectMetadata> => {
 };
 
 // Get project path
-export const getProjectPath = (name: string): string => {
+export const getProjectPath = (id: string): string => {
   const projectsPath = getProjectsPath();
-  return path.join(projectsPath, name);
+  return path.join(projectsPath, id);
 };
