@@ -134,7 +134,7 @@ const handleOpenProject = (project: Project) => {
 const handleDeleteProject = async (project: Project) => {
   if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
     try {
-      await projectApi.delete(project.id);
+      await projectApi.delete(project.metadata.id);
       await loadProjects();
     } catch (error) {
       console.error("Failed to delete project:", error);
