@@ -75,13 +75,16 @@
             <!-- Audio Status -->
             <div class="text-center">
               <div class="flex items-center justify-center gap-1 mb-1">
-                <Volume2 :size="16" :class="`${beat.audio.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`" />
-                <Loader2 v-if="beat.audio.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
+                <Volume2
+                  :size="16"
+                  :class="`${beat?.audio?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
+                />
+                <Loader2 v-if="beat?.audio?.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
               </div>
-              <p :class="`text-xs mb-2 ${beat.audio.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
-                {{ beat.audio.status === "ready" ? "Audio ready" : "Generating..." }}
+              <p :class="`text-xs mb-2 ${beat?.audio?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
+                {{ beat?.audio?.status === "ready" ? "Audio ready" : "Generating..." }}
               </p>
-              <div v-if="beat.audio.status === 'ready'" class="flex justify-center space-x-1">
+              <div v-if="beat?.audio?.status === 'ready'" class="flex justify-center space-x-1">
                 <Tooltip>
                   <TooltipTrigger as-child>
                     <Button size="sm" variant="ghost" class="w-6 h-6 p-0">
