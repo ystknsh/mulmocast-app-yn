@@ -3,6 +3,7 @@ import type { Project } from "./index";
 export interface ElectronAPI {
   openFile: () => Promise<string | null>;
   mulmoTest: (option: any) => Promise<void>;
+  mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: any, data: any) => void) => void;
   getEnv: () => Promise<{ OPENAI_API_KEY?: string }>;
   project: {
