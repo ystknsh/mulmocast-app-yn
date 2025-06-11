@@ -127,6 +127,7 @@ const handleCancelDialog = () => {
   creating.value = false;
 };
 
+// TODO remove this
 const handleOpenProject = (project: Project) => {
   router.push(`/project/${project.metadata.id}`);
 };

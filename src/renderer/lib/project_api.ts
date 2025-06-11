@@ -18,7 +18,11 @@ export const projectApi = {
     return await window.electronAPI.project.delete(id);
   },
 
-  async getPath(id: string): Promise<string> {
-    return await window.electronAPI.project.getPath(id);
+  async saveProjectMetadata(id: string, data: unknown): Promise<boolean> {
+    return await window.electronAPI.project.saveProjectMetadata(id, data);
+  },
+
+  async saveProjectScript(id: string, data: unknown): Promise<boolean> {
+    return await window.electronAPI.project.saveProjectScript(id, data);
   },
 };

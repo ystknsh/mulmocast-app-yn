@@ -163,7 +163,7 @@
 
               <!-- Output Buttons -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4">
+                <Button class="flex flex-col items-center space-y-2 h-auto py-4" @click="generateMovie">
                   <Monitor :size="24" />
                   <span>Generate Movie</span>
                 </Button>
@@ -273,6 +273,7 @@ import ProductTabs from "./components/product_tabs.vue";
 import type { MulmoScript } from "mulmocast";
 
 import { mulmoSample } from "./components/sample";
+import { useDebounceFn } from "@vueuse/core";
 
 // State
 const route = useRoute();
@@ -308,11 +309,23 @@ const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
 };
+
+const saveMulmoScript = useDebounceFn(async (data) => {
+  console.log("saved", data);
+
+  return await projectApi.saveProjectScript(projectId.value, JSON.parse(JSON.stringify(mulmoScript.value)));
+}, 1000);
+
 watch(mulmoScript, () => {
   console.log(mulmoScript.value);
+  saveMulmoScript(mulmoScript.value);
 });
 
 const beatsData = ref(mulmoSample.beats);
+
+const generateMovie = () => {
+  console.log("generateMovie");
+};
 
 // Sample beats data
 /*

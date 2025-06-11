@@ -42,7 +42,12 @@ const readJsonFile = async (filePath: string) => {
 };
 
 const writeJsonFile = (filePath: string, data: unknown) => {
-  fs.writeFile(filePath, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFile(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch {
+    return false;
+  }
 };
 const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
   return readJsonFile(getProjectMetaPath(projectId));
@@ -51,11 +56,11 @@ const getProjectScriptIfExists = async (projectId: string): Promise<Project["scr
   return readJsonFile(getProjectScriptPath(projectId));
 };
 
-const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<void> => {
-  await writeJsonFile(getProjectMetaPath(projectId), data);
+export const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+  return await writeJsonFile(getProjectMetaPath(projectId), data);
 };
-const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<void> => {
-  await writeJsonFile(getProjectScriptPath(projectId), data);
+export const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+  return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
 const generateId = (): string => {
