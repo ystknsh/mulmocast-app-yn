@@ -39,7 +39,7 @@
     <TabsContent value="json" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <pre class="text-sm font-mono">{{ mockProject.mulmoScript }}</pre>
+        <pre class="text-sm font-mono">{{ JSON.stringify(mulmoSample, null, 2) }}</pre>
       </div>
     </TabsContent>
 
@@ -115,6 +115,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+import YAML from "yaml";
+import { mulmoSample } from "./sample";
+
 interface Props {
   mockProject: {
     mulmoScript: string;
@@ -123,76 +126,9 @@ interface Props {
 
 defineProps<Props>();
 
-const yamlContent = `# MulmoScript YAML Format
-metadata:
-  title: "AI Technology Fundamentals"
-  description: "A comprehensive guide to understanding artificial intelligence basics"
+const yamlContent = YAML.stringify(mulmoSample);
 
-speakers:
-  host:
-    name: "Dr. Sarah Johnson"
-    voice: "female"
-  guest:
-    name: "Mike Chen"
-    voice: "male"
-
-beats:
-  - id: "intro"
-    speaker: "host"
-    text: "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence."
-    media:
-      type: "image"
-      prompt: "AI technology concept with neural networks"
-  - id: "definition"
-    speaker: "guest"
-    text: "Thanks for having me, Sarah. Let's start with what AI actually means."
-    media:
-      type: "image"
-      prompt: "Brain and computer connection illustration"
-  - id: "history"
-    speaker: "host"
-    text: "The history of AI dates back to the 1950s with Alan Turing's groundbreaking work."
-    media:
-      type: "image"
-      prompt: "Timeline of AI development from 1950s to present"`;
-
-const mediaBeats = [
-  {
-    id: "intro",
-    speaker: "Dr. Sarah Johnson",
-    text: "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence.",
-    mediaType: "image",
-    prompt: "AI technology concept with neural networks",
-  },
-  {
-    id: "definition",
-    speaker: "Mike Chen",
-    text: "Thanks for having me, Sarah. Let's start with what AI actually means.",
-    mediaType: "image",
-    prompt: "Brain and computer connection illustration",
-  },
-  {
-    id: "history",
-    speaker: "Dr. Sarah Johnson",
-    text: "The history of AI dates back to the 1950s with Alan Turing's groundbreaking work.",
-    mediaType: "image",
-    prompt: "Timeline of AI development from 1950s to present",
-  },
-  {
-    id: "types",
-    speaker: "Mike Chen",
-    text: "There are three main types of AI: narrow AI, general AI, and superintelligence.",
-    mediaType: "chart",
-    prompt: "AI types comparison chart",
-  },
-  {
-    id: "applications",
-    speaker: "Dr. Sarah Johnson",
-    text: "Today, AI is everywhere - from smartphones to self-driving cars.",
-    mediaType: "video",
-    prompt: "Montage of AI applications in daily life",
-  },
-];
+const mediaBeats = mulmoSample.beats;
 
 const getMediaIcon = (type: string) => {
   switch (type) {
