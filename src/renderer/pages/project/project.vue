@@ -80,7 +80,11 @@
             </p>
           </CardHeader>
           <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''">
-            <component :is="selectedTheme === 'beginner' ? BeginnerChat : PromptGuide" :selectedTheme="selectedTheme" />
+            <component
+              :is="selectedTheme === 'beginner' ? BeginnerChat : PromptGuide"
+              :selectedTheme="selectedTheme"
+              @update:updateMulmoScript="handleUpdateScript"
+            />
           </CardContent>
         </Card>
 
@@ -139,6 +143,7 @@
               <CardContent>
                 <ScriptEditor :mockProject="mockProject" />
               </CardContent>
+              {{ mulmoScript }}
             </CollapsibleContent>
           </Card>
         </Collapsible>
@@ -268,6 +273,8 @@ import PresentationStyleSelector from "./components/presentation_style_selector.
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 
+import type { MulmoScript } from "mulmocast";
+
 // State
 const route = useRoute();
 const router = useRouter();
@@ -299,7 +306,7 @@ onMounted(async () => {
 });
 
 // Mock data (will be replaced with actual project data)
-const mockProject = computed(() => ({
+const mockProject = ref({
   id: 1,
   title: project.value?.title || "Podcast: AI Technology Fundamentals",
   description: "A comprehensive guide to understanding artificial intelligence basics",
@@ -328,7 +335,12 @@ const mockProject = computed(() => ({
     }
   ]
 }`,
-}));
+});
+
+const mulmoScript = ref<MulmoScript | null>(null);
+const handleUpdateScript = (script: MulmoScript) => {
+  mulmoScript.value = script;
+};
 
 // Sample beats data
 const beatsData = ref([
