@@ -271,7 +271,7 @@ import ProductTabs from "./components/product_tabs.vue";
 // State
 const route = useRoute();
 const router = useRouter();
-const projectId = computed(() => route.query.id as string);
+const projectId = computed(() => route.params.id as string);
 const project = ref<Project | null>(null);
 const hasProjectData = computed(() => mockProject.value.mulmoScript);
 const isDevMode = ref(false);
