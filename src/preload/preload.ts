@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     get: (name: string) => ipcRenderer.invoke("project:get", name),
     update: (name: string, data: any) => ipcRenderer.invoke("project:update", name, data),
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
-    getPath: (name: string) => ipcRenderer.invoke("project:getPath", name),
+    saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
+    saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
   },
 });
