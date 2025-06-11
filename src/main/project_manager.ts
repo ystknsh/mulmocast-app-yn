@@ -10,14 +10,11 @@ const PROJECT_VERSION = "1.0.0";
 export type ProjectMetadata = {
   id: string;
   title: string;
-  path: string;
   createdAt: string;
   updatedAt: string;
   version: string;
   [key: string]: any;
 };
-
-export type UpdateProjectData = Partial<Omit<ProjectMetadata, "name" | "path" | "createdAt">>;
 
 // Helper function to get projects path
 const getProjectsPath = (): string => {
@@ -45,26 +42,11 @@ const checkMetaFile = async (projectPath: string): Promise<boolean> => {
   }
 };
 
-// Check if a project exists
-const projectExists = async (projectPath: string): Promise<boolean> => {
-  try {
-    const stats = await fs.stat(projectPath);
-    return stats.isDirectory() && (await checkMetaFile(projectPath));
-  } catch {
-    return false;
-  }
-};
-
 // Get project metadata
-const getProjectMetadata = async (projectPath: string): Promise<Partial<ProjectMetadata>> => {
+const getProjectMetadata = async (projectPath: string): Promise<ProjectMetadata> => {
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-  try {
-    const content = await fs.readFile(metaFilePath, "utf-8");
-    return JSON.parse(content);
-  } catch (error) {
-    console.error("Failed to read project metadata:", error);
-    return {};
-  }
+  const content = await fs.readFile(metaFilePath, "utf-8");
+  return JSON.parse(content);
 };
 
 // Save project metadata
@@ -104,11 +86,7 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
           if (!hasMetaFile) return null;
 
           const metadata = await getProjectMetadata(projectPath);
-          return {
-            id: entry.name,
-            path: projectPath,
-            ...metadata,
-          };
+          return metadata;
         }),
     );
 
@@ -131,7 +109,6 @@ export const createProject = async (title: string): Promise<ProjectMetadata> => 
     const initialData: ProjectMetadata = {
       id,
       title,
-      path: projectPath,
       createdAt: dayjs().toISOString(),
       updatedAt: dayjs().toISOString(),
       version: PROJECT_VERSION,
@@ -153,10 +130,6 @@ export const deleteProject = async (id: string): Promise<boolean> => {
   const projectsPath = getProjectsPath();
   const projectPath = path.join(projectsPath, id);
 
-  if (!(await projectExists(projectPath))) {
-    throw new Error(`Project "${id}" not found`);
-  }
-
   try {
     await fs.rm(projectPath, { recursive: true, force: true });
     return true;
@@ -171,21 +144,7 @@ export const getProject = async (id: string): Promise<ProjectMetadata> => {
   const projectsPath = getProjectsPath();
   const projectPath = path.join(projectsPath, id);
 
-  if (!(await projectExists(projectPath))) {
-    throw new Error(`Project "${id}" not found`);
-  }
-
-  try {
-    const metadata = await getProjectMetadata(projectPath);
-    return {
-      id,
-      path: projectPath,
-      ...metadata,
-    } as ProjectMetadata;
-  } catch (error) {
-    console.error("Failed to get project:", error);
-    throw error;
-  }
+  return await getProjectMetadata(projectPath);
 };
 
 // Get project path
