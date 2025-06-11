@@ -53,9 +53,7 @@
               <h1 :class="`font-bold ${getHeaderSize}`">
                 {{ project?.metadata?.title }}
               </h1>
-              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">
-                Description/TODO/TODO
-              </p>
+              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
             </div>
           </div>
         </div>
@@ -300,7 +298,6 @@ onMounted(async () => {
   try {
     project.value = await projectApi.get(projectId.value);
     // TODO: Load mulmo script data from project
-    
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");

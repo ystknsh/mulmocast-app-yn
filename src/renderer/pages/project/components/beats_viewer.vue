@@ -75,7 +75,10 @@
             <!-- Audio Status -->
             <div class="text-center">
               <div class="flex items-center justify-center gap-1 mb-1">
-                <Volume2 :size="16" :class="`${beat?.audio?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`" />
+                <Volume2
+                  :size="16"
+                  :class="`${beat?.audio?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
+                />
                 <Loader2 v-if="beat?.audio?.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
               </div>
               <p :class="`text-xs mb-2 ${beat?.audio?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
