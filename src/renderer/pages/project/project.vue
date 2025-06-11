@@ -54,7 +54,7 @@
                 {{ project?.metadata?.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">
-                {{ mockProject.description }}
+                Description/TODO/TODO
               </p>
             </div>
           </div>
@@ -281,7 +281,7 @@ const route = useRoute();
 const router = useRouter();
 const projectId = computed(() => route.params.id as string);
 const project = ref<Project | null>(null);
-const hasProjectData = computed(() => mockProject.value.mulmoScript);
+const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
 const validationStatus = ref<"valid" | "warning" | "error">("valid");
@@ -300,42 +300,11 @@ onMounted(async () => {
   try {
     project.value = await projectApi.get(projectId.value);
     // TODO: Load mulmo script data from project
+    
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
   }
-});
-
-// Mock data (will be replaced with actual project data)
-const mockProject = ref({
-  id: 1,
-  title: project.value?.metadata.title || "Podcast: AI Technology Fundamentals",
-  description: "A comprehensive guide to understanding artificial intelligence basics",
-  status: "in_progress",
-  mulmoScript: `{
-  "metadata": {
-    "title": "AI Technology Fundamentals",
-    "description": "A comprehensive guide to understanding artificial intelligence basics"
-  },
-  "speakers": {
-    "host": { "name": "Dr. Sarah Johnson", "voice": "female" },
-    "guest": { "name": "Mike Chen", "voice": "male" }
-  },
-  "beats": [
-    {
-      "id": "intro",
-      "speaker": "host",
-      "text": "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence.",
-      "media": { "type": "image", "prompt": "AI technology concept with neural networks" }
-    },
-    {
-      "id": "definition",
-      "speaker": "guest",
-      "text": "Thanks for having me, Sarah. Let's start with what AI actually means.",
-      "media": { "type": "image", "prompt": "Brain and computer connection illustration" }
-    }
-  ]
-}`,
 });
 
 const mulmoScript = ref<MulmoScript | null>(mulmoSample);
@@ -346,7 +315,10 @@ watch(mulmoScript, () => {
   console.log(mulmoScript.value);
 });
 
+const beatsData = ref(mulmoSample.beats);
+
 // Sample beats data
+/*
 const beatsData = ref([
   {
     id: "intro",
@@ -360,58 +332,6 @@ const beatsData = ref([
     timestamp: "00:00",
   },
   {
-    id: "definition",
-    speaker: "Mike Chen",
-    text: "Thanks for having me, Sarah. Let's start with what AI actually means.",
-    image: {
-      status: "ready",
-      prompt: "Brain and computer connection illustration",
-    },
-    audio: { status: "generating" },
-    timestamp: "00:10",
-  },
-  {
-    id: "history",
-    speaker: "Dr. Sarah Johnson",
-    text: "The history of AI dates back to the 1950s with Alan Turing's groundbreaking work.",
-    image: {
-      status: "ready",
-      prompt: "Timeline of AI development from 1950s to present",
-    },
-    audio: { status: "ready" },
-    timestamp: "00:35",
-  },
-  {
-    id: "types",
-    speaker: "Mike Chen",
-    text: "There are three main types of AI: narrow AI, general AI, and superintelligence.",
-    image: { status: "ready", prompt: "AI types comparison chart" },
-    audio: { status: "ready" },
-    timestamp: "00:43",
-  },
-  {
-    id: "applications",
-    speaker: "Dr. Sarah Johnson",
-    text: "Today, AI is everywhere - from smartphones to self-driving cars.",
-    image: {
-      status: "generating",
-      prompt: "Montage of AI applications in daily life",
-    },
-    audio: { status: "generating" },
-    timestamp: "01:13",
-  },
-  {
-    id: "future",
-    speaker: "Mike Chen",
-    text: "The future of AI holds incredible potential for solving global challenges.",
-    image: {
-      status: "ready",
-      prompt: "Futuristic AI solutions for global problems",
-    },
-    audio: { status: "ready" },
-    timestamp: "01:25",
-  },
-  {
     id: "conclusion",
     speaker: "Dr. Sarah Johnson",
     text: "Understanding AI is crucial for everyone in our increasingly digital world.",
@@ -423,7 +343,7 @@ const beatsData = ref([
     timestamp: "01:45",
   },
 ]);
-
+*/
 // Theme change effect
 watch(selectedTheme, (newTheme) => {
   if (newTheme === "beginner") {
