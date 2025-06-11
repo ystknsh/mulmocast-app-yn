@@ -115,7 +115,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import YAML from 'yaml'
+import YAML from "yaml";
 import { mulmoSample } from "./sample";
 
 interface Props {
