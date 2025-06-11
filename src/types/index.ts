@@ -11,5 +11,5 @@ export type ProjectMetadata = {
 export type Project = ProjectMetadata & {
   script: {
     [key: string]: any; //TODO: add definition for MulmoScript type
-  };
+  } | null;
 };
