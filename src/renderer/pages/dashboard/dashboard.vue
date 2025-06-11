@@ -112,7 +112,7 @@ const handleCreateProject = async () => {
     newProjectName.value = "";
     await loadProjects();
     // Navigate to the new project
-    router.push(`/project/${project.id}`);
+    router.push(`/project/${project.metadata.id}`);
   } catch (error) {
     console.error("Failed to create project:", error);
     alert("Failed to create project. Please try again.");
@@ -128,7 +128,7 @@ const handleCancelDialog = () => {
 };
 
 const handleOpenProject = (project: Project) => {
-  router.push(`/project/${project.id}`);
+  router.push(`/project/${project.metadata.id}`);
 };
 
 const handleDeleteProject = async (project: Project) => {

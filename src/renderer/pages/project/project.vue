@@ -51,7 +51,7 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project.metadata.title }}
+                {{ project?.metadata?.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">
                 {{ mockProject.description }}
