@@ -12,34 +12,30 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
         <p class="text-sm text-gray-500 mb-2">Plain Text Mode - Speaker and dialogue editing only</p>
         <div class="font-mono text-sm space-y-2">
-          <div>
-            Dr. Sarah Johnson: Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial
-            intelligence.
-          </div>
-          <div>Mike Chen: Thanks for having me, Sarah. Let's start with what AI actually means.</div>
-          <div>
-            Dr. Sarah Johnson: The history of AI dates back to the 1950s with Alan Turing's groundbreaking work.
-          </div>
-          <div>Mike Chen: There are three main types of AI: narrow AI, general AI, and superintelligence.</div>
-          <div>Dr. Sarah Johnson: Today, AI is everywhere - from smartphones to self-driving cars.</div>
-          <div>Mike Chen: Machine learning is a subset of AI that learns from data without explicit programming.</div>
-          <div>Dr. Sarah Johnson: The future of AI holds incredible potential for solving global challenges.</div>
           <div>Mike Chen: Understanding AI is crucial for everyone in our increasingly digital world.</div>
         </div>
       </div>
     </TabsContent>
 
     <TabsContent value="yaml" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <pre class="text-sm font-mono">{{ yamlContent }}</pre>
+        <textarea
+          v-model="yamlText"
+          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
+          @input="onYamlInput"
+        ></textarea>
       </div>
     </TabsContent>
 
     <TabsContent value="json" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <pre class="text-sm font-mono">{{ JSON.stringify(mulmoSample, null, 2) }}</pre>
+        <textarea
+          v-model="jsonText"
+          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
+          @input="onJsonInput"
+        ></textarea>
       </div>
     </TabsContent>
 
@@ -50,24 +46,24 @@
           <Card v-for="(beat, index) in mediaBeats" :key="beat.id" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <h4 class="font-medium">Beat: {{ beat.id }}</h4>
-              <Badge variant="outline">{{ beat.mediaType }}</Badge>
+              <Badge variant="outline">{{ beat.image.type }}</Badge>
             </div>
             <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="text-sm font-medium">
-                  {{ beat.mediaType === "image" ? "Image" : beat.mediaType === "video" ? "Video" : "Chart" }} Prompt:
+                  {{ beat.image.type === "image" ? "Image" : beat.image.type === "video" ? "Video" : "Chart" }} Prompt:
                 </label>
                 <component
-                  :is="beat.mediaType === 'image' ? 'input' : 'textarea'"
+                  :is="beat.image.type === 'image' ? 'input' : 'textarea'"
                   class="w-full mt-1 p-2 border rounded text-sm"
                   :value="beat.prompt"
                   :rows="3"
                 />
               </div>
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <component :is="getMediaIcon(beat.mediaType)" :size="32" class="mx-auto text-gray-400 mb-2" />
-                <p class="text-sm text-gray-500">{{ beat.mediaType }} Preview</p>
+                <component :is="getMediaIcon(beat.image.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
+                <p class="text-sm text-gray-500">{{ beat.image.type }} Preview</p>
               </div>
             </div>
           </Card>
@@ -110,6 +106,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import { FileImage, Video } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -117,16 +114,58 @@ import { Badge } from "@/components/ui/badge";
 
 import YAML from "yaml";
 import { mulmoSample } from "./sample";
+import type { MulmoScript } from "mulmocast";
 
 interface Props {
-  mockProject: {
-    mulmoScript: string;
-  };
+  mulmoValue: MulmoScript;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+const emit = defineEmits(["update:mulmoValue"]);
 
-const yamlContent = YAML.stringify(mulmoSample);
+const jsonText = ref("");
+const yamlText = ref("");
+const internalValue = ref({ ...mulmoSample });
+
+const syncTextFromInternal = () => {
+  jsonText.value = JSON.stringify(internalValue.value, null, 2);
+  yamlText.value = YAML.stringify(internalValue.value);
+};
+
+watch(
+  () => props.mulmoValue,
+  (newVal) => {
+    internalValue.value = { ...newVal };
+    syncTextFromInternal();
+  },
+  { deep: true, immediate: true },
+);
+
+// syncTextFromInternal();
+
+const onJsonInput = () => {
+  try {
+    const parsed = JSON.parse(jsonText.value);
+    internalValue.value = parsed;
+    yamlText.value = YAML.stringify(parsed);
+    emit("update:mulmoValue", parsed);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const onYamlInput = () => {
+  try {
+    const parsed = YAML.parse(yamlText.value);
+    internalValue.value = parsed;
+    jsonText.value = JSON.stringify(parsed, null, 2);
+    emit("update:mulmoValue", parsed);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// end of mulmo editor
 
 const mediaBeats = mulmoSample.beats;
 

@@ -141,9 +141,8 @@
               }`"
             >
               <CardContent>
-                <ScriptEditor :mockProject="mockProject" />
+                <ScriptEditor :mulmoValue="mulmoScript" @update:mulmoValue="(val) => (mulmoScript = val)" />
               </CardContent>
-              {{ mulmoScript }}
             </CollapsibleContent>
           </Card>
         </Collapsible>
@@ -275,6 +274,8 @@ import ProductTabs from "./components/product_tabs.vue";
 
 import type { MulmoScript } from "mulmocast";
 
+import { mulmoSample } from "./components/sample";
+
 // State
 const route = useRoute();
 const router = useRouter();
@@ -337,10 +338,13 @@ const mockProject = ref({
 }`,
 });
 
-const mulmoScript = ref<MulmoScript | null>(null);
+const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
 };
+watch(mulmoScript, () => {
+  console.log(mulmoScript.value);
+});
 
 // Sample beats data
 const beatsData = ref([
