@@ -2,7 +2,7 @@
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     <div
       v-for="project in projects"
-      :key="project.name"
+      :key="project.id"
       @click="openProject(project)"
       class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 group cursor-pointer"
     >
