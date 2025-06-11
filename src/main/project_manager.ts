@@ -106,7 +106,7 @@ export const listProjects = async (): Promise<Project[]> => {
 };
 
 // Create a new project
-export const createProject = async (title: string): Promise<ProjectMetadata> => {
+export const createProject = async (title: string): Promise<Project> => {
   const basePath = getBasePath();
   const id = generateId();
   const projectPath = path.join(basePath, id);
@@ -126,7 +126,10 @@ export const createProject = async (title: string): Promise<ProjectMetadata> => 
 
     await saveProjectMetadata(projectPath, initialData);
 
-    return initialData;
+    return {
+      metadata: initialData,
+      script: null,
+    };
   } catch (error) {
     // Cleanup on failure
     await deleteProjectDirectory(projectPath);

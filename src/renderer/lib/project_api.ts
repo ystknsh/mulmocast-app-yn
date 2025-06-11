@@ -6,7 +6,7 @@ export const projectApi = {
     return await window.electronAPI.project.list();
   },
 
-  async create(title: string): Promise<ProjectMetadata> {
+  async create(title: string): Promise<Project> {
     return await window.electronAPI.project.create(title);
   },
 
