@@ -132,7 +132,7 @@ const handleOpenProject = (project: Project) => {
 };
 
 const handleDeleteProject = async (project: Project) => {
-  if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
+  if (confirm(`Are you sure you want to delete "${project.metadata.title}"?`)) {
     try {
       await projectApi.delete(project.metadata.id);
       await loadProjects();
