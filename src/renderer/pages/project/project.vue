@@ -51,7 +51,7 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ mockProject.title }}
+                {{ project.metadata.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">
                 {{ mockProject.description }}
@@ -308,7 +308,7 @@ onMounted(async () => {
 // Mock data (will be replaced with actual project data)
 const mockProject = ref({
   id: 1,
-  title: project.value?.title || "Podcast: AI Technology Fundamentals",
+  title: project.value?.metadata.title || "Podcast: AI Technology Fundamentals",
   description: "A comprehensive guide to understanding artificial intelligence basics",
   status: "in_progress",
   mulmoScript: `{
