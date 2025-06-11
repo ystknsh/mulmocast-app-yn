@@ -45,8 +45,7 @@ const writeJsonFile = (filePath: string, data: unknown) => {
   fs.writeFile(filePath, JSON.stringify(data, null, 2));
 };
 const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
-  const projectMetaPath = getProjectMetaPath(projectId);
-  return readJsonFile(projectMetaPath);
+  return readJsonFile(getProjectMetaPath(projectId));
 };
 const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
   return readJsonFile(getProjectScriptPath(projectId));
@@ -67,11 +66,9 @@ const generateId = (): string => {
 
 export const listProjects = async (): Promise<Project[]> => {
   try {
-    const basePath = getBasePath();
-    const entries = await fs.readdir(basePath, { withFileTypes: true });
     return (
       await Promise.all(
-        entries
+        (await fs.readdir(getBasePath(), { withFileTypes: true }))
           .filter((entry) => entry.isDirectory())
           .map(async (entry) => {
             const projectId = entry.name;
@@ -96,7 +93,6 @@ export const listProjects = async (): Promise<Project[]> => {
 // Create a new project
 export const createProject = async (title: string): Promise<Project> => {
   const id = generateId();
-
   try {
     await fs.mkdir(getProjectPath(id), { recursive: true });
 
