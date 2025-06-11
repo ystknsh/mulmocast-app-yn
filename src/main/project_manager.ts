@@ -17,15 +17,15 @@ export type ProjectMetadata = {
 };
 
 // Helper function to get projects path
-const getProjectsPath = (): string => {
+const getBasePath = (): string => {
   return path.join(app.getPath("userData"), PROJECTS_DIR);
 };
 
-// Ensure projects directory exists
-export const ensureProjectsDirectory = async (): Promise<void> => {
+// Ensurer projects directory exists
+export const ensureProjectBaseDirectory = async (): Promise<void> => {
   try {
-    const projectsPath = getProjectsPath();
-    await fs.mkdir(projectsPath, { recursive: true });
+    const basePath = getBasePath();
+    await fs.mkdir(basePath, { recursive: true });
   } catch (error) {
     console.error("Failed to create projects directory:", error);
   }
@@ -74,13 +74,13 @@ const generateId = (): string => {
 // List all projects
 export const listProjects = async (): Promise<ProjectMetadata[]> => {
   try {
-    const projectsPath = getProjectsPath();
-    const entries = await fs.readdir(projectsPath, { withFileTypes: true });
+    const basePath = getBasePath();
+    const entries = await fs.readdir(basePath, { withFileTypes: true });
     const projects = await Promise.all(
       entries
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
-          const projectPath = path.join(projectsPath, entry.name);
+          const projectPath = path.join(basePath, entry.name);
           const hasMetaFile = await checkMetaFile(projectPath);
 
           if (!hasMetaFile) return null;
@@ -99,9 +99,9 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
 
 // Create a new project
 export const createProject = async (title: string): Promise<ProjectMetadata> => {
-  const projectsPath = getProjectsPath();
+  const basePath = getBasePath();
   const id = generateId();
-  const projectPath = path.join(projectsPath, id);
+  const projectPath = path.join(basePath, id);
 
   try {
     await fs.mkdir(projectPath, { recursive: true });
@@ -127,8 +127,8 @@ export const createProject = async (title: string): Promise<ProjectMetadata> => 
 
 // Delete a project
 export const deleteProject = async (id: string): Promise<boolean> => {
-  const projectsPath = getProjectsPath();
-  const projectPath = path.join(projectsPath, id);
+  const basePath = getBasePath();
+  const projectPath = path.join(basePath, id);
 
   try {
     await fs.rm(projectPath, { recursive: true, force: true });
@@ -141,14 +141,14 @@ export const deleteProject = async (id: string): Promise<boolean> => {
 
 // Get a specific project
 export const getProject = async (id: string): Promise<ProjectMetadata> => {
-  const projectsPath = getProjectsPath();
-  const projectPath = path.join(projectsPath, id);
+  const basePath = getBasePath();
+  const projectPath = path.join(basePath, id);
 
   return await getProjectMetadata(projectPath);
 };
 
 // Get project path
 export const getProjectPath = (id: string): string => {
-  const projectsPath = getProjectsPath();
-  return path.join(projectsPath, id);
+  const basePath = getBasePath();
+  return path.join(basePath, id);
 };
