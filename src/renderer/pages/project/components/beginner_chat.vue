@@ -17,8 +17,7 @@
         <div
           class="chat-input-container border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2 transition-colors duration-200 flex justify-between"
         >
-          <input
-            type="text"
+          <textarea
             v-model="userInput"
             :disabled="events.length == 0"
             placeholder="ex) Thank you very much! Please proceed with the creation."
@@ -52,6 +51,9 @@
               <option value="storytelling">一人で読む物語（紙芝居、絵本）</option>
               <option value="business-only">ビジネスプレゼン（画像生成なし）</option>
             </select>
+            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="copy">
+              Copy
+            </Button>
             <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
               Create Script
             </Button>
@@ -76,6 +78,10 @@ import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
+
+const emit = defineEmits<{
+  "update:updateMulmoScript": [value: any];
+}>();
 
 const selectedTemplate = ref("solo-with-images");
 
@@ -162,13 +168,22 @@ const run = async () => {
       },
     },
   );
-  graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
+  // graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
   graphai.registerCallback((log) => {
     console.log(log);
+    if (log.nodeId === "json" && log.state === "completed") {
+      console.log(log.result.json);
+      emit("update:updateMulmoScript", log.result.json);
+    }
   });
   await graphai.run();
+};
+
+const copy = async () => {
+  const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
+  userInput.value = prompt;
 };
 
 run();
