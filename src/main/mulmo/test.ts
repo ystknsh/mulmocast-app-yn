@@ -1,4 +1,4 @@
-import { images, initializeContext, updateNpmRoot } from "mulmocast";
+import { images, initializeContext, updateNpmRoot, readTemplatePrompt } from "mulmocast";
 import path from "path";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
@@ -22,4 +22,22 @@ export const mulmoTest = async (option, webContents) => {
   ]);
 
   // console.log(option);
+};
+
+export const mulmoReadTemplatePrompt = (templateName: string) => {
+  return readTemplatePrompt(templateName);
+};
+
+export const mulmoHandler = (method, ...args) => {
+  try {
+    switch (method) {
+      case "readTemplatePrompt":
+        return mulmoReadTemplatePrompt(args[0]);
+
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
+  } catch (err) {
+    return { error: err.message };
+  }
 };

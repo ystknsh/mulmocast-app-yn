@@ -4,6 +4,7 @@
     <div class="space-x-4 mt-2 ml-2">
       <Button @click="openFile">File</Button>
       <Button @click="run2">Run2</Button>
+      <Button @click="test">Test</Button>
     </div>
   </div>
 </template>
@@ -29,5 +30,10 @@ const run2 = async () => {
   if (filePath.value) {
     await window.electronAPI.mulmoTest({ file: filePath.value });
   }
+};
+
+const test = async () => {
+  const res = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
+  console.log(res);
 };
 </script>
