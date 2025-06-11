@@ -12,27 +12,20 @@ const PROJECT_VERSION = "1.0.0";
 const getBasePath = (): string => {
   return path.join(app.getPath("userData"), PROJECTS_DIR);
 };
-
 const getProjectPath = (projectId: string): string => {
-  const basePath = getBasePath();
-  return path.join(basePath, projectId);
+  return path.join(getBasePath(), projectId);
 };
-
 const getProjectMetaPath = (projectId: string): string => {
-  const projectPath = getProjectPath(projectId);
-  return path.join(projectPath, META_DATA_FILE_NAME);
+  return path.join(getProjectPath(projectId), META_DATA_FILE_NAME);
 };
-
 const getProjectScriptPath = (projectId: string): string => {
-  const projectPath = getProjectPath(projectId);
-  return path.join(projectPath, SCRIPT_FILE_NAME);
+  return path.join(getProjectPath(projectId), SCRIPT_FILE_NAME);
 };
 
 // Ensurer projects directory exists
 export const ensureProjectBaseDirectory = async (): Promise<void> => {
   try {
-    const basePath = getBasePath();
-    await fs.mkdir(basePath, { recursive: true });
+    await fs.mkdir(getBasePath(), { recursive: true });
   } catch (error) {
     console.error("Failed to create projects directory:", error);
   }
@@ -55,20 +48,15 @@ const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> =
   const projectMetaPath = getProjectMetaPath(projectId);
   return readJsonFile(projectMetaPath);
 };
-
 const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
-  const scriptFilePath = getProjectScriptPath(projectId);
-  return readJsonFile(scriptFilePath);
+  return readJsonFile(getProjectScriptPath(projectId));
 };
 
 const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<void> => {
-  const projectMetaPath = getProjectMetaPath(projectId);
-  await writeJsonFile(projectMetaPath, data);
+  await writeJsonFile(getProjectMetaPath(projectId), data);
 };
-
 const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<void> => {
-  const scriptFilePath = getProjectScriptPath(projectId);
-  await writeJsonFile(scriptFilePath, data);
+  await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
 const generateId = (): string => {
@@ -81,7 +69,7 @@ export const listProjects = async (): Promise<Project[]> => {
   try {
     const basePath = getBasePath();
     const entries = await fs.readdir(basePath, { withFileTypes: true });
-    const projects = await Promise.all(
+    return (await Promise.all(
       entries
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
@@ -91,15 +79,12 @@ export const listProjects = async (): Promise<Project[]> => {
             return null;
           }
           const script = await getProjectScriptIfExists(projectId);
-
           return {
             metadata,
             script,
           };
         }),
-    );
-
-    return projects.filter((project): project is Project => project !== null);
+    )).filter((project): project is Project => project !== null);
   } catch (error) {
     console.error("Failed to list projects:", error);
     return [];
@@ -109,10 +94,9 @@ export const listProjects = async (): Promise<Project[]> => {
 // Create a new project
 export const createProject = async (title: string): Promise<Project> => {
   const id = generateId();
-  const projectPath = getProjectPath(id);
 
   try {
-    await fs.mkdir(projectPath, { recursive: true });
+    await fs.mkdir(getProjectPath(id), { recursive: true });
 
     const initialData: ProjectMetadata = {
       id,
@@ -139,10 +123,8 @@ export const createProject = async (title: string): Promise<Project> => {
 };
 
 export const deleteProject = async (id: string): Promise<boolean> => {
-  const projectPath = getProjectPath(id);
-
   try {
-    await fs.rm(projectPath, { recursive: true, force: true });
+    await fs.rm(getProjectPath(id), { recursive: true, force: true });
     return true;
   } catch (error) {
     console.error("Failed to delete project:", error);
