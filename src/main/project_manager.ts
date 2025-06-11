@@ -18,6 +18,16 @@ const getProjectPath = (projectId: string): string => {
   return path.join(basePath, projectId);
 };
 
+const getProjectMetaPath = (projectId: string): string => {
+  const projectPath = getProjectPath(projectId);
+  return path.join(projectPath, META_DATA_FILE_NAME);
+};
+
+const getProjectScriptPath = (projectId: string): string => {
+  const projectPath = getProjectPath(projectId);
+  return path.join(projectPath, SCRIPT_FILE_NAME);
+};
+
 // Ensurer projects directory exists
 export const ensureProjectBaseDirectory = async (): Promise<void> => {
   try {
@@ -28,52 +38,37 @@ export const ensureProjectBaseDirectory = async (): Promise<void> => {
   }
 };
 
-// Check if a meta data file exists
-const checkMetaFile = async (projectId: string): Promise<boolean> => {
-  const projectPath = getProjectPath(projectId);
-  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
+const readJsonFile = async (filePath: string) => {
   try {
-    await fs.access(metaFilePath);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
-  const projectPath = getProjectPath(projectId);
-  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-  const content = await fs.readFile(metaFilePath, "utf-8");
-  return JSON.parse(content);
-};
-
-const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
-  const projectPath = getProjectPath(projectId);
-  const scriptFilePath = path.join(projectPath, SCRIPT_FILE_NAME);
-  try {
-    const content = await fs.readFile(scriptFilePath, "utf-8");
+    const content = await fs.readFile(filePath, "utf-8");
     return JSON.parse(content);
   } catch {
+    console.error(`not hit: ${filePath}`);
     return null;
   }
 };
 
-const saveProjectMetadata = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
-  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-  await fs.writeFile(metaFilePath, JSON.stringify(data, null, 2));
+const writeJsonFile = (filePath: string, data: unknown) => {
+  fs.writeFile(filePath, JSON.stringify(data, null, 2));
+};
+const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
+  const projectMetaPath = getProjectMetaPath(projectId);
+  return readJsonFile(projectMetaPath);
 };
 
-const saveProjectScript = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
-  const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
-  await fs.writeFile(metaFilePath, JSON.stringify(data, null, 2));
+const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
+  const scriptFilePath = getProjectScriptPath(projectId);
+  return readJsonFile(scriptFilePath);
 };
 
-const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
-  try {
-    await fs.rm(projectPath, { recursive: true, force: true });
-  } catch {
-    // Ignore errors during cleanup
-  }
+const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+  const projectMetaPath = getProjectMetaPath(projectId);
+  await writeJsonFile(projectMetaPath, data);
+};
+
+const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+  const scriptFilePath = getProjectScriptPath(projectId);
+  await writeJsonFile(scriptFilePath, data);
 };
 
 const generateId = (): string => {
@@ -90,12 +85,12 @@ export const listProjects = async (): Promise<Project[]> => {
       entries
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
-          const hasMetaFile = await checkMetaFile(entry.name);
-
-          if (!hasMetaFile) return null;
-
-          const metadata = await getProjectMetadata(entry.name);
-          const script = await getProjectScriptIfExists(entry.name);
+          const projectId = entry.name;
+          const metadata = await getProjectMetadata(projectId);
+          if (metadata === null) {
+            return null;
+          }
+          const script = await getProjectScriptIfExists(projectId);
 
           return {
             metadata,
@@ -115,7 +110,7 @@ export const listProjects = async (): Promise<Project[]> => {
 export const createProject = async (title: string): Promise<Project> => {
   const id = generateId();
   const projectPath = getProjectPath(id);
-  console.log(projectPath);
+
   try {
     await fs.mkdir(projectPath, { recursive: true });
 
@@ -129,7 +124,7 @@ export const createProject = async (title: string): Promise<Project> => {
       hasErrors: false,
     };
 
-    await saveProjectMetadata(projectPath, initialData);
+    await saveProjectMetadata(id, initialData);
 
     return {
       metadata: initialData,
@@ -137,7 +132,7 @@ export const createProject = async (title: string): Promise<Project> => {
     };
   } catch (error) {
     // Cleanup on failure
-    await deleteProjectDirectory(projectPath);
+    await deleteProject(id);
     console.error("Failed to create project:", error);
     throw error;
   }
@@ -158,4 +153,3 @@ export const deleteProject = async (id: string): Promise<boolean> => {
 export const getProject = async (id: string): Promise<ProjectMetadata> => {
   return await getProjectMetadata(id);
 };
-
