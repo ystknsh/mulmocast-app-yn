@@ -1,11 +1,15 @@
-export type Project = {
-  id: number;
+export type ProjectMetadata = {
+  id: string;
   title: string;
-  type: "video" | "audio" | "podcast" | "presentation";
-  thumbnail?: string;
-  audioUrl?: string;
-  videoUrl?: string;
-  date: string;
-  sessionActive: boolean;
-  hasErrors: boolean;
+  createdAt: string;
+  updatedAt: string;
+  version: string;
+  sessionActive: boolean; // TODO: Move to appropriate location later
+  hasErrors: boolean; // TODO: Move to appropriate location later
+  [key: string]: any;
+};
+export type Project = ProjectMetadata & {
+  script: {
+    [key: string]: any; //TODO: add definition for MulmoScript type
+  };
 };

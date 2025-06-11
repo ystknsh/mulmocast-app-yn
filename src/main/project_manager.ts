@@ -2,19 +2,12 @@ import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
+import { Project, ProjectMetadata } from "../types";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
+const SCRIPT_FILE_NAME = "script.json";
 const PROJECT_VERSION = "1.0.0";
-
-export type ProjectMetadata = {
-  id: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  version: string;
-  [key: string]: any;
-};
 
 // Helper function to get projects path
 const getBasePath = (): string => {
@@ -49,6 +42,16 @@ const getProjectMetadata = async (projectPath: string): Promise<ProjectMetadata>
   return JSON.parse(content);
 };
 
+const getProjectScriptIfExists = async (projectPath: string): Promise<Project["script"] | null> => {
+  const scriptFilePath = path.join(projectPath, SCRIPT_FILE_NAME);
+  try {
+    const content = await fs.readFile(scriptFilePath, "utf-8");
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
+};
+
 // Save project metadata
 const saveProjectMetadata = async (projectPath: string, data: ProjectMetadata): Promise<void> => {
   const metaFilePath = path.join(projectPath, META_DATA_FILE_NAME);
@@ -72,7 +75,7 @@ const generateId = (): string => {
 };
 
 // List all projects
-export const listProjects = async (): Promise<ProjectMetadata[]> => {
+export const listProjects = async (): Promise<Project[]> => {
   try {
     const basePath = getBasePath();
     const entries = await fs.readdir(basePath, { withFileTypes: true });
@@ -86,11 +89,16 @@ export const listProjects = async (): Promise<ProjectMetadata[]> => {
           if (!hasMetaFile) return null;
 
           const metadata = await getProjectMetadata(projectPath);
-          return metadata;
+          const script = await getProjectScriptIfExists(projectPath);
+
+          return {
+            ...metadata,
+            script,
+          };
         }),
     );
 
-    return projects.filter((project): project is ProjectMetadata => project !== null);
+    return projects.filter((project): project is Project => project !== null);
   } catch (error) {
     console.error("Failed to list projects:", error);
     return [];
