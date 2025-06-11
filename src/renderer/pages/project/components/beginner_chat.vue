@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Bot, User, Send } from "lucide-vue-next";
+import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
 import { GraphAI, GraphData } from "graphai";
