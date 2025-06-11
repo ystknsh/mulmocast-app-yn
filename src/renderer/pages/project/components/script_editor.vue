@@ -129,45 +129,6 @@ defineProps<Props>();
 const yamlContent = YAML.stringify(mulmoSample);
 
 const mediaBeats = mulmoSample.beats;
-/*
-const mediaBeats = [
-  {
-    id: "intro",
-    speaker: "Dr. Sarah Johnson",
-    text: "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence.",
-    mediaType: "image",
-    prompt: "AI technology concept with neural networks",
-  },
-  {
-    id: "definition",
-    speaker: "Mike Chen",
-    text: "Thanks for having me, Sarah. Let's start with what AI actually means.",
-    mediaType: "image",
-    prompt: "Brain and computer connection illustration",
-  },
-  {
-    id: "history",
-    speaker: "Dr. Sarah Johnson",
-    text: "The history of AI dates back to the 1950s with Alan Turing's groundbreaking work.",
-    mediaType: "image",
-    prompt: "Timeline of AI development from 1950s to present",
-  },
-  {
-    id: "types",
-    speaker: "Mike Chen",
-    text: "There are three main types of AI: narrow AI, general AI, and superintelligence.",
-    mediaType: "chart",
-    prompt: "AI types comparison chart",
-  },
-  {
-    id: "applications",
-    speaker: "Dr. Sarah Johnson",
-    text: "Today, AI is everywhere - from smartphones to self-driving cars.",
-    mediaType: "video",
-    prompt: "Montage of AI applications in daily life",
-  },
-];
-*/
 
 const getMediaIcon = (type: string) => {
   switch (type) {
