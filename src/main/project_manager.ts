@@ -84,7 +84,7 @@ const deleteProjectDirectory = async (projectPath: string): Promise<void> => {
 
 // Generate directory name
 const generateId = (): string => {
-  return crypto.randomUUID().replace(/-/g, "").substring(0, 8);
+  return crypto.randomUUID().replace(/-/g, "").substring(0, 12);
 };
 
 // List all projects
