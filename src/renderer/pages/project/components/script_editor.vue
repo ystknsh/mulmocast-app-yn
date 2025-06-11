@@ -114,9 +114,10 @@ import { Badge } from "@/components/ui/badge";
 
 import YAML from "yaml";
 import { mulmoSample } from "./sample";
+import type { MulmoScript } from "mulmocast";
 
 interface Props {
-  mulmoValue: Object;
+  mulmoValue: MulmoScript;
 }
 
 const props = defineProps<Props>();
@@ -148,7 +149,9 @@ const onJsonInput = () => {
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
     emit("update:mulmoValue", parsed);
-  } catch {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const onYamlInput = () => {
@@ -157,7 +160,9 @@ const onYamlInput = () => {
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
     emit("update:mulmoValue", parsed);
-  } catch {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // end of mulmo editor
