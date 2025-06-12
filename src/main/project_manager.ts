@@ -105,6 +105,7 @@ export const createProject = async (title: string): Promise<Project> => {
     const initialData: ProjectMetadata = {
       id,
       title,
+      description: "mulmocast",
       createdAt: dayjs().toISOString(),
       updatedAt: dayjs().toISOString(),
       version: PROJECT_VERSION,
