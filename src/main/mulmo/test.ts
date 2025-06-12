@@ -1,4 +1,4 @@
-import { images, initializeContext, updateNpmRoot, readTemplatePrompt, getAvailableTemplates } from "mulmocast";
+import { images, initializeContext, updateNpmRoot } from "mulmocast";
 import path from "path";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));

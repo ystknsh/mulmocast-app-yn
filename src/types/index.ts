@@ -13,3 +13,9 @@ export type Project = {
   metadata: ProjectMetadata;
   script: MulmoScript | null;
 };
+
+export type MulmoProgressLog<T = unknown> = {
+  projectId: string;
+  type: string;
+  data: T;
+};

@@ -1,5 +1,6 @@
-import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import { images, initializeContext, updateNpmRoot, readTemplatePrompt, getAvailableTemplates } from "mulmocast";
+import type { TransactionLog } from "graphai";
+import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
@@ -14,7 +15,7 @@ export const mulmoImageGenerate = async (projectId: string, webContents) => {
   try {
     const context = await initializeContext(argv);
     await images(context, [
-      (log) => {
+      (log: TransactionLog) => {
         if (webContents) {
           webContents.send("progress-update", {
             projectId,
@@ -56,7 +57,7 @@ export const mulmoHandler = async (method, webContents, ...args) => {
       default:
         throw new Error(`Unknown method: ${method}`);
     }
-  } catch (err) {
-    return { error: "" };
+  } catch (error) {
+    return { error };
   }
 };
