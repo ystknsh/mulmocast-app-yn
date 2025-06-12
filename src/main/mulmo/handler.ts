@@ -31,7 +31,7 @@ export const mulmoImageGenerate = async (projectId: string, webContents) => {
     webContents.send("progress-update", {
       projectId,
       type: "error",
-      data: error
+      data: error,
     });
     return {
       result: false,

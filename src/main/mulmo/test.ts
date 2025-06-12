@@ -23,4 +23,3 @@ export const mulmoTest = async (option, webContents) => {
 
   // console.log(option);
 };
-
