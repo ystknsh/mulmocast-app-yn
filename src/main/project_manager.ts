@@ -135,4 +135,3 @@ export const deleteProject = async (id: string): Promise<boolean> => {
     throw error;
   }
 };
-
