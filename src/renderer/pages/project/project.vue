@@ -231,7 +231,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { projectApi, type Project } from "@/lib/project_api";
+import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
   ArrowLeft,
   Code2,
