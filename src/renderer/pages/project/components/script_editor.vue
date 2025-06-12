@@ -18,23 +18,37 @@
     </TabsContent>
 
     <TabsContent value="yaml" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
+      <div
+        :class="[
+                'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
+                { 'border-red-200': !isValidData }
+                ]"
+        >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
         <textarea
           v-model="yamlText"
           class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
           @input="onYamlInput"
+          @focus="onFocus"
+          @blur="onBlur"
         ></textarea>
       </div>
     </TabsContent>
 
     <TabsContent value="json" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col">
+      <div
+        :class="[
+                'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
+                { 'border-red-200': !isValidData }
+                ]"
+        >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
         <textarea
           v-model="jsonText"
           class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
           @input="onJsonInput"
+          @focus="onFocus"
+          @blur="onBlur"
         ></textarea>
       </div>
     </TabsContent>
@@ -125,23 +139,41 @@ const emit = defineEmits(["update:mulmoValue"]);
 
 const jsonText = ref("");
 const yamlText = ref("");
-const internalValue = ref({ ...mulmoSample });
+const internalValue = ref({});
 
 const syncTextFromInternal = () => {
   jsonText.value = JSON.stringify(internalValue.value, null, 2);
   yamlText.value = YAML.stringify(internalValue.value);
 };
 
+const isEditing = ref(false);
+const onFocus = () => {
+  isEditing.value = true;
+}
+const onBlur = () => {
+  isEditing.value = false;
+}
+watch(isEditing, () => {
+  if (isEditing.value) {
+    syncTextFromInternal();
+  }
+});
+
+
 watch(
   () => props.mulmoValue,
   (newVal) => {
     internalValue.value = { ...newVal };
-    syncTextFromInternal();
+    if (!isEditing.value) {
+      syncTextFromInternal();
+    }
   },
   { deep: true, immediate: true },
 );
 
-// syncTextFromInternal();
+
+
+const isValidData = ref(true);
 
 const onJsonInput = () => {
   try {
@@ -149,8 +181,10 @@ const onJsonInput = () => {
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
     emit("update:mulmoValue", parsed);
+    isValidData.value = true;
   } catch (err) {
     console.log(err);
+    isValidData.value = false;
   }
 };
 
@@ -160,8 +194,10 @@ const onYamlInput = () => {
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
     emit("update:mulmoValue", parsed);
+    isValidData.value = true;
   } catch (err) {
     console.log(err);
+    isValidData.value = false;
   }
 };
 
