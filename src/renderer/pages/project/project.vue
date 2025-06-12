@@ -283,7 +283,8 @@ const router = useRouter();
 
 const projectId = computed(() => route.params.id as string);
 const project = ref<ProjectMetadata | null>(null);
-const mulmoScript = ref<MulmoScript | null>(mulmoSample);
+
+const mulmoScript = ref<MulmoScript | null>(null);
 
 const hasProjectData = computed(() => true); // Todo
 
@@ -324,7 +325,7 @@ const saveMulmoScript = useDebounceFn(async (data) => {
 }, 1000);
 
 watch(mulmoScript, () => {
-  console.log(mulmoScript.value);
+  // Be careful not to save a page just by opening it.
   saveMulmoScript(mulmoScript.value);
 });
 
