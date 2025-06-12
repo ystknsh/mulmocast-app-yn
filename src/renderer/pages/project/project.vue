@@ -51,7 +51,7 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project?.metadata?.title }}
+                {{ project?.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
             </div>
@@ -231,7 +231,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { projectApi, type Project } from "@/lib/project_api";
+import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
   ArrowLeft,
   Code2,
@@ -270,6 +270,8 @@ import PresentationStyleSelector from "./components/presentation_style_selector.
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 
+import dayjs from "dayjs";
+
 import type { MulmoScript } from "mulmocast";
 
 import { mulmoSample } from "./components/sample";
@@ -278,9 +280,13 @@ import { useDebounceFn } from "@vueuse/core";
 // State
 const route = useRoute();
 const router = useRouter();
+
 const projectId = computed(() => route.params.id as string);
-const project = ref<Project | null>(null);
+const project = ref<ProjectMetadata | null>(null);
+const mulmoScript = ref<MulmoScript | null>(mulmoSample);
+
 const hasProjectData = computed(() => true); // Todo
+
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
 const validationStatus = ref<"valid" | "warning" | "error">("valid");
@@ -297,7 +303,8 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
-    project.value = await projectApi.get(projectId.value);
+    project.value = await projectApi.getProjectMetadata(projectId.value);
+    mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
     // TODO: Load mulmo script data from project
   } catch (error) {
     console.error("Failed to load project:", error);
@@ -305,15 +312,15 @@ onMounted(async () => {
   }
 });
 
-const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
 };
 
 const saveMulmoScript = useDebounceFn(async (data) => {
   console.log("saved", data);
-
-  return await projectApi.saveProjectScript(projectId.value, JSON.parse(JSON.stringify(mulmoScript.value)));
+  await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
+  project.value.updatedAt = dayjs().toISOString();
+  await projectApi.saveProjectMetadata(projectId.value, project.value);
 }, 1000);
 
 watch(mulmoScript, () => {

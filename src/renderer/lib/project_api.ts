@@ -1,4 +1,6 @@
 import { Project, ProjectMetadata } from "@/types";
+import type { MulmoScript } from "mulmocast";
+
 export type { Project, ProjectMetadata };
 
 export const projectApi = {
@@ -10,8 +12,11 @@ export const projectApi = {
     return await window.electronAPI.project.create(title);
   },
 
-  async get(id: string): Promise<Project> {
-    return await window.electronAPI.project.get(id);
+  async getProjectMetadata(id: string): Promise<ProjectMetadata> {
+    return await window.electronAPI.project.getProjectMetadata(id);
+  },
+  async getProjectMulmoScript(id: string): Promise<MulmoScript> {
+    return await window.electronAPI.project.getProjectMulmoScript(id);
   },
 
   async delete(id: string): Promise<boolean> {
@@ -19,10 +24,10 @@ export const projectApi = {
   },
 
   async saveProjectMetadata(id: string, data: unknown): Promise<boolean> {
-    return await window.electronAPI.project.saveProjectMetadata(id, data);
+    return await window.electronAPI.project.saveProjectMetadata(id, JSON.parse(JSON.stringify(data)));
   },
 
   async saveProjectScript(id: string, data: unknown): Promise<boolean> {
-    return await window.electronAPI.project.saveProjectScript(id, data);
+    return await window.electronAPI.project.saveProjectScript(id, JSON.parse(JSON.stringify(data)));
   },
 };
