@@ -1,3 +1,5 @@
+import type { MulmoScript } from "mulmocast";
+
 export type ProjectMetadata = {
   id: string;
   title: string;
@@ -9,7 +11,5 @@ export type ProjectMetadata = {
 };
 export type Project = {
   metadata: ProjectMetadata;
-  script: {
-    [key: string]: any; //TODO: add definition for MulmoScript type
-  } | null;
+  script: MulmoScript | null;
 };
