@@ -51,7 +51,7 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project?.metadata?.title }}
+                {{ project?.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
             </div>
@@ -231,7 +231,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { projectApi, type Project } from "@/lib/project_api";
+import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
   ArrowLeft,
   Code2,
@@ -282,7 +282,7 @@ const route = useRoute();
 const router = useRouter();
 
 const projectId = computed(() => route.params.id as string);
-const project = ref<Project | null>(null);
+const project = ref<ProjectMetadata | null>(null);
 const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 
 const hasProjectData = computed(() => true); // Todo

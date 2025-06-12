@@ -1,4 +1,4 @@
-import type { Project } from "./index";
+import type { Project, ProjectMetadata } from "./index";
 import type { MulmoScript } from "mulmocast";
 
 export interface ElectronAPI {
@@ -10,7 +10,7 @@ export interface ElectronAPI {
   project: {
     list: () => Promise<Project[]>;
     create: (name: string) => Promise<Project>;
-    getProjectMetadata: (name: string) => Promise<Project>;
+    getProjectMetadata: (name: string) => Promise<ProjectMetadata>;
     getProjectMulmoScript: (name: string) => Promise<MulmoScript | null>;
     delete: (name: string) => Promise<boolean>;
     getPath: (name: string) => Promise<string>;
