@@ -53,7 +53,7 @@
               <h1 :class="`font-bold ${getHeaderSize}`">
                 {{ project?.title }}
               </h1>
-              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
+              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
             </div>
           </div>
         </div>
