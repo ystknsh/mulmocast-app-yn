@@ -278,9 +278,13 @@ import { useDebounceFn } from "@vueuse/core";
 // State
 const route = useRoute();
 const router = useRouter();
+
 const projectId = computed(() => route.params.id as string);
 const project = ref<Project | null>(null);
+const mulmoScript = ref<MulmoScript | null>(mulmoSample);
+
 const hasProjectData = computed(() => true); // Todo
+
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
 const validationStatus = ref<"valid" | "warning" | "error">("valid");
@@ -297,7 +301,8 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
-    project.value = await projectApi.get(projectId.value);
+    project.value = await projectApi.getProjectMetadata(projectId.value);
+    mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
     // TODO: Load mulmo script data from project
   } catch (error) {
     console.error("Failed to load project:", error);
@@ -305,7 +310,6 @@ onMounted(async () => {
   }
 });
 
-const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
 };

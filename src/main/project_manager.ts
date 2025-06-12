@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
 import { Project, ProjectMetadata } from "../types";
+import type { MulmoScript } from "mulmocast";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
@@ -49,10 +50,10 @@ const writeJsonFile = (filePath: string, data: unknown) => {
     return false;
   }
 };
-const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
+export const getProjectMetadata = async (projectId: string): Promise<ProjectMetadata> => {
   return readJsonFile(getProjectMetaPath(projectId));
 };
-const getProjectScriptIfExists = async (projectId: string): Promise<Project["script"] | null> => {
+export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScript | null> => {
   return readJsonFile(getProjectScriptPath(projectId));
 };
 
@@ -81,7 +82,7 @@ export const listProjects = async (): Promise<Project[]> => {
             if (metadata === null) {
               return null;
             }
-            const script = await getProjectScriptIfExists(projectId);
+            const script = await getProjectMulmoScript(projectId);
             return {
               metadata,
               script,
@@ -135,6 +136,3 @@ export const deleteProject = async (id: string): Promise<boolean> => {
   }
 };
 
-export const getProject = async (id: string): Promise<ProjectMetadata> => {
-  return await getProjectMetadata(id);
-};
