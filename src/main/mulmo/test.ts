@@ -4,7 +4,6 @@ import path from "path";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
-
 export const mulmoTest = async (option, webContents) => {
   const argv = {
     b: __dirname + "/../../",
@@ -43,9 +42,9 @@ export const mulmoImageGenerate = async (projectId: string, webContents) => {
       },
     ]);
     return {
-      result: true
+      result: true,
     };
-  } catch (error){
+  } catch (error) {
     return {
       result: false,
       error,

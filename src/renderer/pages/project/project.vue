@@ -333,7 +333,6 @@ const beatsData = ref(mulmoSample.beats);
 const generateMovie = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value);
-
 };
 
 // Sample beats data
