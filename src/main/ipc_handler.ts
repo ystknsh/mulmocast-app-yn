@@ -1,5 +1,6 @@
 import { ipcMain, dialog } from "electron";
-import { mulmoTest, mulmoHandler } from "./mulmo/test";
+import { mulmoTest } from "./mulmo/test";
+import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 
 export const registerIPCHandler = () => {
