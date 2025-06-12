@@ -12,7 +12,7 @@ export const projectApi = {
     return await window.electronAPI.project.create(title);
   },
 
-  async getProjectMetadata(id: string): Promise<Project> {
+  async getProjectMetadata(id: string): Promise<ProjectMetadata> {
     return await window.electronAPI.project.getProjectMetadata(id);
   },
   async getProjectMulmoScript(id: string): Promise<MulmoScript> {

@@ -51,7 +51,7 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project?.metadata?.title }}
+                {{ project?.title }}
               </h1>
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
             </div>
@@ -282,7 +282,7 @@ const route = useRoute();
 const router = useRouter();
 
 const projectId = computed(() => route.params.id as string);
-const project = ref<Project | null>(null);
+const project = ref<ProjectMetadata | null>(null);
 const mulmoScript = ref<MulmoScript | null>(mulmoSample);
 
 const hasProjectData = computed(() => true); // Todo
