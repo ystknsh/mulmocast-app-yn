@@ -24,10 +24,10 @@ export const projectApi = {
   },
 
   async saveProjectMetadata(id: string, data: unknown): Promise<boolean> {
-    return await window.electronAPI.project.saveProjectMetadata(id, data);
+    return await window.electronAPI.project.saveProjectMetadata(id, JSON.parse(JSON.stringify(data)));
   },
 
   async saveProjectScript(id: string, data: unknown): Promise<boolean> {
-    return await window.electronAPI.project.saveProjectScript(id, data);
+    return await window.electronAPI.project.saveProjectScript(id, JSON.parse(JSON.stringify(data)));
   },
 };

@@ -270,6 +270,8 @@ import PresentationStyleSelector from "./components/presentation_style_selector.
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 
+import dayjs from "dayjs";
+
 import type { MulmoScript } from "mulmocast";
 
 import { mulmoSample } from "./components/sample";
@@ -316,8 +318,9 @@ const handleUpdateScript = (script: MulmoScript) => {
 
 const saveMulmoScript = useDebounceFn(async (data) => {
   console.log("saved", data);
-
-  return await projectApi.saveProjectScript(projectId.value, JSON.parse(JSON.stringify(mulmoScript.value)));
+  await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
+  project.value.updatedAt = dayjs().toISOString();
+  await projectApi.saveProjectMetadata(projectId.value, project.value);
 }, 1000);
 
 watch(mulmoScript, () => {
