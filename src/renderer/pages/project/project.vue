@@ -100,7 +100,7 @@
                 <div class="flex items-center space-x-2">
                   <!-- Validation Status -->
                   <div class="flex items-center space-x-2">
-                    <div v-if="validationStatus === 'valid'" class="group relative">
+                    <div v-if="isValidScriptData" class="group relative">
                       <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
                       <span
                         class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
@@ -108,9 +108,8 @@
                         Validation Status
                       </span>
                     </div>
-                    <AlertCircle v-if="validationStatus === 'warning'" :size="16" class="text-yellow-500" />
-                    <XCircle v-if="validationStatus === 'error'" :size="16" class="text-red-500" />
-                    <span v-if="validationStatus !== 'valid'" class="text-sm text-gray-600">
+                    <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
+                    <span v-if="!isValidScriptData" class="text-sm text-gray-600">
                       {{ validationMessage }}
                     </span>
                   </div>
@@ -139,7 +138,12 @@
               }`"
             >
               <CardContent>
-                <ScriptEditor :mulmoValue="mulmoScript" @update:mulmoValue="(val) => (mulmoScript = val)" />
+                <ScriptEditor
+                  :mulmoValue="mulmoScript"
+                  @update:mulmoValue="(val) => (mulmoScript = val)"
+                  :isValidScriptData="isValidScriptData"
+                  @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                />
               </CardContent>
             </CollapsibleContent>
           </Card>
@@ -243,7 +247,6 @@ import {
   Redo,
   CheckCircle,
   XCircle,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
   Monitor,
@@ -290,7 +293,6 @@ const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
 const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
-const validationStatus = ref<"valid" | "warning" | "error">("valid");
 const validationMessage = ref("");
 const selectedPresentationStyle = ref<"ghibli" | "dilbert" | "japanese">("ghibli");
 const isScriptViewerOpen = ref(false);
@@ -340,6 +342,8 @@ const generateAudio = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
 };
+
+const isValidScriptData = ref(true);
 
 // Sample beats data
 /*
