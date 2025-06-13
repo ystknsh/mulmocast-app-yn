@@ -171,7 +171,7 @@
                   <FileText :size="24" />
                   <span>Generate PDF</span>
                 </Button>
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4"  @click="generateAudio">
+                <Button class="flex flex-col items-center space-y-2 h-auto py-4" @click="generateAudio">
                   <Globe :size="24" />
                   <span>Generate Podcast</span>
                 </Button>
