@@ -9,31 +9,15 @@
               <Settings :size="16" />
               <span>Developer Mode</span>
             </div>
-            <Switch v-model:checked="isDevMode" />
+            <Switch v-model="isDevMode" />
           </div>
           <div v-if="isDevMode" class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
             <div class="space-y-2">
               <span class="text-sm font-medium">Design Theme</span>
               <RadioGroup v-model="selectedTheme" class="grid grid-cols-2 gap-2 text-sm">
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="beginner" id="beginner" />
-                  <Label for="beginner">Beginner Mode</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="classic" id="classic" />
-                  <Label for="classic">Classic Layout</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="compact" id="compact" />
-                  <Label for="compact">Compact View</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="timeline-focus" id="timeline-focus" />
-                  <Label for="timeline-focus">Timeline Focus</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="developer-debug" id="developer-debug" />
-                  <Label for="developer-debug">Developer Debug</Label>
+                <div v-for="option in themeOptions" :key="option.value" class="flex items-center space-x-2">
+                  <RadioGroupItem :value="option.value" :id="option.value" />
+                  <Label :for="option.value">{{ option.label }}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -343,33 +327,14 @@ const generateAudio = async () => {
 
 const isValidScriptData = ref(true);
 
-// Sample beats data
-/*
-const beatsData = ref([
-  {
-    id: "intro",
-    speaker: "Dr. Sarah Johnson",
-    text: "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence.",
-    image: {
-      status: "generating",
-      prompt: "AI technology concept with neural networks",
-    },
-    audio: { status: "generating" },
-    timestamp: "00:00",
-  },
-  {
-    id: "conclusion",
-    speaker: "Dr. Sarah Johnson",
-    text: "Understanding AI is crucial for everyone in our increasingly digital world.",
-    image: {
-      status: "ready",
-      prompt: "People collaborating with AI technology",
-    },
-    audio: { status: "ready" },
-    timestamp: "01:45",
-  },
-]);
-*/
+const themeOptions = [
+  { value: "beginner", label: "Beginner Mode" },
+  { value: "classic", label: "Classic Layout" },
+  { value: "compact", label: "Compact View" },
+  { value: "timeline-focus", label: "Timeline Focus" },
+  { value: "developer-debug", label: "Developer Debug" },
+];
+
 // Theme change effect
 watch(selectedTheme, (newTheme) => {
   if (newTheme === "beginner") {
