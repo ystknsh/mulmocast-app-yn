@@ -77,19 +77,18 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
     };
   }
 };
-
-const mulmoDownload = async (projectId: string, actionName: string) => {
+const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
-  const path = (() => {
-    if (actionName === "audio") {
-      return audioFilePath(context);
-    }
-    if (actionName === "movie") {
-      return movieFilePath(context);
-    }
-    throw Error("no download file");
-  })();
-  console.log(path);
+  if (actionName === "audio") {
+    return audioFilePath(context);
+  }
+  if (actionName === "movie") {
+    return movieFilePath(context);
+  }
+  throw Error("no download file");
+};
+const mulmoDownload = async (projectId: string, actionName: string) => {
+  const path = await mediaFilePath(projectId, actionName);
   const buffer = fs.readFileSync(path);
   return buffer.buffer;
 };
@@ -109,6 +108,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mulmoActionRunner(args[0], args[1], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
+      case "mediaFilePath":
+        return await mediaFilePath(args[0], args[1]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
