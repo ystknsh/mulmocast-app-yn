@@ -13,5 +13,5 @@
 </template>
 <script setup lang="ts">
 import { User } from "lucide-vue-next";
-const props = defineProps(["message", "time"]);
+defineProps(["message", "time"]);
 </script>

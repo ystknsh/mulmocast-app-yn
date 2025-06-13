@@ -150,7 +150,7 @@ const agentFilters = [
 
 const run = async () => {
   const env = await window.electronAPI.getEnv();
-  const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
+  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
 
   const graphai = new GraphAI(
     graphChat,
