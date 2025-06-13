@@ -52,12 +52,12 @@ const presentationStyles: PresentationStyle[] = [
 ];
 
 interface Props {
-  modelValue: StyleValue;
+  modelValue: string;
 }
 
 defineProps<Props>();
 
 defineEmits<{
-  "update:modelValue": [value: StyleValue];
+  "update:modelValue": [value: string];
 }>();
 </script>

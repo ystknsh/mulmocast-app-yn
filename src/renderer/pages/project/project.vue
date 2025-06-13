@@ -79,7 +79,7 @@
           </CardHeader>
           <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''">
             <component
-              :is="selectedTheme === 'beginner' ? BeginnerChat : PromptGuide"
+              :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
               :selectedTheme="selectedTheme"
               @update:updateMulmoScript="handleUpdateScript"
             />
@@ -93,10 +93,12 @@
           <Card>
             <CardHeader>
               <div class="flex items-center justify-between">
-                <CardTitle class="flex items-center space-x-2">
-                  <Code2 :size="20" />
-                  <span>Script</span>
-                </CardTitle>
+                <CollapsibleTrigger as-child>
+                  <CardTitle class="flex items-center space-x-2 cursor-pointer">
+                    <Code2 :size="20" />
+                    <span>Script</span>
+                  </CardTitle>
+                </CollapsibleTrigger>
                 <div class="flex items-center space-x-2">
                   <!-- Validation Status -->
                   <div class="flex items-center space-x-2">
@@ -119,9 +121,6 @@
                   </Button>
                   <Button variant="ghost" size="sm">
                     <Redo :size="16" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Save :size="16" class="mr-2" />
                   </Button>
                   <!-- Collapse/Expand Button -->
                   <CollapsibleTrigger as-child>
@@ -154,7 +153,7 @@
           <CardContent class="p-4">
             <div class="space-y-4">
               <!-- Select Presentation Style -->
-              <PresentationStyleSelector v-model="selectedPresentationStyle" />
+              <Style v-model="selectedPresentationStyle" />
 
               <!-- Caption Toggle -->
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -266,10 +265,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)
 import Layout from "@/components/layout.vue";
-import BeginnerChat from "./components/beginner_chat.vue";
+import Chat from "./components/chat.vue";
 import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
-import PresentationStyleSelector from "./components/presentation_style_selector.vue";
+import Style from "./components/style.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 
