@@ -131,7 +131,7 @@ import type { MulmoScript } from "mulmocast";
 
 interface Props {
   mulmoValue: MulmoScript;
-  isValidScriptData: Boolean;
+  isValidScriptData: boolean;
 }
 
 const props = defineProps<Props>();

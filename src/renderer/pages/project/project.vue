@@ -247,7 +247,6 @@ import {
   Redo,
   CheckCircle,
   XCircle,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
   Monitor,
