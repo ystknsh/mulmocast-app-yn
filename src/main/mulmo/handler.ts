@@ -1,4 +1,13 @@
-import { images, audio, movie, captions, initializeContext, updateNpmRoot, readTemplatePrompt, getAvailableTemplates } from "mulmocast";
+import {
+  images,
+  audio,
+  movie,
+  captions,
+  initializeContext,
+  updateNpmRoot,
+  readTemplatePrompt,
+  getAvailableTemplates,
+} from "mulmocast";
 import type { TransactionLog } from "graphai";
 import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";

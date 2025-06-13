@@ -19,11 +19,8 @@
 
     <TabsContent value="yaml" class="mt-4">
       <div
-        :class="[
-                'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-                { 'border-red-200': !isValidData }
-                ]"
-        >
+        :class="['border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col', { 'border-red-200': !isValidData }]"
+      >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
         <textarea
           v-model="yamlText"
@@ -37,11 +34,8 @@
 
     <TabsContent value="json" class="mt-4">
       <div
-        :class="[
-                'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-                { 'border-red-200': !isValidData }
-                ]"
-        >
+        :class="['border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col', { 'border-red-200': !isValidData }]"
+      >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
         <textarea
           v-model="jsonText"
@@ -149,16 +143,15 @@ const syncTextFromInternal = () => {
 const isEditing = ref(false);
 const onFocus = () => {
   isEditing.value = true;
-}
+};
 const onBlur = () => {
   isEditing.value = false;
-}
+};
 watch(isEditing, () => {
   if (isEditing.value) {
     syncTextFromInternal();
   }
 });
-
 
 watch(
   () => props.mulmoValue,
@@ -170,8 +163,6 @@ watch(
   },
   { deep: true, immediate: true },
 );
-
-
 
 const isValidData = ref(true);
 
