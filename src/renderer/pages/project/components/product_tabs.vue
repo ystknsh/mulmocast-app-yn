@@ -18,7 +18,7 @@
             <Play :size="16" class="mr-2" />
             Play
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" @click="downloadMp4">
             <Video :size="16" class="mr-2" />
             Download MP4
           </Button>
@@ -75,7 +75,7 @@
             <Play :size="16" class="mr-2" />
             Play
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
             Download MP3
           </Button>
@@ -106,7 +106,32 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const projectId = computed(() => route.params.id as string);
+
+const downloadMp4 = async () => {
+  return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
+};
+const downloadMp3 = async () => {
+  return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
+};
+
+const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
+  const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, fileType);
+  const blob = new Blob([buffer], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
 </script>
