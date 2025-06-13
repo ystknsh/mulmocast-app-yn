@@ -53,7 +53,7 @@
               <h1 :class="`font-bold ${getHeaderSize}`">
                 {{ project?.title }}
               </h1>
-              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">Description/TODO/TODO</p>
+              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
             </div>
           </div>
         </div>
@@ -171,7 +171,7 @@
                   <FileText :size="24" />
                   <span>Generate PDF</span>
                 </Button>
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4">
+                <Button class="flex flex-col items-center space-y-2 h-auto py-4" @click="generateAudio">
                   <Globe :size="24" />
                   <span>Generate Podcast</span>
                 </Button>
@@ -283,7 +283,8 @@ const router = useRouter();
 
 const projectId = computed(() => route.params.id as string);
 const project = ref<ProjectMetadata | null>(null);
-const mulmoScript = ref<MulmoScript | null>(mulmoSample);
+
+const mulmoScript = ref<MulmoScript | null>(null);
 
 const hasProjectData = computed(() => true); // Todo
 
@@ -324,14 +325,20 @@ const saveMulmoScript = useDebounceFn(async (data) => {
 }, 1000);
 
 watch(mulmoScript, () => {
-  console.log(mulmoScript.value);
+  // Be careful not to save a page just by opening it.
   saveMulmoScript(mulmoScript.value);
 });
 
 const beatsData = ref(mulmoSample.beats);
 
-const generateMovie = () => {
+const generateMovie = async () => {
   console.log("generateMovie");
+  await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie");
+};
+
+const generateAudio = async () => {
+  console.log("generateMovie");
+  await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
 };
 
 // Sample beats data

@@ -7,13 +7,13 @@ import type { MulmoScript } from "mulmocast";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
-const SCRIPT_FILE_NAME = "script.json";
+export const SCRIPT_FILE_NAME = "script.json";
 const PROJECT_VERSION = "1.0.0";
 
-const getBasePath = (): string => {
+export const getBasePath = (): string => {
   return path.join(app.getPath("userData"), PROJECTS_DIR);
 };
-const getProjectPath = (projectId: string): string => {
+export const getProjectPath = (projectId: string): string => {
   return path.join(getBasePath(), projectId);
 };
 const getProjectMetaPath = (projectId: string): string => {
@@ -105,6 +105,7 @@ export const createProject = async (title: string): Promise<Project> => {
     const initialData: ProjectMetadata = {
       id,
       title,
+      description: "mulmocast",
       createdAt: dayjs().toISOString(),
       updatedAt: dayjs().toISOString(),
       version: PROJECT_VERSION,

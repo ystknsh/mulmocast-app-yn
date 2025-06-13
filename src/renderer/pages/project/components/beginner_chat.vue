@@ -77,10 +77,10 @@ import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import type { MulmoScriptTemplate } from "mulmocast";
+import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
 
 const emit = defineEmits<{
-  "update:updateMulmoScript": [value: any];
+  "update:updateMulmoScript": [value: MulmoScript];
 }>();
 
 const selectedTemplateFileName = ref("");
@@ -150,7 +150,7 @@ const agentFilters = [
 
 const run = async () => {
   const env = await window.electronAPI.getEnv();
-  const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
+  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
 
   const graphai = new GraphAI(
     graphChat,
