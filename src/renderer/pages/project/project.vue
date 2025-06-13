@@ -171,7 +171,7 @@
                   <FileText :size="24" />
                   <span>Generate PDF</span>
                 </Button>
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4">
+                <Button class="flex flex-col items-center space-y-2 h-auto py-4"  @click="generateAudio">
                   <Globe :size="24" />
                   <span>Generate Podcast</span>
                 </Button>
@@ -334,6 +334,11 @@ const beatsData = ref(mulmoSample.beats);
 const generateMovie = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie");
+};
+
+const generateAudio = async () => {
+  console.log("generateMovie");
+  await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
 };
 
 // Sample beats data
