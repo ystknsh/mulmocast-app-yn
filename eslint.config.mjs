@@ -15,7 +15,7 @@ const baseRules = {
   "no-redeclare": "off",
   "@typescript-eslint/no-redeclare": "error",
   indent: ["error", 2],
-  "@typescript-eslint/no-explicit-any": "warn",
+  "@typescript-eslint/no-explicit-any": "error",
   "@typescript-eslint/no-unused-vars": [
     "error",
     {

@@ -1,11 +1,12 @@
-import type { Project, ProjectMetadata } from "./index";
+import type { Project, ProjectMetadata, MulmoProgressLog } from "./index";
 import type { MulmoScript } from "mulmocast";
+import type { IpcRendererEvent } from "electron";
 
 export interface ElectronAPI {
   openFile: () => Promise<string | null>;
-  mulmoTest: (option: any) => Promise<void>;
+  mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
-  onProgress: (callback: (event: any, data: any) => void) => void;
+  onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
   getEnv: () => Promise<{ OPENAI_API_KEY?: string }>;
   project: {
     list: () => Promise<Project[]>;

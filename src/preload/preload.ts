@@ -18,7 +18,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     create: (name: string) => ipcRenderer.invoke("project:create", name),
     getProjectMetadata: (name: string) => ipcRenderer.invoke("project:getProjectMetadata", name),
     getProjectMulmoScript: (name: string) => ipcRenderer.invoke("project:getProjectMulmoScript", name),
-    update: (name: string, data: any) => ipcRenderer.invoke("project:update", name, data),
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
