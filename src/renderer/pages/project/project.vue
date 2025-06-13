@@ -262,6 +262,18 @@ import type { MulmoScript } from "mulmocast";
 import { mulmoSample } from "./components/sample";
 import { useDebounceFn } from "@vueuse/core";
 
+import {
+  selectedTheme,
+  themeOptions,
+  isScriptViewerOpen,
+  isBeatsViewerOpen,
+  beatsViewMode,
+  getCardPadding,
+  getHeaderSize,
+  getContainerSpacing,
+  getTimelineFocusClass,
+} from "./composable/style";
+
 // State
 const route = useRoute();
 const router = useRouter();
@@ -274,12 +286,10 @@ const mulmoScript = ref<MulmoScript | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
-const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
+
 const validationMessage = ref("");
 const selectedPresentationStyle = ref<"ghibli" | "dilbert" | "japanese">("ghibli");
-const isScriptViewerOpen = ref(false);
-const isBeatsViewerOpen = ref(false);
-const beatsViewMode = ref<"list" | "timeline">("list");
+
 const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
@@ -326,62 +336,4 @@ const generateAudio = async () => {
 };
 
 const isValidScriptData = ref(true);
-
-const themeOptions = [
-  { value: "beginner", label: "Beginner Mode" },
-  { value: "classic", label: "Classic Layout" },
-  { value: "compact", label: "Compact View" },
-  { value: "timeline-focus", label: "Timeline Focus" },
-  { value: "developer-debug", label: "Developer Debug" },
-];
-
-// Theme change effect
-watch(selectedTheme, (newTheme) => {
-  if (newTheme === "beginner") {
-    isScriptViewerOpen.value = true;
-    isBeatsViewerOpen.value = true;
-    beatsViewMode.value = "timeline";
-  } else {
-    isScriptViewerOpen.value = false;
-    isBeatsViewerOpen.value = false;
-    beatsViewMode.value = "list";
-  }
-});
-
-// Computed properties
-const getCardPadding = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "p-3";
-    default:
-      return "p-6";
-  }
-});
-
-const getHeaderSize = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "text-lg";
-    default:
-      return "text-2xl";
-  }
-});
-
-const getContainerSpacing = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "space-y-4";
-    case "timeline-focus":
-      return "space-y-8";
-    default:
-      return "space-y-6";
-  }
-});
-
-const getTimelineFocusClass = computed(() => {
-  if (selectedTheme.value === "timeline-focus") {
-    return "hidden";
-  }
-  return "";
-});
 </script>
