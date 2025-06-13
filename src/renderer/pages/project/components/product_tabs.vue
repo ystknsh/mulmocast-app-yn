@@ -10,11 +10,11 @@
 
     <TabsContent value="movie" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <Video :size="64" class="mx-auto text-gray-400 mb-4" />
+        <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="videoUrl" />
         <p class="text-lg font-medium mb-2">Movie Preview</p>
         <p class="text-sm text-gray-600 mb-4">Video content playback and preview</p>
         <div class="flex justify-center space-x-4">
-          <Button>
+          <Button @click="playVideo">
             <Play :size="16" class="mr-2" />
             Play
           </Button>
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -120,6 +120,16 @@ const downloadMp4 = async () => {
 };
 const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
+};
+
+const videoUrl = ref("");
+const playVideo = async () => {
+  // const path = await window.electronAPI.mulmoHandler("mediaFilePath", projectId.value, "movie");
+  const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie");
+  const blob = new Blob([buffer], { type: "video/mp4" });
+  const url = URL.createObjectURL(blob);
+  
+  videoUrl.value = url;
 };
 
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
