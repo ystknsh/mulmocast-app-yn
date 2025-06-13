@@ -1,20 +1,21 @@
-import { images, initializeContext, updateNpmRoot, readTemplatePrompt, getAvailableTemplates } from "mulmocast";
+import { images, audio, movie, captions, initializeContext, updateNpmRoot, readTemplatePrompt, getAvailableTemplates } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
-export const mulmoImageGenerate = async (projectId: string, webContents) => {
+export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
   const projectPath = getProjectPath(projectId);
   const argv = {
+    v: true,
     b: projectPath,
-    o: path.join(projectPath + "output"),
+    o: path.join(projectPath, "output"),
     file: SCRIPT_FILE_NAME,
   };
   try {
     const context = await initializeContext(argv);
-    await images(context, [
+    const callbacks = [
       (log: TransactionLog) => {
         if (webContents) {
           webContents.send("progress-update", {
@@ -24,7 +25,27 @@ export const mulmoImageGenerate = async (projectId: string, webContents) => {
           });
         }
       },
-    ]);
+    ];
+    // await runTranslateIfNeeded(context, argv);
+    if (actionName === "audio") {
+      await audio(context, callbacks);
+    }
+    if (actionName === "image") {
+      await images(context, callbacks);
+    }
+    if (actionName === "movie") {
+      await audio(context, callbacks);
+      await images(context, callbacks);
+      if (context.caption) {
+        await captions(context);
+      }
+      await movie(context);
+    }
+    if (actionName === "pdf") {
+      await images(context, callbacks);
+      // await pdf(context, argv.pdf_mode, argv.pdf_size);
+    }
+
     return {
       result: true,
     };
@@ -52,8 +73,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return mulmoReadTemplatePrompt(args[0]);
       case "getAvailableTemplates":
         return getAvailableTemplates();
-      case "mulmoImageGenerate":
-        return await mulmoImageGenerate(args[0], webContents);
+      case "mulmoActionRunner":
+        return await mulmoActionRunner(args[0], args[1], webContents);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
