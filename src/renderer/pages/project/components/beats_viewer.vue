@@ -373,6 +373,7 @@ const isDragging = ref(false);
 
 // Helper functions
 const convertTimeToSeconds = (timeString: string) => {
+  if (!timeString) return 0;
   const [minutes, seconds] = timeString.split(":").map(Number);
   return minutes * 60 + seconds;
 };

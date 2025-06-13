@@ -9,31 +9,15 @@
               <Settings :size="16" />
               <span>Developer Mode</span>
             </div>
-            <Switch v-model:checked="isDevMode" />
+            <Switch v-model="isDevMode" />
           </div>
           <div v-if="isDevMode" class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
             <div class="space-y-2">
               <span class="text-sm font-medium">Design Theme</span>
               <RadioGroup v-model="selectedTheme" class="grid grid-cols-2 gap-2 text-sm">
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="beginner" id="beginner" />
-                  <Label for="beginner">Beginner Mode</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="classic" id="classic" />
-                  <Label for="classic">Classic Layout</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="compact" id="compact" />
-                  <Label for="compact">Compact View</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="timeline-focus" id="timeline-focus" />
-                  <Label for="timeline-focus">Timeline Focus</Label>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <RadioGroupItem value="developer-debug" id="developer-debug" />
-                  <Label for="developer-debug">Developer Debug</Label>
+                <div v-for="option in themeOptions" :key="option.value" class="flex items-center space-x-2">
+                  <RadioGroupItem :value="option.value" :id="option.value" />
+                  <Label :for="option.value">{{ option.label }}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -278,6 +262,18 @@ import type { MulmoScript } from "mulmocast";
 import { mulmoSample } from "./components/sample";
 import { useDebounceFn } from "@vueuse/core";
 
+import {
+  selectedTheme,
+  themeOptions,
+  isScriptViewerOpen,
+  isBeatsViewerOpen,
+  beatsViewMode,
+  getCardPadding,
+  getHeaderSize,
+  getContainerSpacing,
+  getTimelineFocusClass,
+} from "./composable/style";
+
 // State
 const route = useRoute();
 const router = useRouter();
@@ -290,12 +286,10 @@ const mulmoScript = ref<MulmoScript | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
-const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
+
 const validationMessage = ref("");
 const selectedPresentationStyle = ref<"ghibli" | "dilbert" | "japanese">("ghibli");
-const isScriptViewerOpen = ref(false);
-const isBeatsViewerOpen = ref(false);
-const beatsViewMode = ref<"list" | "timeline">("list");
+
 const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
@@ -342,81 +336,4 @@ const generateAudio = async () => {
 };
 
 const isValidScriptData = ref(true);
-
-// Sample beats data
-/*
-const beatsData = ref([
-  {
-    id: "intro",
-    speaker: "Dr. Sarah Johnson",
-    text: "Welcome to AI Fundamentals. Today we'll explore the fascinating world of artificial intelligence.",
-    image: {
-      status: "generating",
-      prompt: "AI technology concept with neural networks",
-    },
-    audio: { status: "generating" },
-    timestamp: "00:00",
-  },
-  {
-    id: "conclusion",
-    speaker: "Dr. Sarah Johnson",
-    text: "Understanding AI is crucial for everyone in our increasingly digital world.",
-    image: {
-      status: "ready",
-      prompt: "People collaborating with AI technology",
-    },
-    audio: { status: "ready" },
-    timestamp: "01:45",
-  },
-]);
-*/
-// Theme change effect
-watch(selectedTheme, (newTheme) => {
-  if (newTheme === "beginner") {
-    isScriptViewerOpen.value = true;
-    isBeatsViewerOpen.value = true;
-    beatsViewMode.value = "timeline";
-  } else {
-    isScriptViewerOpen.value = false;
-    isBeatsViewerOpen.value = false;
-    beatsViewMode.value = "list";
-  }
-});
-
-// Computed properties
-const getCardPadding = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "p-3";
-    default:
-      return "p-6";
-  }
-});
-
-const getHeaderSize = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "text-lg";
-    default:
-      return "text-2xl";
-  }
-});
-
-const getContainerSpacing = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "space-y-4";
-    case "timeline-focus":
-      return "space-y-8";
-    default:
-      return "space-y-6";
-  }
-});
-
-const getTimelineFocusClass = computed(() => {
-  if (selectedTheme.value === "timeline-focus") {
-    return "hidden";
-  }
-  return "";
-});
 </script>
