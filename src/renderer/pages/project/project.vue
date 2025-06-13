@@ -241,7 +241,6 @@ import {
   FileText,
   Settings,
   Play,
-  Save,
   Undo,
   Redo,
   CheckCircle,
