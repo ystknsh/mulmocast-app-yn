@@ -207,7 +207,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import YAML from "yaml";
-import { mulmoSample } from "./sample";
+// import { mulmoSample } from "./sample";
 import type { MulmoScript } from "mulmocast";
 
 interface Props {
