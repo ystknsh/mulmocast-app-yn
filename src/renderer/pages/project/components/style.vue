@@ -48,7 +48,6 @@ const presentationStyles: PresentationStyle[] = [
   { label: "Studio Ghibli Style", value: "ghibli" },
   { label: "Dilbert Comic Style", value: "dilbert" },
   { label: "Japanese Picture Book", value: "japanese" },
-  { label: "Japanese Picture Book", value: "japanese" },
 ];
 
 interface Props {

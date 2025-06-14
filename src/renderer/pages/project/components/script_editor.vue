@@ -55,25 +55,106 @@
     <TabsContent value="media" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
+
         <div class="space-y-4">
-          <Card v-for="(beat, index) in mediaBeats" :key="beat.id" class="p-4">
+          <Card v-for="(beat, index) in mulmoValue.beats" :key="beat.id" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <h4 class="font-medium">Beat: {{ beat.id }}</h4>
               <Badge variant="outline">{{ beat.image.type }}</Badge>
             </div>
+
             <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
+
             <div class="grid grid-cols-2 gap-4">
+              <!-- left: Edit area -->
               <div>
-                <label class="text-sm font-medium">
-                  {{ beat.image.type === "image" ? "Image" : beat.image.type === "video" ? "Video" : "Chart" }} Prompt:
+                <label class="text-sm font-medium block mb-1">
+                  {{ getPromptLabel(beat.image.type) }}
                 </label>
-                <component
-                  :is="beat.image.type === 'image' ? 'input' : 'textarea'"
-                  class="w-full mt-1 p-2 border rounded text-sm"
-                  :value="beat.prompt"
-                  :rows="3"
-                />
+
+                <!-- image/movie: URL or  path -->
+                <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
+                  <input
+                    v-if="beat.image.source.kind === 'url'"
+                    v-model="beat.image.source.url"
+                    class="w-full p-2 border rounded text-sm"
+                    type="text"
+                  />
+                  <input
+                    v-else-if="beat.image.source.kind === 'path'"
+                    v-model="beat.image.source.path"
+                    class="w-full p-2 border rounded text-sm"
+                    type="text"
+                  />
+                </template>
+
+                <!-- textSlide: title & bullets -->
+                <template v-else-if="beat.image.type === 'textSlide'">
+                  <input
+                    v-model="beat.image.slide.title"
+                    class="w-full p-2 border rounded text-sm mb-2"
+                    placeholder="Slide Title"
+                  />
+                  <textarea
+                    :value="beat.image.slide.bullets.join('\n')"
+                    class="w-full p-2 border rounded text-sm"
+                    rows="4"
+                    @input="beat.image.slide.bullets = $event.target.value.split('\n')"
+                  ></textarea>
+                </template>
+
+                <!-- markdown -->
+                <template v-else-if="beat.image.type === 'markdown'">
+                  <textarea
+                    :value="beat.image.markdown.join('\n')"
+                    class="w-full p-2 border rounded font-mono text-sm"
+                    rows="6"
+                    @input="beat.image.markdown = $event.target.value.split('\n')"
+                  ></textarea>
+                </template>
+
+                <!-- chart -->
+                <template v-else-if="beat.image.type === 'chart'">
+                  <textarea
+                    :value="JSON.stringify(beat.image.chartData, null, 2)"
+                    class="w-full p-2 border rounded font-mono text-sm"
+                    rows="8"
+                    @input="
+                      (() => {
+                        try {
+                          beat.image.chartData = JSON.parse($event.target.value);
+                        } catch (e) {}
+                      })()
+                    "
+                  ></textarea>
+                </template>
+
+                <!-- mermaid -->
+                <template v-else-if="beat.image.type === 'mermaid'">
+                  <textarea
+                    v-model="beat.image.code.text"
+                    class="w-full p-2 border rounded font-mono text-sm"
+                    rows="6"
+                  ></textarea>
+                </template>
+
+                <!-- html_tailwind -->
+                <template v-else-if="beat.image.type === 'html_tailwind'">
+                  <textarea
+                    :value="beat.image.html.join('\n')"
+                    class="w-full p-2 border rounded font-mono text-sm"
+                    rows="10"
+                    @input="beat.image.html = $event.target.value.split('\n')"
+                  ></textarea>
+                </template>
+
+                <!-- Other -->
+                <template v-else>
+                  <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+                </template>
               </div>
+
+              <!-- right: preview -->
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                 <component :is="getMediaIcon(beat.image.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
                 <p class="text-sm text-gray-500">{{ beat.image.type }} Preview</p>
@@ -198,8 +279,6 @@ const onYamlInput = () => {
 
 // end of mulmo editor
 
-const mediaBeats = mulmoSample.beats;
-
 const getMediaIcon = (type: string) => {
   switch (type) {
     case "video":
@@ -208,4 +287,25 @@ const getMediaIcon = (type: string) => {
       return FileImage;
   }
 };
+
+function getPromptLabel(type) {
+  switch (type) {
+    case "image":
+      return "Image Prompt (URL or path)";
+    case "movie":
+      return "Movie Source";
+    case "textSlide":
+      return "Slide Content";
+    case "markdown":
+      return "Markdown Text";
+    case "chart":
+      return "Chart JSON";
+    case "mermaid":
+      return "Mermaid Diagram";
+    case "html_tailwind":
+      return "HTML (Tailwind)";
+    default:
+      return "Prompt";
+  }
+}
 </script>
