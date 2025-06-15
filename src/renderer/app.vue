@@ -12,10 +12,12 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
+    /*
     window.electronAPI.onProgress((event, message) => {
       store.mulmoLogCallback(message);
       console.log("update:", message);
     });
+    */
     watch(
       () => store.mulmoLog,
       (a) => {
