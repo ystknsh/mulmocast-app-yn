@@ -15,7 +15,7 @@
         <p class="text-sm text-gray-500 mb-2">Plain Text Mode - Speaker and dialogue editing only</p>
 
         <div class="font-mono text-sm space-y-6 p-4 max-w-2xl mx-auto">
-          <div v-for="(beat, index) in mulmoValue.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
+          <div v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
 
             <div>
@@ -74,7 +74,7 @@
         <div class="space-y-4">
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <div class="flex items-center justify-between mb-2">
-              <h4 class="font-medium">Beat: {{ index }}</h4>
+              <h4 class="font-medium">Beat: {{ index + 1 }}</h4>
               <Badge variant="outline">{{ beat.image.type }}</Badge>
             </div>
 
@@ -91,13 +91,15 @@
                 <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
                   <input
                     v-if="beat.image.source.kind === 'url'"
-                    v-model="beat.image.source.url"
+                    :value="beat.image.source.url"
+                    @input="update(index, 'image.source.url', $event.target.value)"
                     class="w-full p-2 border rounded text-sm"
                     type="text"
                   />
                   <input
                     v-else-if="beat.image.source.kind === 'path'"
-                    v-model="beat.image.source.path"
+                    :value="beat.image.source.path"
+                    @input="update(index, 'image.source.path', $event.target.value)"
                     class="w-full p-2 border rounded text-sm"
                     type="text"
                   />
@@ -106,25 +108,25 @@
                 <!-- textSlide: title & bullets -->
                 <template v-else-if="beat.image.type === 'textSlide'">
                   <input
-                    v-model="beat.image.slide.title"
+                    :value="beat.image.slide.title"
+                    @input="update(index, 'image.slide.title', $event.target.value)"
                     class="w-full p-2 border rounded text-sm mb-2"
-                    placeholder="Slide Title"
                   />
                   <textarea
                     :value="beat.image.slide.bullets.join('\n')"
+                    @input="update(index, 'image.slide.bullets', $event.target.value.split('\n'))"
                     class="w-full p-2 border rounded text-sm"
                     rows="4"
-                    @input="beat.image.slide.bullets = $event.target.value.split('\n')"
-                  ></textarea>
+                  />
                 </template>
 
                 <!-- markdown -->
                 <template v-else-if="beat.image.type === 'markdown'">
                   <textarea
-                    :value="beat.image.markdown.join('\n')"
                     class="w-full p-2 border rounded font-mono text-sm"
                     rows="6"
-                    @input="beat.image.markdown = $event.target.value.split('\n')"
+                    :value="Array.isArray(beat.image.markdown) ? beat.image.markdown.join('\n') : beat.image.markdown"
+                    @input="update(index, 'image.markdown', $event.target.value.split('\n'))"
                   ></textarea>
                 </template>
 
@@ -132,22 +134,23 @@
                 <template v-else-if="beat.image.type === 'chart'">
                   <textarea
                     :value="JSON.stringify(beat.image.chartData, null, 2)"
-                    class="w-full p-2 border rounded font-mono text-sm"
-                    rows="8"
                     @input="
                       (() => {
                         try {
-                          beat.image.chartData = JSON.parse($event.target.value);
-                        } catch (e) {}
+                          update(index, 'image.chartData', JSON.parse($event.target.value));
+                        } catch (_) {}
                       })()
                     "
+                    class="w-full p-2 border rounded font-mono text-sm"
+                    rows="8"
                   ></textarea>
                 </template>
 
                 <!-- mermaid -->
                 <template v-else-if="beat.image.type === 'mermaid'">
                   <textarea
-                    v-model="beat.image.code.text"
+                    :value="beat.image.code.text"
+                    @input="update(index, 'image.code.text', $event.target.value)"
                     class="w-full p-2 border rounded font-mono text-sm"
                     rows="6"
                   ></textarea>
@@ -156,13 +159,12 @@
                 <!-- html_tailwind -->
                 <template v-else-if="beat.image.type === 'html_tailwind'">
                   <textarea
-                    :value="beat.image.html.join('\n')"
+                    :value="Array.isArray(beat.image.html) ? beat.image.html.join('\n') : beat.image.html"
+                    @input="update(index, 'image.html', $event.target.value.split('\n'))"
                     class="w-full p-2 border rounded font-mono text-sm"
                     rows="10"
-                    @input="beat.image.html = $event.target.value.split('\n')"
                   ></textarea>
                 </template>
-
                 <!-- Other -->
                 <template v-else>
                   <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
@@ -290,6 +292,23 @@ const onYamlInput = () => {
     console.log(err);
     emit("update:isValidScriptData", false);
   }
+};
+
+const update = (index, path, value) => {
+  const set = (obj, keys, val) =>
+    keys.length === 1
+      ? { ...obj, [keys[0]]: val }
+      : {
+          ...obj,
+          [keys[0]]: set(obj[keys[0]], keys.slice(1), val),
+        };
+  const newBeat = set(props.mulmoValue.beats[index], path.split("."), value);
+  const newBeats = [...props.mulmoValue.beats.slice(0, index), newBeat, ...props.mulmoValue.beats.slice(index + 1)];
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
 };
 
 // end of mulmo editor

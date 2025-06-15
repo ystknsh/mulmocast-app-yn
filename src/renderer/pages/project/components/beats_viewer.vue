@@ -253,7 +253,7 @@
             >
               <!-- Beat Number -->
               <div class="text-xs font-semibold text-gray-600">
-                {{ index }}
+                {{ index + 1 }}
               </div>
               <!-- Duration -->
               <div class="text-xs text-gray-500 font-mono">{{ formatTime(getBeatDuration(index)) }}s</div>
