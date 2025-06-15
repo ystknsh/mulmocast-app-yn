@@ -9,10 +9,25 @@
     </TabsList>
 
     <TabsContent value="plain" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
+      <div
+        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto font-mono text-sm space-y-6"
+      >
         <p class="text-sm text-gray-500 mb-2">Plain Text Mode - Speaker and dialogue editing only</p>
-        <div class="font-mono text-sm space-y-2">
-          <div>Mike Chen: Understanding AI is crucial for everyone in our increasingly digital world.</div>
+
+        <div class="font-mono text-sm space-y-6 p-4 max-w-2xl mx-auto">
+          <div v-for="(beat, index) in mulmoValue.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
+            <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
+
+            <div>
+              <label class="block mb-1 text-gray-500">Speaker</label>
+              <input v-model="beat.speaker" type="text" class="w-full p-2 border rounded" placeholder="e.g. Alice" />
+            </div>
+
+            <div>
+              <label class="block mb-1 text-gray-500">Text</label>
+              <input v-model="beat.text" type="text" class="w-full p-2 border rounded" placeholder="e.g. What is AI?" />
+            </div>
+          </div>
         </div>
       </div>
     </TabsContent>
@@ -57,9 +72,9 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
-          <Card v-for="(beat, index) in mulmoValue.beats" :key="beat.id" class="p-4">
+          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <div class="flex items-center justify-between mb-2">
-              <h4 class="font-medium">Beat: {{ beat.id }}</h4>
+              <h4 class="font-medium">Beat: {{ index }}</h4>
               <Badge variant="outline">{{ beat.image.type }}</Badge>
             </div>
 
