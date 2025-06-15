@@ -210,13 +210,37 @@
             <ProductTabs />
           </CardContent>
         </Card>
+
+        <!-- Debug Log Section -->
+        <Card>
+          <CardContent class="p-4 space-y-4">
+            <!-- System Logs -->
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-sm font-medium mb-2">Validate Logs</h3>
+              <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded">
+                <div v-for="(entry, i) in validateLog" :key="'system-' + i" class="whitespace-pre-wrap">
+                  {{ entry }}
+                </div>
+              </div>
+            </div>
+            <!-- Debug Logs -->
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-sm font-medium mb-2">Debug Logs</h3>
+              <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded" ref="logContainer">
+                <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
+                  {{ entry }}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </TooltipProvider>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
@@ -258,8 +282,8 @@ import ProductTabs from "./components/product_tabs.vue";
 import dayjs from "dayjs";
 
 import type { MulmoScript } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast";
 
-import { mulmoSample } from "./components/sample";
 import { useDebounceFn } from "@vueuse/core";
 
 import {
@@ -323,7 +347,7 @@ watch(mulmoScript, () => {
   saveMulmoScript(mulmoScript.value);
 });
 
-const beatsData = ref(mulmoSample.beats);
+const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
 const generateMovie = async () => {
   console.log("generateMovie");
@@ -336,4 +360,20 @@ const generateAudio = async () => {
 };
 
 const isValidScriptData = ref(true);
+
+const logContainer = ref<HTMLElement | null>(null);
+const validateLog = computed(() => {
+  // mulmoScriptSchema.parse(mulmoScript.value)
+  return [];
+});
+const debugLog = ref([]);
+
+window.electronAPI.onProgress(async (event, message) => {
+  if (message["projectId"] === projectId.value) {
+    console.log("update:", message.data);
+    debugLog.value.push(message.data);
+    await nextTick();
+    logContainer.value?.scrollTo({ top: logContainer.value.scrollHeight });
+  }
+});
 </script>

@@ -1118,27 +1118,6 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@pdf-lib/fontkit@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@pdf-lib/fontkit/-/fontkit-1.1.1.tgz#f18473892b65e3253eb73f4569785abd2c03b1e0"
-  integrity sha512-KjMd7grNapIWS/Dm0gvfHEilSyAmeLvrEGVcqLGi0VYebuqqzTbgF29efCx7tvx+IEbG3zQciRSWl3GkUSvjZg==
-  dependencies:
-    pako "^1.0.6"
-
-"@pdf-lib/standard-fonts@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@pdf-lib/standard-fonts/-/standard-fonts-1.0.0.tgz#8ba691c4421f71662ed07c9a0294b44528af2d7f"
-  integrity sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==
-  dependencies:
-    pako "^1.0.6"
-
-"@pdf-lib/upng@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@pdf-lib/upng/-/upng-1.0.1.tgz#7dc9c636271aca007a9df4deaf2dd7e7960280cb"
-  integrity sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==
-  dependencies:
-    pako "^1.0.10"
-
 "@pkgr/core@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.4.tgz#d897170a2b0ba51f78a099edccd968f7b103387c"
@@ -4235,10 +4214,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.5.tgz#2c646df2ec105fb9aaf24b38c93092598db71426"
-  integrity sha512-Qo9KX006YF5SFK4taytTjZJVPnEzHIlCHq3/m2CfZDEDEBYIgo0WpMSEaH4thRRhy0mm5U/4i6AImq1oUqsqdQ==
+graphai@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.6.tgz#ff0e6f7de739bfb109b637a13b72bcb41b32d301"
+  integrity sha512-OOeb0ULF/o2WxuVT4EC6je6IaGJQMVMn/zAwYpTeZf0Mqd33vonUkkSUdADUKWPwM2uJBxPWq+JYys64BISh/Q==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -5361,10 +5340,10 @@ ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mulmocast@^0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.14.tgz#b81dc34d6ec317912b366059e249a59d4177e3b2"
-  integrity sha512-Sghbb5aob814iuHpeIzLkSsbb17MsxZ9R2Kvf8GTwxd4hDIZfBbwT6p9D2odiB+9QPJhA4TIPe4Kdx+f82siOA==
+mulmocast@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.15.tgz#1ea175fb001a5b4d07f44451d80107ca7fcb0f0f"
+  integrity sha512-OuSaBK2IxNUgrOXkZwQ1N4TLzR8ckGC9ieSXWgp5u+owm99MF6r1oMgg3d1i0S2CYaFCA4YvBRp5ewVB9KW00g==
   dependencies:
     "@google-cloud/text-to-speech" "^6.1.0"
     "@graphai/anthropic_agent" "^2.0.2"
@@ -5376,17 +5355,15 @@ mulmocast@^0.0.14:
     "@graphai/stream_agent_filter" "^2.0.2"
     "@graphai/vanilla" "^2.0.4"
     "@graphai/vanilla_node_agents" "^2.0.1"
-    "@pdf-lib/fontkit" "^1.1.1"
     canvas "^3.1.0"
     clipboardy "^4.0.0"
     dotenv "^16.4.7"
     fluent-ffmpeg "^2.1.3"
     google-auth-library "^9.15.1"
-    graphai "^2.0.5"
+    graphai "^2.0.6"
     inquirer "^12.6.1"
     marked "^15.0.12"
     ora "^8.2.0"
-    pdf-lib "^1.17.1"
     puppeteer "^24.10.0"
     yaml "^2.8.0"
     yargs "^17.7.2"
@@ -5773,11 +5750,6 @@ pac-resolver@^7.0.1:
     degenerator "^5.0.0"
     netmask "^2.0.2"
 
-pako@^1.0.10, pako@^1.0.11, pako@^1.0.6:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
-  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -5860,16 +5832,6 @@ path-type@^2.0.0:
   integrity sha512-dUnb5dXUf+kzhC/W/F4e5/SkluXIFf5VUHolW1Eg1irn1hGWjPGdsRcvYJ1nD6lhk8Ir7VM0bHJKsYTx8Jx9OQ==
   dependencies:
     pify "^2.0.0"
-
-pdf-lib@^1.17.1:
-  version "1.17.1"
-  resolved "https://registry.yarnpkg.com/pdf-lib/-/pdf-lib-1.17.1.tgz#9e7dd21261a0c1fb17992580885b39e7d08f451f"
-  integrity sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==
-  dependencies:
-    "@pdf-lib/standard-fonts" "^1.0.0"
-    "@pdf-lib/upng" "^1.0.1"
-    pako "^1.0.11"
-    tslib "^1.11.1"
 
 pe-library@^1.0.1:
   version "1.0.1"
@@ -7126,11 +7088,6 @@ tsconfig-paths@^3.15.0:
     json5 "^1.0.2"
     minimist "^1.2.6"
     strip-bom "^3.0.0"
-
-tslib@^1.11.1:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
-  integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
 tslib@^2.0.0, tslib@^2.0.1, tslib@^2.1.0, tslib@^2.4.0, tslib@^2.8.0:
   version "2.8.1"
