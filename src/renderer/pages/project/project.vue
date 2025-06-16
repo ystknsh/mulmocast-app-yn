@@ -207,7 +207,7 @@
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ProductTabs />
+            <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
           </CardContent>
         </Card>
 
@@ -368,12 +368,36 @@ const validateLog = computed(() => {
 });
 const debugLog = ref([]);
 
+//
+
+const videoUrl = ref("");
+const playVideo = async (callback?: () => void) => {
+  const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie");
+  const blob = new Blob([buffer], { type: "video/mp4" });
+  const url = URL.createObjectURL(blob);
+
+  videoUrl.value = url;
+  if (callback) {
+    callback();
+  }
+};
+
 window.electronAPI.onProgress(async (event, message) => {
   if (message["projectId"] === projectId.value) {
-    console.log("update:", message.data);
-    debugLog.value.push(message.data);
-    await nextTick();
-    logContainer.value?.scrollTo({ top: logContainer.value.scrollHeight });
+    if (message.type === "state") {
+      console.log(message);
+      if (message.data.sessionType === "video" && message.data.inSession) {
+        console.log("AAA");
+        await playVideo();
+      }
+      console.log("update:", message.data);
+    }
+    // console.log("update:", message.data);
+    if (message.type === "progress") {
+      debugLog.value.push(message.data);
+      await nextTick();
+      logContainer.value?.scrollTo({ top: logContainer.value.scrollHeight });
+    }
   }
 });
 </script>

@@ -20,12 +20,24 @@
 
             <div>
               <label class="block mb-1 text-gray-500">Speaker</label>
-              <input v-model="beat.speaker" type="text" class="w-full p-2 border rounded" placeholder="e.g. Alice" />
+              <input
+                :value="beat.speaker"
+                @input="update(index, 'speaker', $event.target.value)"
+                type="text"
+                class="w-full p-2 border rounded"
+                placeholder="e.g. Alice"
+              />
             </div>
 
             <div>
               <label class="block mb-1 text-gray-500">Text</label>
-              <input v-model="beat.text" type="text" class="w-full p-2 border rounded" placeholder="e.g. What is AI?" />
+              <input
+                :value="beat.text"
+                @input="update(index, 'text', $event.target.value)"
+                type="text"
+                class="w-full p-2 border rounded"
+                placeholder="e.g. What is AI?"
+              />
             </div>
           </div>
         </div>

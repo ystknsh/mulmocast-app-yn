@@ -9,6 +9,8 @@ import {
   getAvailableTemplates,
   audioFilePath,
   movieFilePath,
+  addSessionProgressCallback,
+  removeSessionProgressCallback,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
@@ -42,6 +44,16 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
         }
       },
     ];
+    const callback = (data) => {
+      if (webContents) {
+        webContents.send("progress-update", {
+          projectId,
+          type: "state",
+          data,
+        });
+      }
+    };
+    addSessionProgressCallback(callback);
     // await runTranslateIfNeeded(context, argv);
     if (actionName === "audio") {
       await audio(context, callbacks);
@@ -61,6 +73,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
       await images(context, callbacks);
       // await pdf(context, argv.pdf_mode, argv.pdf_size);
     }
+    removeSessionProgressCallback(callback);
 
     return {
       result: true,
