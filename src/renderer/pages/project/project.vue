@@ -385,14 +385,14 @@ const playVideo = async (callback?: () => void) => {
 window.electronAPI.onProgress(async (event, message) => {
   if (message["projectId"] === projectId.value) {
     if (message.type === "state") {
-      console.log(message);
       if (message.data.sessionType === "video" && message.data.inSession) {
-        console.log("AAA");
         await playVideo();
+      }
+      if (message.data.sessionType === "audio") {
+        console.log("audio", message.data);
       }
       console.log("update:", message.data);
     }
-    // console.log("update:", message.data);
     if (message.type === "progress") {
       debugLog.value.push(message.data);
       await nextTick();
