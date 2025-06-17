@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <!-- Chat history -->
-    <div class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
+    <div ref="chatHistoryRef" class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
       <div v-for="(message, key) in messages" :key="key">
         <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
         <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
@@ -79,6 +79,7 @@ import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
 import { ChatMessage } from "@/types";
+import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 
 const { initialMessages = [] } = defineProps<{
   initialMessages: ChatMessage[];
@@ -148,6 +149,7 @@ const { eventAgent, userInput, events, submitText } = textInputEvent();
 const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
   emit("update:updateChatMessages", messages);
 });
+const chatHistoryRef = useAutoScroll(messages);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
