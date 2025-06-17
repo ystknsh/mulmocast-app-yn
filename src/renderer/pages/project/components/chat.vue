@@ -147,7 +147,9 @@ const outputNodes = ["llm", "userInput"];
 
 const { eventAgent, userInput, events, submitText } = textInputEvent();
 const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
-  emit("update:updateChatMessages", messages);
+  if (messages && messages[messages.length - 1].role === "assistant") {
+    emit("update:updateChatMessages", messages);
+  }
 });
 const chatHistoryRef = useAutoScroll(messages);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
