@@ -147,7 +147,7 @@ const outputNodes = ["llm", "userInput"];
 
 const { eventAgent, userInput, events, submitText } = textInputEvent();
 const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
-  if (messages && messages[messages.length - 1].role === "assistant") {
+  if (messages.at(-1)?.role === "assistant") {
     emit("update:updateChatMessages", messages);
   }
 });
