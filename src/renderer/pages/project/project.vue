@@ -139,7 +139,7 @@
           <CardContent class="p-4">
             <div class="space-y-4">
               <!-- Select Presentation Style -->
-              <Style v-model="selectedPresentationStyle" ></Style>
+              <Style v-model="selectedPresentationStyle"></Style>
 
               <!-- Caption Toggle -->
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
