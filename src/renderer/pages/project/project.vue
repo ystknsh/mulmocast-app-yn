@@ -325,13 +325,7 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
-    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
-    console.log("project.value", project.value);
-    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
     project.value = await projectApi.getProjectMetadata(projectId.value);
-    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
-    console.log("project.value", project.value?.chatMessages);
-    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
     // TODO: Load mulmo script data from project
   } catch (error) {
