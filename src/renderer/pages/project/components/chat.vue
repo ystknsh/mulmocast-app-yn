@@ -78,9 +78,15 @@ import UserMessage from "./user_message.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
+import { ChatMessage } from "@/types";
+
+const { initialMessages = [] } = defineProps<{
+  initialMessages: ChatMessage[];
+}>();
 
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
+  "update:updateChatMessages": [value: ChatMessage[]];
 }>();
 
 const selectedTemplateFileName = ref("");
@@ -139,7 +145,9 @@ const streamNodes = ["llm"];
 const outputNodes = ["llm", "userInput"];
 
 const { eventAgent, userInput, events, submitText } = textInputEvent();
-const { messages, chatMessagePlugin } = useChatPlugin();
+const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
+  emit("update:updateChatMessages", messages);
+});
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -148,7 +156,7 @@ const agentFilters = [
   },
 ];
 
-const run = async () => {
+const run = async (initialMessages: ChatMessage[]) => {
   const env = await window.electronAPI.getEnv();
   // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
 
@@ -171,6 +179,7 @@ const run = async () => {
   // graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
+  graphai.injectValue("messages", initialMessages);
   graphai.registerCallback((log) => {
     console.log(log);
     if (log.nodeId === "json" && log.state === "completed") {
@@ -184,7 +193,7 @@ const run = async () => {
 // TODO MulmoScriptTemplateFile
 const templates = ref<MulmoScriptTemplate & { filename: string }[]>([]);
 onMounted(async () => {
-  run();
+  run(initialMessages);
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
   selectedTemplateFileName.value = templates.value[0].filename;
 });

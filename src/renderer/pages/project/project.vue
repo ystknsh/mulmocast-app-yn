@@ -61,10 +61,12 @@
               }}
             </p>
           </CardHeader>
-          <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''">
+          <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''" v-if="project">
             <component
               :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
               :selectedTheme="selectedTheme"
+              :initialMessages="project?.chatMessages"
+              @update:updateChatMessages="handleUpdateChatMessages"
               @update:updateMulmoScript="handleUpdateScript"
             />
           </CardContent>
@@ -137,7 +139,7 @@
           <CardContent class="p-4">
             <div class="space-y-4">
               <!-- Select Presentation Style -->
-              <Style v-model="selectedPresentationStyle" />
+              <Style v-model="selectedPresentationStyle" ></Style>
 
               <!-- Caption Toggle -->
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -297,6 +299,7 @@ import {
   getContainerSpacing,
   getTimelineFocusClass,
 } from "./composable/style";
+import { ChatMessage } from "@/types";
 
 // State
 const route = useRoute();
@@ -322,7 +325,13 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
+    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
+    console.log("project.value", project.value);
+    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
     project.value = await projectApi.getProjectMetadata(projectId.value);
+    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
+    console.log("project.value", project.value?.chatMessages);
+    console.log("🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐🌐");
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
     // TODO: Load mulmo script data from project
   } catch (error) {
@@ -334,6 +343,18 @@ onMounted(async () => {
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
 };
+
+const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
+  await saveChatMessages(messages);
+};
+
+const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
+  await projectApi.saveProjectMetadata(projectId.value, {
+    ...project.value,
+    updatedAt: dayjs().toISOString(),
+    chatMessages: messages,
+  });
+}, 1000);
 
 const saveMulmoScript = useDebounceFn(async (data) => {
   console.log("saved", data);

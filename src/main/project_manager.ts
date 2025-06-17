@@ -111,6 +111,7 @@ export const createProject = async (title: string): Promise<Project> => {
       version: PROJECT_VERSION,
       sessionActive: false,
       hasErrors: false,
+      chatMessages: [],
     };
 
     await saveProjectMetadata(id, initialData);
