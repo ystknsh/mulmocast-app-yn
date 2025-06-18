@@ -51,9 +51,6 @@
                 {{ template.title }}
               </option>
             </select>
-            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="copy">
-              Copy
-            </Button>
             <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
               Create Script
             </Button>
@@ -204,13 +201,6 @@ onMounted(async () => {
 const selectTemplate = computed(() => {
   return templates.value.find((template) => template.filename === selectedTemplateFileName.value);
 });
-
-const copy = async () => {
-  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
-  if (selectTemplate.value) {
-    userInput.value = selectTemplate.value.systemPrompt;
-  }
-};
 
 const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter
