@@ -11,7 +11,9 @@ import {
   movieFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
+  getBeatAudioPath,
 } from "mulmocast";
+import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";
@@ -19,7 +21,7 @@ import fs from "fs";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
-const getContext = async (projectId: string) => {
+const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
   const argv = {
     v: true,
@@ -110,6 +112,32 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
+export const mulmoAudioFiles = async (projectId: string, actionName: string, webContents) => {
+  try {
+    const context = await getContext(projectId);
+    return context.studio.script.beats
+      .map((beat) => {
+        try {
+          const { text } = beat; // TODO: multiLingual
+          return getBeatAudioPath(text, context, beat);
+        } catch (e) {
+          console.log(e);
+          return "";
+        }
+      })
+      .map((fileName) => {
+        if (fs.existsSync && fs.existsSync(fileName)) {
+          const buffer = fs.readFileSync(fileName);
+          return buffer.buffer;
+          // return fileName;
+        }
+        return;
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const mulmoHandler = async (method, webContents, ...args) => {
   try {
     switch (method) {
@@ -123,6 +151,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":
         return await mediaFilePath(args[0], args[1]);
+      case "mulmoAudioFiles":
+        return await mulmoAudioFiles(args[0]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

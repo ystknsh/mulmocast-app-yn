@@ -47,6 +47,7 @@
               </div>
               <p :class="`text-xs mb-2 ${beat.image.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
                 {{ beat.image.status === "ready" ? "Image ready" : "Generating..." }}
+                <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
               </p>
               <div v-if="beat.image.status === 'ready'" class="flex justify-center space-x-1">
                 <Tooltip>
@@ -354,6 +355,7 @@ interface Beat {
 
 interface Props {
   beatsData: Beat[];
+  audioFiles: (ArrayBuffer | null)[];
   viewMode: "list" | "timeline";
   currentBeatIndex: number;
   timelinePosition: number;

@@ -190,6 +190,7 @@
               <CardContent>
                 <BeatsViewer
                   :beatsData="beatsData"
+                  :audioFiles="audioFiles"
                   v-model:viewMode="beatsViewMode"
                   v-model:currentBeatIndex="currentBeatIndex"
                   v-model:timelinePosition="timelinePosition"
@@ -373,6 +374,21 @@ const generateAudio = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
 };
+
+const audioFiles = ref<(ArrayBuffer | null)[]>([]);
+const downloadAudioFiles = async () => {
+  console.log("audioFiles");
+  const res = await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value);
+  audioFiles.value = res.map((buffer) => {
+    if (buffer) {
+      const blob = new Blob([buffer], { type: "audio/mp3" });
+      const url = URL.createObjectURL(blob);
+      return url;
+    }
+    return "";
+  });
+};
+downloadAudioFiles();
 
 const isValidScriptData = ref(true);
 
