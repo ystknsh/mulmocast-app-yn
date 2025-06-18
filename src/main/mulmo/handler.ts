@@ -112,7 +112,7 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
-export const mulmoAudioFiles = async (projectId: string, actionName: string, webContents) => {
+export const mulmoAudioFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
     return context.studio.script.beats
