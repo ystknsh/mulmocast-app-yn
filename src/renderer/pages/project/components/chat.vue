@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <!-- Chat history -->
-    <div class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
+    <div ref="chatHistoryRef" class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4">
       <div v-for="(message, key) in messages" :key="key">
         <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
         <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
@@ -22,6 +22,7 @@
             :disabled="events.length == 0"
             placeholder="ex) Thank you very much! Please proceed with the creation."
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0"
+            @keydown="handleKeydown"
           />
           <Button
             size="sm"
@@ -78,9 +79,16 @@ import UserMessage from "./user_message.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
+import { ChatMessage } from "@/types";
+import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
+
+const { initialMessages = [] } = defineProps<{
+  initialMessages: ChatMessage[];
+}>();
 
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
+  "update:updateChatMessages": [value: ChatMessage[]];
 }>();
 
 const selectedTemplateFileName = ref("");
@@ -139,7 +147,12 @@ const streamNodes = ["llm"];
 const outputNodes = ["llm", "userInput"];
 
 const { eventAgent, userInput, events, submitText } = textInputEvent();
-const { messages, chatMessagePlugin } = useChatPlugin();
+const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
+  if (messages.at(-1)?.role === "assistant") {
+    emit("update:updateChatMessages", messages);
+  }
+});
+const chatHistoryRef = useAutoScroll(messages);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -148,7 +161,7 @@ const agentFilters = [
   },
 ];
 
-const run = async () => {
+const run = async (initialMessages: ChatMessage[]) => {
   const env = await window.electronAPI.getEnv();
   // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
 
@@ -171,6 +184,7 @@ const run = async () => {
   // graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
+  graphai.injectValue("messages", initialMessages);
   graphai.registerCallback((log) => {
     console.log(log);
     if (log.nodeId === "json" && log.state === "completed") {
@@ -184,7 +198,7 @@ const run = async () => {
 // TODO MulmoScriptTemplateFile
 const templates = ref<MulmoScriptTemplate & { filename: string }[]>([]);
 onMounted(async () => {
-  run();
+  run(initialMessages);
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
   selectedTemplateFileName.value = templates.value[0].filename;
 });
@@ -196,6 +210,16 @@ const copy = async () => {
   // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
   if (selectTemplate.value) {
     userInput.value = selectTemplate.value.systemPrompt;
+  }
+};
+
+const handleKeydown = (e: KeyboardEvent) => {
+  // Mac: command + enter, Win: ctrl + enter
+  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+    e.preventDefault();
+    if (events.value.length > 0) {
+      submitText(events.value[0]);
+    }
   }
 };
 </script>
