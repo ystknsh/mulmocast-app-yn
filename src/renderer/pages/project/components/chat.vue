@@ -78,7 +78,7 @@ import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 
@@ -195,8 +195,7 @@ const run = async (initialMessages: ChatMessage[]) => {
   await graphai.run();
 };
 
-// TODO MulmoScriptTemplateFile
-const templates = ref<MulmoScriptTemplate & { filename: string }[]>([]);
+const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
   run(initialMessages);
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
