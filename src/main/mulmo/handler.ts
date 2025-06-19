@@ -12,6 +12,8 @@ import {
   addSessionProgressCallback,
   removeSessionProgressCallback,
   getBeatAudioPath,
+  imagePreprocessAgent,
+  MulmoPresentationStyleMethods,
 } from "mulmocast";
 import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
@@ -138,6 +140,31 @@ export const mulmoAudioFiles = async (projectId: string) => {
   }
 };
 
+export const mulmoImageFiles = async (projectId: string) => {
+  try {
+    const context = await getContext(projectId);
+    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
+    return Promise.all(
+      context.studio.script.beats.map(async (beat, index) => {
+        try {
+          const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
+          if (res.imagePath && fs.existsSync(res.imagePath)) {
+            const buffer = fs.readFileSync(res.imagePath);
+            res.imageData = buffer.buffer;
+          }
+          // console.log(res);
+          return res;
+        } catch (e) {
+          console.log(e);
+          return "";
+        }
+      }),
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const mulmoHandler = async (method, webContents, ...args) => {
   try {
     switch (method) {
@@ -153,6 +180,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mediaFilePath(args[0], args[1]);
       case "mulmoAudioFiles":
         return await mulmoAudioFiles(args[0]);
+      case "mulmoImageFiles":
+        return await mulmoImageFiles(args[0]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
