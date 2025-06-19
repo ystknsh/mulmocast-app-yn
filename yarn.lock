@@ -724,10 +724,10 @@
     "@anthropic-ai/sdk" "^0.52.0"
     "@graphai/llm_utils" "^2.0.0"
 
-"@graphai/browserless_agent@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@graphai/browserless_agent/-/browserless_agent-2.0.0.tgz#bd816c9ece23494587f47ae76d77ba861c97b24b"
-  integrity sha512-tjZC42maU70bUYhMX5IrmekXumhcm7hMl29t00XulMv09NCIAb9uMZA9IKOWHfavOICCQ6SXqGCFtGUGQHlFYw==
+"@graphai/browserless_agent@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@graphai/browserless_agent/-/browserless_agent-2.0.1.tgz#951e9800ef7c3d696f3b829347ac9d05ba4e4dc5"
+  integrity sha512-Uq7gikcA7lrK3xyZwKPx6au0VcMKXDHbzHjOkuBV/I0RDNWo3qApmF6pTVBVR49WtrKKloN2/a48+8IzPGefLg==
 
 "@graphai/gemini_agent@^2.0.0":
   version "2.0.0"
@@ -5370,14 +5370,14 @@ ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mulmocast@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.16.tgz#8ca6c7f04e9d9e04a45fc7f8e0d79ffa5d7de2f8"
-  integrity sha512-oXzOdyRzP+5jE5B7hbZTipk52XMkhKndMRYM4tQq4Gsulob5HSuPLXUC6MHZg6R7txbWqQi75rP33LNan/cJng==
+mulmocast@^0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.17.tgz#fd75a51fa8a7198df6f8c06d666559acba4fafd8"
+  integrity sha512-hBA0sXTgg6sSQgNPkX8UzesodT2n6oJVUzc2Hn0GE+8LBrH3ZKRx76a5aSB1F229+/mYF1IYEFKmz8tuIPXxWQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.1.0"
     "@graphai/anthropic_agent" "^2.0.2"
-    "@graphai/browserless_agent" "^2.0.0"
+    "@graphai/browserless_agent" "^2.0.1"
     "@graphai/gemini_agent" "^2.0.0"
     "@graphai/groq_agent" "^2.0.0"
     "@graphai/input_agents" "^1.0.1"
@@ -5395,10 +5395,10 @@ mulmocast@^0.0.16:
     inquirer "^12.6.1"
     marked "^15.0.12"
     ora "^8.2.0"
-    puppeteer "^24.10.0"
+    puppeteer "^24.10.2"
     yaml "^2.8.0"
     yargs "^17.7.2"
-    zod "^3.25.51"
+    zod "^3.25.67"
     zod-to-json-schema "^3.24.5"
 
 mute-stream@^2.0.0:
@@ -6072,10 +6072,10 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-puppeteer-core@24.10.0:
-  version "24.10.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.10.0.tgz#b44175d90511eb414395ae60c51a13185b391421"
-  integrity sha512-xX0QJRc8t19iAwRDsAOR38Q/Zx/W6WVzJCEhKCAwp2XMsaWqfNtQ+rBfQW9PlF+Op24d7c8Zlgq9YNmbnA7hdQ==
+puppeteer-core@24.10.2:
+  version "24.10.2"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.10.2.tgz#7d4552a62ef1c74291f917d02e43f3d6f2971cbf"
+  integrity sha512-CnzhOgrZj8DvkDqI+Yx+9or33i3Y9uUYbKyYpP4C13jWwXx/keQ38RMTMmxuLCWQlxjZrOH0Foq7P2fGP7adDQ==
   dependencies:
     "@puppeteer/browsers" "2.10.5"
     chromium-bidi "5.1.0"
@@ -6084,16 +6084,16 @@ puppeteer-core@24.10.0:
     typed-query-selector "^2.12.0"
     ws "^8.18.2"
 
-puppeteer@^24.10.0:
-  version "24.10.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.10.0.tgz#52bc657c01a96ce2b9e0b4300f1ff5ddb8a644cd"
-  integrity sha512-Oua9VkGpj0S2psYu5e6mCer6W9AU9POEQh22wRgSXnLXASGH+MwLUVWgLCLeP9QPHHcJ7tySUlg4Sa9OJmaLpw==
+puppeteer@^24.10.2:
+  version "24.10.2"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.10.2.tgz#f4129ceff8f1bb71c380660b6bed06a69ba95bd5"
+  integrity sha512-+k26rCz6akFZntx0hqUoFjCojgOLIxZs6p2k53LmEicwsT8F/FMBKfRfiBw1sitjiCvlR/15K7lBqfjXa251FA==
   dependencies:
     "@puppeteer/browsers" "2.10.5"
     chromium-bidi "5.1.0"
     cosmiconfig "^9.0.0"
     devtools-protocol "0.0.1452169"
-    puppeteer-core "24.10.0"
+    puppeteer-core "24.10.2"
     typed-query-selector "^2.12.0"
 
 qs@6.13.0:
@@ -7648,7 +7648,7 @@ zod@^3.24.1:
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.50.tgz#9de9ca02ae702fd37ed87b28f8f17099f2402aa9"
   integrity sha512-VstOnRxf4tlSq0raIwbn0n+LA34SxVoZ8r3pkwSUM0jqNiA/HCMQEVjTuS5FZmHsge+9MDGTiAuHyml5T0um6A==
 
-zod@^3.25.51:
-  version "3.25.51"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.51.tgz#aa2cf648e54f6f060f139cf77b694819f63c9f3a"
-  integrity sha512-TQSnBldh+XSGL+opiSIq0575wvDPqu09AqWe1F7JhUMKY+M91/aGlK4MhpVNO7MgYfHcVCB1ffwAUTJzllKJqg==
+zod@^3.25.67:
+  version "3.25.67"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.67.tgz#62987e4078e2ab0f63b491ef0c4f33df24236da8"
+  integrity sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==
