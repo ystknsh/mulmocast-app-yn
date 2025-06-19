@@ -125,6 +125,7 @@
               <CardContent>
                 <ScriptEditor
                   :mulmoValue="mulmoScript"
+                  :imageFiles="imageFiles"
                   @update:mulmoValue="(val) => (mulmoScript = val)"
                   :isValidScriptData="isValidScriptData"
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
@@ -376,6 +377,7 @@ const generateAudio = async () => {
 };
 
 const audioFiles = ref<(ArrayBuffer | null)[]>([]);
+const imageFiles = ref<(ArrayBuffer | null)[]>([]);
 const downloadAudioFiles = async () => {
   console.log("audioFiles");
   const res = await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value);
@@ -387,8 +389,22 @@ const downloadAudioFiles = async () => {
     }
     return "";
   });
+  console.log(audioFiles.value);
+};
+const downloadImageFiles = async () => {
+  const res2 = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
+  imageFiles.value = res2.map((data) => {
+    if (data && data.imageData) {
+      const blob = new Blob([data.imageData], { type: "image/png" });
+      const url = URL.createObjectURL(blob);
+      return url;
+    }
+    return "";
+  });
+  console.log(imageFiles.value);
 };
 downloadAudioFiles();
+downloadImageFiles();
 
 const isValidScriptData = ref(true);
 
