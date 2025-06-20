@@ -437,12 +437,12 @@ const playVideo = async (callback?: () => void) => {
 watch(
   () => store.mulmoEvent[projectId.value],
   (mulmoEvent) => {
-    if (mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
       playVideo();
     }
     console.log(mulmoEvent);
   },
-  { deep: true, immediate: true },
+  { immediate: true },
 );
 
 const debugLog = computed(() => store?.graphaiDebugLog[projectId.value]);
