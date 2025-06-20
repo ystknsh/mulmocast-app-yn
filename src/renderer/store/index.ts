@@ -6,6 +6,11 @@ import { MulmoProgressLog } from "../../types";
 type SessionType = "audio" | "image" | "video" | "multiLingual" | "caption" | "pdf";
 type BeatSessionType = "audio" | "image" | "multiLingual" | "caption" | "movie";
 
+type SessionProgressEvent =
+  | { kind: "session"; sessionType: SessionType; inSession: boolean }
+  | { kind: "beat"; sessionType: BeatSessionType; index: number; inSession: boolean };
+// end of TODO
+
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
 
@@ -18,11 +23,11 @@ export const useStore = defineStore("store", () => {
   const sessionState = ref<SessionState>({});
   const beatSessionState = ref<BeatSessionState>({});
 
-  const graphaiDebugLog = ref({});
+  const graphaiDebugLog = ref<Record<string, unknown[]>>({});
 
-  const mulmoLogCallback = (log: MulmoProgressLog) => {
+  const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent>) => {
     const { projectId, data } = log;
-    const { kind, sessionType, index, inSession } = data;
+    const { kind, sessionType, inSession } = data;
     if (kind === "session") {
       if (!sessionState.value[projectId]) {
         sessionState.value[projectId] = {
@@ -46,10 +51,10 @@ export const useStore = defineStore("store", () => {
           movie: {},
         };
       }
-      beatSessionState.value[projectId][sessionType][index] = inSession;
+      beatSessionState.value[projectId][sessionType][data.index] = inSession;
     }
   };
-  const graphaiLogCallback = (log: { project: string; data: unknown }) => {
+  const graphaiLogCallback = (log: { projectId: string; data: unknown }) => {
     const { projectId, data } = log;
     if (!graphaiDebugLog.value[projectId]) {
       graphaiDebugLog.value[projectId] = [];
