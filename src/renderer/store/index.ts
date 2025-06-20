@@ -18,7 +18,7 @@ type SessionState = Record<string, SessionStateEntry>;
 type BeatSessionState = Record<string, BeatSessionStateEntry>;
 
 export const useStore = defineStore("store", () => {
-  const mulmoLog = ref<Record<string, MulmoProgressLog[]>>({});
+  const mulmoLog = ref<Record<string, MulmoProgressLog<SessionProgressEvent>[]>>({});
 
   const sessionState = ref<SessionState>({});
   const beatSessionState = ref<BeatSessionState>({});
