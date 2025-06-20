@@ -14,44 +14,42 @@ type SessionProgressEvent =
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
 
-type SessionState = Record<string, SessionStateEntry>;
-type BeatSessionState = Record<string, BeatSessionStateEntry>;
+type SessionState = Record<string, { beat: BeatSessionStateEntry; artifact: SessionStateEntry }>;
 
 export const useStore = defineStore("store", () => {
-  const mulmoLog = ref<Record<string, MulmoProgressLog<SessionProgressEvent>[]>>({});
-
+  const mulmoEvent = ref<Record<string, MulmoProgressLog<SessionProgressEvent>>>({});
   const sessionState = ref<SessionState>({});
-  const beatSessionState = ref<BeatSessionState>({});
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
 
   const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent>) => {
     const { projectId, data } = log;
     const { kind, sessionType, inSession } = data;
-    if (kind === "session") {
-      if (!sessionState.value[projectId]) {
-        sessionState.value[projectId] = {
+    mulmoEvent.value[projectId] = data;
+    if (!sessionState.value[projectId]) {
+      sessionState.value[projectId] = {
+        artifact: {
           audio: false,
           image: false,
           video: false,
           multiLingual: false,
           caption: false,
           pdf: false,
-        };
-      }
-      sessionState.value[projectId][sessionType] = inSession;
-    }
-    if (kind === "beat") {
-      if (!beatSessionState.value[projectId]) {
-        beatSessionState.value[projectId] = {
+        },
+        beat: {
           audio: {},
           image: {},
           multiLingual: {},
           caption: {},
           movie: {},
-        };
-      }
-      beatSessionState.value[projectId][sessionType][data.index] = inSession;
+        },
+      };
+    }
+    if (kind === "session") {
+      sessionState.value[projectId]["artifact"][sessionType] = inSession;
+    }
+    if (kind === "beat") {
+      sessionState.value[projectId]["beat"][sessionType][data.index] = inSession;
     }
   };
   const graphaiLogCallback = (log: { projectId: string; data: unknown }) => {
@@ -63,10 +61,9 @@ export const useStore = defineStore("store", () => {
   };
 
   return {
-    mulmoLog,
+    mulmoEvent,
     mulmoLogCallback,
     sessionState,
-    beatSessionState,
 
     graphaiDebugLog,
     graphaiLogCallback,

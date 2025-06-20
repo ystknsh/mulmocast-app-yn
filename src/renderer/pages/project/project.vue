@@ -435,21 +435,12 @@ const playVideo = async (callback?: () => void) => {
 };
 
 watch(
-  () => store.beatSessionState[projectId.value],
-  (beatSession) => {
-    console.log(beatSession);
-  },
-  { deep: true, immediate: true },
-);
-
-// Spread to create a new object so deep watch triggers with proper old/new values
-watch(
-  () => ({ ...store.sessionState[projectId.value] }),
-  (mulmoSesion, oldMulmoSession) => {
-    if (!mulmoSesion?.video && oldMulmoSession?.video) {
+  () => store.mulmoEvent[projectId.value],
+  (mulmoEvent) => {
+    if (mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
       playVideo();
     }
-    // console.log(mulmoSesion);
+    console.log(mulmoEvent);
   },
   { deep: true, immediate: true },
 );

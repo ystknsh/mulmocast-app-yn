@@ -12,13 +12,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    watch(
-      () => store.mulmoLog,
-      (a) => {
-        console.log(a);
-      },
-    );
-
     onMounted(() => {
       window.electronAPI.onProgress(async (event, message) => {
         if (message.type === "mulmo") {
