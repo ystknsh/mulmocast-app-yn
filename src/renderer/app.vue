@@ -5,25 +5,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useStore } from "./store";
 
 export default defineComponent({
   setup() {
     const store = useStore();
 
-    /*
-    window.electronAPI.onProgress((event, message) => {
-      store.mulmoLogCallback(message);
-      console.log("update:", message);
+    onMounted(() => {
+      window.electronAPI.onProgress(async (event, message) => {
+        if (message.type === "mulmo") {
+          store.mulmoLogCallback(message);
+        }
+        if (message.type === "graphai") {
+          store.graphaiLogCallback(message);
+        }
+      });
     });
-    */
-    watch(
-      () => store.mulmoLog,
-      (a) => {
-        console.log(a);
-      },
-    );
   },
 });
 </script>

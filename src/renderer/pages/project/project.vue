@@ -244,7 +244,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
@@ -289,6 +289,7 @@ import type { MulmoScript } from "mulmocast";
 // import { mulmoScriptSchema } from "mulmocast";
 
 import { useDebounceFn } from "@vueuse/core";
+import { useStore } from "../../store";
 
 import {
   selectedTheme,
@@ -306,6 +307,8 @@ import { ChatMessage } from "@/types";
 // State
 const route = useRoute();
 const router = useRouter();
+
+const store = useStore();
 
 const projectId = computed(() => route.params.id as string);
 const project = ref<ProjectMetadata | null>(null);
@@ -381,6 +384,7 @@ const imageFiles = ref<(ArrayBuffer | null)[]>([]);
 const downloadAudioFiles = async () => {
   console.log("audioFiles");
   const res = await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value);
+  console.log(res);
   audioFiles.value = res.map((buffer) => {
     if (buffer) {
       const blob = new Blob([buffer], { type: "audio/mp3" });
@@ -393,6 +397,7 @@ const downloadAudioFiles = async () => {
 };
 const downloadImageFiles = async () => {
   const res2 = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
+  console.log(res2);
   imageFiles.value = res2.map((data) => {
     if (data && data.imageData) {
       const blob = new Blob([data.imageData], { type: "image/png" });
@@ -413,7 +418,7 @@ const validateLog = computed(() => {
   // mulmoScriptSchema.parse(mulmoScript.value)
   return [];
 });
-const debugLog = ref([]);
+// const debugLog = ref([]);
 
 //
 
@@ -429,22 +434,24 @@ const playVideo = async (callback?: () => void) => {
   }
 };
 
-window.electronAPI.onProgress(async (event, message) => {
-  if (message["projectId"] === projectId.value) {
-    if (message.type === "state") {
-      if (message.data.sessionType === "video" && message.data.inSession) {
-        await playVideo();
-      }
-      if (message.data.sessionType === "audio") {
-        console.log("audio", message.data);
-      }
-      console.log("update:", message.data);
+watch(
+  () => store.mulmoEvent[projectId.value],
+  (mulmoEvent) => {
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+      playVideo();
     }
-    if (message.type === "progress") {
-      debugLog.value.push(message.data);
-      await nextTick();
-      logContainer.value?.scrollTo({ top: logContainer.value.scrollHeight });
-    }
-  }
-});
+    console.log(mulmoEvent);
+  },
+  { immediate: true },
+);
+
+const debugLog = computed(() => store?.graphaiDebugLog[projectId.value]);
+
+watch(
+  () => debugLog,
+  () => {
+    logContainer.value?.scrollTo({ top: logContainer.value.scrollHeight });
+  },
+  { deep: true },
+);
 </script>
