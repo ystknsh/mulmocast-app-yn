@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useStore } from "./store";
 
 export default defineComponent({
