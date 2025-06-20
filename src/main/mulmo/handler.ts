@@ -37,47 +37,47 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
 export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
   try {
     const context = await getContext(projectId);
-    const callbacks = [
+    const graphAICallbacks = [
       (log: TransactionLog) => {
         if (webContents) {
           webContents.send("progress-update", {
             projectId,
-            type: "progress",
+            type: "graphai",
             data: log,
           });
         }
       },
     ];
-    const callback = (data) => {
+    const mulmoCallback = (data) => {
       if (webContents) {
         webContents.send("progress-update", {
           projectId,
-          type: "state",
+          type: "mulmo",
           data,
         });
       }
     };
-    addSessionProgressCallback(callback);
+    addSessionProgressCallback(mulmoCallback);
     // await runTranslateIfNeeded(context, argv);
     if (actionName === "audio") {
-      await audio(context, callbacks);
+      await audio(context, graphAICallbacks);
     }
     if (actionName === "image") {
-      await images(context, callbacks);
+      await images(context, graphAICallbacks);
     }
     if (actionName === "movie") {
-      await audio(context, callbacks);
-      await images(context, callbacks);
+      await audio(context, graphAICallbacks);
+      await images(context, graphAICallbacks);
       if (context.caption) {
         await captions(context);
       }
       await movie(context);
     }
     if (actionName === "pdf") {
-      await images(context, callbacks);
+      await images(context, graphAICallbacks);
       // await pdf(context, argv.pdf_mode, argv.pdf_size);
     }
-    removeSessionProgressCallback(callback);
+    removeSessionProgressCallback(mulmoCallback);
 
     return {
       result: true,
