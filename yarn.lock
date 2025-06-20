@@ -5273,10 +5273,10 @@ ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mulmocast@^0.0.19:
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.19.tgz#7db3ddd303a19b400231d59c4b398d438b3b7b06"
-  integrity sha512-259Fiq2aRN4gogeY5EZjn6Xr1gP/0apoPI6d4qjygS0RD4jE35sxRNrZn/97ds1fsWDAWK+kPXAwi4F9kWQUSg==
+mulmocast@^0.0.20:
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.20.tgz#d62dfe1e0afa30ca269d7f9cc49d31bb29607683"
+  integrity sha512-XmPzzpr91yLLoVNSQg1yw2Fxnt+Eu93FZNXVcRETAGDFUxoQnk3W9MYXJg1vTG0o/O1UErcY9gSHKLMF44XzCQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.1.0"
     "@graphai/anthropic_agent" "^2.0.2"
