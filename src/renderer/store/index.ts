@@ -17,7 +17,7 @@ type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
 type SessionState = Record<string, { beat: BeatSessionStateEntry; artifact: SessionStateEntry }>;
 
 export const useStore = defineStore("store", () => {
-  const mulmoEvent = ref<Record<string, MulmoProgressLog<SessionProgressEvent>>>({});
+  const mulmoEvent = ref<Record<string, SessionProgressEvent>>({});
   const sessionState = ref<SessionState>({});
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
