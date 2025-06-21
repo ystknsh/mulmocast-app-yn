@@ -51,12 +51,12 @@
 
         <!-- Project List -->
         <div v-else-if="viewMode === 'list'">
-          <ListView :projects="projects" @open="handleOpenProject" @delete="handleDeleteProject" />
+          <ListView :projects="sortedProjects" @open="handleOpenProject" @delete="handleDeleteProject" />
         </div>
 
         <!-- Project Grid -->
         <div v-else>
-          <GridView :projects="projects" @open="handleOpenProject" @delete="handleDeleteProject" />
+          <GridView :projects="sortedProjects" @open="handleOpenProject" @delete="handleDeleteProject" />
         </div>
       </div>
     </div>
@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
@@ -100,6 +100,12 @@ const loadProjects = async () => {
     loading.value = false;
   }
 };
+
+const sortedProjects = computed(() => {
+  return projects.value.toSorted((a, b) => {
+    return new Date(b.metadata.updatedAt).getTime() - new Date(a.metadata.updatedAt).getTime();
+  });
+});
 
 const handleCreateProject = async () => {
   const title = newProjectName.value.trim() || "[untitled]";
