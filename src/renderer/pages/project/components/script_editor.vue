@@ -87,14 +87,14 @@
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <h4 class="font-medium">Beat: {{ index + 1 }}</h4>
-              <Badge variant="outline">{{ beat.image.type }}</Badge>
+              <Badge variant="outline">{{ beat?.image?.type }}</Badge>
             </div>
 
             <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
 
             <div class="grid grid-cols-2 gap-4">
               <!-- left: Edit area -->
-              <div>
+              <div v-if="beat.image">
                 <label class="text-sm font-medium block mb-1">
                   {{ getPromptLabel(beat.image.type) }}
                 </label>
@@ -186,10 +186,10 @@
               </div>
 
               <!-- right: preview -->
-              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center" >
                 <img :src="imageFiles[index]" v-if="imageFiles[index]" />
                 <component :is="getMediaIcon(beat.image.type)" :size="32" class="mx-auto text-gray-400 mb-2" v-else />
-                <p class="text-sm text-gray-500">{{ beat.image.type }} Preview</p>
+                <p class="text-sm text-gray-500" v-if="beat.image">{{ beat.image.type }} Preview</p>
               </div>
             </div>
           </Card>
