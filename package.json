@@ -70,7 +70,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "graphai": "^2.0.8",
     "lucide-vue-next": "^0.511.0",
-    "mulmocast": "^0.0.20",
+    "mulmocast": "^0.0.21",
     "pinia": "^3.0.3",
     "radix-vue": "^1.9.17",
     "reka-ui": "^2.3.0",

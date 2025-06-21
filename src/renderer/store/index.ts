@@ -1,15 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
-
-// TODO: import from cli
-type SessionType = "audio" | "image" | "video" | "multiLingual" | "caption" | "pdf";
-type BeatSessionType = "audio" | "image" | "multiLingual" | "caption" | "movie";
-
-type SessionProgressEvent =
-  | { kind: "session"; sessionType: SessionType; inSession: boolean }
-  | { kind: "beat"; sessionType: BeatSessionType; index: number; inSession: boolean };
-// end of TODO
+import type { SessionType, BeatSessionType, SessionProgressEvent } from "mulmocast";
 
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
