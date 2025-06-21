@@ -181,6 +181,8 @@
                 <template v-else>
                   <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
                 </template>
+                <Button variant="ghost" size="sm" @click="generateImage(index)">generate image</Button>
+                <Button variant="ghost" size="sm" @click="generateAudio(index)">generate audio</Button>
               </div>
 
               <!-- right: preview -->
@@ -235,6 +237,7 @@ import { FileImage, Video } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import YAML from "yaml";
 // import { mulmoSample } from "./sample";
@@ -247,7 +250,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData"]);
+const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio"]);
 
 const jsonText = ref("");
 const yamlText = ref("");
@@ -326,6 +329,15 @@ const update = (index, path, value) => {
 };
 
 // end of mulmo editor
+
+const generateImage = (index) => {
+  emit("generateImage", index);
+  console.log(index);
+};
+const generateAudio = (index) => {
+  emit("generateAudio", index);
+  console.log(index);
+};
 
 const getMediaIcon = (type: string) => {
   switch (type) {
