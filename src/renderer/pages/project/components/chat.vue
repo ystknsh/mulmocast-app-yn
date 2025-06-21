@@ -129,19 +129,6 @@ const graphChat: GraphData = {
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
-    output: {
-      agent: "stringTemplateAgent",
-      inputs: {
-        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
-      },
-    },
-    json: {
-      console: { after: true },
-      agent: "copyAgent",
-      inputs: {
-        json: ":llm.text.codeBlock().jsonParse()",
-      },
-    },
     reducer: {
       agent: "pushAgent",
       inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
@@ -191,13 +178,6 @@ const run = async (initialMessages: ChatMessage[]) => {
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
   graphai.injectValue("messages", initialMessages);
-  graphai.registerCallback((log) => {
-    console.log(log);
-    if (log.nodeId === "json" && log.state === "completed") {
-      console.log(log.result.json);
-      emit("update:updateMulmoScript", log.result.json);
-    }
-  });
   await graphai.run();
 };
 
