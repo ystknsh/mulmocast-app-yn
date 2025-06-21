@@ -28,6 +28,7 @@
             size="sm"
             class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 m-1 rounded-md"
             @click="submitText(events[0])"
+            :disabled="isCreatingScript"
           >
             <Send :size="16" />
           </Button>
@@ -46,13 +47,20 @@
             <select
               v-model="selectedTemplateFileName"
               class="template-dropdown border-2 border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
+              :disabled="isCreatingScript"
             >
               <option v-for="(template, k) in templates" :key="k" :value="template.filename">
                 {{ template.title }}
               </option>
             </select>
-            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
-              Create Script
+            <Button
+              size="sm"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full"
+              @click="createScript"
+              :disabled="isCreatingScript"
+            >
+              <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
+              {{ isCreatingScript ? "Creating..." : "Create Script" }}
             </Button>
           </div>
         </div>
@@ -62,7 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { Loader2 } from "lucide-vue-next";
+import { ref, onMounted } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
@@ -192,14 +201,28 @@ const run = async (initialMessages: ChatMessage[]) => {
   await graphai.run();
 };
 
+const isCreatingScript = ref(false);
+const createScript = async () => {
+  try {
+    isCreatingScript.value = true;
+    const script = await window.electronAPI.mulmoHandler(
+      "createMulmoScript",
+      messages.value.map((m) => ({ role: m.role, content: m.content })),
+      selectedTemplateFileName.value,
+    );
+    emit("update:updateMulmoScript", script as MulmoScript);
+  } catch (error) {
+    console.error("Failed to create script:", error);
+  } finally {
+    isCreatingScript.value = false;
+  }
+};
+
 const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
   run(initialMessages);
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
   selectedTemplateFileName.value = templates.value[0].filename;
-});
-const selectTemplate = computed(() => {
-  return templates.value.find((template) => template.filename === selectedTemplateFileName.value);
 });
 
 const handleKeydown = (e: KeyboardEvent) => {

@@ -20,6 +20,7 @@ import type { TransactionLog } from "graphai";
 import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";
 import fs from "fs";
+import { createMulmoScript } from "./scripting";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
@@ -182,6 +183,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mulmoAudioFiles(args[0]);
       case "mulmoImageFiles":
         return await mulmoImageFiles(args[0]);
+      case "createMulmoScript":
+        return await createMulmoScript(args[0], args[1]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

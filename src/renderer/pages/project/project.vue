@@ -352,6 +352,7 @@ onMounted(async () => {
 
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
+  isScriptViewerOpen.value = true;
 };
 
 const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
