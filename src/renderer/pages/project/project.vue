@@ -153,15 +153,26 @@
 
               <!-- Output Buttons -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4" @click="generateMovie">
+                <Button
+                  class="flex flex-col items-center space-y-2 h-auto py-4"
+                  @click="generateMovie"
+                  :disabled="store.isArtifactGenerating[projectId]"
+                >
                   <Monitor :size="24" />
                   <span>Generate Movie</span>
                 </Button>
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4">
+                <Button
+                  class="flex flex-col items-center space-y-2 h-auto py-4"
+                  :disabled="store.isArtifactGenerating[projectId]"
+                >
                   <FileText :size="24" />
                   <span>Generate PDF</span>
                 </Button>
-                <Button class="flex flex-col items-center space-y-2 h-auto py-4" @click="generateAudio">
+                <Button
+                  class="flex flex-col items-center space-y-2 h-auto py-4"
+                  @click="generateAudio"
+                  :disabled="store.isArtifactGenerating[projectId]"
+                >
                   <Globe :size="24" />
                   <span>Generate Podcast</span>
                 </Button>

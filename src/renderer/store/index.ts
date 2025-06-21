@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
 
@@ -59,6 +59,20 @@ export const useStore = defineStore("store", () => {
     }
     graphaiDebugLog.value[projectId].push(data);
   };
+  const isArtifactGenerating = computed(() => {
+    return Object.keys(sessionState.value).reduce((tmp: Record<string, boolean>, projectId) => {
+      tmp[projectId] = Object.values(sessionState.value[projectId]["artifact"]).some((state) => state);
+      return tmp;
+    }, {});
+  });
+  const isBeatGenerating = computed(() => {
+    return Object.keys(sessionState.value).reduce((tmp: Record<string, boolean>, projectId) => {
+      tmp[projectId] = Object.values(sessionState.value[projectId]["beat"]).some((sessionState) => {
+        return Object.values(sessionState).some((value) => value);
+      }, {});
+      return tmp;
+    }, {});
+  });
 
   return {
     mulmoEvent,
@@ -67,5 +81,8 @@ export const useStore = defineStore("store", () => {
 
     graphaiDebugLog,
     graphaiLogCallback,
+
+    isArtifactGenerating,
+    isBeatGenerating,
   };
 });
