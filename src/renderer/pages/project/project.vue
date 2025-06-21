@@ -390,6 +390,12 @@ const generateAudio = async () => {
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
 };
 
+const bufferToUrl = (buffer: Buffer, mimeType: string) => {
+  const blob = new Blob([buffer], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  return url;
+};
+
 const audioFiles = ref<(ArrayBuffer | null)[]>([]);
 const imageFiles = ref<(ArrayBuffer | null)[]>([]);
 const downloadAudioFiles = async () => {
@@ -398,9 +404,7 @@ const downloadAudioFiles = async () => {
   console.log(res);
   audioFiles.value = res.map((buffer) => {
     if (buffer) {
-      const blob = new Blob([buffer], { type: "audio/mp3" });
-      const url = URL.createObjectURL(blob);
-      return url;
+      return bufferToUrl(buffer, "audio/mp3");
     }
     return "";
   });
@@ -411,9 +415,7 @@ const downloadImageFiles = async () => {
   console.log(res2);
   imageFiles.value = res2.map((data) => {
     if (data && data.imageData) {
-      const blob = new Blob([data.imageData], { type: "image/png" });
-      const url = URL.createObjectURL(blob);
-      return url;
+      return bufferToUrl(data.imageData, "image/png");
     }
     return "";
   });
@@ -429,17 +431,12 @@ const validateLog = computed(() => {
   // mulmoScriptSchema.parse(mulmoScript.value)
   return [];
 });
-// const debugLog = ref([]);
 
-//
 
 const videoUrl = ref("");
 const playVideo = async (callback?: () => void) => {
   const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie");
-  const blob = new Blob([buffer], { type: "video/mp4" });
-  const url = URL.createObjectURL(blob);
-
-  videoUrl.value = url;
+  videoUrl.value = bufferToUrl(buffer, "video/mp4");
   if (callback) {
     callback();
   }
@@ -447,9 +444,21 @@ const playVideo = async (callback?: () => void) => {
 
 watch(
   () => store.mulmoEvent[projectId.value],
-  (mulmoEvent) => {
+  async (mulmoEvent) => {
+    // session
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
       playVideo();
+    }
+    // beats
+    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+    }
+    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
+      const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, mulmoEvent.index);
+      if (data && data.imageData) {
+        imageFiles.value[mulmoEvent.index] = bufferToUrl(data.imageData, "image/png");
+      }
+    }
+    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
     }
     console.log(mulmoEvent);
   },

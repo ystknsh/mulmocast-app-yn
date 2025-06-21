@@ -140,26 +140,38 @@ export const mulmoAudioFiles = async (projectId: string) => {
   }
 };
 
+const beatImage = (context, imageAgentInfo) => {
+  return async (beat, index) => {
+    try {
+      const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
+      if (res.imagePath && fs.existsSync(res.imagePath)) {
+        const buffer = fs.readFileSync(res.imagePath);
+        res.imageData = buffer.buffer;
+      }
+      // console.log(res);
+      return res;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
+};
+
 export const mulmoImageFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    return Promise.all(
-      context.studio.script.beats.map(async (beat, index) => {
-        try {
-          const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-          if (res.imagePath && fs.existsSync(res.imagePath)) {
-            const buffer = fs.readFileSync(res.imagePath);
-            res.imageData = buffer.buffer;
-          }
-          // console.log(res);
-          return res;
-        } catch (e) {
-          console.log(e);
-          return "";
-        }
-      }),
-    );
+    return Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const mulmoImageFile = async (projectId: string, index: number) => {
+  try {
+    const context = await getContext(projectId);
+    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
+    const beat = context.studio.script.beats[index];
+    return await beatImage(context, imageAgentInfo)(beat, index);
   } catch (error) {
     console.log(error);
   }
@@ -182,6 +194,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mulmoAudioFiles(args[0]);
       case "mulmoImageFiles":
         return await mulmoImageFiles(args[0]);
+      case "mulmoImageFile":
+        return await mulmoImageFile(args[0], args[1]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
