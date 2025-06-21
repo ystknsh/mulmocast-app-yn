@@ -81,6 +81,7 @@ import ListView from "./components/list_view.vue";
 import GridView from "./components/grid_view.vue";
 import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/project_api";
+import dayjs from "dayjs";
 
 const router = useRouter();
 const viewMode = ref<"list" | "grid">("list");
@@ -103,7 +104,7 @@ const loadProjects = async () => {
 
 const sortedProjects = computed(() => {
   return projects.value.toSorted((a, b) => {
-    return new Date(b.metadata.updatedAt).getTime() - new Date(a.metadata.updatedAt).getTime();
+    return dayjs(b.metadata.updatedAt).valueOf() - dayjs(a.metadata.updatedAt).valueOf();
   });
 });
 
