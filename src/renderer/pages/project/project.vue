@@ -314,6 +314,7 @@ import {
   getTimelineFocusClass,
 } from "./composable/style";
 import { ChatMessage } from "@/types";
+import { toast } from "vue-sonner";
 
 // State
 const route = useRoute();
@@ -353,6 +354,9 @@ onMounted(async () => {
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
   isScriptViewerOpen.value = true;
+  toast("Script created successfully 🎉", {
+    description: "You can now edit the script and generate artifacts",
+  });
 };
 
 const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
