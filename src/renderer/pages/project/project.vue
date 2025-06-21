@@ -129,6 +129,8 @@
                   @update:mulmoValue="(val) => (mulmoScript = val)"
                   :isValidScriptData="isValidScriptData"
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                  @generateImage="(val) => generateImage(val)"
+                  @generateAudio="(val) => generateAudio(val)"
                 />
               </CardContent>
             </CollapsibleContent>
@@ -170,7 +172,7 @@
                 </Button>
                 <Button
                   class="flex flex-col items-center space-y-2 h-auto py-4"
-                  @click="generateAudio"
+                  @click="generatePodcast"
                   :disabled="store.isArtifactGenerating[projectId]"
                 >
                   <Globe :size="24" />
@@ -366,12 +368,13 @@ const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
   });
 }, 1000);
 
-const saveMulmoScript = useDebounceFn(async (data) => {
+const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
-}, 1000);
+};
+const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(mulmoScript, () => {
   // Be careful not to save a page just by opening it.
@@ -385,9 +388,19 @@ const generateMovie = async () => {
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie");
 };
 
-const generateAudio = async () => {
+const generatePodcast = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
+};
+
+const generateImage = async (index) => {
+  await saveMulmo(mulmoScript.value);
+  await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index);
+  console.log(index);
+};
+const generateAudio = async (index) => {
+  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index);
+  console.log(index);
 };
 
 const bufferToUrl = (buffer: Buffer, mimeType: string) => {

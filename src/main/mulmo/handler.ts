@@ -13,6 +13,8 @@ import {
   removeSessionProgressCallback,
   getBeatAudioPath,
   imagePreprocessAgent,
+  generateBeatImage,
+  generateBeatAudio,
   MulmoPresentationStyleMethods,
 } from "mulmocast";
 import type { MulmoStudioContext } from "mulmocast";
@@ -34,6 +36,60 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
   return await initializeContext(argv);
 };
 
+const mulmoCallbackGenerator = (projectId: string, webContents) => {
+  return (data) => {
+    if (webContents) {
+      webContents.send("progress-update", {
+        projectId,
+        type: "mulmo",
+        data,
+      });
+    }
+  };
+};
+
+export const mulmoGenerateImage = async (projectId: string, index: number, webContents) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  addSessionProgressCallback(mulmoCallback);
+  try {
+    const context = await getContext(projectId);
+    await generateBeatImage(index, context);
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+export const mulmoGenerateAudio = async (projectId: string, index: number, webContents) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    await generateBeatAudio(index, context);
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
 export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
   try {
     const context = await getContext(projectId);
@@ -48,15 +104,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
         }
       },
     ];
-    const mulmoCallback = (data) => {
-      if (webContents) {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data,
-        });
-      }
-    };
+    const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
     // await runTranslateIfNeeded(context, argv);
     if (actionName === "audio") {
@@ -196,6 +244,10 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return getAvailableTemplates();
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
+      case "mulmoImageGenerate":
+        return await mulmoGenerateImage(args[0], args[1], webContents);
+      case "mulmoAudioGenerate":
+        return await mulmoGenerateAudio(args[0], args[1], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":

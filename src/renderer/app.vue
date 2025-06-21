@@ -20,6 +20,9 @@ export default defineComponent({
         if (message.type === "graphai") {
           store.graphaiLogCallback(message);
         }
+        if (message.type === "error") {
+          console.log(message);
+        }
       });
     });
   },
