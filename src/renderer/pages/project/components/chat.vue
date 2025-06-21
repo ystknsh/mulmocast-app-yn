@@ -87,6 +87,7 @@ import { openAIAgent } from "@graphai/llm_agents";
 import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
+import { toast } from "vue-sonner";
 
 const { initialMessages = [] } = defineProps<{
   initialMessages: ChatMessage[];
@@ -193,6 +194,12 @@ const createScript = async () => {
     emit("update:updateMulmoScript", script as MulmoScript);
   } catch (error) {
     console.error("Failed to create script:", error);
+    toast("Failed to create script", {
+      description: "Please try again",
+      style: {
+        color: "red",
+      },
+    });
   } finally {
     isCreatingScript.value = false;
   }
