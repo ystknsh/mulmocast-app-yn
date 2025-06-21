@@ -186,7 +186,7 @@
               </div>
 
               <!-- right: preview -->
-              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center" >
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                 <img :src="imageFiles[index]" v-if="imageFiles[index]" />
                 <component :is="getMediaIcon(beat.image.type)" :size="32" class="mx-auto text-gray-400 mb-2" v-else />
                 <p class="text-sm text-gray-500" v-if="beat.image">{{ beat.image.type }} Preview</p>
