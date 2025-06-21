@@ -356,7 +356,7 @@ onMounted(async () => {
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
   isScriptViewerOpen.value = true;
-  notifySuccess("Script created successfully 🎉", "You can now edit the script and generate artifacts");
+  notifySuccess("Script created successfully 🎉");
 };
 
 const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
