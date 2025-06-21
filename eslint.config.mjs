@@ -105,6 +105,7 @@ export default [
       },
       globals: {
         ...globals.browser,
+        Buffer: 'readonly',
       },
     },
     plugins: {

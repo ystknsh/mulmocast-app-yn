@@ -13,6 +13,8 @@ import {
   removeSessionProgressCallback,
   getBeatAudioPath,
   imagePreprocessAgent,
+  generateBeatImage,
+  generateBeatAudio,
   MulmoPresentationStyleMethods,
 } from "mulmocast";
 import type { MulmoStudioContext } from "mulmocast";
@@ -34,6 +36,60 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
   return await initializeContext(argv);
 };
 
+const mulmoCallbackGenerator = (projectId: string, webContents) => {
+  return (data) => {
+    if (webContents) {
+      webContents.send("progress-update", {
+        projectId,
+        type: "mulmo",
+        data,
+      });
+    }
+  };
+};
+
+export const mulmoGenerateImage = async (projectId: string, index: number, webContents) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  addSessionProgressCallback(mulmoCallback);
+  try {
+    const context = await getContext(projectId);
+    await generateBeatImage(index, context);
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+export const mulmoGenerateAudio = async (projectId: string, index: number, webContents) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    await generateBeatAudio(index, context);
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
 export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
   try {
     const context = await getContext(projectId);
@@ -48,15 +104,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
         }
       },
     ];
-    const mulmoCallback = (data) => {
-      if (webContents) {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data,
-        });
-      }
-    };
+    const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
     // await runTranslateIfNeeded(context, argv);
     if (actionName === "audio") {
@@ -114,52 +162,74 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
+const beatAudio = (context) => {
+  return (beat) => {
+    try {
+      const { text } = beat; // TODO: multiLingual
+      const fileName = getBeatAudioPath(text, context, beat);
+      if (fs.existsSync(fileName)) {
+        const buffer = fs.readFileSync(fileName);
+        return buffer.buffer;
+        // return fileName;
+      }
+      return;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
+};
+
 export const mulmoAudioFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
-    return context.studio.script.beats
-      .map((beat) => {
-        try {
-          const { text } = beat; // TODO: multiLingual
-          return getBeatAudioPath(text, context, beat);
-        } catch (e) {
-          console.log(e);
-          return "";
-        }
-      })
-      .map((fileName) => {
-        if (fs.existsSync && fs.existsSync(fileName)) {
-          const buffer = fs.readFileSync(fileName);
-          return buffer.buffer;
-          // return fileName;
-        }
-        return;
-      });
+    return context.studio.script.beats.map(beatAudio(context));
   } catch (error) {
     console.log(error);
   }
+};
+export const mulmoAudioFile = async (projectId: string, index: number) => {
+  try {
+    const context = await getContext(projectId);
+    const beat = context.studio.script.beats[index];
+    return beatAudio(context)(beat);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const beatImage = (context, imageAgentInfo) => {
+  return async (beat, index) => {
+    try {
+      const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
+      if (res.imagePath && fs.existsSync(res.imagePath)) {
+        const buffer = fs.readFileSync(res.imagePath);
+        res.imageData = buffer.buffer;
+      }
+      // console.log(res);
+      return res;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
 };
 
 export const mulmoImageFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    return Promise.all(
-      context.studio.script.beats.map(async (beat, index) => {
-        try {
-          const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-          if (res.imagePath && fs.existsSync(res.imagePath)) {
-            const buffer = fs.readFileSync(res.imagePath);
-            res.imageData = buffer.buffer;
-          }
-          // console.log(res);
-          return res;
-        } catch (e) {
-          console.log(e);
-          return "";
-        }
-      }),
-    );
+    return Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const mulmoImageFile = async (projectId: string, index: number) => {
+  try {
+    const context = await getContext(projectId);
+    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
+    const beat = context.studio.script.beats[index];
+    return await beatImage(context, imageAgentInfo)(beat, index);
   } catch (error) {
     console.log(error);
   }
@@ -174,14 +244,22 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return getAvailableTemplates();
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
+      case "mulmoImageGenerate":
+        return await mulmoGenerateImage(args[0], args[1], webContents);
+      case "mulmoAudioGenerate":
+        return await mulmoGenerateAudio(args[0], args[1], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":
         return await mediaFilePath(args[0], args[1]);
       case "mulmoAudioFiles":
         return await mulmoAudioFiles(args[0]);
+      case "mulmoAudioFile":
+        return await mulmoAudioFile(args[0], args[1]);
       case "mulmoImageFiles":
         return await mulmoImageFiles(args[0]);
+      case "mulmoImageFile":
+        return await mulmoImageFile(args[0], args[1]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

@@ -129,6 +129,8 @@
                   @update:mulmoValue="(val) => (mulmoScript = val)"
                   :isValidScriptData="isValidScriptData"
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                  @generateImage="(val) => generateImage(val)"
+                  @generateAudio="(val) => generateAudio(val)"
                 />
               </CardContent>
             </CollapsibleContent>
@@ -170,7 +172,7 @@
                 </Button>
                 <Button
                   class="flex flex-col items-center space-y-2 h-auto py-4"
-                  @click="generateAudio"
+                  @click="generatePodcast"
                   :disabled="store.isArtifactGenerating[projectId]"
                 >
                   <Globe :size="24" />
@@ -366,12 +368,13 @@ const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
   });
 }, 1000);
 
-const saveMulmoScript = useDebounceFn(async (data) => {
+const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
-}, 1000);
+};
+const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(mulmoScript, () => {
   // Be careful not to save a page just by opening it.
@@ -385,9 +388,25 @@ const generateMovie = async () => {
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie");
 };
 
-const generateAudio = async () => {
+const generatePodcast = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
+};
+
+const generateImage = async (index) => {
+  await saveMulmo(mulmoScript.value);
+  await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index);
+  console.log(index);
+};
+const generateAudio = async (index) => {
+  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index);
+  console.log(index);
+};
+
+const bufferToUrl = (buffer: Buffer, mimeType: string) => {
+  const blob = new Blob([buffer], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  return url;
 };
 
 const audioFiles = ref<(ArrayBuffer | null)[]>([]);
@@ -398,9 +417,7 @@ const downloadAudioFiles = async () => {
   console.log(res);
   audioFiles.value = res.map((buffer) => {
     if (buffer) {
-      const blob = new Blob([buffer], { type: "audio/mp3" });
-      const url = URL.createObjectURL(blob);
-      return url;
+      return bufferToUrl(buffer, "audio/mp3");
     }
     return "";
   });
@@ -411,9 +428,7 @@ const downloadImageFiles = async () => {
   console.log(res2);
   imageFiles.value = res2.map((data) => {
     if (data && data.imageData) {
-      const blob = new Blob([data.imageData], { type: "image/png" });
-      const url = URL.createObjectURL(blob);
-      return url;
+      return bufferToUrl(data.imageData, "image/png");
     }
     return "";
   });
@@ -429,17 +444,11 @@ const validateLog = computed(() => {
   // mulmoScriptSchema.parse(mulmoScript.value)
   return [];
 });
-// const debugLog = ref([]);
-
-//
 
 const videoUrl = ref("");
 const playVideo = async (callback?: () => void) => {
   const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie");
-  const blob = new Blob([buffer], { type: "video/mp4" });
-  const url = URL.createObjectURL(blob);
-
-  videoUrl.value = url;
+  videoUrl.value = bufferToUrl(buffer, "video/mp4");
   if (callback) {
     callback();
   }
@@ -447,9 +456,23 @@ const playVideo = async (callback?: () => void) => {
 
 watch(
   () => store.mulmoEvent[projectId.value],
-  (mulmoEvent) => {
+  async (mulmoEvent) => {
+    // session
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
       playVideo();
+    }
+    // beats
+    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
+      const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, mulmoEvent.index);
+      if (data && data.imageData) {
+        imageFiles.value[mulmoEvent.index] = bufferToUrl(data.imageData, "image/png");
+      }
+    }
+    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
+      const res = await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, mulmoEvent.index);
+      if (res) {
+        audioFiles.value[mulmoEvent.index] = bufferToUrl(res, "audio/mp3");
+      }
     }
     console.log(mulmoEvent);
   },
