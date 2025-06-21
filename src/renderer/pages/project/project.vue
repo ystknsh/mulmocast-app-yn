@@ -432,7 +432,6 @@ const validateLog = computed(() => {
   return [];
 });
 
-
 const videoUrl = ref("");
 const playVideo = async (callback?: () => void) => {
   const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie");
@@ -450,8 +449,6 @@ watch(
       playVideo();
     }
     // beats
-    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
-    }
     if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
       const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, mulmoEvent.index);
       if (data && data.imageData) {
@@ -459,6 +456,10 @@ watch(
       }
     }
     if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
+      const res = await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, mulmoEvent.index);
+      if (res) {
+        audioFiles.value[mulmoEvent.index] = bufferToUrl(res, "audio/mp3");
+      }
     }
     console.log(mulmoEvent);
   },

@@ -114,27 +114,37 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
+const beatAudio = (context) => {
+  return (beat) => {
+    try {
+      const { text } = beat; // TODO: multiLingual
+      const fileName = getBeatAudioPath(text, context, beat);
+      if (fs.existsSync(fileName)) {
+        const buffer = fs.readFileSync(fileName);
+        return buffer.buffer;
+        // return fileName;
+      }
+      return;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
+};
+
 export const mulmoAudioFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
-    return context.studio.script.beats
-      .map((beat) => {
-        try {
-          const { text } = beat; // TODO: multiLingual
-          return getBeatAudioPath(text, context, beat);
-        } catch (e) {
-          console.log(e);
-          return "";
-        }
-      })
-      .map((fileName) => {
-        if (fs.existsSync && fs.existsSync(fileName)) {
-          const buffer = fs.readFileSync(fileName);
-          return buffer.buffer;
-          // return fileName;
-        }
-        return;
-      });
+    return context.studio.script.beats.map(beatAudio(context));
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const mulmoAudioFile = async (projectId: string, index: number) => {
+  try {
+    const context = await getContext(projectId);
+    const beat = context.studio.script.beats[index];
+    return beatAudio(context)(beat);
   } catch (error) {
     console.log(error);
   }
@@ -192,6 +202,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mediaFilePath(args[0], args[1]);
       case "mulmoAudioFiles":
         return await mulmoAudioFiles(args[0]);
+      case "mulmoAudioFile":
+        return await mulmoAudioFile(args[0], args[1]);
       case "mulmoImageFiles":
         return await mulmoImageFiles(args[0]);
       case "mulmoImageFile":
