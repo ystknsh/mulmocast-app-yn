@@ -57,7 +57,7 @@
               size="sm"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full"
               @click="createScript"
-              :disabled="isCreatingScript"
+              :disabled="!canCreateScript"
             >
               <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
               {{ isCreatingScript ? "Creating..." : "Create Script" }}
@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 import { Loader2 } from "lucide-vue-next";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
@@ -206,6 +206,8 @@ onMounted(async () => {
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
   selectedTemplateFileName.value = templates.value[0].filename;
 });
+
+const canCreateScript = computed(() => messages.value.length > 0 && !isCreatingScript.value);
 
 const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter
