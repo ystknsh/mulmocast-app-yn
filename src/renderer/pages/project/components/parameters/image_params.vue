@@ -5,8 +5,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Model</label>
         <input
-          :value="modelValue?.imageParams?.model || ''"
-          @input="$emit('update', 'imageParams.model', ($event.target as HTMLInputElement).value)"
+          :value="imageParams?.model || ''"
+          @input="$emit('update', ($event.target as HTMLInputElement).value, 'model')"
           placeholder="e.g. dall-e-3, gpt-image-1"
           class="w-full p-2 border rounded text-sm"
         />
@@ -14,8 +14,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Style</label>
         <input
-          :value="modelValue?.imageParams?.style || ''"
-          @input="$emit('update', 'imageParams.style', ($event.target as HTMLInputElement).value)"
+          :value="imageParams?.style || ''"
+          @input="$emit('update', ($event.target as HTMLInputElement).value, 'style')"
           placeholder="e.g. vivid, natural"
           class="w-full p-2 border rounded text-sm"
         />
@@ -23,8 +23,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Moderation</label>
         <input
-          :value="modelValue?.imageParams?.moderation || ''"
-          @input="$emit('update', 'imageParams.moderation', ($event.target as HTMLInputElement).value)"
+          :value="imageParams?.moderation || ''"
+          @input="$emit('update', ($event.target as HTMLInputElement).value, 'moderation')"
           placeholder="e.g. low, auto"
           class="w-full p-2 border rounded text-sm"
         />
@@ -35,13 +35,18 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-import type { MulmoScript } from "mulmocast";
+
+interface ImageParams {
+  model?: string;
+  style?: string;
+  moderation?: string;
+}
 
 defineProps<{
-  modelValue: MulmoScript;
+  imageParams?: ImageParams;
 }>();
 
 defineEmits<{
-  update: [path: string, value: unknown];
+  update: [value: string, field: "model" | "style" | "moderation"];
 }>();
 </script>

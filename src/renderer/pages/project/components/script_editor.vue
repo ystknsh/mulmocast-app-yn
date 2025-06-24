@@ -201,18 +201,38 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-4">Parameters Mode - Image, Speech, and Audio parameter editing</p>
         <div class="space-y-6">
-          <CanvasSizeParams :model-value="mulmoValue" @update="updateParam" />
+          <CanvasSizeParams
+            :canvas-size="mulmoValue?.canvasSize"
+            @update="(value, field) => updateParam(`canvasSize.${field}`, value)"
+          />
+          <ImageParams
+            :image-params="mulmoValue?.imageParams"
+            @update="(value, field) => updateParam(`imageParams.${field}`, value)"
+          />
+          <TextSlideParams
+            :text-slide-params="mulmoValue?.textSlideParams"
+            @update="(value) => updateParam('textSlideParams.cssStyles', value)"
+          />
           <SpeechParams
-            :model-value="mulmoValue"
-            @update="updateParam"
+            :speech-params="mulmoValue?.speechParams"
+            @update-speaker="(name, field, value) => updateParam(`speechParams.speakers.${name}.${field}`, value)"
+            @update-speaker-display-name="
+              (name, language, value) => updateParam(`speechParams.speakers.${name}.displayName.${language}`, value)
+            "
             @add-speaker="addSpeaker"
             @delete-speaker="deleteSpeaker"
             @initialize-speech-params="initializeSpeechParams"
           />
-          <ImageParams :model-value="mulmoValue" @update="updateParam" />
-          <TextSlideParams :model-value="mulmoValue" @update="updateParam" />
-          <MovieParams :model-value="mulmoValue" @update="updateParam" />
-          <AudioParams :model-value="mulmoValue" @update="updateParam" />
+          <AudioParams
+            :audio-params="mulmoValue?.audioParams"
+            @update="(value, field) => updateParam(`audioParams.${field}`, value)"
+          />
+          <MovieParams
+            :movie-params="mulmoValue?.movieParams"
+            @update="(value, field) => updateParam(`movieParams.${field}`, value)"
+            @update-transition="(value, field) => updateParam(`movieParams.transition.${field}`, value)"
+            @update-fill-option="(value) => updateParam('movieParams.fillOption.style', value)"
+          />
         </div>
       </div>
     </TabsContent>

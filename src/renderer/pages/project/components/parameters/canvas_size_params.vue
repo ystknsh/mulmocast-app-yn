@@ -5,8 +5,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Width</label>
         <input
-          :value="modelValue?.canvasSize?.width || 1280"
-          @input="$emit('update', 'canvasSize.width', Number(($event.target as HTMLInputElement).value))"
+          :value="canvasSize?.width || 1280"
+          @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'width')"
           type="number"
           class="w-full p-2 border rounded text-sm"
         />
@@ -14,8 +14,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Height</label>
         <input
-          :value="modelValue?.canvasSize?.height || 720"
-          @input="$emit('update', 'canvasSize.height', Number(($event.target as HTMLInputElement).value))"
+          :value="canvasSize?.height || 720"
+          @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'height')"
           type="number"
           class="w-full p-2 border rounded text-sm"
         />
@@ -26,13 +26,17 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-import type { MulmoScript } from "mulmocast";
+
+interface CanvasSize {
+  width?: number;
+  height?: number;
+}
 
 defineProps<{
-  modelValue: MulmoScript;
+  canvasSize?: CanvasSize;
 }>();
 
 defineEmits<{
-  update: [path: string, value: unknown];
+  update: [value: number, field: "width" | "height"];
 }>();
 </script>

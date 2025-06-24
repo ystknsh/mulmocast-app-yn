@@ -126,12 +126,7 @@
                 <ScriptEditor
                   :mulmoValue="mulmoScript"
                   :imageFiles="imageFiles"
-                  @update:mulmoValue="
-                    (val) => {
-                      console.log('Script updated:', val);
-                      mulmoScript = val;
-                    }
-                  "
+                  @update:mulmoValue="(val) => (mulmoScript = val)"
                   :isValidScriptData="isValidScriptData"
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
                   @generateImage="(val) => generateImage(val)"
@@ -377,11 +372,10 @@ const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
 }, 1000);
 
 const saveMulmo = async (data) => {
-  console.log("Saving mulmo script:", data);
+  console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
-  console.log("Save completed");
 };
 const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 

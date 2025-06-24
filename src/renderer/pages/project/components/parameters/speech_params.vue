@@ -1,12 +1,12 @@
 <template>
   <Card class="p-4">
     <h4 class="font-medium mb-3">Speech Parameters</h4>
-    <div v-if="modelValue?.speechParams?.speakers" class="space-y-4">
-      <div v-for="(speaker, name) in modelValue.speechParams.speakers" :key="name" class="border p-3 rounded">
+    <div v-if="speechParams?.speakers" class="space-y-4">
+      <div v-for="(speaker, name) in speechParams.speakers" :key="name" class="border p-3 rounded">
         <div class="flex items-center justify-between mb-2">
           <h5 class="font-medium text-sm">{{ name }}</h5>
           <Button
-            v-if="Object.keys(modelValue.speechParams.speakers).length > 1"
+            v-if="Object.keys(speechParams.speakers).length > 1"
             variant="ghost"
             size="sm"
             @click="$emit('deleteSpeaker', name)"
@@ -20,9 +20,7 @@
             <label class="block text-xs text-gray-600 mb-1">Voice ID</label>
             <input
               :value="speaker.voiceId"
-              @input="
-                $emit('update', `speechParams.speakers.${name}.voiceId`, ($event.target as HTMLInputElement).value)
-              "
+              @input="$emit('updateSpeaker', name, 'voiceId', ($event.target as HTMLInputElement).value)"
               class="w-full p-1 border rounded text-sm"
             />
           </div>
@@ -47,8 +45,9 @@
                 :value="speaker.displayName[selectedLanguages[name] || 'en'] || ''"
                 @input="
                   $emit(
-                    'update',
-                    `speechParams.speakers.${name}.displayName.${selectedLanguages[name] || 'en'}`,
+                    'updateSpeakerDisplayName',
+                    name,
+                    selectedLanguages[name] || 'en',
                     ($event.target as HTMLInputElement).value,
                   )
                 "
@@ -71,14 +70,23 @@
 import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { MulmoScript } from "mulmocast";
+
+interface Speaker {
+  voiceId: string;
+  displayName?: Record<string, string>;
+}
+
+interface SpeechParams {
+  speakers: Record<string, Speaker>;
+}
 
 const props = defineProps<{
-  modelValue: MulmoScript;
+  speechParams?: SpeechParams;
 }>();
 
 defineEmits<{
-  update: [path: string, value: unknown];
+  updateSpeaker: [name: string, field: "voiceId", value: string];
+  updateSpeakerDisplayName: [name: string, language: string, value: string];
   addSpeaker: [];
   deleteSpeaker: [name: string];
   initializeSpeechParams: [];
@@ -89,18 +97,11 @@ const selectedLanguages = ref<Record<string, string>>({});
 const languages = [
   { code: "en", name: "English" },
   { code: "ja", name: "日本語" },
-  { code: "es", name: "Español" },
-  { code: "fr", name: "Français" },
-  { code: "de", name: "Deutsch" },
-  { code: "zh", name: "中文" },
-  { code: "ko", name: "한국어" },
-  { code: "pt", name: "Português" },
-  { code: "it", name: "Italiano" },
-  { code: "ru", name: "Русский" },
+  // TODO: add more languages
 ];
 
 watch(
-  () => props.modelValue?.speechParams?.speakers,
+  () => props.speechParams?.speakers,
   (speakers) => {
     if (speakers) {
       Object.keys(speakers).forEach((speakerName) => {

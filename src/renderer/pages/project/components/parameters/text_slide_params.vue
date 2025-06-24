@@ -10,7 +10,7 @@
         <textarea
           :value="cssStylesText"
           @input="handleCssStylesInput(($event.target as HTMLTextAreaElement).value)"
-          placeholder="e.g. &#10;font-size: 24px;&#10;color: #333;&#10;margin: 20px;"
+          placeholder="e.g. font-size: 24px;&#10;color: #333;&#10;margin: 20px;"
           class="w-full p-2 border rounded text-sm font-mono"
           rows="6"
         />
@@ -22,18 +22,23 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Card } from "@/components/ui/card";
-import type { MulmoScript } from "mulmocast";
+
+type CssStyles = string | string[];
+
+type TextSlideParams = {
+  cssStyles?: CssStyles;
+};
 
 const props = defineProps<{
-  modelValue: MulmoScript;
+  textSlideParams?: TextSlideParams;
 }>();
 
 const emit = defineEmits<{
-  update: [path: string, value: unknown];
+  update: [value: CssStyles];
 }>();
 
 const cssStylesText = computed(() => {
-  const styles = props.modelValue?.textSlideParams?.cssStyles;
+  const styles = props.textSlideParams?.cssStyles;
   if (!styles) return "";
   if (typeof styles === "string") return styles;
   if (Array.isArray(styles)) return styles.join("\n");
@@ -44,10 +49,10 @@ const handleCssStylesInput = (value: string) => {
   // If it contains newlines, convert to array
   if (value.includes("\n")) {
     const lines = value.split("\n").filter((line) => line.trim() !== "");
-    emit("update", "textSlideParams.cssStyles", lines);
+    emit("update", lines);
   } else {
     // Otherwise, keep as single string
-    emit("update", "textSlideParams.cssStyles", value);
+    emit("update", value);
   }
 };
 </script>

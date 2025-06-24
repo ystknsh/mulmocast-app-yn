@@ -6,8 +6,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Padding</label>
           <input
-            :value="modelValue?.audioParams?.padding || 0.3"
-            @input="$emit('update', 'audioParams.padding', Number($event.target.value))"
+            :value="audioParams?.padding ?? 0.3"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'padding')"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -16,8 +16,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Intro Padding</label>
           <input
-            :value="modelValue?.audioParams?.introPadding || 1.0"
-            @input="$emit('update', 'audioParams.introPadding', Number($event.target.value))"
+            :value="audioParams?.introPadding ?? 1.0"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'introPadding')"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -28,8 +28,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Closing Padding</label>
           <input
-            :value="modelValue?.audioParams?.closingPadding || 0.8"
-            @input="$emit('update', 'audioParams.closingPadding', Number($event.target.value))"
+            :value="audioParams?.closingPadding ?? 0.8"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'closingPadding')"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -38,8 +38,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Outro Padding</label>
           <input
-            :value="modelValue?.audioParams?.outroPadding || 1.0"
-            @input="$emit('update', 'audioParams.outroPadding', Number($event.target.value))"
+            :value="audioParams?.outroPadding ?? 1.0"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'outroPadding')"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -50,8 +50,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">BGM Volume</label>
           <input
-            :value="modelValue?.audioParams?.bgmVolume || 0.2"
-            @input="$emit('update', 'audioParams.bgmVolume', Number($event.target.value))"
+            :value="audioParams?.bgmVolume ?? 0.2"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'bgmVolume')"
             type="number"
             step="0.05"
             min="0"
@@ -62,8 +62,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Audio Volume</label>
           <input
-            :value="modelValue?.audioParams?.audioVolume || 1.0"
-            @input="$emit('update', 'audioParams.audioVolume', Number($event.target.value))"
+            :value="audioParams?.audioVolume ?? 1.0"
+            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'audioVolume')"
             type="number"
             step="0.05"
             min="0"
@@ -72,11 +72,11 @@
           />
         </div>
       </div>
-      <div v-if="modelValue?.audioParams?.bgm">
+      <div v-if="audioParams?.bgm">
         <label class="block text-sm text-gray-600 mb-1">Background Music</label>
         <div class="p-2 border rounded text-sm">
-          <span class="text-xs text-gray-500">{{ modelValue.audioParams.bgm.kind }}:</span>
-          {{ modelValue.audioParams.bgm[modelValue.audioParams.bgm.kind] }}
+          <span class="text-xs text-gray-500">{{ audioParams.bgm.kind }}:</span>
+          {{ (audioParams.bgm as any)[audioParams.bgm.kind] }}
         </div>
       </div>
     </div>
@@ -85,13 +85,30 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-import type { MulmoScript } from "mulmocast";
+
+interface Bgm {
+  kind: string;
+  [key: string]: unknown;
+}
+
+interface AudioParams {
+  padding?: number;
+  introPadding?: number;
+  closingPadding?: number;
+  outroPadding?: number;
+  bgmVolume?: number;
+  audioVolume?: number;
+  bgm?: Bgm;
+}
 
 defineProps<{
-  modelValue: MulmoScript;
+  audioParams?: AudioParams;
 }>();
 
 defineEmits<{
-  update: [path: string, value: unknown];
+  update: [
+    value: number,
+    field: "padding" | "introPadding" | "closingPadding" | "outroPadding" | "bgmVolume" | "audioVolume",
+  ];
 }>();
 </script>
