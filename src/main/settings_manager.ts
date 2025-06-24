@@ -51,8 +51,3 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
     throw error;
   }
 };
-
-export const getApiKey = async (keyName: keyof Settings): Promise<string | undefined> => {
-  const settings = await loadSettings();
-  return settings[keyName];
-};
