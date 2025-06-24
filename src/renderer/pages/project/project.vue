@@ -379,10 +379,14 @@ const saveMulmo = async (data) => {
 };
 const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
-watch(mulmoScript, () => {
-  // Be careful not to save a page just by opening it.
-  saveMulmoScript(mulmoScript.value);
-});
+watch(
+  mulmoScript,
+  () => {
+    // Be careful not to save a page just by opening it.
+    saveMulmoScript(mulmoScript.value);
+  },
+  { deep: true },
+);
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
