@@ -26,14 +26,10 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-
-type CanvasSize = {
-  width?: number;
-  height?: number;
-};
+import type { MulmoPresentationStyle } from "mulmocast";
 
 defineProps<{
-  canvasSize?: CanvasSize;
+  canvasSize?: MulmoPresentationStyle["canvasSize"];
 }>();
 
 defineEmits<{

@@ -46,16 +46,10 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-
-type ImageParams = {
-  provider?: "openai" | "google";
-  model?: string;
-  style?: string;
-  moderation?: string;
-};
+import type { MulmoPresentationStyle } from "mulmocast";
 
 defineProps<{
-  imageParams?: ImageParams;
+  imageParams?: MulmoPresentationStyle["imageParams"];
 }>();
 
 defineEmits<{

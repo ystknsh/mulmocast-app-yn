@@ -88,19 +88,10 @@
 import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-type Speaker = {
-  voiceId: string;
-  displayName?: Record<string, string>;
-};
-
-type SpeechParams = {
-  provider?: "openai" | "nijivoice" | "google" | "elevenlabs";
-  speakers: Record<string, Speaker>;
-};
+import type { MulmoPresentationStyle } from "mulmocast";
 
 const props = defineProps<{
-  speechParams?: SpeechParams;
+  speechParams?: MulmoPresentationStyle["speechParams"];
 }>();
 
 defineEmits<{

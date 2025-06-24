@@ -20,19 +20,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Card } from "@/components/ui/card";
-
-type CssStyles = string | string[];
-
-type TextSlideParams = {
-  cssStyles?: CssStyles;
-};
+import type { MulmoPresentationStyle } from "mulmocast";
 
 const props = defineProps<{
-  textSlideParams?: TextSlideParams;
+  textSlideParams?: MulmoPresentationStyle["textSlideParams"];
 }>();
 
 const emit = defineEmits<{
-  update: [value: CssStyles];
+  update: [value: string | string[]];
 }>();
 
 const cssStylesText = computed(() => {

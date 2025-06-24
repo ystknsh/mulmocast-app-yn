@@ -85,24 +85,10 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-
-interface Bgm {
-  kind: string;
-  [key: string]: unknown;
-}
-
-interface AudioParams {
-  padding?: number;
-  introPadding?: number;
-  closingPadding?: number;
-  outroPadding?: number;
-  bgmVolume?: number;
-  audioVolume?: number;
-  bgm?: Bgm;
-}
+import type { MulmoPresentationStyle } from "mulmocast";
 
 defineProps<{
-  audioParams?: AudioParams;
+  audioParams?: MulmoPresentationStyle["audioParams"];
 }>();
 
 defineEmits<{

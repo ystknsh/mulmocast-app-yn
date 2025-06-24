@@ -63,29 +63,10 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
-
-type Provider = "openai" | "google" | "replicate";
-type TransitionType = "fade" | "slideout_left";
-type FillStyle = "aspectFit" | "aspectFill";
-
-type Transition = {
-  type: TransitionType;
-  duration: number;
-};
-
-type FillOption = {
-  style: FillStyle;
-};
-
-type MovieParams = {
-  provider?: Provider;
-  model?: string;
-  transition?: Transition;
-  fillOption?: FillOption;
-};
+import type { MulmoPresentationStyle } from "mulmocast";
 
 defineProps<{
-  movieParams?: MovieParams;
+  movieParams?: MulmoPresentationStyle["movieParams"];
 }>();
 
 defineEmits<{
