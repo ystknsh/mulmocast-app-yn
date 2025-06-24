@@ -22,4 +22,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
   },
+  settings: {
+    get: () => ipcRenderer.invoke("settings:get"),
+    set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
+  },
 });

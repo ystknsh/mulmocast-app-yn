@@ -7,7 +7,10 @@ export interface ElectronAPI {
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
-  getEnv: () => Promise<{ OPENAI_API_KEY?: string }>;
+  getEnv: () => Promise<{
+    OPENAI_API_KEY?: string;
+    NIJIVOICE_API_KEY?: string;
+  }>;
   project: {
     list: () => Promise<Project[]>;
     create: (name: string) => Promise<Project>;
@@ -17,6 +20,10 @@ export interface ElectronAPI {
     getPath: (name: string) => Promise<string>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<boolean>;
     saveProjectScript: (id: string, data: unknown) => Promise<boolean>;
+  };
+  settings: {
+    get: () => Promise<{ openaiKey?: string; nijivoiceApiKey?: string }>;
+    set: (settings: { openaiKey?: string; nijivoiceApiKey?: string }) => Promise<void>;
   };
 }
 

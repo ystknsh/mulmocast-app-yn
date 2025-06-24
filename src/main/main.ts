@@ -4,6 +4,7 @@ import started from "electron-squirrel-startup";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
+import * as settingsManager from "./settings_manager";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -30,9 +31,12 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  ipcMain.on("request-env", (event) => {
+  ipcMain.on("request-env", async (event) => {
+    const settings = await settingsManager.loadSettings();
+
     event.reply("response-env", {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      OPENAI_API_KEY: settings.openaiKey || process.env.OPENAI_API_KEY,
+      NIJIVOICE_API_KEY: settings.nijivoiceApiKey || process.env.NIJIVOICE_API_KEY,
     });
   });
 };
@@ -42,6 +46,15 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   await projectManager.ensureProjectBaseDirectory();
+
+  const settings = await settingsManager.loadSettings();
+  if (settings.openaiKey) {
+    process.env.OPENAI_API_KEY = settings.openaiKey;
+  }
+  if (settings.nijivoiceApiKey) {
+    process.env.NIJIVOICE_API_KEY = settings.nijivoiceApiKey;
+  }
+
   createWindow();
 });
 

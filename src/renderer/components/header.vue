@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, BookOpen, Users, User, Activity, AlertTriangle, Menu } from "lucide-vue-next";
+import { Home, Settings, Activity, AlertTriangle, Menu } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -86,11 +86,8 @@ const mockStatus = {
 
 const dashboardItem = { path: "/", icon: Home, label: "Dashboard" };
 const menuItems = [
+  { path: "/", icon: Home, label: "Home" },
   { path: "/settings", icon: Settings, label: "Settings" },
-  { path: "/templates", icon: BookOpen, label: "Templates" },
-  { path: "/guides", icon: Users, label: "Guides" },
-  { path: "/forum", icon: Users, label: "Forum" },
-  { path: "/profile", icon: User, label: "Profile" },
 ];
 
 const isDashboardActive = computed(() => route.path === dashboardItem.path);
