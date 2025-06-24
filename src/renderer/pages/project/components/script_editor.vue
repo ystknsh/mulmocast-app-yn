@@ -198,33 +198,21 @@
     </TabsContent>
 
     <TabsContent value="params" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px]">
-        <p class="text-sm text-gray-500 mb-2">Parameters Mode - Image, Speech, and Audio parameter editing</p>
-        <div class="grid grid-cols-3 gap-4">
-          <Card class="p-4">
-            <h4 class="font-medium mb-2">Image Parameters</h4>
-            <div class="space-y-2 text-sm">
-              <div>Style: Realistic</div>
-              <div>Aspect Ratio: 16:9</div>
-              <div>Quality: High</div>
-            </div>
-          </Card>
-          <Card class="p-4">
-            <h4 class="font-medium mb-2">Speech Parameters</h4>
-            <div class="space-y-2 text-sm">
-              <div>Speed: 1.0x</div>
-              <div>Pitch: Normal</div>
-              <div>Voice: Natural</div>
-            </div>
-          </Card>
-          <Card class="p-4">
-            <h4 class="font-medium mb-2">Audio Parameters</h4>
-            <div class="space-y-2 text-sm">
-              <div>Background Music: Soft</div>
-              <div>Volume: 0.3</div>
-              <div>Fade: Enabled</div>
-            </div>
-          </Card>
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
+        <p class="text-sm text-gray-500 mb-4">Parameters Mode - Image, Speech, and Audio parameter editing</p>
+        <div class="space-y-6">
+          <CanvasSizeParams :model-value="mulmoValue" @update="updateParam" />
+          <SpeechParams
+            :model-value="mulmoValue"
+            @update="updateParam"
+            @add-speaker="addSpeaker"
+            @delete-speaker="deleteSpeaker"
+            @initialize-speech-params="initializeSpeechParams"
+          />
+          <ImageParams :model-value="mulmoValue" @update="updateParam" />
+          <TextSlideParams :model-value="mulmoValue" @update="updateParam" />
+          <MovieParams :model-value="mulmoValue" @update="updateParam" />
+          <AudioParams :model-value="mulmoValue" @update="updateParam" />
         </div>
       </div>
     </TabsContent>
@@ -238,6 +226,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CanvasSizeParams from "./parameters/canvas_size_params.vue";
+import ImageParams from "./parameters/image_params.vue";
+import SpeechParams from "./parameters/speech_params.vue";
+import AudioParams from "./parameters/audio_params.vue";
+import MovieParams from "./parameters/movie_params.vue";
+import TextSlideParams from "./parameters/text_slide_params.vue";
+import { useDebounceFn } from "@vueuse/core";
 
 import YAML from "yaml";
 // import { mulmoSample } from "./sample";
@@ -311,8 +306,8 @@ const onYamlInput = () => {
   }
 };
 
-const update = (index, path, value) => {
-  const set = (obj, keys, val) =>
+const update = (index: number, path: string, value: unknown) => {
+  const set = (obj: any, keys: string[], val: unknown): any =>
     keys.length === 1
       ? { ...obj, [keys[0]]: val }
       : {
@@ -328,13 +323,79 @@ const update = (index, path, value) => {
   });
 };
 
+const updateParamImmediate = (path: string, value: unknown) => {
+  const keys = path.split(".");
+  const set = (obj: Record<string, unknown>, keyPath: string[], val: unknown): Record<string, unknown> => {
+    if (keyPath.length === 1) {
+      return { ...obj, [keyPath[0]]: val };
+    }
+    const [head, ...tail] = keyPath;
+    const currentValue = obj?.[head];
+    const nextValue =
+      currentValue !== null && typeof currentValue === "object" ? (currentValue as Record<string, unknown>) : {};
+
+    return {
+      ...obj,
+      [head]: set(nextValue, tail, val),
+    };
+  };
+
+  const updatedValue = set((props.mulmoValue || {}) as Record<string, unknown>, keys, value);
+  console.log(`Updating parameter: ${path} =`, value);
+  emit("update:mulmoValue", updatedValue);
+};
+
+const updateParam = useDebounceFn(updateParamImmediate, 300);
+
+const initializeSpeechParams = () => {
+  updateParamImmediate("speechParams", {
+    speakers: {
+      Presenter: {
+        voiceId: "shimmer",
+        displayName: {
+          en: "Presenter",
+        },
+      },
+    },
+  });
+};
+
+const addSpeaker = () => {
+  const speakers = props.mulmoValue?.speechParams?.speakers || {};
+  const speakerCount = Object.keys(speakers).length;
+  const newSpeakerName = `Speaker${speakerCount + 1}`;
+
+  updateParamImmediate("speechParams.speakers", {
+    ...speakers,
+    [newSpeakerName]: {
+      voiceId: "shimmer",
+      displayName: {
+        en: newSpeakerName,
+      },
+    },
+  });
+};
+
+const deleteSpeaker = (speakerName: string) => {
+  const speakers = props.mulmoValue?.speechParams?.speakers || {};
+  const speakerCount = Object.keys(speakers).length;
+
+  if (speakerCount <= 1) {
+    return;
+  }
+
+  const { [speakerName]: __, ...remainingSpeakers } = speakers;
+
+  updateParamImmediate("speechParams.speakers", remainingSpeakers);
+};
+
 // end of mulmo editor
 
-const generateImage = (index) => {
+const generateImage = (index: number) => {
   emit("generateImage", index);
   console.log(index);
 };
-const generateAudio = (index) => {
+const generateAudio = (index: number) => {
   emit("generateAudio", index);
   console.log(index);
 };
@@ -348,7 +409,7 @@ const getMediaIcon = (type: string) => {
   }
 };
 
-function getPromptLabel(type) {
+function getPromptLabel(type: string) {
   switch (type) {
     case "image":
       return "Image Prompt (URL or path)";
