@@ -307,12 +307,12 @@ const onYamlInput = () => {
 };
 
 const update = (index: number, path: string, value: unknown) => {
-  const set = (obj: any, keys: string[], val: unknown): any =>
+  const set = (obj: Record<string, unknown>, keys: string[], val: unknown): Record<string, unknown> =>
     keys.length === 1
       ? { ...obj, [keys[0]]: val }
       : {
           ...obj,
-          [keys[0]]: set(obj[keys[0]], keys.slice(1), val),
+          [keys[0]]: set(obj[keys[0]] as Record<string, unknown>, keys.slice(1), val),
         };
   const newBeat = set(props.mulmoValue.beats[index], path.split("."), value);
   const newBeats = [...props.mulmoValue.beats.slice(0, index), newBeat, ...props.mulmoValue.beats.slice(index + 1)];
