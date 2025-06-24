@@ -47,12 +47,12 @@
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
 
-interface ImageParams {
+type ImageParams = {
   provider?: "openai" | "google";
   model?: string;
   style?: string;
   moderation?: string;
-}
+};
 
 defineProps<{
   imageParams?: ImageParams;

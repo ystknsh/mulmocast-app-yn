@@ -89,15 +89,15 @@ import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-interface Speaker {
+type Speaker = {
   voiceId: string;
   displayName?: Record<string, string>;
-}
+};
 
-interface SpeechParams {
+type SpeechParams = {
   provider?: "openai" | "nijivoice" | "google" | "elevenlabs";
   speakers: Record<string, Speaker>;
-}
+};
 
 const props = defineProps<{
   speechParams?: SpeechParams;

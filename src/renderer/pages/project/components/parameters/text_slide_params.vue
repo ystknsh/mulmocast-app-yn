@@ -4,9 +4,7 @@
     <div class="space-y-3">
       <div>
         <label class="block text-sm text-gray-600 mb-1">CSS Styles</label>
-        <div class="text-xs text-gray-500 mb-2">
-          Enter CSS styles as a single string or multiple lines (each line becomes an array item)
-        </div>
+        <div class="text-xs text-gray-500 mb-2">Enter CSS styles as a single string or multiple lines.</div>
         <textarea
           :value="cssStylesText"
           @input="handleCssStylesInput(($event.target as HTMLTextAreaElement).value)"
@@ -46,12 +44,10 @@ const cssStylesText = computed(() => {
 });
 
 const handleCssStylesInput = (value: string) => {
-  // If it contains newlines, convert to array
   if (value.includes("\n")) {
     const lines = value.split("\n").filter((line) => line.trim() !== "");
     emit("update", lines);
   } else {
-    // Otherwise, keep as single string
     emit("update", value);
   }
 };

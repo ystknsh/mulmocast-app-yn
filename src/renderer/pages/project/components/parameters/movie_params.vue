@@ -68,21 +68,21 @@ type Provider = "openai" | "google" | "replicate";
 type TransitionType = "fade" | "slideout_left";
 type FillStyle = "aspectFit" | "aspectFill";
 
-interface Transition {
+type Transition = {
   type: TransitionType;
   duration: number;
-}
+};
 
-interface FillOption {
+type FillOption = {
   style: FillStyle;
-}
+};
 
-interface MovieParams {
+type MovieParams = {
   provider?: Provider;
   model?: string;
   transition?: Transition;
   fillOption?: FillOption;
-}
+};
 
 defineProps<{
   movieParams?: MovieParams;

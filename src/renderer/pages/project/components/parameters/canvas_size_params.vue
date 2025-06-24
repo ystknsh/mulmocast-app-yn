@@ -27,10 +27,10 @@
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
 
-interface CanvasSize {
+type CanvasSize = {
   width?: number;
   height?: number;
-}
+};
 
 defineProps<{
   canvasSize?: CanvasSize;
