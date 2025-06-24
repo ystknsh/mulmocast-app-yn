@@ -205,14 +205,6 @@
             :canvas-size="mulmoValue?.canvasSize"
             @update="(value, field) => updateParam(`canvasSize.${field}`, value)"
           />
-          <ImageParams
-            :image-params="mulmoValue?.imageParams"
-            @update="(value, field) => updateParam(`imageParams.${field}`, value)"
-          />
-          <TextSlideParams
-            :text-slide-params="mulmoValue?.textSlideParams"
-            @update="(value) => updateParam('textSlideParams.cssStyles', value)"
-          />
           <SpeechParams
             :speech-params="mulmoValue?.speechParams"
             @update-speaker="(name, field, value) => updateParam(`speechParams.speakers.${name}.${field}`, value)"
@@ -223,15 +215,23 @@
             @delete-speaker="deleteSpeaker"
             @initialize-speech-params="initializeSpeechParams"
           />
-          <AudioParams
-            :audio-params="mulmoValue?.audioParams"
-            @update="(value, field) => updateParam(`audioParams.${field}`, value)"
+          <ImageParams
+            :image-params="mulmoValue?.imageParams"
+            @update="(value, field) => updateParam(`imageParams.${field}`, value)"
           />
           <MovieParams
             :movie-params="mulmoValue?.movieParams"
             @update="(value, field) => updateParam(`movieParams.${field}`, value)"
             @update-transition="(value, field) => updateParam(`movieParams.transition.${field}`, value)"
             @update-fill-option="(value) => updateParam('movieParams.fillOption.style', value)"
+          />
+          <TextSlideParams
+            :text-slide-params="mulmoValue?.textSlideParams"
+            @update="(value) => updateParam('textSlideParams.cssStyles', value)"
+          />
+          <AudioParams
+            :audio-params="mulmoValue?.audioParams"
+            @update="(value, field) => updateParam(`audioParams.${field}`, value)"
           />
         </div>
       </div>
@@ -369,6 +369,7 @@ const updateParam = useDebounceFn(updateParamImmediate, 300);
 
 const initializeSpeechParams = () => {
   updateParamImmediate("speechParams", {
+    provider: "openai",
     speakers: {
       Presenter: {
         voiceId: "shimmer",

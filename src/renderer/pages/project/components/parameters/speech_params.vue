@@ -1,8 +1,26 @@
 <template>
   <Card class="p-4">
     <h4 class="font-medium mb-3">Speech Parameters</h4>
-    <div v-if="speechParams?.speakers" class="space-y-4">
-      <div v-for="(speaker, name) in speechParams.speakers" :key="name" class="border p-3 rounded">
+    <div v-if="speechParams" class="space-y-4">
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Provider</label>
+        <select
+          :value="speechParams.provider || 'openai'"
+          @change="$emit('updateProvider', ($event.target as HTMLSelectElement).value)"
+          class="w-full p-2 border rounded text-sm"
+        >
+          <option value="openai">OpenAI</option>
+          <option value="nijivoice">Nijivoice</option>
+          <option value="google">Google</option>
+          <option value="elevenlabs">ElevenLabs</option>
+        </select>
+      </div>
+      <div
+        v-if="speechParams.speakers"
+        v-for="(speaker, name) in speechParams.speakers"
+        :key="name"
+        class="border p-3 rounded"
+      >
         <div class="flex items-center justify-between mb-2">
           <h5 class="font-medium text-sm">{{ name }}</h5>
           <Button
@@ -77,6 +95,7 @@ interface Speaker {
 }
 
 interface SpeechParams {
+  provider?: "openai" | "nijivoice" | "google" | "elevenlabs";
   speakers: Record<string, Speaker>;
 }
 
@@ -85,6 +104,7 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
+  updateProvider: [provider: string];
   updateSpeaker: [name: string, field: "voiceId", value: string];
   updateSpeakerDisplayName: [name: string, language: string, value: string];
   addSpeaker: [];
