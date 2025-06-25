@@ -4140,11 +4140,6 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.8.tgz#e9c6cbe07cf925b8f3c24ef79b4d442366607f66"
-  integrity sha512-GRUbAPxSXXLKmVYWlW90/1qjoxZ9C2p8ohPwsr564o/VpAdZVQXZMEhbXeqTOfzBf8U25MOH5XwbergrCDGw9Q==
-
 graphai@^2.0.9:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.9.tgz#0636d05814418d344ac15ee39a0fd80c37823a8b"
