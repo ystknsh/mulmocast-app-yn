@@ -4,6 +4,8 @@ import started from "electron-squirrel-startup";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
+import * as settingsManager from "./settings_manager";
+import { ENV_KEYS } from "../shared/constants";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -30,10 +32,16 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  ipcMain.on("request-env", (event) => {
-    event.reply("response-env", {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-    });
+  ipcMain.on("request-env", async (event) => {
+    const settings = await settingsManager.loadSettings();
+    const envData: Record<string, string | undefined> = {};
+
+    for (const envKey of Object.keys(ENV_KEYS)) {
+      const value = settings[envKey as keyof settingsManager.Settings];
+      envData[envKey] = value || process.env[envKey];
+    }
+
+    event.reply("response-env", envData);
   });
 };
 
@@ -42,6 +50,16 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   await projectManager.ensureProjectBaseDirectory();
+
+  const settings = await settingsManager.loadSettings();
+
+  for (const envKey of Object.keys(ENV_KEYS)) {
+    const value = settings[envKey as keyof settingsManager.Settings];
+    if (value) {
+      process.env[envKey] = value;
+    }
+  }
+
   createWindow();
 });
 

@@ -2,6 +2,7 @@ import { ipcMain, dialog } from "electron";
 import { mulmoTest } from "./mulmo/test";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
+import * as settingsManager from "./settings_manager";
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
@@ -44,4 +45,10 @@ export const registerIPCHandler = () => {
   ipcMain.handle("project:saveProjectScript", (_event, id: string, data: unknown) =>
     projectManager.saveProjectScript(id, data),
   );
+
+  ipcMain.handle("settings:get", () => settingsManager.loadSettings());
+
+  ipcMain.handle("settings:set", async (_event, settings: settingsManager.Settings) => {
+    await settingsManager.saveSettings(settings);
+  });
 };
