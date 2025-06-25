@@ -1,11 +1,11 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
+import { ENV_KEYS, type EnvKey } from "../shared/constants";
 
+// Dynamically build the Settings type from ENV_KEYS
 export type Settings = {
-  openaiKey?: string;
-  nijivoiceApiKey?: string;
-  // Additional API keys can be added here
+  [K in EnvKey]?: string;
 };
 
 const getSettingsPath = (): string => {
@@ -40,11 +40,12 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     await fs.promises.writeFile(settingsPath, JSON.stringify(settings, null, 2), "utf-8");
 
-    if (settings.openaiKey) {
-      process.env.OPENAI_API_KEY = settings.openaiKey;
-    }
-    if (settings.nijivoiceApiKey) {
-      process.env.NIJIVOICE_API_KEY = settings.nijivoiceApiKey;
+    // Dynamically set environment variables based on constants
+    for (const envKey of Object.keys(ENV_KEYS)) {
+      const value = settings[envKey as keyof Settings];
+      if (value) {
+        process.env[envKey] = value;
+      }
     }
   } catch (error) {
     console.error("Failed to save settings:", error);

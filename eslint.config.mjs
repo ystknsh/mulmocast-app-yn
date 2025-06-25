@@ -69,7 +69,7 @@ export default [
   },
   // Node.js environment configuration (Main & Preload)
   {
-    files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}"],
+    files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}", "src/shared/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {

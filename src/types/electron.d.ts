@@ -1,16 +1,14 @@
 import type { Project, ProjectMetadata, MulmoProgressLog } from "./index";
 import type { MulmoScript } from "mulmocast";
 import type { IpcRendererEvent } from "electron";
+import type { Settings } from "../main/settings_manager";
 
 export interface ElectronAPI {
   openFile: () => Promise<string | null>;
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
-  getEnv: () => Promise<{
-    OPENAI_API_KEY?: string;
-    NIJIVOICE_API_KEY?: string;
-  }>;
+  getEnv: () => Promise<Record<string, string | undefined>>;
   project: {
     list: () => Promise<Project[]>;
     create: (name: string) => Promise<Project>;
@@ -22,8 +20,8 @@ export interface ElectronAPI {
     saveProjectScript: (id: string, data: unknown) => Promise<boolean>;
   };
   settings: {
-    get: () => Promise<{ openaiKey?: string; nijivoiceApiKey?: string }>;
-    set: (settings: { openaiKey?: string; nijivoiceApiKey?: string }) => Promise<void>;
+    get: () => Promise<Settings>;
+    set: (settings: Settings) => Promise<void>;
   };
 }
 
