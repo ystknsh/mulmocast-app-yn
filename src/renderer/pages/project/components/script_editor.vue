@@ -1,18 +1,18 @@
 <template>
-  <Tabs default-value="plain" class="w-full">
+  <Tabs default-value="text" class="w-full">
     <TabsList class="grid w-full grid-cols-5">
-      <TabsTrigger value="plain">Plain Text</TabsTrigger>
+      <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
       <TabsTrigger value="media">Media</TabsTrigger>
       <TabsTrigger value="params">Parameters</TabsTrigger>
     </TabsList>
 
-    <TabsContent value="plain" class="mt-4">
+    <TabsContent value="text" class="mt-4">
       <div
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto font-mono text-sm space-y-6"
       >
-        <p class="text-sm text-gray-500 mb-2">Plain Text Mode - Speaker and dialogue editing only</p>
+        <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
 
         <div class="font-mono text-sm space-y-6 p-4 max-w-2xl mx-auto">
           <div v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
