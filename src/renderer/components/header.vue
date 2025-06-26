@@ -8,7 +8,7 @@
         <h1
           class="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer"
         >
-          <RouterLink to="/test">MulmoCast</RouterLink>
+          MulmoCast
         </h1>
       </RouterLink>
 
