@@ -6,7 +6,7 @@
         <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
         <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
       </div>
-      <BotMessage v-if="isStreaming['llm']" :message="streamData['llm']" time="14:30" />
+      <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" time="14:30" />
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -33,6 +33,12 @@
             <Send :size="16" />
           </Button>
         </div>
+      </div>
+
+      <div>
+        <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="clearChat">
+          clear chat
+        </Button>
       </div>
 
       <!-- Template selection section -->
@@ -155,6 +161,9 @@ const agentFilters = [
   },
 ];
 
+const clearChat = () => {
+  messages.value = [];
+};
 const run = async (initialMessages: ChatMessage[]) => {
   const env = await window.electronAPI.getEnv();
   // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
