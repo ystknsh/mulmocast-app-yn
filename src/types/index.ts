@@ -1,4 +1,4 @@
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
 
 export type ChatMessage = {
   role: "user" | "assistant";
@@ -15,6 +15,7 @@ export type ProjectMetadata = {
   hasErrors: boolean; // TODO: Move to appropriate location later
   chatMessages: ChatMessage[];
   useCache?: boolean;
+  presentationStyle?: MulmoPresentationStyle;
 };
 export type Project = {
   metadata: ProjectMetadata;

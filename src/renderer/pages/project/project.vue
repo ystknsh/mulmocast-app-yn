@@ -139,28 +139,60 @@
 
         <!-- Output Section -->
         <Card v-if="hasProjectData">
+          <CardHeader>
+            <CardTitle class="flex items-center space-x-2">
+              <Settings :size="20" />
+              <span>Output Settings & Generation</span>
+            </CardTitle>
+          </CardHeader>
           <CardContent class="p-4">
-            <div class="space-y-4">
-              <!-- Caption Toggle -->
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div class="flex flex-col">
-                  <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
-                  <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
+            <div class="space-y-6">
+              <!-- Presentation Style Parameters -->
+              <div class="border-2 border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+                <div class="bg-gray-50 border-b-2 border-gray-200 px-4 py-3">
+                  <h3 class="text-sm font-semibold text-gray-700">Presentation Style Parameters</h3>
                 </div>
-                <Switch id="caption-toggle" v-model:checked="captionEnabled" />
+                <div class="bg-gray-50 p-2">
+                  <!-- Scrollable content area -->
+                  <div
+                    class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200 scrollbar-visible"
+                  >
+                    <div class="pr-2">
+                      <PresentationStyleEditor
+                        :presentation-style="mergedPresentationStyle"
+                        @update:presentation-style="handleUpdatePresentationStyle"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <!-- Cache Toggle -->
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div class="flex flex-col">
-                  <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
-                  <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+              <!-- General Settings -->
+              <div class="border rounded-lg p-4 bg-gray-50">
+                <h3 class="text-sm font-medium mb-4">General Settings</h3>
+                <div class="space-y-4">
+                  <!-- Caption Toggle -->
+                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                    <div class="flex flex-col">
+                      <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
+                      <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
+                    </div>
+                    <Switch id="caption-toggle" v-model:checked="captionEnabled" />
+                  </div>
+
+                  <!-- Cache Toggle -->
+                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                    <div class="flex flex-col">
+                      <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                      <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                    </div>
+                    <Switch
+                      id="cache-toggle"
+                      :model-value="project?.useCache ?? false"
+                      @update:model-value="saveCacheEnabled"
+                    />
+                  </div>
                 </div>
-                <Switch
-                  id="cache-toggle"
-                  :model-value="project?.useCache ?? false"
-                  @update:model-value="saveCacheEnabled"
-                />
               </div>
 
               <!-- Output Buttons -->
@@ -304,6 +336,7 @@ import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
+import PresentationStyleEditor from "./components/presentation_style_editor.vue";
 
 import dayjs from "dayjs";
 
@@ -343,7 +376,6 @@ const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 
 const validationMessage = ref("");
-const selectedPresentationStyle = ref<"ghibli" | "dilbert" | "japanese">("ghibli");
 
 const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
@@ -355,7 +387,34 @@ onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
-    // TODO: Load mulmo script data from project
+
+    // Initialize presentationStyle from script if not already set
+    if (!project.value.presentationStyle && mulmoScript.value) {
+      const initialStyle = {
+        canvasSize: mulmoScript.value.canvasSize,
+        speechParams: mulmoScript.value.speechParams,
+        imageParams: mulmoScript.value.imageParams,
+        movieParams: mulmoScript.value.movieParams,
+        textSlideParams: mulmoScript.value.textSlideParams,
+        audioParams: mulmoScript.value.audioParams,
+      };
+
+      // Remove undefined values
+      Object.keys(initialStyle).forEach((key) => {
+        if (initialStyle[key] === undefined) {
+          delete initialStyle[key];
+        }
+      });
+
+      if (Object.keys(initialStyle).length > 0) {
+        project.value.presentationStyle = initialStyle;
+        await projectApi.saveProjectMetadata(projectId.value, {
+          ...project.value,
+          presentationStyle: initialStyle,
+          updatedAt: dayjs().toISOString(),
+        });
+      }
+    }
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -389,6 +448,16 @@ const saveCacheEnabled = async (enabled: boolean) => {
   });
 };
 
+const handleUpdatePresentationStyle = async (style: unknown) => {
+  if (!project.value) return;
+  project.value.presentationStyle = style;
+  await projectApi.saveProjectMetadata(projectId.value, {
+    ...project.value,
+    presentationStyle: style,
+    updatedAt: dayjs().toISOString(),
+  });
+};
+
 const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
@@ -407,6 +476,38 @@ watch(
 );
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
+
+// Merge script parameters with user overrides
+const mergedPresentationStyle = computed(() => {
+  if (!mulmoScript.value) return project.value?.presentationStyle || {};
+
+  // Start with script defaults
+  const scriptStyle = {
+    canvasSize: mulmoScript.value.canvasSize,
+    speechParams: mulmoScript.value.speechParams,
+    imageParams: mulmoScript.value.imageParams,
+    movieParams: mulmoScript.value.movieParams,
+    textSlideParams: mulmoScript.value.textSlideParams,
+    audioParams: mulmoScript.value.audioParams,
+  };
+
+  // Remove undefined values
+  Object.keys(scriptStyle).forEach((key) => {
+    if (scriptStyle[key] === undefined) {
+      delete scriptStyle[key];
+    }
+  });
+
+  // If user has presentationStyle, merge it (user values take precedence)
+  if (project.value?.presentationStyle) {
+    return {
+      ...scriptStyle,
+      ...project.value.presentationStyle,
+    };
+  }
+
+  return scriptStyle;
+});
 
 const generateMovie = async () => {
   console.log("generateMovie");
@@ -514,3 +615,35 @@ watch(
   { deep: true },
 );
 </script>
+
+<style scoped>
+/* Custom scrollbar styles - more visible */
+.scrollbar-visible {
+  scrollbar-width: auto;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 5px;
+  margin: 4px 0;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 5px;
+  border: 1px solid #e5e7eb;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Show scrollbar always on webkit browsers */
+.scrollbar-visible::-webkit-scrollbar-thumb:vertical {
+  min-height: 30px;
+}
+</style>
