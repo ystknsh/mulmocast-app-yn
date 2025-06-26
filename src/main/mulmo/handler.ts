@@ -31,7 +31,6 @@ updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
   const projectMetadata = await getProjectMetadata(projectId);
-  console.log("projectMetadata🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏", projectMetadata?.presentationStyle);
 
   const argv = {
     v: true,
@@ -43,7 +42,6 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
 
   const context = await initializeContext(argv);
   const script = mergePresentationStyleToScript(context.studio.script, projectMetadata);
-  console.log("script🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏", script);
 
   return {
     ...context,
