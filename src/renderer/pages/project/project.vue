@@ -389,25 +389,7 @@ onMounted(async () => {
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
 
     // Initialize presentationStyle from script if not already set
-    if (!project.value.presentationStyle && mulmoScript.value) {
-      const initialStyle: Partial<MulmoPresentationStyle> = {};
-
-      if (mulmoScript.value.canvasSize) initialStyle.canvasSize = mulmoScript.value.canvasSize;
-      if (mulmoScript.value.speechParams) initialStyle.speechParams = mulmoScript.value.speechParams;
-      if (mulmoScript.value.imageParams) initialStyle.imageParams = mulmoScript.value.imageParams;
-      if (mulmoScript.value.movieParams) initialStyle.movieParams = mulmoScript.value.movieParams;
-      if (mulmoScript.value.textSlideParams) initialStyle.textSlideParams = mulmoScript.value.textSlideParams;
-      if (mulmoScript.value.audioParams) initialStyle.audioParams = mulmoScript.value.audioParams;
-
-      if (Object.keys(initialStyle).length > 0) {
-        project.value.presentationStyle = initialStyle as MulmoPresentationStyle;
-        await projectApi.saveProjectMetadata(projectId.value, {
-          ...project.value,
-          presentationStyle: initialStyle as MulmoPresentationStyle,
-          updatedAt: dayjs().toISOString(),
-        });
-      }
-    }
+    await initializePresentationStyleFromScript();
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -439,6 +421,30 @@ const saveCacheEnabled = async (enabled: boolean) => {
     useCache: enabled,
     updatedAt: dayjs().toISOString(),
   });
+};
+
+const initializePresentationStyleFromScript = async () => {
+  if (!project.value || !mulmoScript.value || project.value.presentationStyle) {
+    return;
+  }
+
+  const initialStyle: Partial<MulmoPresentationStyle> = {};
+
+  if (mulmoScript.value.canvasSize) initialStyle.canvasSize = mulmoScript.value.canvasSize;
+  if (mulmoScript.value.speechParams) initialStyle.speechParams = mulmoScript.value.speechParams;
+  if (mulmoScript.value.imageParams) initialStyle.imageParams = mulmoScript.value.imageParams;
+  if (mulmoScript.value.movieParams) initialStyle.movieParams = mulmoScript.value.movieParams;
+  if (mulmoScript.value.textSlideParams) initialStyle.textSlideParams = mulmoScript.value.textSlideParams;
+  if (mulmoScript.value.audioParams) initialStyle.audioParams = mulmoScript.value.audioParams;
+
+  if (Object.keys(initialStyle).length > 0) {
+    project.value.presentationStyle = initialStyle as MulmoPresentationStyle;
+    await projectApi.saveProjectMetadata(projectId.value, {
+      ...project.value,
+      presentationStyle: initialStyle as MulmoPresentationStyle,
+      updatedAt: dayjs().toISOString(),
+    });
+  }
 };
 
 const handleUpdatePresentationStyle = async (style: Partial<MulmoPresentationStyle>) => {
