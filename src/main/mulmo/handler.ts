@@ -24,10 +24,11 @@ import fs from "fs";
 import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
+import { ProjectMetadata } from "@/types/index";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
-const _mergePresentationStyle = (context: MulmoStudioContext, projectMetadata: any) => {
+const _mergePresentationStyle = (context: MulmoStudioContext, projectMetadata: ProjectMetadata) => {
   if (!context?.studio?.script || !projectMetadata?.presentationStyle) {
     return context;
   }
@@ -48,6 +49,7 @@ const _mergePresentationStyle = (context: MulmoStudioContext, projectMetadata: a
   const mergedScript = { ...context.studio.script };
   propertiesToMerge.forEach((property) => {
     if (presentationStyle[property]) {
+      // @ts-expect-error TODO: Fix type error
       mergedScript[property] = presentationStyle[property];
     }
   });
@@ -75,6 +77,7 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
 
   const context = await initializeContext(argv);
 
+  // Merge presentationStyle from metadata into the script
   return _mergePresentationStyle(context, projectMetadata);
 };
 
