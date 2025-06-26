@@ -191,6 +191,7 @@ export const mulmoAudioFiles = async (projectId: string) => {
     return context.studio.script.beats.map(beatAudio(context));
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 export const mulmoAudioFile = async (projectId: string, index: number) => {
@@ -227,6 +228,7 @@ export const mulmoImageFiles = async (projectId: string) => {
     return Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 export const mulmoImageFile = async (projectId: string, index: number) => {
