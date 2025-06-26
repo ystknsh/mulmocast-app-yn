@@ -14,6 +14,7 @@ export type ProjectMetadata = {
   sessionActive: boolean; // TODO: Move to appropriate location later
   hasErrors: boolean; // TODO: Move to appropriate location later
   chatMessages: ChatMessage[];
+  useCache?: boolean;
 };
 export type Project = {
   metadata: ProjectMetadata;
