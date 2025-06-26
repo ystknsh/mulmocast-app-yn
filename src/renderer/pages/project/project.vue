@@ -154,9 +154,7 @@
                 </div>
                 <div class="bg-gray-50 p-2">
                   <!-- Scrollable content area -->
-                  <div
-                    class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200 scrollbar-visible"
-                  >
+                  <div class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200">
                     <div class="pr-2">
                       <PresentationStyleEditor
                         :presentation-style="mergedPresentationStyle"
@@ -607,35 +605,3 @@ watch(
   { deep: true },
 );
 </script>
-
-<style scoped>
-/* Custom scrollbar styles - more visible */
-.scrollbar-visible {
-  scrollbar-width: auto;
-}
-
-.scrollbar-visible::-webkit-scrollbar {
-  width: 10px;
-}
-
-.scrollbar-visible::-webkit-scrollbar-track {
-  background: #e5e7eb;
-  border-radius: 5px;
-  margin: 4px 0;
-}
-
-.scrollbar-visible::-webkit-scrollbar-thumb {
-  background: #9ca3af;
-  border-radius: 5px;
-  border: 1px solid #e5e7eb;
-}
-
-.scrollbar-visible::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
-}
-
-/* Show scrollbar always on webkit browsers */
-.scrollbar-visible::-webkit-scrollbar-thumb:vertical {
-  min-height: 30px;
-}
-</style>
