@@ -67,6 +67,7 @@ const graphData: GraphData = {
 };
 
 export const createMulmoScript = async (messages: ChatMessage[], templateName: string) => {
+  // TODO option.config
   const graph = new GraphAI(graphData, {
     ...agents,
     openAIAgent,
