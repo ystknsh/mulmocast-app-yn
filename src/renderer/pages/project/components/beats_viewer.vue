@@ -41,15 +41,15 @@
               <div class="flex items-center justify-center gap-1 mb-1">
                 <FileImage
                   :size="16"
-                  :class="`${beat.image.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
+                  :class="`${beat?.image?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
                 />
-                <Loader2 v-if="beat.image.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
+                <Loader2 v-if="beat?.image?.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
               </div>
-              <p :class="`text-xs mb-2 ${beat.image.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
-                {{ beat.image.status === "ready" ? "Image ready" : "Generating..." }}
+              <p :class="`text-xs mb-2 ${beat?.image?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
+                {{ beat?.image?.status === "ready" ? "Image ready" : "Generating..." }}
                 <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
               </p>
-              <div v-if="beat.image.status === 'ready'" class="flex justify-center space-x-1">
+              <div v-if="beat?.image?.status === 'ready'" class="flex justify-center space-x-1">
                 <Tooltip>
                   <TooltipTrigger as-child>
                     <Button size="sm" variant="ghost" class="w-6 h-6 p-0">

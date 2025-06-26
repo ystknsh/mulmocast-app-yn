@@ -4140,10 +4140,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.8.tgz#e9c6cbe07cf925b8f3c24ef79b4d442366607f66"
-  integrity sha512-GRUbAPxSXXLKmVYWlW90/1qjoxZ9C2p8ohPwsr564o/VpAdZVQXZMEhbXeqTOfzBf8U25MOH5XwbergrCDGw9Q==
+graphai@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.9.tgz#0636d05814418d344ac15ee39a0fd80c37823a8b"
+  integrity sha512-F2QQAhcpX2F+FoPRzdeueaQxerbVwX2/YAOFzdsbjlQRVJQ0bNbo1d7V908gPGDmEWo+7xWHberIkNEEW7y0vQ==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -5273,10 +5273,10 @@ ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mulmocast@^0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.21.tgz#aeabde46184bac09024bb5f13773a2677bb50404"
-  integrity sha512-SEqUnhEPyK4XjIzbOKyKPlyDMjBwJekjwbYm22E4Uq3Fdqb0QdRzt5dAiieqG1934G2r6NWNdCGK7HH75UZ5YA==
+mulmocast@^0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.0.24.tgz#44e115ade64cdb3b9c20f8aae0596d0ef5c6a69e"
+  integrity sha512-wWor4yd8mrP+E8IB3sJqUWKIbVBb5KBJaymzb87ns4mHIe5VjMHxhJDFl3dYCd+GOM2GkOeRxuiFO/jctR4nGQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.1.0"
     "@graphai/anthropic_agent" "^2.0.2"
@@ -5294,11 +5294,12 @@ mulmocast@^0.0.21:
     dotenv "^16.4.7"
     fluent-ffmpeg "^2.1.3"
     google-auth-library "^9.15.1"
-    graphai "^2.0.8"
+    graphai "^2.0.9"
     inquirer "^12.6.1"
     marked "^15.0.12"
     ora "^8.2.0"
     puppeteer "^24.10.2"
+    replicate "^1.0.1"
     yaml "^2.8.0"
     yargs "^17.7.2"
     zod "^3.25.67"

@@ -19,9 +19,10 @@ import {
 } from "mulmocast";
 import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
-import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import path from "path";
 import fs from "fs";
+import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
+import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
@@ -50,11 +51,12 @@ const mulmoCallbackGenerator = (projectId: string, webContents) => {
 };
 
 export const mulmoGenerateImage = async (projectId: string, index: number, webContents) => {
+  const settings = loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
-    await generateBeatImage(index, context);
+    await generateBeatImage(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -71,11 +73,12 @@ export const mulmoGenerateImage = async (projectId: string, index: number, webCo
 };
 
 export const mulmoGenerateAudio = async (projectId: string, index: number, webContents) => {
+  const settings = loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
-    await generateBeatAudio(index, context);
+    await generateBeatAudio(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -92,6 +95,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
 };
 
 export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
+  const settings = loadSettings();
   try {
     const context = await getContext(projectId);
     const graphAICallbacks = [
@@ -109,21 +113,21 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
     addSessionProgressCallback(mulmoCallback);
     // await runTranslateIfNeeded(context, argv);
     if (actionName === "audio") {
-      await audio(context, graphAICallbacks);
+      await audio(context, settings, graphAICallbacks);
     }
     if (actionName === "image") {
-      await images(context, graphAICallbacks);
+      await images(context, settings, graphAICallbacks);
     }
     if (actionName === "movie") {
-      await audio(context, graphAICallbacks);
-      await images(context, graphAICallbacks);
+      await audio(context, settings, graphAICallbacks);
+      await images(context, settings, graphAICallbacks);
       if (context.caption) {
         await captions(context);
       }
       await movie(context);
     }
     if (actionName === "pdf") {
-      await images(context, graphAICallbacks);
+      await images(context, settings, graphAICallbacks);
       // await pdf(context, argv.pdf_mode, argv.pdf_size);
     }
     removeSessionProgressCallback(mulmoCallback);
