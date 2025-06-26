@@ -385,7 +385,7 @@ const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
 }, 1000);
 
 const saveCacheEnabled = async (enabled: boolean) => {
-  console.log("saveCacheEnabled", enabled);
+  project.value.useCache = enabled;
   await projectApi.saveProjectMetadata(projectId.value, {
     ...project.value,
     useCache: enabled,
