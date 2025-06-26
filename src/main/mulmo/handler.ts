@@ -27,6 +27,40 @@ import { createMulmoScript } from "./scripting";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
+const _mergePresentationStyle = (context: MulmoStudioContext, projectMetadata: any) => {
+  if (!context?.studio?.script || !projectMetadata?.presentationStyle) {
+    return context;
+  }
+
+  const { presentationStyle } = projectMetadata;
+
+  // Define the properties to merge
+  const propertiesToMerge = [
+    "canvasSize",
+    "speechParams",
+    "imageParams",
+    "movieParams",
+    "textSlideParams",
+    "audioParams",
+  ] as const;
+
+  // Create a new context with merged properties
+  const mergedScript = { ...context.studio.script };
+  propertiesToMerge.forEach((property) => {
+    if (presentationStyle[property]) {
+      mergedScript[property] = presentationStyle[property];
+    }
+  });
+
+  return {
+    ...context,
+    studio: {
+      ...context.studio,
+      script: mergedScript,
+    },
+  };
+};
+
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
   const projectMetadata = await getProjectMetadata(projectId);
@@ -41,32 +75,7 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
 
   const context = await initializeContext(argv);
 
-  // Merge presentationStyle from metadata into the script
-  if (context && projectMetadata?.presentationStyle) {
-    const presentationStyle = projectMetadata.presentationStyle;
-
-    // Merge each property if it exists in presentationStyle
-    if (presentationStyle.canvasSize && context.studio.script) {
-      context.studio.script.canvasSize = presentationStyle.canvasSize;
-    }
-    if (presentationStyle.speechParams && context.studio.script) {
-      context.studio.script.speechParams = presentationStyle.speechParams;
-    }
-    if (presentationStyle.imageParams && context.studio.script) {
-      context.studio.script.imageParams = presentationStyle.imageParams;
-    }
-    if (presentationStyle.movieParams && context.studio.script) {
-      context.studio.script.movieParams = presentationStyle.movieParams;
-    }
-    if (presentationStyle.textSlideParams && context.studio.script) {
-      context.studio.script.textSlideParams = presentationStyle.textSlideParams;
-    }
-    if (presentationStyle.audioParams && context.studio.script) {
-      context.studio.script.audioParams = presentationStyle.audioParams;
-    }
-  }
-
-  return context;
+  return _mergePresentationStyle(context, projectMetadata);
 };
 
 const mulmoCallbackGenerator = (projectId: string, webContents) => {
