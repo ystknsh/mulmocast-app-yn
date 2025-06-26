@@ -340,7 +340,7 @@ import PresentationStyleEditor from "./components/presentation_style_editor.vue"
 
 import dayjs from "dayjs";
 
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
 // import { mulmoScriptSchema } from "mulmocast";
 
 import { useDebounceFn } from "@vueuse/core";
@@ -390,27 +390,20 @@ onMounted(async () => {
 
     // Initialize presentationStyle from script if not already set
     if (!project.value.presentationStyle && mulmoScript.value) {
-      const initialStyle = {
-        canvasSize: mulmoScript.value.canvasSize,
-        speechParams: mulmoScript.value.speechParams,
-        imageParams: mulmoScript.value.imageParams,
-        movieParams: mulmoScript.value.movieParams,
-        textSlideParams: mulmoScript.value.textSlideParams,
-        audioParams: mulmoScript.value.audioParams,
-      };
+      const initialStyle: Partial<MulmoPresentationStyle> = {};
 
-      // Remove undefined values
-      Object.keys(initialStyle).forEach((key) => {
-        if (initialStyle[key] === undefined) {
-          delete initialStyle[key];
-        }
-      });
+      if (mulmoScript.value.canvasSize) initialStyle.canvasSize = mulmoScript.value.canvasSize;
+      if (mulmoScript.value.speechParams) initialStyle.speechParams = mulmoScript.value.speechParams;
+      if (mulmoScript.value.imageParams) initialStyle.imageParams = mulmoScript.value.imageParams;
+      if (mulmoScript.value.movieParams) initialStyle.movieParams = mulmoScript.value.movieParams;
+      if (mulmoScript.value.textSlideParams) initialStyle.textSlideParams = mulmoScript.value.textSlideParams;
+      if (mulmoScript.value.audioParams) initialStyle.audioParams = mulmoScript.value.audioParams;
 
       if (Object.keys(initialStyle).length > 0) {
-        project.value.presentationStyle = initialStyle;
+        project.value.presentationStyle = initialStyle as MulmoPresentationStyle;
         await projectApi.saveProjectMetadata(projectId.value, {
           ...project.value,
-          presentationStyle: initialStyle,
+          presentationStyle: initialStyle as MulmoPresentationStyle,
           updatedAt: dayjs().toISOString(),
         });
       }
@@ -448,12 +441,12 @@ const saveCacheEnabled = async (enabled: boolean) => {
   });
 };
 
-const handleUpdatePresentationStyle = async (style: unknown) => {
+const handleUpdatePresentationStyle = async (style: Partial<MulmoPresentationStyle>) => {
   if (!project.value) return;
-  project.value.presentationStyle = style;
+  project.value.presentationStyle = style as MulmoPresentationStyle;
   await projectApi.saveProjectMetadata(projectId.value, {
     ...project.value,
-    presentationStyle: style,
+    presentationStyle: style as MulmoPresentationStyle,
     updatedAt: dayjs().toISOString(),
   });
 };
@@ -478,25 +471,18 @@ watch(
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
 // Merge script parameters with user overrides
-const mergedPresentationStyle = computed(() => {
+const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
   if (!mulmoScript.value) return project.value?.presentationStyle || {};
 
   // Start with script defaults
-  const scriptStyle = {
-    canvasSize: mulmoScript.value.canvasSize,
-    speechParams: mulmoScript.value.speechParams,
-    imageParams: mulmoScript.value.imageParams,
-    movieParams: mulmoScript.value.movieParams,
-    textSlideParams: mulmoScript.value.textSlideParams,
-    audioParams: mulmoScript.value.audioParams,
-  };
+  const scriptStyle: Partial<MulmoPresentationStyle> = {};
 
-  // Remove undefined values
-  Object.keys(scriptStyle).forEach((key) => {
-    if (scriptStyle[key] === undefined) {
-      delete scriptStyle[key];
-    }
-  });
+  if (mulmoScript.value.canvasSize) scriptStyle.canvasSize = mulmoScript.value.canvasSize;
+  if (mulmoScript.value.speechParams) scriptStyle.speechParams = mulmoScript.value.speechParams;
+  if (mulmoScript.value.imageParams) scriptStyle.imageParams = mulmoScript.value.imageParams;
+  if (mulmoScript.value.movieParams) scriptStyle.movieParams = mulmoScript.value.movieParams;
+  if (mulmoScript.value.textSlideParams) scriptStyle.textSlideParams = mulmoScript.value.textSlideParams;
+  if (mulmoScript.value.audioParams) scriptStyle.audioParams = mulmoScript.value.audioParams;
 
   // If user has presentationStyle, merge it (user values take precedence)
   if (project.value?.presentationStyle) {

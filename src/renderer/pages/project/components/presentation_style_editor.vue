@@ -45,11 +45,13 @@ import MovieParams from "./parameters/movie_params.vue";
 import TextSlideParams from "./parameters/text_slide_params.vue";
 
 interface Props {
-  presentationStyle?: MulmoPresentationStyle;
+  presentationStyle?: Partial<MulmoPresentationStyle>;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:presentationStyle"]);
+const emit = defineEmits<{
+  "update:presentationStyle": [style: Partial<MulmoPresentationStyle>];
+}>();
 
 const updateParamImmediate = (path: string, value: unknown) => {
   const keys = path.split(".");
