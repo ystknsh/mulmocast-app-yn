@@ -38,7 +38,35 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
     file: SCRIPT_FILE_NAME,
     f: projectMetadata?.useCache ? false : true,
   };
-  return await initializeContext(argv);
+
+  const context = await initializeContext(argv);
+
+  // Merge presentationStyle from metadata into the script
+  if (context && projectMetadata?.presentationStyle) {
+    const presentationStyle = projectMetadata.presentationStyle;
+
+    // Merge each property if it exists in presentationStyle
+    if (presentationStyle.canvasSize && context.studio.script) {
+      context.studio.script.canvasSize = presentationStyle.canvasSize;
+    }
+    if (presentationStyle.speechParams && context.studio.script) {
+      context.studio.script.speechParams = presentationStyle.speechParams;
+    }
+    if (presentationStyle.imageParams && context.studio.script) {
+      context.studio.script.imageParams = presentationStyle.imageParams;
+    }
+    if (presentationStyle.movieParams && context.studio.script) {
+      context.studio.script.movieParams = presentationStyle.movieParams;
+    }
+    if (presentationStyle.textSlideParams && context.studio.script) {
+      context.studio.script.textSlideParams = presentationStyle.textSlideParams;
+    }
+    if (presentationStyle.audioParams && context.studio.script) {
+      context.studio.script.audioParams = presentationStyle.audioParams;
+    }
+  }
+
+  return context;
 };
 
 const mulmoCallbackGenerator = (projectId: string, webContents) => {
