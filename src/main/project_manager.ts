@@ -114,11 +114,24 @@ export const createProject = async (title: string): Promise<Project> => {
       chatMessages: [],
     };
 
+    const script = {
+      $mulmocast: {
+        version: "1.0",
+        credit: "closing",
+      },
+      canvasSize: {
+        width: 1536,
+        height: 1024,
+      },
+      beats: [],
+    };
+
     await saveProjectMetadata(id, initialData);
+    await saveProjectScript(id, script);
 
     return {
       metadata: initialData,
-      script: null,
+      script,
     };
   } catch (error) {
     // Cleanup on failure
