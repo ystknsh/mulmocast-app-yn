@@ -357,6 +357,7 @@ import {
 } from "./composable/style";
 import { ChatMessage } from "@/types";
 import { notifySuccess } from "@/lib/notification";
+import { mergePresentationStyleToScript } from "../../../shared/helpers";
 
 // State
 const route = useRoute();
@@ -385,9 +386,6 @@ onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
-
-    // Initialize presentationStyle from script if not already set
-    await initializePresentationStyleFromScript();
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -421,30 +419,6 @@ const saveCacheEnabled = async (enabled: boolean) => {
   });
 };
 
-const initializePresentationStyleFromScript = async () => {
-  if (!project.value || !mulmoScript.value || project.value.presentationStyle) {
-    return;
-  }
-
-  const initialStyle: Partial<MulmoPresentationStyle> = {};
-
-  if (mulmoScript.value.canvasSize) initialStyle.canvasSize = mulmoScript.value.canvasSize;
-  if (mulmoScript.value.speechParams) initialStyle.speechParams = mulmoScript.value.speechParams;
-  if (mulmoScript.value.imageParams) initialStyle.imageParams = mulmoScript.value.imageParams;
-  if (mulmoScript.value.movieParams) initialStyle.movieParams = mulmoScript.value.movieParams;
-  if (mulmoScript.value.textSlideParams) initialStyle.textSlideParams = mulmoScript.value.textSlideParams;
-  if (mulmoScript.value.audioParams) initialStyle.audioParams = mulmoScript.value.audioParams;
-
-  if (Object.keys(initialStyle).length > 0) {
-    project.value.presentationStyle = initialStyle as MulmoPresentationStyle;
-    await projectApi.saveProjectMetadata(projectId.value, {
-      ...project.value,
-      presentationStyle: initialStyle as MulmoPresentationStyle,
-      updatedAt: dayjs().toISOString(),
-    });
-  }
-};
-
 const handleUpdatePresentationStyle = async (style: Partial<MulmoPresentationStyle>) => {
   if (!project.value) return;
   project.value.presentationStyle = style as MulmoPresentationStyle;
@@ -474,29 +448,8 @@ watch(
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
-// Merge script parameters with user overrides
 const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
-  if (!mulmoScript.value) return project.value?.presentationStyle || {};
-
-  // Start with script defaults
-  const scriptStyle: Partial<MulmoPresentationStyle> = {};
-
-  if (mulmoScript.value.canvasSize) scriptStyle.canvasSize = mulmoScript.value.canvasSize;
-  if (mulmoScript.value.speechParams) scriptStyle.speechParams = mulmoScript.value.speechParams;
-  if (mulmoScript.value.imageParams) scriptStyle.imageParams = mulmoScript.value.imageParams;
-  if (mulmoScript.value.movieParams) scriptStyle.movieParams = mulmoScript.value.movieParams;
-  if (mulmoScript.value.textSlideParams) scriptStyle.textSlideParams = mulmoScript.value.textSlideParams;
-  if (mulmoScript.value.audioParams) scriptStyle.audioParams = mulmoScript.value.audioParams;
-
-  // If user has presentationStyle, merge it (user values take precedence)
-  if (project.value?.presentationStyle) {
-    return {
-      ...scriptStyle,
-      ...project.value.presentationStyle,
-    };
-  }
-
-  return scriptStyle;
+  return mergePresentationStyleToScript(mulmoScript.value, project.value);
 });
 
 const generateMovie = async () => {

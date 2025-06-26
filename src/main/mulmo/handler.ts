@@ -24,48 +24,14 @@ import fs from "fs";
 import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
-import { ProjectMetadata } from "@/types/index";
+import { mergePresentationStyleToScript } from "../../shared/helpers";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
-
-const _mergePresentationStyle = (context: MulmoStudioContext, projectMetadata: ProjectMetadata) => {
-  if (!context?.studio?.script || !projectMetadata?.presentationStyle) {
-    return context;
-  }
-
-  const { presentationStyle } = projectMetadata;
-
-  // Define the properties to merge
-  const propertiesToMerge = [
-    "canvasSize",
-    "speechParams",
-    "imageParams",
-    "movieParams",
-    "textSlideParams",
-    "audioParams",
-  ] as const;
-
-  // Create a new context with merged properties
-  const mergedScript = { ...context.studio.script };
-  propertiesToMerge.forEach((property) => {
-    if (presentationStyle[property]) {
-      // @ts-expect-error TODO: Fix type error
-      mergedScript[property] = presentationStyle[property];
-    }
-  });
-
-  return {
-    ...context,
-    studio: {
-      ...context.studio,
-      script: mergedScript,
-    },
-  };
-};
 
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
   const projectMetadata = await getProjectMetadata(projectId);
+  console.log("projectMetadata🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏", projectMetadata?.presentationStyle);
 
   const argv = {
     v: true,
@@ -76,9 +42,16 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
   };
 
   const context = await initializeContext(argv);
+  const script = mergePresentationStyleToScript(context.studio.script, projectMetadata);
+  console.log("script🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏", script);
 
-  // Merge presentationStyle from metadata into the script
-  return _mergePresentationStyle(context, projectMetadata);
+  return {
+    ...context,
+    studio: {
+      ...context.studio,
+      script,
+    },
+  };
 };
 
 const mulmoCallbackGenerator = (projectId: string, webContents) => {
