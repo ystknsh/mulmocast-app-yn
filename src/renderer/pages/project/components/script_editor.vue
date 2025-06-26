@@ -181,8 +181,8 @@
                 <template v-else>
                   <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
                 </template>
-                <Button variant="ghost" size="sm" @click="generateImage(index)">generate image</Button>
-                <Button variant="ghost" size="sm" @click="generateAudio(index)">generate audio</Button>
+                <Button variant="outline" size="sm" @click="generateImage(index)">Generate image</Button>
+                <Button variant="outline" size="sm" @click="generateAudio(index)">generate audio</Button>
               </div>
 
               <!-- right: preview -->
