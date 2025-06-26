@@ -153,6 +153,19 @@
                 <Switch id="caption-toggle" v-model:checked="captionEnabled" />
               </div>
 
+              <!-- Cache Toggle -->
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div class="flex flex-col">
+                  <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                  <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                </div>
+                <Switch
+                  id="cache-toggle"
+                  :model-value="project?.useCache ?? false"
+                  @update:model-value="saveCacheEnabled"
+                />
+              </div>
+
               <!-- Output Buttons -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button
@@ -370,6 +383,15 @@ const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
     chatMessages: messages,
   });
 }, 1000);
+
+const saveCacheEnabled = async (enabled: boolean) => {
+  console.log("saveCacheEnabled", enabled);
+  await projectApi.saveProjectMetadata(projectId.value, {
+    ...project.value,
+    useCache: enabled,
+    updatedAt: dayjs().toISOString(),
+  });
+};
 
 const saveMulmo = async (data) => {
   console.log("saved", data);

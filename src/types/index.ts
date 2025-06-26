@@ -8,12 +8,14 @@ export type ChatMessage = {
 export type ProjectMetadata = {
   id: string;
   title: string;
+  description?: string;
   createdAt: string;
   updatedAt: string;
   version: string;
   sessionActive: boolean; // TODO: Move to appropriate location later
   hasErrors: boolean; // TODO: Move to appropriate location later
   chatMessages: ChatMessage[];
+  useCache?: boolean;
 };
 export type Project = {
   metadata: ProjectMetadata;

@@ -112,6 +112,7 @@ export const createProject = async (title: string): Promise<Project> => {
       sessionActive: false,
       hasErrors: false,
       chatMessages: [],
+      useCache: false,
     };
 
     const script = {

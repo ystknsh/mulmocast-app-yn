@@ -21,7 +21,7 @@ import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import path from "path";
 import fs from "fs";
-import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
+import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
@@ -29,11 +29,14 @@ updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
+  const projectMetadata = await getProjectMetadata(projectId);
+
   const argv = {
     v: true,
     b: projectPath,
     o: path.join(projectPath, "output"),
     file: SCRIPT_FILE_NAME,
+    f: projectMetadata?.useCache ? false : true,
   };
   return await initializeContext(argv);
 };
@@ -51,7 +54,7 @@ const mulmoCallbackGenerator = (projectId: string, webContents) => {
 };
 
 export const mulmoGenerateImage = async (projectId: string, index: number, webContents) => {
-  const settings = loadSettings();
+  const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
   try {
@@ -73,7 +76,7 @@ export const mulmoGenerateImage = async (projectId: string, index: number, webCo
 };
 
 export const mulmoGenerateAudio = async (projectId: string, index: number, webContents) => {
-  const settings = loadSettings();
+  const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
@@ -95,7 +98,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
 };
 
 export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
-  const settings = loadSettings();
+  const settings = await loadSettings();
   try {
     const context = await getContext(projectId);
     const graphAICallbacks = [
