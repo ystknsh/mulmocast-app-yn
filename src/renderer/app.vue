@@ -11,6 +11,8 @@ import { useStore } from "./store";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 
+import { notifyError } from "@/lib/notification";
+
 export default defineComponent({
   components: {
     Toaster,
@@ -27,6 +29,9 @@ export default defineComponent({
           store.graphaiLogCallback(message);
         }
         if (message.type === "error") {
+          if (message.data?.message) {
+            notifyError("Error", message.data.message);
+          }
           console.log(message);
         }
       });
