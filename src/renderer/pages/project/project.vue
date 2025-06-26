@@ -3,7 +3,7 @@
     <TooltipProvider>
       <div :class="`max-w-7xl mx-auto ${getCardPadding} ${getContainerSpacing}`">
         <!-- Developer Mode Toggle - Always at the top -->
-        <div class="bg-gray-50 dark:bg-gray-900 border rounded-lg p-3">
+        <div class="bg-gray-50 dark:bg-gray-900 border rounded-lg p-3" v-if="false">
           <div class="flex items-center justify-between space-x-2 text-sm">
             <div class="flex items-center space-x-2">
               <Settings :size="16" />
