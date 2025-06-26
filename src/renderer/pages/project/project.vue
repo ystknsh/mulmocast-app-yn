@@ -141,9 +141,6 @@
         <Card v-if="hasProjectData">
           <CardContent class="p-4">
             <div class="space-y-4">
-              <!-- Select Presentation Style -->
-              <Style v-model="selectedPresentationStyle"></Style>
-
               <!-- Caption Toggle -->
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div class="flex flex-col">
@@ -305,7 +302,6 @@ import Layout from "@/components/layout.vue";
 import Chat from "./components/chat.vue";
 import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
-import Style from "./components/style.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 
