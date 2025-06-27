@@ -189,6 +189,7 @@ import { computed } from "vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileImage, Video, Loader2 } from "lucide-vue-next";
+import type { MulmoBeat } from "mulmocast";
 
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
@@ -199,7 +200,7 @@ interface Props {
   imageFiles: (ArrayBuffer | null)[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const emit = defineEmits(["update", "generateImage"]);
 
 const route = useRoute();

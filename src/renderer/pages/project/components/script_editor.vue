@@ -110,7 +110,7 @@ import { Button } from "@/components/ui/button";
 import BeatEditor from "./beat_editor.vue";
 
 import YAML from "yaml";
-import type { MulmoScript, MulmoBeat } from "mulmocast";
+import type { MulmoScript } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
