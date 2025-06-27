@@ -91,9 +91,12 @@
             <BeatEditor
               :beat="beat"
               :index="index"
+              :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
               :imageFiles="imageFiles"
               @update="update"
               @generateImage="generateImage"
+              @deleteBeat="deleteBeat"
+              @positionUp="positionUp"
             />
           </Card>
         </div>
@@ -213,5 +216,26 @@ const generateImage = (index: number) => {
 const generateAudio = (index: number) => {
   emit("generateAudio", index);
   console.log(index);
+};
+const deleteBeat = (index: number) => {
+  if (index >= 0 && index < props.mulmoValue.beats.length) {
+    const newBeats = [...props.mulmoValue.beats];
+    newBeats.splice(index, 1);
+    emit("update:mulmoValue", {
+      ...props.mulmoValue,
+      beats: newBeats,
+    });
+  }
+};
+const positionUp = (index: number) => {
+  if (index <= 0 || index >= props.mulmoValue.beats.length) return;
+  const newBeats = [...props.mulmoValue.beats];
+  const temp = newBeats[index - 1];
+  newBeats[index - 1] = newBeats[index];
+  newBeats[index] = temp;
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
 };
 </script>

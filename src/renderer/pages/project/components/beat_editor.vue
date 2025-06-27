@@ -36,7 +36,7 @@
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, index, beat.image.type)"
               draggable="true"
-              class="bg-white border border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer"
+              class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
             >
               Drop file here
             </div>
@@ -154,20 +154,29 @@
       </div>
 
       <!-- right: preview -->
-      <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-        <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
-        <template v-else-if="imageFiles[index]">
-          <template v-if="beat?.image?.type === 'movie'">
-            <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFiles[index]" />
+      <div>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
+          <template v-else-if="imageFiles[index]">
+            <template v-if="beat?.image?.type === 'movie'">
+              <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFiles[index]" />
+            </template>
+            <template v-else>
+              <img :src="imageFiles[index]" />
+            </template>
           </template>
           <template v-else>
-            <img :src="imageFiles[index]" />
+            <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
+            <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
           </template>
-        </template>
-        <template v-else>
-          <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
-          <p class="text-sm text-gray-500">{{ beat.image.type }} Preview</p>
-        </template>
+        </div>
+        <div class="flex justify-end pt-2">
+          <div class="inline-flex gap-2">
+            <ArrowUp v-if="index !== 0" @click="positionUp" class="cursor-pointer" />
+            <ArrowDown v-if="!isEnd" @click="positionDown" class="cursor-pointer" />
+            <Trash @click="trash" class="cursor-pointer" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -177,7 +186,7 @@
 import { computed } from "vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileImage, Video, Loader2 } from "lucide-vue-next";
+import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast";
 
 import { useStore } from "../../../store";
@@ -187,10 +196,11 @@ interface Props {
   beat: MulmoBeat;
   index: number;
   imageFiles: (ArrayBuffer | null)[];
+  isEnd: booean;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage"]);
+const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]);
 
 const route = useRoute();
 const store = useStore();
@@ -287,5 +297,15 @@ const generateImage = (index: number) => {
 
 const update = (index: number, path: string, value: unknown) => {
   emit("update", index, path, value);
+};
+
+const positionUp = () => {
+  emit("positionUp", props.index);
+};
+const positionDown = () => {
+  emit("positionUp", props.index + 1);
+};
+const trash = () => {
+  emit("deleteBeat", props.index);
 };
 </script>
