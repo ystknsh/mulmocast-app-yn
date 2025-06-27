@@ -196,7 +196,7 @@ interface Props {
   beat: MulmoBeat;
   index: number;
   imageFiles: (ArrayBuffer | null)[];
-  isEnd: booean;
+  isEnd: boolean;
 }
 
 const props = defineProps<Props>();
