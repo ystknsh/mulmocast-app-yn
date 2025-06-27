@@ -9,7 +9,7 @@ export const themeOptions = [
   { value: "developer-debug", label: "Developer Debug" },
 ];
 
-export const isScriptViewerOpen = ref(false);
+export const isScriptViewerOpen = ref(true);
 export const isBeatsViewerOpen = ref(false);
 export const beatsViewMode = ref<"list" | "timeline">("list");
 
