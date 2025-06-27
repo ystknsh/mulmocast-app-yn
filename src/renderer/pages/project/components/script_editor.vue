@@ -125,7 +125,7 @@
                       draggable="true"
                       class="bg-white border border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer"
                     >
-                      Drag file here
+                      Drop file here
                     </div>
                   </template>
 
@@ -232,7 +232,7 @@
                   </template>
                 </div>
                 <!-- end of beat.image -->
-                <template v-if="beat?.image?.type !== 'beat'">
+                <template v-if="beat?.image?.type !== 'beat' && beat?.image?.type !== 'image'">
                   <Button
                     variant="outline"
                     size="sm"
