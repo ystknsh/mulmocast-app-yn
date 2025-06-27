@@ -145,19 +145,8 @@
           </template>
         </div>
         <!-- end of beat.image -->
-        <template
-          v-if="
-            beat?.image?.type !== 'beat' &&
-            !(['image', 'movie'].includes(beat?.image?.type) && beat.image.source.kind === 'path')
-          "
-        >
-          <Button
-            variant="outline"
-            size="sm"
-            @click="generateImage(index)"
-            v-if="!store.sessionState?.[projectId]?.['beat']['image']?.[index]"
-            >Generate image</Button
-          >
+        <template v-if="shouldShowGenerateButton">
+          <Button variant="outline" size="sm" @click="generateImage(index)" v-if="!isGenerating">Generate image</Button>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </div>
@@ -200,13 +189,23 @@ interface Props {
   imageFiles: (ArrayBuffer | null)[];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits(["update", "generateImage"]);
 
 const route = useRoute();
 const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
+const shouldShowGenerateButton = computed(() => {
+  return (
+    props.beat?.image?.type !== "beat" &&
+    !(["image", "movie"].includes(props.beat?.image?.type) && props.beat.image.source.kind === "path")
+  );
+});
+
+const isGenerating = computed(() => {
+  return store.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
+});
 const getPromptLabel = (beat: MulmoBeat) => {
   if (beat.image.type) {
     switch (beat.image.type) {
