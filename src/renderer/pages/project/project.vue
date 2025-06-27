@@ -140,31 +140,58 @@
 
         <!-- Output Section -->
         <Card v-if="hasProjectData">
+          <CardHeader>
+            <CardTitle class="flex items-center space-x-2">
+              <Settings :size="20" />
+              <span>Output Settings & Generation</span>
+            </CardTitle>
+          </CardHeader>
           <CardContent class="p-4">
-            <div class="space-y-4">
-              <!-- Select Presentation Style -->
-              <Style v-model="selectedPresentationStyle"></Style>
-
-              <!-- Caption Toggle -->
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div class="flex flex-col">
-                  <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
-                  <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
+            <div class="space-y-6">
+              <!-- Presentation Style Parameters -->
+              <div class="border-2 border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+                <div class="bg-gray-50 border-b-2 border-gray-200 px-4 py-3">
+                  <h3 class="text-sm font-semibold text-gray-700">Presentation Style Parameters</h3>
                 </div>
-                <Switch id="caption-toggle" v-model:checked="captionEnabled" />
+                <div class="bg-gray-50 p-2">
+                  <!-- Scrollable content area -->
+                  <div class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200">
+                    <div class="pr-2">
+                      <PresentationStyleEditor
+                        :presentation-style="mergedPresentationStyle"
+                        @update:presentation-style="handleUpdatePresentationStyle"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <!-- Cache Toggle -->
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div class="flex flex-col">
-                  <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
-                  <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+              <!-- General Settings -->
+              <div class="border rounded-lg p-4 bg-gray-50">
+                <h3 class="text-sm font-medium mb-4">General Settings</h3>
+                <div class="space-y-4">
+                  <!-- Caption Toggle -->
+                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                    <div class="flex flex-col">
+                      <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
+                      <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
+                    </div>
+                    <Switch id="caption-toggle" v-model:checked="captionEnabled" />
+                  </div>
+
+                  <!-- Cache Toggle -->
+                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                    <div class="flex flex-col">
+                      <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                      <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                    </div>
+                    <Switch
+                      id="cache-toggle"
+                      :model-value="project?.useCache ?? false"
+                      @update:model-value="saveCacheEnabled"
+                    />
+                  </div>
                 </div>
-                <Switch
-                  id="cache-toggle"
-                  :model-value="project?.useCache ?? false"
-                  @update:model-value="saveCacheEnabled"
-                />
               </div>
 
               <!-- Output Buttons -->
@@ -306,13 +333,13 @@ import Layout from "@/components/layout.vue";
 import Chat from "./components/chat.vue";
 import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
-import Style from "./components/style.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
+import PresentationStyleEditor from "./components/presentation_style_editor.vue";
 
 import dayjs from "dayjs";
 
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
 // import { mulmoScriptSchema } from "mulmocast";
 
 import { useDebounceFn } from "@vueuse/core";
@@ -331,6 +358,7 @@ import {
 } from "./composable/style";
 import { ChatMessage } from "@/types";
 import { notifySuccess } from "@/lib/notification";
+import { mergePresentationStyleToScript } from "../../../shared/helpers";
 
 // State
 const route = useRoute();
@@ -348,7 +376,6 @@ const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 
 const validationMessage = ref("");
-const selectedPresentationStyle = ref<"ghibli" | "dilbert" | "japanese">("ghibli");
 
 const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
@@ -360,7 +387,6 @@ onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
     mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
-    // TODO: Load mulmo script data from project
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -394,6 +420,16 @@ const saveCacheEnabled = async (enabled: boolean) => {
   });
 };
 
+const handleUpdatePresentationStyle = async (style: Partial<MulmoPresentationStyle>) => {
+  if (!project.value) return;
+  project.value.presentationStyle = style as MulmoPresentationStyle;
+  await projectApi.saveProjectMetadata(projectId.value, {
+    ...project.value,
+    presentationStyle: style as MulmoPresentationStyle,
+    updatedAt: dayjs().toISOString(),
+  });
+};
+
 const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
@@ -412,6 +448,10 @@ watch(
 );
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
+
+const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
+  return mergePresentationStyleToScript(mulmoScript.value, project.value);
+});
 
 const generateMovie = async () => {
   console.log("generateMovie");

@@ -1,11 +1,10 @@
 <template>
   <Tabs default-value="text" class="w-full">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
       <TabsTrigger value="media">Media</TabsTrigger>
-      <TabsTrigger value="params">Parameters</TabsTrigger>
     </TabsList>
 
     <TabsContent value="text" class="mt-4">
@@ -239,46 +238,6 @@
         </div>
       </div>
     </TabsContent>
-
-    <TabsContent value="params" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
-        <p class="text-sm text-gray-500 mb-4">Parameters Mode - Image, Speech, and Audio parameter editing</p>
-        <div class="space-y-6">
-          <CanvasSizeParams
-            :canvas-size="mulmoValue?.canvasSize"
-            @update="(value, field) => updateParam(`canvasSize.${field}`, value)"
-          />
-          <SpeechParams
-            :speech-params="mulmoValue?.speechParams"
-            @update-speaker="(name, field, value) => updateParam(`speechParams.speakers.${name}.${field}`, value)"
-            @update-speaker-display-name="
-              (name, language, value) => updateParam(`speechParams.speakers.${name}.displayName.${language}`, value)
-            "
-            @add-speaker="addSpeaker"
-            @delete-speaker="deleteSpeaker"
-            @initialize-speech-params="initializeSpeechParams"
-          />
-          <ImageParams
-            :image-params="mulmoValue?.imageParams"
-            @update="(value, field) => updateParam(`imageParams.${field}`, value)"
-          />
-          <MovieParams
-            :movie-params="mulmoValue?.movieParams"
-            @update="(value, field) => updateParam(`movieParams.${field}`, value)"
-            @update-transition="(value, field) => updateParam(`movieParams.transition.${field}`, value)"
-            @update-fill-option="(value) => updateParam('movieParams.fillOption.style', value)"
-          />
-          <TextSlideParams
-            :text-slide-params="mulmoValue?.textSlideParams"
-            @update="(value) => updateParam('textSlideParams.cssStyles', value)"
-          />
-          <AudioParams
-            :audio-params="mulmoValue?.audioParams"
-            @update="(value, field) => updateParam(`audioParams.${field}`, value)"
-          />
-        </div>
-      </div>
-    </TabsContent>
   </Tabs>
 </template>
 
@@ -289,13 +248,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import CanvasSizeParams from "./parameters/canvas_size_params.vue";
-import ImageParams from "./parameters/image_params.vue";
-import SpeechParams from "./parameters/speech_params.vue";
-import AudioParams from "./parameters/audio_params.vue";
-import MovieParams from "./parameters/movie_params.vue";
-import TextSlideParams from "./parameters/text_slide_params.vue";
-import { useDebounceFn } from "@vueuse/core";
 
 import YAML from "yaml";
 // import { mulmoSample } from "./sample";
@@ -391,73 +343,6 @@ const update = (index: number, path: string, value: unknown) => {
     ...props.mulmoValue,
     beats: newBeats,
   });
-};
-
-const updateParamImmediate = (path: string, value: unknown) => {
-  const keys = path.split(".");
-  const set = (obj: Record<string, unknown>, keyPath: string[], val: unknown): Record<string, unknown> => {
-    if (keyPath.length === 1) {
-      return { ...obj, [keyPath[0]]: val };
-    }
-    const [head, ...tail] = keyPath;
-    const currentValue = obj?.[head];
-    const nextValue =
-      currentValue !== null && typeof currentValue === "object" ? (currentValue as Record<string, unknown>) : {};
-
-    return {
-      ...obj,
-      [head]: set(nextValue, tail, val),
-    };
-  };
-
-  const updatedValue = set((props.mulmoValue || {}) as Record<string, unknown>, keys, value);
-  console.log(`Updating parameter: ${path} =`, value);
-  emit("update:mulmoValue", updatedValue);
-};
-
-const updateParam = useDebounceFn(updateParamImmediate, 300);
-
-const initializeSpeechParams = () => {
-  updateParamImmediate("speechParams", {
-    provider: "openai",
-    speakers: {
-      Presenter: {
-        voiceId: "shimmer",
-        displayName: {
-          en: "Presenter",
-        },
-      },
-    },
-  });
-};
-
-const addSpeaker = () => {
-  const speakers = props.mulmoValue?.speechParams?.speakers || {};
-  const speakerCount = Object.keys(speakers).length;
-  const newSpeakerName = `Speaker${speakerCount + 1}`;
-
-  updateParamImmediate("speechParams.speakers", {
-    ...speakers,
-    [newSpeakerName]: {
-      voiceId: "shimmer",
-      displayName: {
-        en: newSpeakerName,
-      },
-    },
-  });
-};
-
-const deleteSpeaker = (speakerName: string) => {
-  const speakers = props.mulmoValue?.speechParams?.speakers || {};
-  const speakerCount = Object.keys(speakers).length;
-
-  if (speakerCount <= 1) {
-    return;
-  }
-
-  const { [speakerName]: __, ...remainingSpeakers } = speakers;
-
-  updateParamImmediate("speechParams.speakers", remainingSpeakers);
 };
 
 // end of mulmo editor

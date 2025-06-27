@@ -24,6 +24,7 @@ import fs from "fs";
 import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
+import { mergePresentationStyleToScript } from "../../shared/helpers";
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
@@ -38,7 +39,17 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
     file: SCRIPT_FILE_NAME,
     f: projectMetadata?.useCache ? false : true,
   };
-  return await initializeContext(argv);
+
+  const context = await initializeContext(argv);
+  const script = mergePresentationStyleToScript(context.studio.script, projectMetadata);
+
+  return {
+    ...context,
+    studio: {
+      ...context.studio,
+      script,
+    },
+  };
 };
 
 const mulmoCallbackGenerator = (projectId: string, webContents) => {
