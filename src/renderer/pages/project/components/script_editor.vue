@@ -225,14 +225,27 @@
                   </template>
                 </div>
                 <!-- end of beat.image -->
-                <Button variant="outline" size="sm" @click="generateImage(index)">Generate image</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  @click="generateImage(index)"
+                  v-if="!store.sessionState?.[projectId]?.['beat']['image']?.[index]"
+                  >Generate image</Button
+                >
+                <div v-else class="inline-flex items-center whitespace-nowrap">
+                  <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+                </div>
               </div>
 
               <!-- right: preview -->
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <img :src="imageFiles[index]" v-if="imageFiles[index]" />
-                <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" v-else />
-                <p class="text-sm text-gray-500" v-if="beat.image">{{ beat.image.type }} Preview</p>
+                <template v-if="imageFiles[index]">
+                  <img :src="imageFiles[index]" />
+                </template>
+                <template v-else>
+                  <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
+                  <p class="text-sm text-gray-500">{{ beat.image.type }} Preview</p>
+                </template>
               </div>
             </div>
           </Card>
@@ -284,7 +297,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { FileImage, Video } from "lucide-vue-next";
+import { FileImage, Video, Loader2 } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
