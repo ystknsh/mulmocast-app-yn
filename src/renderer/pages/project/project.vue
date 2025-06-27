@@ -131,6 +131,7 @@
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
                   @generateImage="(val) => generateImage(val)"
                   @generateAudio="(val) => generateAudio(val)"
+                  :audioFiles="audioFiles"
                 />
               </CardContent>
             </CollapsibleContent>
