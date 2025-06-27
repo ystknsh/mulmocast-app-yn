@@ -198,7 +198,7 @@
         </Card>
 
         <!-- Beats Viewer Section -->
-        <Collapsible v-if="beatsData.length > 0" v-model:open="isBeatsViewerOpen">
+        <Collapsible v-if="false" v-model:open="isBeatsViewerOpen">
           <Card>
             <CardHeader>
               <div class="flex items-center justify-between">
