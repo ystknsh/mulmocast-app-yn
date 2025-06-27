@@ -1,0 +1,84 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Development Commands
+
+### Core Development
+- `yarn start` - Start Electron application in development mode
+- `yarn run format` - Format code with Prettier
+- `yarn run format:check` - Check code formatting
+- `yarn run lint` - Run ESLint
+- `yarn run lint:fix` - Fix ESLint errors
+- `yarn run type-check` - Run TypeScript type checking for both client and Express modules
+
+### Build & Package
+- `yarn run package` - Package Electron application
+- `yarn run make` - Create distributable packages
+- `yarn run publish` - Publish the application
+
+### Component Development
+- `npx shadcn-vue@latest add [component-name]` - Add new shadcn-vue components
+
+## Architecture Overview
+
+This is an Electron application with a dual-process architecture:
+
+### Main Process (`src/main.ts`)
+- Manages application lifecycle and window creation
+- Starts Express server via `runExpresse()` on app ready
+- Handles window management and platform-specific behavior
+
+### Renderer Process (`src/client/`)
+- Vue 3 application with Vue Router for navigation
+- Uses hash-based routing for client-side navigation
+- Styled with Tailwind CSS and shadcn-vue components
+- Path aliases: `@/*` resolves to `src/client/*`
+- Composition API with `<script setup>` syntax
+
+### Backend Server (`src/express/`)
+- Express server running on port 8085
+- CORS enabled for cross-origin requests
+- API routes under `/api` namespace
+- Separate TypeScript configuration
+
+## Project Structure Conventions
+
+### Component Organization
+- Base shadcn-vue components: `src/client/components/ui/`
+- Composite components: `src/client/components/`
+- Page components: `src/client/pages/`
+- Utilities: `src/client/lib/`
+
+### Code Style Guidelines
+- Use `type` instead of `interface` for TypeScript definitions
+- Use Lucide Vue Next (`lucide-vue-next`) for icons
+- Write comments in English
+- Use Vue 3 Composition API with `<script setup>` syntax
+- Use single-file components (.vue) for all Vue components
+
+### TypeScript Configuration
+- Dual tsconfig setup: separate configs for client and Express
+- Client module extends root config with Vue support
+- Express module extends root config with Node.js output directory
+
+## Key Dependencies
+- **Frontend**: Vue 3, Tailwind CSS, shadcn-vue, Vue Router 4
+- **Backend**: Express 5, CORS
+- **Desktop**: Electron 36, Electron Forge
+- **Build**: Vite 6 with Vue plugin and TypeScript paths support
+- **Development**: ESLint with Vue plugin, Prettier, TypeScript 5.8
+
+## Vue-Specific Guidelines
+- All components use Composition API with `<script setup>` syntax
+- Use radix-vue for headless UI components
+- Styling follows shadcn-vue patterns with CSS variables
+- Component props are defined using TypeScript interfaces
+- Event handling uses Vue's event system with `@click` syntax
+
+## Development Notes
+- The application uses Vite Vue plugin for Electron Forge integration
+- Multiple Vite configs: main, preload, and renderer processes
+- Development server opens DevTools automatically
+- Backend API endpoints are accessible at `http://localhost:8085`
+- Vue DevTools extension recommended for development

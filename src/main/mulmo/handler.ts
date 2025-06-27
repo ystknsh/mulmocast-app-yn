@@ -70,6 +70,7 @@ export const mulmoGenerateImage = async (projectId: string, index: number, webCo
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
+    context.force = true;
     await generateBeatImage(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -92,6 +93,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    context.force = true;
     await generateBeatAudio(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -222,9 +224,18 @@ const beatImage = (context, imageAgentInfo) => {
   return async (beat, index) => {
     try {
       const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-      if (res.imagePath && fs.existsSync(res.imagePath)) {
-        const buffer = fs.readFileSync(res.imagePath);
-        res.imageData = buffer.buffer;
+      if (res.imagePath) {
+        if (res.imagePath.startsWith("http")) {
+          const response = await fetch(res.imagePath);
+          if (!response.ok) {
+            throw new Error(`Failed to download image: ${res.imagePath}`);
+          }
+          const buffer = Buffer.from(await response.arrayBuffer());
+          res.imageData = buffer.buffer;
+        } else if (fs.existsSync(res.imagePath)) {
+          const buffer = fs.readFileSync(res.imagePath);
+          res.imageData = buffer.buffer;
+        }
       }
       // console.log(res);
       return res;
