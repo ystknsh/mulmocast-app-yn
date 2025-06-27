@@ -120,6 +120,7 @@
                       type="text"
                     />
                     <div
+                      v-if="beat.image.source.kind === 'path'"
                       @dragover.prevent
                       @drop.prevent="(e) => handleDrop(index, e)"
                       draggable="true"
@@ -232,7 +233,12 @@
                   </template>
                 </div>
                 <!-- end of beat.image -->
-                <template v-if="beat?.image?.type !== 'beat' && beat?.image?.type !== 'image'">
+                <template
+                  v-if="
+                    beat?.image?.type !== 'beat' &&
+                    !(beat?.image?.type === 'image' && beat.image.source.kind === 'path')
+                  "
+                >
                   <Button
                     variant="outline"
                     size="sm"
@@ -250,7 +256,12 @@
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                 <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
                 <template v-else-if="imageFiles[index]">
-                  <img :src="imageFiles[index]" />
+                  <template v-if="beat?.image?.type === 'movie'">
+                    <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFiles[index]" />
+                  </template>
+                  <template v-else>
+                    <img :src="imageFiles[index]" />
+                  </template>
                 </template>
                 <template v-else>
                   <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
