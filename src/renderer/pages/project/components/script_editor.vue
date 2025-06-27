@@ -225,21 +225,24 @@
                   </template>
                 </div>
                 <!-- end of beat.image -->
-                <Button
-                  variant="outline"
-                  size="sm"
-                  @click="generateImage(index)"
-                  v-if="!store.sessionState?.[projectId]?.['beat']['image']?.[index]"
-                  >Generate image</Button
-                >
-                <div v-else class="inline-flex items-center whitespace-nowrap">
-                  <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-                </div>
+                <template v-if="beat?.image?.type !== 'beat'">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    @click="generateImage(index)"
+                    v-if="!store.sessionState?.[projectId]?.['beat']['image']?.[index]"
+                    >Generate image</Button
+                  >
+                  <div v-else class="inline-flex items-center whitespace-nowrap">
+                    <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+                  </div>
+                </template>
               </div>
 
               <!-- right: preview -->
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <template v-if="imageFiles[index]">
+                <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
+                <template v-else-if="imageFiles[index]">
                   <img :src="imageFiles[index]" />
                 </template>
                 <template v-else>
