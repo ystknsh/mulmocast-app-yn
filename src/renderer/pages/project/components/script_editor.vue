@@ -122,7 +122,7 @@
                     <div
                       v-if="beat.image.source.kind === 'path'"
                       @dragover.prevent
-                      @drop.prevent="(e) => handleDrop(index, e)"
+                      @drop.prevent="(e) => handleDrop(e, index, beat.image.type)"
                       draggable="true"
                       class="bg-white border border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer"
                     >
@@ -236,7 +236,7 @@
                 <template
                   v-if="
                     beat?.image?.type !== 'beat' &&
-                    !(beat?.image?.type === 'image' && beat.image.source.kind === 'path')
+                    !(['image', 'movie'].includes(beat?.image?.type) && beat.image.source.kind === 'path')
                   "
                 >
                   <Button
@@ -437,16 +437,17 @@ const getBadge = (beat: MulmoBeat) => {
   return "Image Prompt";
 };
 
-const handleDrop = (index, event) => {
+const handleDrop = (event, index, imageType) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
     // console.log("File dropped:", file.name);
     const fileType = (file.type ?? "").split("/")[1] ?? "";
-    if (!["jpg", "jpeg", "png"].includes(fileType)) {
+
+    if (!(imageType === "image" ? ["jpg", "jpeg", "png"] : ["mov", "mp4", "mpg"]).includes(fileType)) {
       return;
     }
-    const extention = fileType === "png" ? "png" : "jpg";
+    const extention = fileType === "jpeg" ? "jpg" : fileType;
 
     const reader = new FileReader();
     reader.onload = async () => {
