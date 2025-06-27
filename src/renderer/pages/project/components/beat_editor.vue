@@ -20,21 +20,21 @@
             <input
               v-if="beat.image.source.kind === 'url'"
               :value="beat.image.source.url"
-              @input="update(index, 'image.source.url', $event.target.value)"
+              @input="update('image.source.url', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
             <input
               v-else-if="beat.image.source.kind === 'path'"
               :value="beat.image.source.path"
-              @input="update(index, 'image.source.path', $event.target.value)"
+              @input="update('image.source.path', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
             <div
               v-if="beat.image.source.kind === 'path'"
               @dragover.prevent
-              @drop.prevent="(e) => handleDrop(e, index, beat.image.type)"
+              @drop.prevent="(e) => handleDrop(e, beat.image.type)"
               draggable="true"
               class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
             >
@@ -46,12 +46,12 @@
           <template v-else-if="beat.image.type === 'textSlide'">
             <input
               :value="beat.image.slide.title"
-              @input="update(index, 'image.slide.title', $event.target.value)"
+              @input="update('image.slide.title', $event.target.value)"
               class="w-full p-2 border rounded text-sm mb-2"
             />
             <textarea
               :value="beat.image.slide.bullets.join('\n')"
-              @input="update(index, 'image.slide.bullets', $event.target.value.split('\n'))"
+              @input="update('image.slide.bullets', $event.target.value.split('\n'))"
               class="w-full p-2 border rounded text-sm"
               rows="4"
             />
@@ -63,7 +63,7 @@
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
               :value="Array.isArray(beat.image.markdown) ? beat.image.markdown.join('\n') : beat.image.markdown"
-              @input="update(index, 'image.markdown', $event.target.value.split('\n'))"
+              @input="update('image.markdown', $event.target.value.split('\n'))"
             ></textarea>
           </template>
 
@@ -74,7 +74,7 @@
               @input="
                 (() => {
                   try {
-                    update(index, 'image.chartData', JSON.parse($event.target.value));
+                    update('image.chartData', JSON.parse($event.target.value));
                   } catch (_) {}
                 })()
               "
@@ -87,7 +87,7 @@
           <template v-else-if="beat.image.type === 'mermaid'">
             <textarea
               :value="beat.image.code.text"
-              @input="update(index, 'image.code.text', $event.target.value)"
+              @input="update('image.code.text', $event.target.value)"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
             ></textarea>
@@ -97,7 +97,7 @@
           <template v-else-if="beat.image.type === 'html_tailwind'">
             <textarea
               :value="Array.isArray(beat.image.html) ? beat.image.html.join('\n') : beat.image.html"
-              @input="update(index, 'image.html', $event.target.value.split('\n'))"
+              @input="update('image.html', $event.target.value.split('\n'))"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="10"
             ></textarea>
@@ -108,7 +108,7 @@
 
             <input
               :value="beat.image.id"
-              @input="update(index, 'image.id', $event.target.value)"
+              @input="update('image.id', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
@@ -122,7 +122,7 @@
           <template v-if="beat.htmlPrompt">
             <textarea
               :value="beat.htmlPrompt.prompt"
-              @input="update(index, 'htmlPrompt.prompt', $event.target.value)"
+              @input="update('htmlPrompt.prompt', $event.target.value)"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
             ></textarea>
@@ -131,14 +131,14 @@
             Image Promot:
             <input
               :value="beat.imagePrompt"
-              @input="update(index, 'imagePrompt', $event.target.value)"
+              @input="update('imagePrompt', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
             Movie Promot:
             <input
               :value="beat.moviePrompt"
-              @input="update(index, 'moviePrompt', $event.target.value)"
+              @input="update('moviePrompt', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
@@ -146,7 +146,7 @@
         </div>
         <!-- end of beat.image -->
         <template v-if="shouldShowGenerateButton">
-          <Button variant="outline" size="sm" @click="generateImage(index)" v-if="!isGenerating">Generate image</Button>
+          <Button variant="outline" size="sm" @click="generateImage()" v-if="!isGenerating">Generate image</Button>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </div>
@@ -262,7 +262,7 @@ const getMediaIcon = (type: string) => {
   }
 };
 
-const handleDrop = (event, index, imageType) => {
+const handleDrop = (event: DragEvent, imageType: string) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
@@ -280,23 +280,23 @@ const handleDrop = (event, index, imageType) => {
       const path = await window.electronAPI.mulmoHandler(
         "mulmoImageUpload",
         projectId.value,
-        index,
+        props.index,
         [...uint8Array],
         extention,
       );
-      update(index, "image.source.path", "./" + path);
-      generateImage(index);
+      update("image.source.path", "./" + path);
+      generateImage();
     };
     reader.readAsArrayBuffer(file);
   }
 };
 
-const generateImage = (index: number) => {
-  emit("generateImage", index);
+const generateImage = () => {
+  emit("generateImage", props.index);
 };
 
-const update = (index: number, path: string, value: unknown) => {
-  emit("update", index, path, value);
+const update = (path: string, value: unknown) => {
+  emit("update", props.index, path, value);
 };
 
 const positionUp = () => {
