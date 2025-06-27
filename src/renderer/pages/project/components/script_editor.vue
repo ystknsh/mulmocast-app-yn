@@ -430,12 +430,23 @@ const handleDrop = (index, event) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
-    console.log("File dropped:", file.name);
+    // console.log("File dropped:", file.name);
+    const fileType = (file.type ?? "").split("/")[1] ?? "";
+    if (!["jpg", "jpeg", "png"].includes(fileType)) {
+      return;
+    }
+    const extention = fileType === "png" ? "png" : "jpg";
 
     const reader = new FileReader();
     reader.onload = async () => {
       const uint8Array = new Uint8Array(reader.result);
-      const path = await window.electronAPI.mulmoHandler("mulmoImageUpload", projectId.value, index, [...uint8Array]);
+      const path = await window.electronAPI.mulmoHandler(
+        "mulmoImageUpload",
+        projectId.value,
+        index,
+        [...uint8Array],
+        extention,
+      );
       update(index, "image.source.path", "./" + path);
       generateImage(index);
     };
