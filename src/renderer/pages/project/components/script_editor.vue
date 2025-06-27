@@ -91,7 +91,7 @@
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <h4 class="font-medium">Beat: {{ index + 1 }}</h4>
-              <Badge variant="outline">{{ beat?.image?.type }}</Badge>
+              <Badge variant="outline">{{ getBadge(beat) }}</Badge>
             </div>
 
             <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
@@ -101,7 +101,7 @@
               <div>
                 <div v-if="beat.image">
                   <label class="text-sm font-medium block mb-1">
-                    {{ getPromptLabel(beat.image.type) }}
+                    {{ getPromptLabel(beat) }}
                   </label>
 
                   <!-- image/movie: URL or  path -->
@@ -182,9 +182,46 @@
                       rows="10"
                     ></textarea>
                   </template>
+                  <!-- reference -->
+                  <template v-else-if="beat.image.type === 'beat'">
+                    reference
+
+                    <input
+                      :value="beat.image.id"
+                      @input="update(index, 'image.id', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm"
+                      type="text"
+                    />
+                  </template>
                   <!-- Other -->
                   <template v-else>
                     <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+                  </template>
+                </div>
+                <div v-else>
+                  <template v-if="beat.htmlPrompt">
+                    <textarea
+                      :value="beat.htmlPrompt.prompt"
+                      @input="update(index, 'htmlPrompt.prompt', $event.target.value)"
+                      class="w-full p-2 border rounded font-mono text-sm"
+                      rows="6"
+                    ></textarea>
+                  </template>
+                  <template v-else>
+                    Image Promot:
+                    <input
+                      :value="beat.imagePrompt"
+                      @input="update(index, 'imagePrompt', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm"
+                      type="text"
+                    />
+                    Movie Promot:
+                    <input
+                      :value="beat.moviePrompt"
+                      @input="update(index, 'moviePrompt', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm"
+                      type="text"
+                    />
                   </template>
                 </div>
                 <!-- end of beat.image -->
@@ -262,7 +299,7 @@ import { useDebounceFn } from "@vueuse/core";
 
 import YAML from "yaml";
 // import { mulmoSample } from "./sample";
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoBeat } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
@@ -443,24 +480,40 @@ const getMediaIcon = (type: string) => {
   }
 };
 
-function getPromptLabel(type: string) {
-  switch (type) {
-    case "image":
-      return "Image Prompt (URL or path)";
-    case "movie":
-      return "Movie Source";
-    case "textSlide":
-      return "Slide Content";
-    case "markdown":
-      return "Markdown Text";
-    case "chart":
-      return "Chart JSON";
-    case "mermaid":
-      return "Mermaid Diagram";
-    case "html_tailwind":
-      return "HTML (Tailwind)";
-    default:
-      return "Prompt";
+const getPromptLabel = (beat: MulmoBeat) => {
+  if (beat.image.type) {
+    switch (beat.image.type) {
+      case "image":
+        return "Image Prompt (URL or path)";
+      case "movie":
+        return "Movie Source";
+      case "textSlide":
+        return "Slide Content";
+      case "markdown":
+        return "Markdown Text";
+      case "chart":
+        return "Chart JSON";
+      case "mermaid":
+        return "Mermaid Diagram";
+      case "html_tailwind":
+        return "HTML (Tailwind)";
+      default:
+        return "Prompt";
+    }
   }
-}
+  if (beat.htmlPrompt) {
+    return "Html Prompt";
+  }
+  return "Image Prompt";
+};
+
+const getBadge = (beat: MulmoBeat) => {
+  if (beat?.image) {
+    return beat?.image?.type;
+  }
+  if (beat.htmlPrompt) {
+    return "Html Prompt";
+  }
+  return "Image Prompt";
+};
 </script>
