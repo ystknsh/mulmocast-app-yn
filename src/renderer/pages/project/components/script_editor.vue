@@ -98,95 +98,97 @@
 
             <div class="grid grid-cols-2 gap-4">
               <!-- left: Edit area -->
-              <div v-if="beat.image">
-                <label class="text-sm font-medium block mb-1">
-                  {{ getPromptLabel(beat.image.type) }}
-                </label>
+              <div>
+                <div v-if="beat.image">
+                  <label class="text-sm font-medium block mb-1">
+                    {{ getPromptLabel(beat.image.type) }}
+                  </label>
 
-                <!-- image/movie: URL or  path -->
-                <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
-                  <input
-                    v-if="beat.image.source.kind === 'url'"
-                    :value="beat.image.source.url"
-                    @input="update(index, 'image.source.url', $event.target.value)"
-                    class="w-full p-2 border rounded text-sm"
-                    type="text"
-                  />
-                  <input
-                    v-else-if="beat.image.source.kind === 'path'"
-                    :value="beat.image.source.path"
-                    @input="update(index, 'image.source.path', $event.target.value)"
-                    class="w-full p-2 border rounded text-sm"
-                    type="text"
-                  />
-                </template>
+                  <!-- image/movie: URL or  path -->
+                  <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
+                    <input
+                      v-if="beat.image.source.kind === 'url'"
+                      :value="beat.image.source.url"
+                      @input="update(index, 'image.source.url', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm"
+                      type="text"
+                    />
+                    <input
+                      v-else-if="beat.image.source.kind === 'path'"
+                      :value="beat.image.source.path"
+                      @input="update(index, 'image.source.path', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm"
+                      type="text"
+                    />
+                  </template>
 
-                <!-- textSlide: title & bullets -->
-                <template v-else-if="beat.image.type === 'textSlide'">
-                  <input
-                    :value="beat.image.slide.title"
-                    @input="update(index, 'image.slide.title', $event.target.value)"
-                    class="w-full p-2 border rounded text-sm mb-2"
-                  />
-                  <textarea
-                    :value="beat.image.slide.bullets.join('\n')"
-                    @input="update(index, 'image.slide.bullets', $event.target.value.split('\n'))"
-                    class="w-full p-2 border rounded text-sm"
-                    rows="4"
-                  />
-                </template>
+                  <!-- textSlide: title & bullets -->
+                  <template v-else-if="beat.image.type === 'textSlide'">
+                    <input
+                      :value="beat.image.slide.title"
+                      @input="update(index, 'image.slide.title', $event.target.value)"
+                      class="w-full p-2 border rounded text-sm mb-2"
+                    />
+                    <textarea
+                      :value="beat.image.slide.bullets.join('\n')"
+                      @input="update(index, 'image.slide.bullets', $event.target.value.split('\n'))"
+                      class="w-full p-2 border rounded text-sm"
+                      rows="4"
+                    />
+                  </template>
 
-                <!-- markdown -->
-                <template v-else-if="beat.image.type === 'markdown'">
-                  <textarea
-                    class="w-full p-2 border rounded font-mono text-sm"
-                    rows="6"
-                    :value="Array.isArray(beat.image.markdown) ? beat.image.markdown.join('\n') : beat.image.markdown"
-                    @input="update(index, 'image.markdown', $event.target.value.split('\n'))"
-                  ></textarea>
-                </template>
+                  <!-- markdown -->
+                  <template v-else-if="beat.image.type === 'markdown'">
+                    <textarea
+                      class="w-full p-2 border rounded font-mono text-sm"
+                      rows="6"
+                      :value="Array.isArray(beat.image.markdown) ? beat.image.markdown.join('\n') : beat.image.markdown"
+                      @input="update(index, 'image.markdown', $event.target.value.split('\n'))"
+                    ></textarea>
+                  </template>
 
-                <!-- chart -->
-                <template v-else-if="beat.image.type === 'chart'">
-                  <textarea
-                    :value="JSON.stringify(beat.image.chartData, null, 2)"
-                    @input="
-                      (() => {
-                        try {
-                          update(index, 'image.chartData', JSON.parse($event.target.value));
-                        } catch (_) {}
-                      })()
-                    "
-                    class="w-full p-2 border rounded font-mono text-sm"
-                    rows="8"
-                  ></textarea>
-                </template>
+                  <!-- chart -->
+                  <template v-else-if="beat.image.type === 'chart'">
+                    <textarea
+                      :value="JSON.stringify(beat.image.chartData, null, 2)"
+                      @input="
+                        (() => {
+                          try {
+                            update(index, 'image.chartData', JSON.parse($event.target.value));
+                          } catch (_) {}
+                        })()
+                      "
+                      class="w-full p-2 border rounded font-mono text-sm"
+                      rows="8"
+                    ></textarea>
+                  </template>
 
-                <!-- mermaid -->
-                <template v-else-if="beat.image.type === 'mermaid'">
-                  <textarea
-                    :value="beat.image.code.text"
-                    @input="update(index, 'image.code.text', $event.target.value)"
-                    class="w-full p-2 border rounded font-mono text-sm"
-                    rows="6"
-                  ></textarea>
-                </template>
+                  <!-- mermaid -->
+                  <template v-else-if="beat.image.type === 'mermaid'">
+                    <textarea
+                      :value="beat.image.code.text"
+                      @input="update(index, 'image.code.text', $event.target.value)"
+                      class="w-full p-2 border rounded font-mono text-sm"
+                      rows="6"
+                    ></textarea>
+                  </template>
 
-                <!-- html_tailwind -->
-                <template v-else-if="beat.image.type === 'html_tailwind'">
-                  <textarea
-                    :value="Array.isArray(beat.image.html) ? beat.image.html.join('\n') : beat.image.html"
-                    @input="update(index, 'image.html', $event.target.value.split('\n'))"
-                    class="w-full p-2 border rounded font-mono text-sm"
-                    rows="10"
-                  ></textarea>
-                </template>
-                <!-- Other -->
-                <template v-else>
-                  <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
-                </template>
+                  <!-- html_tailwind -->
+                  <template v-else-if="beat.image.type === 'html_tailwind'">
+                    <textarea
+                      :value="Array.isArray(beat.image.html) ? beat.image.html.join('\n') : beat.image.html"
+                      @input="update(index, 'image.html', $event.target.value.split('\n'))"
+                      class="w-full p-2 border rounded font-mono text-sm"
+                      rows="10"
+                    ></textarea>
+                  </template>
+                  <!-- Other -->
+                  <template v-else>
+                    <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+                  </template>
+                </div>
+                <!-- end of beat.image -->
                 <Button variant="outline" size="sm" @click="generateImage(index)">Generate image</Button>
-                <Button variant="outline" size="sm" @click="generateAudio(index)">generate audio</Button>
               </div>
 
               <!-- right: preview -->
