@@ -1,33 +1,35 @@
 import type { MulmoScript } from "mulmocast";
 import type { ProjectMetadata } from "@/types/index";
 
-export const mergePresentationStyleToScript = (script: MulmoScript, projectMetadata: ProjectMetadata): MulmoScript => {
+export const mergePresentationStyleToScript = (
+  script?: MulmoScript,
+  projectMetadata?: ProjectMetadata,
+): MulmoScript => {
   if (!(projectMetadata?.presentationStyle && script)) {
     return script;
   }
 
-  const _script = { ...script };
   const { presentationStyle } = projectMetadata;
 
-  // merge presentation style into script
-  if (presentationStyle.canvasSize) {
-    _script.canvasSize = presentationStyle.canvasSize;
-  }
-  if (presentationStyle.speechParams) {
-    _script.speechParams = presentationStyle.speechParams;
-  }
-  if (presentationStyle.imageParams) {
-    _script.imageParams = presentationStyle.imageParams;
-  }
-  if (presentationStyle.movieParams) {
-    _script.movieParams = presentationStyle.movieParams;
-  }
-  if (presentationStyle.textSlideParams) {
-    _script.textSlideParams = presentationStyle.textSlideParams;
-  }
-  if (presentationStyle.audioParams) {
-    _script.audioParams = presentationStyle.audioParams;
-  }
+  // Define the parameters to merge
+  const paramsToMerge = [
+    "canvasSize" as const,
+    "speechParams" as const,
+    "imageParams" as const,
+    "movieParams" as const,
+    "textSlideParams" as const,
+    "audioParams" as const,
+  ] as const;
 
-  return _script;
+  // Create merged script by copying existing properties and adding presentation style parameters
+  const mergedScript = { ...script };
+
+  paramsToMerge.forEach((param) => {
+    if (presentationStyle[param]) {
+      // @ts-expect-error TODO: fix this
+      mergedScript[param] = presentationStyle[param];
+    }
+  });
+
+  return mergedScript;
 };
