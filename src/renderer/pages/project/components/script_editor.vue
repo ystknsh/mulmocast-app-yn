@@ -39,6 +39,10 @@
                 placeholder="e.g. What is AI?"
               />
             </div>
+
+            <Button variant="outline" size="sm" @click="generateAudio(index)">generate audio</Button>
+            {{ store.sessionState?.[projectId]?.["beat"]["audio"]?.[index] ? "generating" : "" }}
+            <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
           </div>
         </div>
       </div>
@@ -240,7 +244,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { FileImage, Video } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -257,15 +261,22 @@ import { useDebounceFn } from "@vueuse/core";
 import YAML from "yaml";
 // import { mulmoSample } from "./sample";
 import type { MulmoScript } from "mulmocast";
+import { useStore } from "../../../store";
+import { useRoute } from "vue-router";
 
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
   imageFiles: (ArrayBuffer | null)[];
+  audioFiles: (ArrayBuffer | null)[];
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio"]);
+
+const route = useRoute();
+const store = useStore();
+const projectId = computed(() => route.params.id as string);
 
 const jsonText = ref("");
 const yamlText = ref("");

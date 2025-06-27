@@ -59,6 +59,7 @@ export const mulmoGenerateImage = async (projectId: string, index: number, webCo
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
+    context.force = true;
     await generateBeatImage(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -81,6 +82,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    context.force = true;
     await generateBeatAudio(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
