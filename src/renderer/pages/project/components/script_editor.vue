@@ -119,6 +119,14 @@
                       class="w-full p-2 border rounded text-sm"
                       type="text"
                     />
+                    <div
+                      @dragover.prevent
+                      @drop.prevent="(e) => handleDrop(index, e)"
+                      draggable="true"
+                      class="bg-white border border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer"
+                    >
+                      Drag file here
+                    </div>
                   </template>
 
                   <!-- textSlide: title & bullets -->
@@ -416,5 +424,22 @@ const getBadge = (beat: MulmoBeat) => {
     return "Html Prompt";
   }
   return "Image Prompt";
+};
+
+const handleDrop = (index, event) => {
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    const file = files[0];
+    console.log("File dropped:", file.name);
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const uint8Array = new Uint8Array(reader.result);
+      const path = await window.electronAPI.mulmoHandler("mulmoImageUpload", projectId.value, index, [...uint8Array]);
+      update(index, "image.source.path", "./" + path);
+      generateImage(index);
+    };
+    reader.readAsArrayBuffer(file);
+  }
 };
 </script>

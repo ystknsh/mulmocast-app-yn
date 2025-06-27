@@ -267,6 +267,16 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
   }
 };
 
+export const mulmoImageUpload = async (projectId: string, index: number, buffer) => {
+  const projectPath = getProjectPath(projectId);
+  const dir = path.resolve(projectPath, "upload_image", String(index));
+  fs.mkdirSync(dir, { recursive: true });
+  const filename = `${Date.now()}.jpg`;
+  fs.writeFileSync(path.join(dir, filename), Buffer.from(buffer));
+
+  return path.join("upload_image", String(index), filename);
+};
+
 export const mulmoHandler = async (method, webContents, ...args) => {
   try {
     switch (method) {
@@ -294,6 +304,8 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         return await mulmoImageFile(args[0], args[1]);
       case "createMulmoScript":
         return await createMulmoScript(args[0], args[1]);
+      case "mulmoImageUpload":
+        return await mulmoImageUpload(args[0], args[1], args[2]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
