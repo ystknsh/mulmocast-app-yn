@@ -1,6 +1,6 @@
 <template>
   <Tabs default-value="text" class="w-full">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
