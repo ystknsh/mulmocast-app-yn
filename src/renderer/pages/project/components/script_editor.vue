@@ -54,13 +54,13 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <textarea
+        <CodeEditor
           v-model="yamlText"
-          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
-          @input="onYamlInput"
+          language="yaml"
+          @update:modelValue="onYamlInput"
           @focus="onFocus"
           @blur="onBlur"
-        ></textarea>
+        />
       </div>
     </TabsContent>
 
@@ -72,13 +72,13 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <textarea
+        <CodeEditor
           v-model="jsonText"
-          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
-          @input="onJsonInput"
+          language="json"
+          @update:modelValue="onJsonInput"
           @focus="onFocus"
           @blur="onBlur"
-        ></textarea>
+        />
       </div>
     </TabsContent>
 
@@ -114,6 +114,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import BeatEditor from "./beat_editor.vue";
 import BeatAdd from "./beat_add.vue";
+import CodeEditor from "@/components/code_editor.vue";
 
 import YAML from "yaml";
 import type { MulmoScript, MulmoBeat } from "mulmocast";
@@ -137,7 +138,6 @@ const projectId = computed(() => route.params.id as string);
 const jsonText = ref("");
 const yamlText = ref("");
 const internalValue = ref({});
-
 const syncTextFromInternal = () => {
   jsonText.value = JSON.stringify(internalValue.value, null, 2);
   yamlText.value = YAML.stringify(internalValue.value);
@@ -167,9 +167,10 @@ watch(
   { deep: true, immediate: true },
 );
 
-const onJsonInput = () => {
+const onJsonInput = (value: string) => {
+  jsonText.value = value;
   try {
-    const parsed = JSON.parse(jsonText.value);
+    const parsed = JSON.parse(value);
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
     emit("update:mulmoValue", parsed);
@@ -180,9 +181,10 @@ const onJsonInput = () => {
   }
 };
 
-const onYamlInput = () => {
+const onYamlInput = (value: string) => {
+  yamlText.value = value;
   try {
-    const parsed = YAML.parse(yamlText.value);
+    const parsed = YAML.parse(value);
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
     emit("update:mulmoValue", parsed);
