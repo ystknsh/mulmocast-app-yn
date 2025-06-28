@@ -66,5 +66,4 @@ const updateParam = (path: string, value: unknown) => {
   console.log(`Updating parameter: ${path} =`, value);
   emit("update:presentationStyle", updatedValue);
 };
-
 </script>

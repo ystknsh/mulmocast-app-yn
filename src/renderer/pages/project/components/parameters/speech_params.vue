@@ -164,7 +164,6 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-
 const handleProviderChange = (event: Event) => {
   const newProvider = (event.target as HTMLSelectElement).value as Provider;
   const defaultVoiceId = getDefaultVoiceId(newProvider);
