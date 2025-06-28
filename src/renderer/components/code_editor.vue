@@ -45,7 +45,7 @@ const emit = defineEmits<{
   blur: [];
 }>();
 
-// @ts-expect-error TODO: fix this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const highlighter = ref<any>(null);
 const highlighted = ref("");
 
@@ -135,5 +135,6 @@ const syncScroll = () => {
 
 :deep(.syntax-highlighted > pre) {
   padding: 20px;
+  width: fit-content;
 }
 </style>
