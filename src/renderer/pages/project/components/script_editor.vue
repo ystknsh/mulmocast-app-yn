@@ -87,6 +87,7 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
+          <BeatAdd @addBeat="addBeatHead" />
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <BeatEditor
               :beat="beat"
@@ -99,6 +100,7 @@
               @positionUp="positionUp"
             />
           </Card>
+          <BeatAdd @addBeat="addBeatTail" />
         </div>
       </div>
     </TabsContent>
@@ -111,9 +113,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import BeatEditor from "./beat_editor.vue";
+import BeatAdd from "./beat_add.vue";
 
 import YAML from "yaml";
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoBeat } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
@@ -233,6 +236,24 @@ const positionUp = (index: number) => {
   const temp = newBeats[index - 1];
   newBeats[index - 1] = newBeats[index];
   newBeats[index] = temp;
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
+};
+
+const addBeatHead = (beat: MulmoBeat) => {
+  const newBeats = [...props.mulmoValue.beats];
+  newBeats.unshift(beat);
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
+};
+
+const addBeatTail = (beat: MulmoBeat) => {
+  const newBeats = [...props.mulmoValue.beats];
+  newBeats.push(beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,
