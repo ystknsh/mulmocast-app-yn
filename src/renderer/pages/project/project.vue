@@ -399,35 +399,26 @@ const handleUpdateScript = (script: MulmoScript) => {
   notifySuccess("Script created successfully 🎉");
 };
 
-const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
-  await saveChatMessages(messages);
-};
-
-const saveChatMessages = useDebounceFn(async (messages: ChatMessage[]) => {
+const saveProjectMetadata = useDebounceFn(async (project: ProjectMetadata) => {
   await projectApi.saveProjectMetadata(projectId.value, {
-    ...project.value,
+    ...project,
     updatedAt: dayjs().toISOString(),
-    chatMessages: messages,
   });
 }, 1000);
 
-const saveCacheEnabled = async (enabled: boolean) => {
-  project.value.useCache = enabled;
-  await projectApi.saveProjectMetadata(projectId.value, {
-    ...project.value,
-    useCache: enabled,
-    updatedAt: dayjs().toISOString(),
-  });
+const handleUpdateChatMessages = (messages: ChatMessage[]) => {
+  project.value.chatMessages = messages;
+  saveProjectMetadata(project.value);
 };
 
-const handleUpdatePresentationStyle = async (style: Partial<MulmoPresentationStyle>) => {
-  if (!project.value) return;
+const saveCacheEnabled = (enabled: boolean) => {
+  project.value.useCache = enabled;
+  saveProjectMetadata(project.value);
+};
+
+const handleUpdatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   project.value.presentationStyle = style as MulmoPresentationStyle;
-  await projectApi.saveProjectMetadata(projectId.value, {
-    ...project.value,
-    presentationStyle: style as MulmoPresentationStyle,
-    updatedAt: dayjs().toISOString(),
-  });
+  saveProjectMetadata(project.value);
 };
 
 const saveMulmo = async (data) => {
