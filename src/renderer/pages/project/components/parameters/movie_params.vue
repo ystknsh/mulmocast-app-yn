@@ -84,41 +84,36 @@ const currentParams = computed((): MovieParams => {
   };
 });
 
-const handleProviderChange = (event: Event) => {
-  const value = (event.target as HTMLSelectElement).value as "google" | "openai";
+const updateParams = (partial: Partial<MovieParams>) => {
   emit("update", {
     ...currentParams.value,
-    provider: value,
+    ...partial,
+    transition: partial.transition
+      ? {
+          ...currentParams.value.transition,
+          ...partial.transition,
+        }
+      : currentParams.value.transition,
   });
+};
+
+const handleProviderChange = (event: Event) => {
+  const value = (event.target as HTMLSelectElement).value as "google" | "openai";
+  updateParams({ provider: value });
 };
 
 const handleModelChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-  emit("update", {
-    ...currentParams.value,
-    model: value,
-  });
+  updateParams({ model: value });
 };
 
 const handleTransitionTypeChange = (event: Event) => {
   const value = (event.target as HTMLSelectElement).value as "fade" | "slideout_left";
-  emit("update", {
-    ...currentParams.value,
-    transition: {
-      ...currentParams.value.transition,
-      type: value,
-    },
-  });
+  updateParams({ transition: { type: value, duration: currentParams.value.transition.duration } });
 };
 
 const handleTransitionDurationChange = (event: Event) => {
   const value = Number((event.target as HTMLInputElement).value);
-  emit("update", {
-    ...currentParams.value,
-    transition: {
-      ...currentParams.value.transition,
-      duration: value,
-    },
-  });
+  updateParams({ transition: { type: currentParams.value.transition.type, duration: value } });
 };
 </script>
