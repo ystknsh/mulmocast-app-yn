@@ -233,7 +233,7 @@ const initializeSpeechParams = () => {
     provider: "openai",
     speakers: {
       Presenter: {
-        voiceId: "shimmer",
+        voiceId: DEFAULT_VOICE_IDS.openai,
         displayName: {
           en: "Presenter",
         },

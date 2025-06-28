@@ -35,6 +35,7 @@ export type EnvKey = keyof typeof ENV_KEYS;
 
 export const VOICE_LISTS = {
   openai: [
+    { id: "shimmer", name: "Shimmer" },
     { id: "alloy", name: "Alloy" },
     { id: "ash", name: "Ash" },
     { id: "ballad", name: "Ballad" },
@@ -44,7 +45,6 @@ export const VOICE_LISTS = {
     { id: "nova", name: "Nova" },
     { id: "onyx", name: "Onyx" },
     { id: "sage", name: "Sage" },
-    { id: "shimmer", name: "Shimmer" },
   ],
   google: [
     { id: "ja-JP-Standard-A", name: "JP Standard A (Female)" },
@@ -195,10 +195,10 @@ export const VOICE_LISTS = {
 } as const;
 
 export const DEFAULT_VOICE_IDS: Record<string, string> = {
-  openai: "shimmer",
-  google: "en-US-Wavenet-C",
-  nijivoice: "ACTOR_ID_1",
-  elevenlabs: "21m00Tcm4TlvDq8ikWAM",
+  openai: VOICE_LISTS.openai[0].id,
+  google: VOICE_LISTS.google[0].id,
+  nijivoice: VOICE_LISTS.nijivoice[0].id,
+  elevenlabs: VOICE_LISTS.elevenlabs[0].id,
 } as const;
 
 export const PRESET_CANVAS_SIZE = {
