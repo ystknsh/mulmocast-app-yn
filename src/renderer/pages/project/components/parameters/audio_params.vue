@@ -6,8 +6,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Padding</label>
           <input
-            :value="audioParams?.padding ?? 0.3"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'padding')"
+            :value="audioParams?.padding ?? DEFAULT_VALUES.padding"
+            @input="handleUpdate('padding', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -16,8 +16,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Intro Padding</label>
           <input
-            :value="audioParams?.introPadding ?? 1.0"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'introPadding')"
+            :value="audioParams?.introPadding ?? DEFAULT_VALUES.introPadding"
+            @input="handleUpdate('introPadding', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -28,8 +28,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Closing Padding</label>
           <input
-            :value="audioParams?.closingPadding ?? 0.8"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'closingPadding')"
+            :value="audioParams?.closingPadding ?? DEFAULT_VALUES.closingPadding"
+            @input="handleUpdate('closingPadding', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -38,8 +38,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Outro Padding</label>
           <input
-            :value="audioParams?.outroPadding ?? 1.0"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'outroPadding')"
+            :value="audioParams?.outroPadding ?? DEFAULT_VALUES.outroPadding"
+            @input="handleUpdate('outroPadding', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.1"
             class="w-full p-2 border rounded text-sm"
@@ -50,8 +50,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">BGM Volume</label>
           <input
-            :value="audioParams?.bgmVolume ?? 0.2"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'bgmVolume')"
+            :value="audioParams?.bgmVolume ?? DEFAULT_VALUES.bgmVolume"
+            @input="handleUpdate('bgmVolume', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.05"
             min="0"
@@ -62,8 +62,8 @@
         <div>
           <label class="block text-sm text-gray-600 mb-1">Audio Volume</label>
           <input
-            :value="audioParams?.audioVolume ?? 1.0"
-            @input="$emit('update', Number(($event.target as HTMLInputElement).value), 'audioVolume')"
+            :value="audioParams?.audioVolume ?? DEFAULT_VALUES.audioVolume"
+            @input="handleUpdate('audioVolume', Number(($event.target as HTMLInputElement).value))"
             type="number"
             step="0.05"
             min="0"
@@ -87,14 +87,31 @@
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
 
-defineProps<{
-  audioParams?: MulmoPresentationStyle["audioParams"];
+type AudioParams = MulmoPresentationStyle["audioParams"];
+
+const props = defineProps<{
+  audioParams?: AudioParams;
 }>();
 
-defineEmits<{
-  update: [
-    value: number,
-    field: "padding" | "introPadding" | "closingPadding" | "outroPadding" | "bgmVolume" | "audioVolume",
-  ];
+const emit = defineEmits<{
+  update: [audioParams: AudioParams];
 }>();
+
+const DEFAULT_VALUES = {
+  padding: 0.3,
+  introPadding: 1.0,
+  closingPadding: 0.8,
+  outroPadding: 1.0,
+  bgmVolume: 0.2,
+  audioVolume: 1.0,
+} as const;
+
+const handleUpdate = (field: keyof typeof DEFAULT_VALUES, value: number) => {
+  const currentParams = props.audioParams || {};
+  emit("update", {
+    ...DEFAULT_VALUES,
+    ...currentParams,
+    [field]: value,
+  });
+};
 </script>

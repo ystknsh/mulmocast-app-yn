@@ -2,27 +2,19 @@
   <div class="space-y-6">
     <CanvasSizeParams
       :canvas-size="presentationStyle?.canvasSize"
-      @update="(value, field) => updateParam(`canvasSize.${field}`, value)"
+      @update="(value) => updateParam(`canvasSize`, value)"
     />
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
-      @update-speaker="(name, field, value) => updateParam(`speechParams.speakers.${name}.${field}`, value)"
-      @update-speaker-display-name="
-        (name, language, value) => updateParam(`speechParams.speakers.${name}.displayName.${language}`, value)
-      "
-      @add-speaker="addSpeaker"
-      @delete-speaker="deleteSpeaker"
-      @initialize-speech-params="initializeSpeechParams"
+      @update="(value) => updateParam('speechParams', value)"
     />
     <ImageParams
       :image-params="presentationStyle?.imageParams"
-      @update="(value, field) => updateParam(`imageParams.${field}`, value)"
+      @update="(value) => updateParam('imageParams', value)"
     />
     <MovieParams
       :movie-params="presentationStyle?.movieParams"
-      @update="(value, field) => updateParam(`movieParams.${field}`, value)"
-      @update-transition="(value, field) => updateParam(`movieParams.transition.${field}`, value)"
-      @update-fill-option="(value) => updateParam('movieParams.fillOption.style', value)"
+      @update="(value) => updateParam('movieParams', value)"
     />
     <TextSlideParams
       :text-slide-params="presentationStyle?.textSlideParams"
@@ -30,7 +22,7 @@
     />
     <AudioParams
       :audio-params="presentationStyle?.audioParams"
-      @update="(value, field) => updateParam(`audioParams.${field}`, value)"
+      @update="(value) => updateParam('audioParams', value)"
     />
   </div>
 </template>
@@ -53,7 +45,7 @@ const emit = defineEmits<{
   "update:presentationStyle": [style: Partial<MulmoPresentationStyle>];
 }>();
 
-const updateParamImmediate = (path: string, value: unknown) => {
+const updateParam = (path: string, value: unknown) => {
   const keys = path.split(".");
   const set = (obj: Record<string, unknown>, keyPath: string[], val: unknown): Record<string, unknown> => {
     if (keyPath.length === 1) {
@@ -62,7 +54,7 @@ const updateParamImmediate = (path: string, value: unknown) => {
     const [head, ...tail] = keyPath;
     const currentValue = obj?.[head];
     const nextValue =
-      currentValue !== null && typeof currentValue === "object" ? (currentValue as Record<string, unknown>) : {};
+      currentValue !== null && typeof currentValue === "object" ? { ...(currentValue as Record<string, unknown>) } : {};
 
     return {
       ...obj,
@@ -70,53 +62,8 @@ const updateParamImmediate = (path: string, value: unknown) => {
     };
   };
 
-  const updatedValue = set((props.presentationStyle || {}) as Record<string, unknown>, keys, value);
+  const updatedValue = set({ ...(props.presentationStyle || {}) } as Record<string, unknown>, keys, value);
   console.log(`Updating parameter: ${path} =`, value);
   emit("update:presentationStyle", updatedValue);
-};
-
-const updateParam = updateParamImmediate;
-
-const initializeSpeechParams = () => {
-  updateParamImmediate("speechParams", {
-    provider: "openai",
-    speakers: {
-      Presenter: {
-        voiceId: "shimmer",
-        displayName: {
-          en: "Presenter",
-        },
-      },
-    },
-  });
-};
-
-const addSpeaker = () => {
-  const speakers = props.presentationStyle?.speechParams?.speakers || {};
-  const speakerCount = Object.keys(speakers).length;
-  const newSpeakerName = `Speaker${speakerCount + 1}`;
-
-  updateParamImmediate("speechParams.speakers", {
-    ...speakers,
-    [newSpeakerName]: {
-      voiceId: "shimmer",
-      displayName: {
-        en: newSpeakerName,
-      },
-    },
-  });
-};
-
-const deleteSpeaker = (speakerName: string) => {
-  const speakers = props.presentationStyle?.speechParams?.speakers || {};
-  const speakerCount = Object.keys(speakers).length;
-
-  if (speakerCount <= 1) {
-    return;
-  }
-
-  const { [speakerName]: __, ...remainingSpeakers } = speakers;
-
-  updateParamImmediate("speechParams.speakers", remainingSpeakers);
 };
 </script>

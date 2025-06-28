@@ -5,20 +5,19 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Provider</label>
         <select
-          :value="movieParams?.provider || 'google'"
-          @change="$emit('update', ($event.target as HTMLSelectElement).value, 'provider')"
+          :value="movieParams?.provider || DEFAULT_VALUES.provider"
+          @change="handleProviderChange($event)"
           class="w-full p-2 border rounded text-sm"
         >
-          <option value="openai">OpenAI</option>
           <option value="google">Google</option>
-          <option value="replicate">Replicate</option>
+          <option value="openai">OpenAI</option>
         </select>
       </div>
       <div>
         <label class="block text-sm text-gray-600 mb-1">Model</label>
         <input
-          :value="movieParams?.model || ''"
-          @input="$emit('update', ($event.target as HTMLInputElement).value, 'model')"
+          :value="movieParams?.model || DEFAULT_VALUES.model"
+          @input="handleModelChange($event)"
           placeholder="Provider specific model (optional)"
           class="w-full p-2 border rounded text-sm"
         />
@@ -26,8 +25,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Transition Type</label>
         <select
-          :value="movieParams?.transition?.type || 'fade'"
-          @change="$emit('updateTransition', ($event.target as HTMLSelectElement).value, 'type')"
+          :value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
+          @change="handleTransitionTypeChange($event)"
           class="w-full p-2 border rounded text-sm"
         >
           <option value="fade">Fade</option>
@@ -37,8 +36,8 @@
       <div>
         <label class="block text-sm text-gray-600 mb-1">Transition Duration (seconds)</label>
         <input
-          :value="movieParams?.transition?.duration ?? 0.3"
-          @input="$emit('updateTransition', Number(($event.target as HTMLInputElement).value), 'duration')"
+          :value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
+          @input="handleTransitionDurationChange($event)"
           type="number"
           min="0"
           max="2"
@@ -46,32 +45,75 @@
           class="w-full p-2 border rounded text-sm"
         />
       </div>
-      <div>
-        <label class="block text-sm text-gray-600 mb-1">Fill Option</label>
-        <select
-          :value="movieParams?.fillOption?.style || 'aspectFit'"
-          @change="$emit('updateFillOption', ($event.target as HTMLSelectElement).value)"
-          class="w-full p-2 border rounded text-sm"
-        >
-          <option value="aspectFit">Aspect Fit</option>
-          <option value="aspectFill">Aspect Fill</option>
-        </select>
-      </div>
     </div>
   </Card>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
 
-defineProps<{
-  movieParams?: MulmoPresentationStyle["movieParams"];
+type MovieParams = MulmoPresentationStyle["movieParams"];
+
+const props = defineProps<{
+  movieParams?: MovieParams;
 }>();
 
-defineEmits<{
-  update: [value: string, field: "provider" | "model"];
-  updateTransition: [value: string | number, field: "type" | "duration"];
-  updateFillOption: [value: string];
+const emit = defineEmits<{
+  update: [movieParams: MovieParams];
 }>();
+
+const DEFAULT_VALUES: MovieParams = {
+  provider: "google",
+  model: "",
+  transition: {
+    type: "fade",
+    duration: 0.3,
+  },
+};
+
+const currentParams = computed((): MovieParams => {
+  return {
+    provider: props.movieParams?.provider || DEFAULT_VALUES.provider,
+    model: props.movieParams?.model || DEFAULT_VALUES.model,
+    transition: {
+      type: props.movieParams?.transition?.type || DEFAULT_VALUES.transition.type,
+      duration: props.movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration,
+    },
+  };
+});
+
+const updateParams = (partial: Partial<MovieParams>) => {
+  emit("update", {
+    ...currentParams.value,
+    ...partial,
+    transition: partial.transition
+      ? {
+          ...currentParams.value.transition,
+          ...partial.transition,
+        }
+      : currentParams.value.transition,
+  });
+};
+
+const handleProviderChange = (event: Event) => {
+  const value = (event.target as HTMLSelectElement).value as "google" | "openai";
+  updateParams({ provider: value });
+};
+
+const handleModelChange = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  updateParams({ model: value });
+};
+
+const handleTransitionTypeChange = (event: Event) => {
+  const value = (event.target as HTMLSelectElement).value as "fade" | "slideout_left";
+  updateParams({ transition: { type: value, duration: currentParams.value.transition.duration } });
+};
+
+const handleTransitionDurationChange = (event: Event) => {
+  const value = Number((event.target as HTMLInputElement).value);
+  updateParams({ transition: { type: currentParams.value.transition.type, duration: value } });
+};
 </script>
