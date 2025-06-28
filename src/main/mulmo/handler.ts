@@ -136,7 +136,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
     }
     if (actionName === "movie") {
       const audioContext = await audio(context, settings, graphAICallbacks);
-      const imageContext = await images(audioContext, settings, graphAICallbacks)
+      const imageContext = await images(audioContext, settings, graphAICallbacks);
       if (imageContext.caption) {
         const captionCoontext = await captions(imageContext);
         await movie(captionCoontext);
