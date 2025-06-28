@@ -95,12 +95,19 @@
 import { ref, computed } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { VOICE_LISTS, DEFAULT_VOICE_IDS } from "@/../shared/constants";
+import { VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
 type Speaker = NonNullable<SpeechParams>["speakers"][string];
+
+export const DEFAULT_VOICE_IDS: Record<string, string> = {
+  openai: VOICE_LISTS.openai[0].id,
+  google: VOICE_LISTS.google[0].id,
+  nijivoice: VOICE_LISTS.nijivoice[0].id,
+  elevenlabs: VOICE_LISTS.elevenlabs[0].id,
+} as const;
 
 const props = defineProps<{
   speechParams?: SpeechParams;

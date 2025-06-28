@@ -49,7 +49,14 @@
 import { computed, ref } from "vue";
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
-import { PRESET_CANVAS_SIZE } from "../../../../../shared/constants";
+
+const PRESET_CANVAS_SIZE = {
+  "1792x1024": { width: 1792, height: 1024 },
+  "1024x1792": { width: 1024, height: 1792 },
+  "1024x1024": { width: 1024, height: 1024 },
+  "1536x1024": { width: 1536, height: 1024 },
+  "1024x1536": { width: 1024, height: 1536 },
+} as const;
 
 const props = defineProps<{
   canvasSize?: MulmoPresentationStyle["canvasSize"];

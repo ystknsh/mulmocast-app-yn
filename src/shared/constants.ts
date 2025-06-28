@@ -193,18 +193,3 @@ export const VOICE_LISTS = {
     { id: "l39JidvAMB3s85XyNSRd", name: "Sayuri" },
   ],
 } as const;
-
-export const DEFAULT_VOICE_IDS: Record<string, string> = {
-  openai: VOICE_LISTS.openai[0].id,
-  google: VOICE_LISTS.google[0].id,
-  nijivoice: VOICE_LISTS.nijivoice[0].id,
-  elevenlabs: VOICE_LISTS.elevenlabs[0].id,
-} as const;
-
-export const PRESET_CANVAS_SIZE = {
-  "1792x1024": { width: 1792, height: 1024 },
-  "1024x1792": { width: 1024, height: 1792 },
-  "1024x1024": { width: 1024, height: 1024 },
-  "1536x1024": { width: 1536, height: 1024 },
-  "1024x1536": { width: 1024, height: 1536 },
-} as const;
