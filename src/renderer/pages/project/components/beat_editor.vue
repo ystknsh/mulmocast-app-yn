@@ -157,12 +157,12 @@
       <div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
           <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
-          <template v-else-if="imageFiles[index]">
+          <template v-else-if="imageFile">
             <template v-if="beat?.image?.type === 'movie'">
-              <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFiles[index]" />
+              <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFile" />
             </template>
             <template v-else>
-              <img :src="imageFiles[index]" />
+              <img :src="imageFile" />
             </template>
           </template>
           <template v-else>
@@ -195,7 +195,7 @@ import { useRoute } from "vue-router";
 interface Props {
   beat: MulmoBeat;
   index: number;
-  imageFiles: (ArrayBuffer | null)[];
+  imageFile: ArrayBuffer | null;
   isEnd: boolean;
 }
 

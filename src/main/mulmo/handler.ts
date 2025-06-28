@@ -135,12 +135,14 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
       await images(context, settings, graphAICallbacks);
     }
     if (actionName === "movie") {
-      await audio(context, settings, graphAICallbacks);
-      await images(context, settings, graphAICallbacks);
-      if (context.caption) {
-        await captions(context);
+      const audioContext = await audio(context, settings, graphAICallbacks);
+      const imageContext = await images(audioContext, settings, graphAICallbacks)
+      if (imageContext.caption) {
+        const captionCoontext = await captions(imageContext);
+        await movie(captionCoontext);
+      } else {
+        await movie(imageContext);
       }
-      await movie(context);
     }
     if (actionName === "pdf") {
       await images(context, settings, graphAICallbacks);
@@ -152,6 +154,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
       result: true,
     };
   } catch (error) {
+    console.log(error);
     webContents.send("progress-update", {
       projectId,
       type: "error",
@@ -310,6 +313,7 @@ export const mulmoHandler = async (method, webContents, ...args) => {
         throw new Error(`Unknown method: ${method}`);
     }
   } catch (error) {
+    console.log(error);
     return { error };
   }
 };

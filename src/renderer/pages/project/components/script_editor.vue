@@ -92,7 +92,7 @@
               :beat="beat"
               :index="index"
               :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-              :imageFiles="imageFiles"
+              :imageFile="imageFiles[index]"
               @update="update"
               @generateImage="generateImage"
               @deleteBeat="deleteBeat"
