@@ -16,12 +16,7 @@
           <label class="block text-sm text-gray-600 mb-1">Width</label>
           <input
             :value="canvasSize?.width || 1280"
-            @input="
-              emit('update', {
-                width: Number(($event.target as HTMLInputElement).value),
-                height: canvasSize?.height || 720,
-              })
-            "
+            @input="handleCustomChange($event, 'width')"
             type="number"
             class="w-full p-2 border rounded text-sm"
           />
@@ -30,12 +25,7 @@
           <label class="block text-sm text-gray-600 mb-1">Height</label>
           <input
             :value="canvasSize?.height || 720"
-            @input="
-              emit('update', {
-                width: canvasSize?.width || 1280,
-                height: Number(($event.target as HTMLInputElement).value),
-              })
-            "
+            @input="handleCustomChange($event, 'height')"
             type="number"
             class="w-full p-2 border rounded text-sm"
           />
@@ -46,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
 
@@ -63,28 +53,15 @@ const props = defineProps<{
 }>();
 
 const showCustom = ref(false);
+const selectedPreset = ref<keyof typeof PRESET_CANVAS_SIZE | "custom">("1024x1024");
 
 const emit = defineEmits<{
   update: [value: { width: number; height: number }];
 }>();
 
-const selectedPreset = computed(() => {
-  const currentSize = props.canvasSize;
-  if (!currentSize) return "1024x1024";
-
-  const width = Number(currentSize.width);
-  const height = Number(currentSize.height);
-
-  for (const [key, preset] of Object.entries(PRESET_CANVAS_SIZE)) {
-    if (preset.width === width && preset.height === height) {
-      return key;
-    }
-  }
-  return "custom";
-});
-
 const handlePresetChange = (event: Event) => {
-  const value = (event.target as HTMLSelectElement).value;
+  const value = (event.target as HTMLSelectElement).value as keyof typeof PRESET_CANVAS_SIZE | "custom";
+  selectedPreset.value = value;
   if (value !== "custom" && value in PRESET_CANVAS_SIZE) {
     showCustom.value = false;
     const preset = PRESET_CANVAS_SIZE[value as keyof typeof PRESET_CANVAS_SIZE];
@@ -93,4 +70,28 @@ const handlePresetChange = (event: Event) => {
     showCustom.value = true;
   }
 };
+
+const handleCustomChange = (event: Event, key: "width" | "height") => {
+  const value = (event.target as HTMLInputElement).value;
+  const currentSize = props.canvasSize;
+  emit("update", { ...currentSize, [key]: Number(value) });
+};
+
+watch(
+  () => props.canvasSize,
+  (newSize) => {
+    if (!newSize) return;
+    if (
+      Object.values(PRESET_CANVAS_SIZE).some(
+        (preset) => preset.width === newSize.width && preset.height === newSize.height,
+      )
+    ) {
+      showCustom.value = false;
+      selectedPreset.value = `${newSize.width}x${newSize.height}` as keyof typeof PRESET_CANVAS_SIZE;
+    } else {
+      showCustom.value = true;
+      selectedPreset.value = "custom";
+    }
+  },
+);
 </script>
