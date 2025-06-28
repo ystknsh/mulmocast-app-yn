@@ -102,7 +102,7 @@ type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
 type Speaker = NonNullable<SpeechParams>["speakers"][string];
 
-export const DEFAULT_VOICE_IDS: Record<string, string> = {
+const DEFAULT_VOICE_IDS: Record<string, string> = {
   openai: VOICE_LISTS.openai[0].id,
   google: VOICE_LISTS.google[0].id,
   nijivoice: VOICE_LISTS.nijivoice[0].id,
