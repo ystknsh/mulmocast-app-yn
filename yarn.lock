@@ -1686,10 +1686,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@^24.0.6":
-  version "24.0.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.6.tgz#d483f1407d022ef2a12118f7c02074ca218346c3"
-  integrity sha512-ZOyn+gOs749xU7ovp+Ibj0g1o3dFRqsfPnT22C2t5JzcRvgsEDpGawPbCISGKLudJk9Y0wiu9sYd6kUh0pc9TA==
+"@types/node@^24.0.7":
+  version "24.0.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.7.tgz#ee580f7850c7eabaeef61ef96b8d8c04fdf94f53"
+  integrity sha512-YIEUUr4yf8q8oQoXPpSlnvKNVKDQlPMWrmOcgzoduo7kvA2UF0/BwJ/eMKFTiTtkNL17I0M6Xe2tvwFU7be6iw==
   dependencies:
     undici-types "~7.8.0"
 
@@ -8428,12 +8428,7 @@ zod-to-json-schema@^3.24.1, zod-to-json-schema@^3.24.6:
   resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.24.6.tgz#5920f020c4d2647edfbb954fa036082b92c9e12d"
   integrity sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==
 
-zod@^3.23.8, zod@^3.25.67:
-  version "3.25.67"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.67.tgz#62987e4078e2ab0f63b491ef0c4f33df24236da8"
-  integrity sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==
-
-zod@^3.25.67:
+zod@^3.23.8, zod@^3.24.1, zod@^3.25.67:
   version "3.25.67"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.67.tgz#62987e4078e2ab0f63b491ef0c4f33df24236da8"
   integrity sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==
@@ -8442,4 +8437,3 @@ zwitch@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/zwitch/-/zwitch-2.0.4.tgz#c827d4b0acb76fc3e685a4c6ec2902d51070e9d7"
   integrity sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==
-
