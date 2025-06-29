@@ -14,36 +14,31 @@
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
 
-        <div class="font-mono text-sm space-y-6 p-4 max-w-2xl mx-auto">
-          <div v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
+        <div class="space-y-6 mx-auto">
+          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 space-y-1 gap-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
-
             <div>
-              <label class="block mb-1 text-gray-500">Speaker</label>
+              <label class="block text-sm text-gray-600 mb-1">Speaker</label>
               <input
                 :value="beat.speaker"
                 @input="update(index, 'speaker', $event.target.value)"
-                type="text"
-                class="w-full p-2 border rounded"
                 placeholder="e.g. Alice"
+                class="w-full p-1 border rounded text-sm"
               />
             </div>
-
             <div>
-              <label class="block mb-1 text-gray-500">Text</label>
+              <label class="block text-sm text-gray-600 mb-1">Text</label>
               <input
                 :value="beat.text"
                 @input="update(index, 'text', $event.target.value)"
-                type="text"
-                class="w-full p-2 border rounded"
                 placeholder="e.g. What is AI?"
+                class="w-full p-1 border rounded text-sm"
               />
             </div>
-
-            <Button variant="outline" size="sm" @click="generateAudio(index)">generate audio</Button>
-            {{ store.sessionState?.[projectId]?.["beat"]["audio"]?.[index] ? "generating" : "" }}
+            <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+            <span v-if="store.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
             <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-          </div>
+          </Card>
         </div>
       </div>
     </TabsContent>
