@@ -1,5 +1,5 @@
 <template>
-  <Tabs default-value="text" class="w-full">
+  <Tabs class="w-full" v-model="currentTab">
     <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
@@ -149,11 +149,17 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio"]);
+const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio", "formatAndPushHistoryMulmoScript"]);
 
 const route = useRoute();
 const store = useStore();
 const projectId = computed(() => route.params.id as string);
+
+const currentTab = ref('text')
+watch(currentTab, () => {
+  console.log(currentTab.value);
+  emit("formatAndPushHistoryMulmoScript")
+});
 
 const jsonText = ref("");
 const yamlText = ref("");
