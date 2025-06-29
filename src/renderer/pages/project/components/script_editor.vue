@@ -1,10 +1,11 @@
 <template>
   <Tabs default-value="text" class="w-full">
-    <TabsList class="grid w-full grid-cols-4">
+    <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
       <TabsTrigger value="media">Media</TabsTrigger>
+      <TabsTrigger value="parameters">Parameters</TabsTrigger>
     </TabsList>
 
     <TabsContent value="text" class="mt-4">
@@ -105,6 +106,12 @@
         </div>
       </div>
     </TabsContent>
+    <TabsContent value="parameters" class="mt-4">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
+        <p class="text-sm text-gray-500 mb-2">Parameters - Presentation style editing</p>
+        <PresentationStyleEditor :presentationStyle="mulmoValue" @update:presentationStyle="updatePresentationStyle" />
+      </div>
+    </TabsContent>
   </Tabs>
 </template>
 
@@ -116,9 +123,10 @@ import { Button } from "@/components/ui/button";
 import BeatEditor from "./beat_editor.vue";
 import BeatAdd from "./beat_add.vue";
 import CodeEditor from "@/components/code_editor.vue";
+import PresentationStyleEditor from "./presentation_style_editor.vue";
 
 import YAML from "yaml";
-import type { MulmoScript, MulmoBeat } from "mulmocast";
+import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
@@ -263,6 +271,14 @@ const addBeatTail = (beat: MulmoBeat) => {
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,
+  });
+};
+
+const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
+  console.log("updatePresentationStyle", style);
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    ...style,
   });
 };
 </script>
