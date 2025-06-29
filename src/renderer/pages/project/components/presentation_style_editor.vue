@@ -3,6 +3,7 @@
     <CanvasSizeParams
       :canvas-size="presentationStyle?.canvasSize"
       @update="(value) => updateParam(`canvasSize`, value)"
+      :mulmoError="mulmoError?.canvasSize ?? []"
     />
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
@@ -12,22 +13,27 @@
     <ImageParams
       :image-params="presentationStyle?.imageParams"
       @update="(value) => updateParam('imageParams', value)"
+      :mulmoError="mulmoError?.imageParams ?? []"
     />
     <MovieParams
       :movie-params="presentationStyle?.movieParams"
       @update="(value) => updateParam('movieParams', value)"
+      :mulmoError="mulmoError?.movieParams ?? []"
     />
     <TextSlideParams
       :text-slide-params="presentationStyle?.textSlideParams"
       @update="(value) => updateParam('textSlideParams.cssStyles', value)"
+      :mulmoError="mulmoError?.textSlideParams ?? []"
     />
     <AudioParams
       :audio-params="presentationStyle?.audioParams"
       @update="(value) => updateParam('audioParams', value)"
+      :mulmoError="mulmoError?.audioParams ?? []"
     />
     <CaptionParams
       :caption-params="presentationStyle?.captionParams"
       @update="(value) => updateParam('captionParams', value)"
+      :mulmoError="mulmoError?.captionParams ?? []"
     />
   </div>
 </template>
