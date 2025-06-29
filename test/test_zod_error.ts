@@ -110,5 +110,5 @@ test("test beats invalid string error", async () => {
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   const mulmoError = zodError2MulmoError(zodError.error);
-  assert.deepStrictEqual(mulmoError.beats[0], ["invalid string: image.source.url."]);
+  assert.deepStrictEqual(mulmoError.beats[0], ["invalid string: image.source.url. url must be a valid URL."]);
 });
