@@ -136,5 +136,6 @@ const syncScroll = () => {
 :deep(.syntax-highlighted > pre) {
   padding: 20px;
   width: fit-content;
+  min-width: 100%;
 }
 </style>
