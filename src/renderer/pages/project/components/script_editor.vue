@@ -8,7 +8,10 @@
       <TabsTrigger value="parameters">Parameters</TabsTrigger>
     </TabsList>
 
-    <div v-if="mulmoError.script && hasScriptError" class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2">
+    <div
+      v-if="mulmoError.script && hasScriptError"
+      class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
+    >
       <div v-for="(message, key) in Object.values(mulmoError.script).flat()" :key="key">
         {{ message }}
       </div>
