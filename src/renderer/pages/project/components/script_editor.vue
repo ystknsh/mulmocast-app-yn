@@ -94,6 +94,7 @@
               :index="index"
               :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
               :imageFile="imageFiles[index]"
+              :mulmoError="mulmoError['beats'][index] ?? []"
               @update="update"
               @generateImage="generateImage"
               @deleteBeat="deleteBeat"
@@ -120,11 +121,14 @@ import type { MulmoScript, MulmoBeat } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
+import { MulmoError } from "../../../../types";
+
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
   imageFiles: (ArrayBuffer | null)[];
   audioFiles: (ArrayBuffer | null)[];
+  mulmoError: MulmoError;
 }
 
 const props = defineProps<Props>();
