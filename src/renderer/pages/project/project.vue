@@ -132,12 +132,12 @@
                   @generateImage="(val) => generateImage(val)"
                   @generateAudio="(val) => generateAudio(val)"
                   :audioFiles="audioFiles"
+                  :mulmoError="mulmoError"
                 />
               </CardContent>
             </CollapsibleContent>
           </Card>
         </Collapsible>
-
         <!-- Output Section -->
         <Card v-if="hasProjectData">
           <CardHeader>
@@ -340,7 +340,7 @@ import PresentationStyleEditor from "./components/presentation_style_editor.vue"
 import dayjs from "dayjs";
 
 import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
-// import { mulmoScriptSchema } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
 import { useStore } from "../../store";
@@ -356,9 +356,11 @@ import {
   getContainerSpacing,
   getTimelineFocusClass,
 } from "./composable/style";
-import { ChatMessage } from "@/types";
+import { ChatMessage, MulmoError } from "@/types";
 import { notifySuccess } from "@/lib/notification";
 import { mergePresentationStyleToScript } from "../../../shared/helpers";
+
+import { zodError2MulmoError } from "../../lib/error";
 
 // State
 const route = useRoute();
@@ -439,6 +441,14 @@ watch(
 );
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
+
+const mulmoError = computed<MulmoError>(() => {
+  const zodError = mulmoScriptSchema.safeParse(mulmoScript.value);
+  if (!zodError.success) {
+    return zodError2MulmoError(zodError.error);
+  }
+  return null;
+});
 
 const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
   return mergePresentationStyleToScript(mulmoScript.value, project.value);
