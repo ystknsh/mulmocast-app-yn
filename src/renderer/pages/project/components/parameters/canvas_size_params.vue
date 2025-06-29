@@ -93,5 +93,6 @@ watch(
       selectedPreset.value = "custom";
     }
   },
+  { immediate: true },
 );
 </script>
