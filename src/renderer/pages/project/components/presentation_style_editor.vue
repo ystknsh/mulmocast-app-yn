@@ -24,6 +24,10 @@
       :audio-params="presentationStyle?.audioParams"
       @update="(value) => updateParam('audioParams', value)"
     />
+    <CaptionParams
+      :caption-params="presentationStyle?.captionParams"
+      @update="(value) => updateParam('captionParams', value)"
+    />
   </div>
 </template>
 
@@ -35,6 +39,7 @@ import SpeechParams from "./parameters/speech_params.vue";
 import AudioParams from "./parameters/audio_params.vue";
 import MovieParams from "./parameters/movie_params.vue";
 import TextSlideParams from "./parameters/text_slide_params.vue";
+import CaptionParams from "./parameters/caption_params.vue";
 
 interface Props {
   presentationStyle?: Partial<MulmoPresentationStyle>;

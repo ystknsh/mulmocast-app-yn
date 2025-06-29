@@ -152,15 +152,6 @@
               <div class="border rounded-lg p-4 bg-gray-50">
                 <h3 class="text-sm font-medium mb-4">General Settings</h3>
                 <div class="space-y-4">
-                  <!-- Caption Toggle -->
-                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
-                    <div class="flex flex-col">
-                      <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
-                      <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
-                    </div>
-                    <Switch id="caption-toggle" v-model:checked="captionEnabled" />
-                  </div>
-
                   <!-- Cache Toggle -->
                   <div class="flex items-center justify-between p-4 bg-white rounded-lg">
                     <div class="flex flex-col">
@@ -359,7 +350,6 @@ const isDevMode = ref(false);
 
 const validationMessage = ref("");
 
-const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
