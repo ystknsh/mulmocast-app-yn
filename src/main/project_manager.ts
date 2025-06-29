@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import dayjs from "dayjs";
 import { Project, ProjectMetadata } from "../types";
 import type { MulmoScript } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
@@ -120,19 +121,18 @@ export const createProject = async (title: string): Promise<Project> => {
         version: "1.0",
         credit: "closing",
       },
-      canvasSize: {
-        width: 1536,
-        height: 1024,
-      },
-      beats: [],
+      beats: [{}],
     };
+    const newScript = mulmoScriptSchema.strip().safeParse(script);
+    console.log(newScript);
+    const mulmoScript = newScript.data;
 
     await saveProjectMetadata(id, initialData);
-    await saveProjectScript(id, script);
+    await saveProjectScript(id, mulmoScript);
 
     return {
       metadata: initialData,
-      script,
+      script: mulmoScript,
     };
   } catch (error) {
     // Cleanup on failure
