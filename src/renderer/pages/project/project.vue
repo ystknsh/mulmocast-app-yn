@@ -320,7 +320,6 @@ import ProductTabs from "./components/product_tabs.vue";
 
 import dayjs from "dayjs";
 
-import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
 import { mulmoScriptSchema } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
