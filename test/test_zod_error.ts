@@ -121,12 +121,15 @@ test("test speechParams extra element error", async () => {
       version: "1.0",
     },
     speechParams: {
-      aaa: "222",
+      aaa: "111",
       provider: "openai",
       speakers: {
+        bbb: "111",
         Presenter: {
+          ccc: "111",
           displayName: {
             en: "Presenter",
+            ddd: "111",
           },
           voiceId: "shimmer",
         },
@@ -136,10 +139,12 @@ test("test speechParams extra element error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  // console.log(zodError);
+  // console.log(zodError.error.issues);
   const mulmoError = zodError2MulmoError(zodError.error);
   // console.log(mulmoError);
   assert.deepStrictEqual(mulmoError.speechParams, [
+    "'speakers.bbb' contains invalid data: Expected object, received string.",
+    "The object at 'speakers.Presenter' contains unrecognized key(s): 'ccc'.",
     "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
   ]);
 });
