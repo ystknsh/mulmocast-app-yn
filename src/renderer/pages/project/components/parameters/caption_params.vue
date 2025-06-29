@@ -26,6 +26,7 @@
           rows="6"
         />
       </div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
@@ -35,9 +36,11 @@ import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
 import { LANGUAGES } from "../../../../../shared/constants";
+import MulmoError from "./mulmo_error.vue";
 
 const props = defineProps<{
   captionParams?: MulmoPresentationStyle["captionParams"];
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{

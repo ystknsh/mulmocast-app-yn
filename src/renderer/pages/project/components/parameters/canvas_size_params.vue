@@ -31,6 +31,7 @@
           />
         </div>
       </div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
@@ -38,6 +39,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
+import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 const PRESET_CANVAS_SIZE = {
@@ -50,6 +52,7 @@ const PRESET_CANVAS_SIZE = {
 
 const props = defineProps<{
   canvasSize?: MulmoPresentationStyle["canvasSize"];
+  mulmoError: MulmoError | null;
 }>();
 
 const showCustom = ref(false);

@@ -40,12 +40,14 @@
           class="w-full p-2 border rounded text-sm"
         />
       </div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
+import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
@@ -53,6 +55,7 @@ type ImageParamField = "provider" | "model" | "style" | "moderation";
 
 const props = defineProps<{
   imageParams?: ImageParams;
+  mulmoError: MulmoError | null;
 }>();
 
 const emit = defineEmits<{
