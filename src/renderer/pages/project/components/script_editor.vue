@@ -94,7 +94,7 @@
               :index="index"
               :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
               :imageFile="imageFiles[index]"
-              :mulmoError="mulmoError['beats'][index] ?? []"
+              :mulmoError="mulmoError?.['beats']?.[index] ?? []"
               @update="update"
               @generateImage="generateImage"
               @deleteBeat="deleteBeat"
@@ -129,7 +129,7 @@ interface Props {
   isValidScriptData: boolean;
   imageFiles: (ArrayBuffer | null)[];
   audioFiles: (ArrayBuffer | null)[];
-  mulmoError: MulmoError;
+  mulmoError: MulmoError | null;
 }
 
 const props = defineProps<Props>();
