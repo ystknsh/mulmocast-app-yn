@@ -28,4 +28,4 @@ export type MulmoProgressLog<T = unknown> = {
   data: T;
 };
 
-export type MulmoError = { beats: Record<string, string[]> };
+export type MulmoError = { beats: Record<string, string[]>; script: Record<string, string> };
