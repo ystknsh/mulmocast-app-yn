@@ -8,12 +8,17 @@
       <TabsTrigger value="parameters">Parameters</TabsTrigger>
     </TabsList>
 
-    <TabsContent value="text" class="mt-4">
+    <div v-if="mulmoError.script" class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2">
+      <div v-for="(message, key) in Object.values(mulmoError.script).flat()" :key="key">
+        {{ message }}
+      </div>
+    </div>
+
+    <TabsContent value="text" class="mt-2">
       <div
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-
         <div class="space-y-6 mx-auto">
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 space-y-1 gap-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
@@ -252,7 +257,7 @@ const positionUp = (index: number) => {
 };
 
 const addBeatHead = (beat: MulmoBeat) => {
-  const newBeats = [...props.mulmoValue.beats];
+  const newBeats = [...(props.mulmoValue.beats ?? [])];
   newBeats.unshift(beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
