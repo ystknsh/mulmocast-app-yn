@@ -51,7 +51,7 @@
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-200': !isValidScriptData },
+          { 'border-red-400 border-2': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
@@ -69,7 +69,7 @@
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-200': !isValidScriptData },
+          { 'border-red-400 border-2': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
