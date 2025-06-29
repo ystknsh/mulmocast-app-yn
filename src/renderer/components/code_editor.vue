@@ -137,5 +137,6 @@ const syncScroll = () => {
   padding: 20px;
   width: fit-content;
   min-width: 100%;
+  min-height: 350px;
 }
 </style>
