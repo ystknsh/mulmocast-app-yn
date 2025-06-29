@@ -131,6 +131,7 @@
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
                   @generateImage="(val) => generateImage(val)"
                   @generateAudio="(val) => generateAudio(val)"
+                  @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                   :audioFiles="audioFiles"
                   :mulmoError="mulmoError"
                 />
@@ -414,6 +415,15 @@ const mulmoError = computed<MulmoError>(() => {
   }
   return null;
 });
+
+const formatAndPushHistoryMulmoScript = () => {
+  const data = mulmoScriptSchema.safeParse(mulmoScript.value);
+  if (data.success) {
+    mulmoScript.value = data.data;
+    // push store //
+  }
+  console.log(data);
+};
 
 const generateMovie = async () => {
   console.log("generateMovie");
