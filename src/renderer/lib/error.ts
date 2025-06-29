@@ -1,4 +1,4 @@
-import type { ZodError } from "zod";
+import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
 
 const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
@@ -9,7 +9,7 @@ const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   return `The object at '${pathStr}' contains unrecognized key(s): ${keys.map((k) => `'${k}'`).join(", ")}.`;
 };
 
-const isRequiredElement = (current) => {
+const isRequiredElement = (current: ZodIssue) => {
   return current.code === "invalid_type" && current.message === "Required";
 };
 
