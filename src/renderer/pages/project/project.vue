@@ -418,6 +418,11 @@ const mulmoError = computed<MulmoError>(() => {
 
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScript.value);
+  if (data.success) {
+    mulmoScript.value = data.data;
+    // push store //
+  }
+  console.log(data);
 };
 
 const generateMovie = async () => {
