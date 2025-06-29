@@ -110,7 +110,7 @@
               @positionUp="positionUp"
             />
           </Card>
-          <BeatAdd @addBeat="addBeatTail" />
+          <BeatAdd @addBeat="addBeatTail" v-if="mulmoValue?.beats && mulmoValue?.beats.length > 0" />
         </div>
       </div>
     </TabsContent>
@@ -149,16 +149,22 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio", "formatAndPushHistoryMulmoScript"]);
+const emit = defineEmits([
+  "update:mulmoValue",
+  "update:isValidScriptData",
+  "generateImage",
+  "generateAudio",
+  "formatAndPushHistoryMulmoScript",
+]);
 
 const route = useRoute();
 const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
-const currentTab = ref('text')
+const currentTab = ref("text");
 watch(currentTab, () => {
   console.log(currentTab.value);
-  emit("formatAndPushHistoryMulmoScript")
+  emit("formatAndPushHistoryMulmoScript");
 });
 
 const jsonText = ref("");
@@ -284,7 +290,7 @@ const addBeatHead = (beat: MulmoBeat) => {
 };
 
 const addBeatTail = (beat: MulmoBeat) => {
-  const newBeats = [...props.mulmoValue.beats];
+  const newBeats = [...(props.mulmoValue.beats ?? [])];
   newBeats.push(beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
