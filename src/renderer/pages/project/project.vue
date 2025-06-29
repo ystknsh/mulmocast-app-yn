@@ -148,24 +148,6 @@
           </CardHeader>
           <CardContent class="p-4">
             <div class="space-y-6">
-              <!-- Presentation Style Parameters -->
-              <div class="border-2 border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-                <div class="bg-gray-50 border-b-2 border-gray-200 px-4 py-3">
-                  <h3 class="text-sm font-semibold text-gray-700">Presentation Style Parameters</h3>
-                </div>
-                <div class="bg-gray-50 p-2">
-                  <!-- Scrollable content area -->
-                  <div class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200">
-                    <div class="pr-2">
-                      <PresentationStyleEditor
-                        :presentation-style="mergedPresentationStyle"
-                        @update:presentation-style="handleUpdatePresentationStyle"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <!-- General Settings -->
               <div class="border rounded-lg p-4 bg-gray-50">
                 <h3 class="text-sm font-medium mb-4">General Settings</h3>
@@ -335,7 +317,6 @@ import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
-import PresentationStyleEditor from "./components/presentation_style_editor.vue";
 
 import dayjs from "dayjs";
 
@@ -358,7 +339,6 @@ import {
 } from "./composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { notifySuccess } from "@/lib/notification";
-import { mergePresentationStyleToScript } from "../../../shared/helpers";
 
 import { zodError2MulmoError } from "../../lib/error";
 
@@ -418,11 +398,6 @@ const saveCacheEnabled = (enabled: boolean) => {
   saveProjectMetadata(project.value);
 };
 
-const handleUpdatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  project.value.presentationStyle = style as MulmoPresentationStyle;
-  saveProjectMetadata(project.value);
-};
-
 const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
@@ -448,10 +423,6 @@ const mulmoError = computed<MulmoError>(() => {
     return zodError2MulmoError(zodError.error);
   }
   return null;
-});
-
-const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
-  return mergePresentationStyleToScript(mulmoScript.value, project.value);
 });
 
 const generateMovie = async () => {
