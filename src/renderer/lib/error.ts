@@ -9,6 +9,14 @@ const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   return `The object at '${pathStr}' contains unrecognized key(s): ${keys.map((k) => `'${k}'`).join(", ")}.`;
 };
 
+const invalidKeysError = (paths: (string | number)[], message: string) => {
+  const pathStr = paths
+    .map((segment) => (typeof segment === "number" ? `[${segment}]` : `.${segment}`))
+    .join("")
+    .replace(/^\./, "");
+  return `'${pathStr}' contains invalid data: ${message}.`;
+};
+
 const isRequiredElement = (current: ZodIssue) => {
   return current.code === "invalid_type" && current.message === "Required";
 };
@@ -31,12 +39,16 @@ export const zodError2MulmoError = (error: ZodError) => {
             tmp["script"]["beats"] = ["Beats must set."];
           }
         } else {
+          const [__, index, ...paths] = current.path;
+          if (!tmp["beats"][String(index)]) {
+            tmp["beats"][String(index)] = [];
+          }
           if (current.code === "unrecognized_keys") {
-            const [__, index, ...paths] = current.path;
-            if (!tmp["beats"][String(index)]) {
-              tmp["beats"][String(index)] = [];
-            }
             tmp["beats"][index].push(unrecognizedKeysError(paths, current.keys));
+          } else if (current.code === "invalid_type") {
+            tmp["beats"][index].push(invalidKeysError(paths, current.message));
+          } else if (current.code === "invalid_union") {
+            tmp["beats"][index].push("invalid_union: something broken.");
           } else {
             console.log(current);
           }
