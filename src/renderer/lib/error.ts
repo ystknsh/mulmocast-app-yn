@@ -29,6 +29,14 @@ export const zodError2MulmoError = (error: ZodError) => {
           tmp["script"]["script"] = [unrecognizedKeysError(["mulmoScript"], current.keys)];
         }
       }
+      if (current.path.length === 1) {
+        const key = current.path[0] as keyof MulmoError;
+        if (current.code === "unrecognized_keys") {
+          if (Array.isArray(tmp[key])) {
+            tmp[key].push(unrecognizedKeysError(current.path, current.keys));
+          }
+        }
+      }
 
       if (current.path[0] === "beats") {
         if (current.path.length === 1) {
@@ -68,6 +76,17 @@ export const zodError2MulmoError = (error: ZodError) => {
       }
       return tmp;
     },
-    { script: {}, beats: {} },
+    {
+      script: {},
+      canvasSize: [],
+      beats: {},
+      speechParams: [],
+      imageParams: [],
+      movieParams: [],
+      htmlImageParams: [],
+      textSlideParams: [],
+      captionParams: [],
+      audioParams: [],
+    },
   );
 };

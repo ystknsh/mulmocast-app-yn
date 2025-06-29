@@ -112,3 +112,34 @@ test("test beats invalid string error", async () => {
   const mulmoError = zodError2MulmoError(zodError.error);
   assert.deepStrictEqual(mulmoError.beats[0], ["invalid string: image.source.url. url must be a valid URL."]);
 });
+
+//
+// speechParams
+test("test speechParams extra element error", async () => {
+  const mulmoScript = {
+    $mulmocast: {
+      version: "1.0",
+    },
+    speechParams: {
+      aaa: "222",
+      provider: "openai",
+      speakers: {
+        Presenter: {
+          displayName: {
+            en: "Presenter",
+          },
+          voiceId: "shimmer",
+        },
+      },
+    },
+    beats: [{}],
+  };
+
+  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
+  // console.log(zodError);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // console.log(mulmoError);
+  assert.deepStrictEqual(mulmoError.speechParams, [
+    "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
+  ]);
+});

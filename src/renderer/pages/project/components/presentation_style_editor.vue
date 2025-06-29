@@ -7,6 +7,7 @@
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
       @update="(value) => updateParam('speechParams', value)"
+      :mulmoError="mulmoError.speechParams ?? []"
     />
     <ImageParams
       :image-params="presentationStyle?.imageParams"
@@ -41,8 +42,11 @@ import MovieParams from "./parameters/movie_params.vue";
 import TextSlideParams from "./parameters/text_slide_params.vue";
 import CaptionParams from "./parameters/caption_params.vue";
 
+import { MulmoError } from "../../../../types";
+
 interface Props {
   presentationStyle?: Partial<MulmoPresentationStyle>;
+  mulmoError: MulmoError | null;
 }
 
 const props = defineProps<Props>();
