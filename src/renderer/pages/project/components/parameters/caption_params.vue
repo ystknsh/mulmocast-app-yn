@@ -11,8 +11,9 @@
           class="w-full p-2 border rounded text-sm"
         >
           <option value="">Auto</option>
-          <option value="en">English</option>
-          <option value="ja">Japanese</option>
+          <option v-for="language in LANGUAGES" :key="language.id" :value="language.id">
+            {{ language.name }}
+          </option>
         </select>
       </div>
       <div>
@@ -33,6 +34,7 @@
 import { ref, watch } from "vue";
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
+import { LANGUAGES } from "../../../../../shared/constants";
 
 const props = defineProps<{
   captionParams?: MulmoPresentationStyle["captionParams"];
