@@ -10,7 +10,7 @@
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
       <div>
-        <div v-if="beat.image">
+        <div v-if="beat.image && beat.image.type">
           <label class="text-sm font-medium block mb-1">
             {{ getPromptLabel(beat) }}
           </label>
@@ -18,21 +18,21 @@
           <!-- image/movie: URL or  path -->
           <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
             <input
-              v-if="beat.image.source.kind === 'url'"
-              :value="beat.image.source.url"
+              v-if="beat.image?.source?.kind === 'url'"
+              :value="beat.image?.source?.url"
               @input="update('image.source.url', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
             <input
-              v-else-if="beat.image.source.kind === 'path'"
-              :value="beat.image.source.path"
+              v-else-if="beat.image?.source?.kind === 'path'"
+              :value="beat.image?.source?.path"
               @input="update('image.source.path', $event.target.value)"
               class="w-full p-2 border rounded text-sm"
               type="text"
             />
             <div
-              v-if="beat.image.source.kind === 'path'"
+              v-if="beat.image?.source?.kind === 'path'"
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, beat.image.type)"
               draggable="true"
@@ -45,12 +45,12 @@
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
             <input
-              :value="beat.image.slide.title"
+              :value="beat.image?.slide?.title"
               @input="update('image.slide.title', $event.target.value)"
               class="w-full p-2 border rounded text-sm mb-2"
             />
             <textarea
-              :value="beat.image.slide.bullets.join('\n')"
+              :value="beat.image?.slide?.bullets?.join('\n')"
               @input="update('image.slide.bullets', $event.target.value.split('\n'))"
               class="w-full p-2 border rounded text-sm"
               rows="4"
@@ -62,7 +62,7 @@
             <textarea
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
-              :value="Array.isArray(beat.image.markdown) ? beat.image.markdown.join('\n') : beat.image.markdown"
+              :value="Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown"
               @input="update('image.markdown', $event.target.value.split('\n'))"
             ></textarea>
           </template>
@@ -70,7 +70,7 @@
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
             <textarea
-              :value="JSON.stringify(beat.image.chartData, null, 2)"
+              :value="JSON.stringify(beat.image?.chartData, null, 2)"
               @input="
                 (() => {
                   try {
@@ -86,7 +86,7 @@
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
             <textarea
-              :value="beat.image.code.text"
+              :value="beat?.image?.code?.text"
               @input="update('image.code.text', $event.target.value)"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
@@ -96,7 +96,7 @@
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
             <textarea
-              :value="Array.isArray(beat.image.html) ? beat.image.html.join('\n') : beat.image.html"
+              :value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @input="update('image.html', $event.target.value.split('\n'))"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="10"
@@ -121,7 +121,7 @@
         <div v-else>
           <template v-if="beat.htmlPrompt">
             <textarea
-              :value="beat.htmlPrompt.prompt"
+              :value="beat.htmlPrompt?.prompt"
               @input="update('htmlPrompt.prompt', $event.target.value)"
               class="w-full p-2 border rounded font-mono text-sm"
               rows="6"
@@ -179,6 +179,11 @@
         </div>
       </div>
     </div>
+    <div v-if="mulmoError" class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2">
+      <div v-for="(error, key) in mulmoError" :key="key">
+        {{ error }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -197,6 +202,7 @@ interface Props {
   index: number;
   imageFile: ArrayBuffer | null;
   isEnd: boolean;
+  mulmoError: unknown;
 }
 
 const props = defineProps<Props>();
