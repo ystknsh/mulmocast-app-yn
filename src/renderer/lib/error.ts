@@ -30,11 +30,11 @@ export const zodError2MulmoError = (error: ZodError) => {
         }
       }
       if (current.path.length === 1) {
+        const key = current.path[0] as keyof MulmoError;
         if (current.code === "unrecognized_keys") {
-          if (!tmp[current.path[0]]) {
-            tmp[current.path[0]] = [];
+          if (Array.isArray(tmp[key])) {
+            tmp[key].push(unrecognizedKeysError(current.path, current.keys));
           }
-          tmp[current.path[0]].push(unrecognizedKeysError(current.path, current.keys));
         }
       }
 
