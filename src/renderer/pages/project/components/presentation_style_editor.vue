@@ -7,7 +7,7 @@
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
       @update="(value) => updateParam('speechParams', value)"
-      :mulmoError="mulmoError.speechParams ?? []"
+      :mulmoError="mulmoError?.speechParams ?? []"
     />
     <ImageParams
       :image-params="presentationStyle?.imageParams"
