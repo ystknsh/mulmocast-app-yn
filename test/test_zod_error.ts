@@ -8,9 +8,18 @@ test("test ", async () => {
     $mulmocast: {
       version: "1.0",
     },
-    beats: [{}],
+    beats: [
+      {
+        text: "",
+        htmlPrompt: {
+          prompt: "aaaa",
+          extra: "bbb",
+        },
+      },
+    ],
   };
-  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  console.log(JSON.stringify(zodError, null, 2));
-});
 
+  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.deepStrictEqual(mulmoError.beats[0], ["The object at 'htmlPrompt' contains unrecognized key(s): 'extra'."]);
+});
