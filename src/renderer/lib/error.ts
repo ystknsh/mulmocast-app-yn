@@ -49,6 +49,12 @@ export const zodError2MulmoError = (error: ZodError) => {
             tmp["beats"][index].push(invalidKeysError(paths, current.message));
           } else if (current.code === "invalid_union") {
             tmp["beats"][index].push("invalid_union: something broken.");
+          } else if (current.code === "invalid_string") {
+            if (current.validation === "url") {
+              tmp["beats"][index].push("invalid string: " + paths.join(".") + ". url must be a valid URL.");
+            } else {
+              tmp["beats"][index].push("invalid string: " + paths.join(".") + ".");
+            }
           } else {
             console.log(current);
           }

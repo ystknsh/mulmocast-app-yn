@@ -67,7 +67,7 @@ test("test beats extra element error", async () => {
   assert.deepStrictEqual(mulmoError.beats[0], ["The object at 'htmlPrompt' contains unrecognized key(s): 'extra'."]);
 });
 
-test("test beats extra element error", async () => {
+test("test beats invalid data error", async () => {
   const mulmoScript = {
     $mulmocast: {
       version: "1.0",
@@ -87,4 +87,28 @@ test("test beats extra element error", async () => {
   assert.deepStrictEqual(mulmoError.beats[0], [
     "'imagePrompt' contains invalid data: Expected string, received object.",
   ]);
+});
+
+test("test beats invalid string error", async () => {
+  const mulmoScript = {
+    $mulmocast: {
+      version: "1.0",
+    },
+    beats: [
+      {
+        text: "",
+        image: {
+          type: "image",
+          source: {
+            kind: "url",
+            url: "",
+          },
+        },
+      },
+    ],
+  };
+
+  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.deepStrictEqual(mulmoError.beats[0], ["invalid string: image.source.url."]);
 });
