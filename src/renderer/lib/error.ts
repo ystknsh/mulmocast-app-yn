@@ -77,14 +77,17 @@ export const zodError2MulmoError = (error: ZodError) => {
           "textSlideParams",
           "captionParams",
           "audioParams",
-        ].includes(current.path[0]) &&
+        ].includes(String(current.path[0])) &&
         current.path.length > 1
       ) {
-        const [key, ...paths] = current.path;
-        if (current.code === "unrecognized_keys") {
-          tmp[key].push(unrecognizedKeysError(paths, current.keys));
-        } else if (current.code === "invalid_type") {
-          tmp[key].push(invalidKeysError(paths, current.message));
+        const [__, ...paths] = current.path;
+        const key = current.path[0] as keyof MulmoError;
+        if (Array.isArray(tmp[key])) {
+          if (current.code === "unrecognized_keys") {
+            tmp[key].push(unrecognizedKeysError(paths, current.keys));
+          } else if (current.code === "invalid_type") {
+            tmp[key].push(invalidKeysError(paths, current.message));
+          }
         }
       }
       if (current.path[0] === "$mulmocast") {
