@@ -39,3 +39,12 @@ jobs:
         
       - name: Run test
         run: yarn test
+
+      - name: Run package
+        run: yarn run package
+        
+      - name: Upload generated media
+        uses: actions/upload-artifact@v4
+        with:
+          name: bin-${{ matrix.node-version }}
+          path: out/
