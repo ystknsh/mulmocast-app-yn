@@ -21,17 +21,17 @@ const props = defineProps<Props>();
 const store = useStore();
 
 const tasks = computed(() => {
-  const data = store.sessionState?.[props.projectId];
+  const data = store.sessionState?.[props.projectId] ?? {};
   // console.log(Object.keys(data));
   // ['artifact', 'beat']
   const ret = [];
-  Object.keys(data["artifact"]).forEach((key) => {
+  Object.keys(data["artifact"] ?? {}).forEach((key) => {
     if (data["artifact"][key]) {
       // console.log(data['artifact'][key]);
       ret.push({ name: "artifact_" + key, status: true });
     }
   });
-  Object.keys(data["beat"]).forEach((key) => {
+  Object.keys(data["beat"] ?? {}).forEach((key) => {
     if (data["beat"][key]) {
       Object.keys(data["beat"][key]).forEach((index) => {
         // console.log(data['beat'][key][index]);
