@@ -32,7 +32,10 @@ export default defineComponent({
           if (message.data?.message) {
             notifyError("Error", message.data.message);
           }
-          console.log(message);
+        }
+
+        if (message.type === "zod_error") {
+          store.zodErrorLogCallback(message);
         }
       });
     });

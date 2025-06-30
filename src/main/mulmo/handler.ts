@@ -25,6 +25,8 @@ import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
+import { z } from "zod";
+
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
@@ -82,7 +84,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
+    const context = await getContext(projectId, true);
     context.force = true;
     await generateBeatAudio(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
@@ -144,12 +146,23 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
       result: true,
     };
   } catch (error) {
-    console.log(error);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    if (error instanceof z.ZodError) {
+      if (error.issues) {
+        error.issues.map((e) => {
+          webContents.send("progress-update", {
+            projectId,
+            type: "zod_error",
+            data: e,
+          });
+        });
+      }
+    } else {
+      webContents.send("progress-update", {
+        projectId,
+        type: "error",
+        data: error,
+      });
+    }
     return {
       result: false,
       error,
