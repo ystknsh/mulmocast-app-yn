@@ -15,7 +15,7 @@ export default defineConfig(async () => {
       },
     },
     build: {
-      commonjsOptions: { transformMixedEsModules: true }
+      commonjsOptions: { transformMixedEsModules: true },
     },
   };
 });
