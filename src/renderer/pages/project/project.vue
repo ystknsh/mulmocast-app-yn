@@ -266,6 +266,7 @@
             </div>
           </CardContent>
         </Card>
+        <ConcurrentTaskStatus :projectId="projectId" />
       </div>
     </TooltipProvider>
   </Layout>
@@ -309,7 +310,7 @@ import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
-
+import ConcurrentTaskStatus from "./components/concurrent_task_status.vue";
 import dayjs from "dayjs";
 
 import type { MulmoScript } from "mulmocast";
