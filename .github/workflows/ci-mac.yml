@@ -28,6 +28,9 @@ jobs:
 
       - name: Run package
         run: yarn run package
+
+      - name: Remove quarantine attributes
+        run: xattr -c out/mulmocast-app-darwin-arm64/mulmocast-app.app
         
       - name: Upload generated media
         uses: actions/upload-artifact@v4
