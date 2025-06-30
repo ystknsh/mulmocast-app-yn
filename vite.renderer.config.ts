@@ -14,5 +14,8 @@ export default defineConfig(async () => {
         "@/types": path.resolve(__dirname, "./src/types"),
       },
     },
+    build: {
+      commonjsOptions: { transformMixedEsModules: true }
+    },
   };
 });
