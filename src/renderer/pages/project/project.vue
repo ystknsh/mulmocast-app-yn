@@ -409,8 +409,6 @@ watch(
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
-const tasks = [{ name: "aaa", status: "fff" }];
-
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript.value);
   if (!zodError.success) {
