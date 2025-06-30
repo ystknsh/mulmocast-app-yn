@@ -13,6 +13,7 @@
           rows="6"
         />
       </div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
@@ -20,10 +21,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Card } from "@/components/ui/card";
+import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 const props = defineProps<{
   textSlideParams?: MulmoPresentationStyle["textSlideParams"];
+  mulmoError: MulmoError | null;
 }>();
 
 const emit = defineEmits<{

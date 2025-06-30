@@ -193,3 +193,26 @@ export const VOICE_LISTS = {
     { id: "l39JidvAMB3s85XyNSRd", name: "Sayuri" },
   ],
 } as const;
+
+export const LANGUAGES = [
+  { id: "en", name: "English" },
+  { id: "es", name: "Spanish" },
+  { id: "de", name: "German" },
+  { id: "ru", name: "Russian" },
+  { id: "fr", name: "French" },
+  { id: "ja", name: "Japanese" },
+  { id: "pt", name: "Portuguese" },
+  { id: "tr", name: "Turkish" },
+  { id: "it", name: "Italian" },
+  { id: "fa", name: "Persian" },
+  { id: "nl", name: "Dutch" },
+  { id: "pl", name: "Polish" },
+  { id: "zh", name: "Chinese" },
+  { id: "vi", name: "Vietnamese" },
+  { id: "id", name: "Indonesian" },
+  { id: "cs", name: "Czech" },
+  { id: "ko", name: "Korean" },
+  { id: "ar", name: "Arabic" },
+  { id: "uk", name: "Ukrainian" },
+  { id: "el", name: "Greek" },
+] as const;

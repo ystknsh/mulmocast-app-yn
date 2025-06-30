@@ -1,15 +1,13 @@
-name: CI
+name: Build for Windows
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     strategy:
       matrix:
@@ -26,25 +24,15 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
+        shell: powershell
         run: yarn install --frozen-lockfile
 
-      - name: Type check
-        run: yarn type-check
-
-      - name: Run ESLint
-        run: yarn lint
-
-      - name: Check Prettier formatting
-        run: yarn format:check
-        
-      - name: Run test
-        run: yarn test
-
       - name: Run package
+        shell: powershell
         run: yarn run package
         
       - name: Upload generated media
         uses: actions/upload-artifact@v4
         with:
-          name: bin-${{ matrix.node-version }}
+          name: bin-win-${{ matrix.node-version }}
           path: out/

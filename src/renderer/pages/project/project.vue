@@ -131,13 +131,14 @@
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
                   @generateImage="(val) => generateImage(val)"
                   @generateAudio="(val) => generateAudio(val)"
+                  @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                   :audioFiles="audioFiles"
+                  :mulmoError="mulmoError"
                 />
               </CardContent>
             </CollapsibleContent>
           </Card>
         </Collapsible>
-
         <!-- Output Section -->
         <Card v-if="hasProjectData">
           <CardHeader>
@@ -148,37 +149,10 @@
           </CardHeader>
           <CardContent class="p-4">
             <div class="space-y-6">
-              <!-- Presentation Style Parameters -->
-              <div class="border-2 border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-                <div class="bg-gray-50 border-b-2 border-gray-200 px-4 py-3">
-                  <h3 class="text-sm font-semibold text-gray-700">Presentation Style Parameters</h3>
-                </div>
-                <div class="bg-gray-50 p-2">
-                  <!-- Scrollable content area -->
-                  <div class="max-h-[400px] overflow-y-auto p-4 bg-white rounded border border-gray-200">
-                    <div class="pr-2">
-                      <PresentationStyleEditor
-                        :presentation-style="mergedPresentationStyle"
-                        @update:presentation-style="handleUpdatePresentationStyle"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <!-- General Settings -->
               <div class="border rounded-lg p-4 bg-gray-50">
                 <h3 class="text-sm font-medium mb-4">General Settings</h3>
                 <div class="space-y-4">
-                  <!-- Caption Toggle -->
-                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
-                    <div class="flex flex-col">
-                      <Label for="caption-toggle" class="text-sm font-medium"> Caption Display </Label>
-                      <p class="text-xs text-gray-500 mt-1">Show captions in video and HTML outputs</p>
-                    </div>
-                    <Switch id="caption-toggle" v-model:checked="captionEnabled" />
-                  </div>
-
                   <!-- Cache Toggle -->
                   <div class="flex items-center justify-between p-4 bg-white rounded-lg">
                     <div class="flex flex-col">
@@ -292,6 +266,7 @@
             </div>
           </CardContent>
         </Card>
+        <ConcurrentTaskStatus :projectId="projectId" />
       </div>
     </TooltipProvider>
   </Layout>
@@ -335,12 +310,11 @@ import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
-import PresentationStyleEditor from "./components/presentation_style_editor.vue";
-
+import ConcurrentTaskStatus from "./components/concurrent_task_status.vue";
 import dayjs from "dayjs";
 
-import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
-// import { mulmoScriptSchema } from "mulmocast";
+import type { MulmoScript } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
 import { useStore } from "../../store";
@@ -356,9 +330,10 @@ import {
   getContainerSpacing,
   getTimelineFocusClass,
 } from "./composable/style";
-import { ChatMessage } from "@/types";
+import { ChatMessage, MulmoError } from "@/types";
 import { notifySuccess } from "@/lib/notification";
-import { mergePresentationStyleToScript } from "../../../shared/helpers";
+
+import { zodError2MulmoError } from "../../lib/error";
 
 // State
 const route = useRoute();
@@ -377,7 +352,6 @@ const isDevMode = ref(false);
 
 const validationMessage = ref("");
 
-const captionEnabled = ref(true);
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
@@ -416,11 +390,6 @@ const saveCacheEnabled = (enabled: boolean) => {
   saveProjectMetadata(project.value);
 };
 
-const handleUpdatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  project.value.presentationStyle = style as MulmoPresentationStyle;
-  saveProjectMetadata(project.value);
-};
-
 const saveMulmo = async (data) => {
   console.log("saved", data);
   await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
@@ -440,9 +409,22 @@ watch(
 
 const beatsData = computed(() => mulmoScript.value?.beats ?? []);
 
-const mergedPresentationStyle = computed<Partial<MulmoPresentationStyle>>(() => {
-  return mergePresentationStyleToScript(mulmoScript.value, project.value);
+const mulmoError = computed<MulmoError>(() => {
+  const zodError = mulmoScriptSchema.safeParse(mulmoScript.value);
+  if (!zodError.success) {
+    return zodError2MulmoError(zodError.error);
+  }
+  return null;
 });
+
+const formatAndPushHistoryMulmoScript = () => {
+  const data = mulmoScriptSchema.safeParse(mulmoScript.value);
+  if (data.success) {
+    mulmoScript.value = data.data;
+    // push store //
+  }
+  console.log(data);
+};
 
 const generateMovie = async () => {
   console.log("generateMovie");

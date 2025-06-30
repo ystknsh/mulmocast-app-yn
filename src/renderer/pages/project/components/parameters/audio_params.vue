@@ -79,6 +79,7 @@
           {{ (audioParams.bgm as any)[audioParams.bgm.kind] }}
         </div>
       </div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
@@ -86,11 +87,13 @@
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
 import type { MulmoPresentationStyle } from "mulmocast";
+import MulmoError from "./mulmo_error.vue";
 
 type AudioParams = MulmoPresentationStyle["audioParams"];
 
 const props = defineProps<{
   audioParams?: AudioParams;
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{

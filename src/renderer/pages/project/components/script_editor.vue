@@ -1,48 +1,52 @@
 <template>
-  <Tabs default-value="text" class="w-full">
-    <TabsList class="grid w-full grid-cols-4">
+  <Tabs class="w-full" v-model="currentTab">
+    <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger value="text">Text</TabsTrigger>
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
       <TabsTrigger value="media">Media</TabsTrigger>
+      <TabsTrigger value="parameters">Parameters</TabsTrigger>
     </TabsList>
 
-    <TabsContent value="text" class="mt-4">
+    <div
+      v-if="mulmoError?.script && hasScriptError"
+      class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
+    >
+      <div v-for="(message, key) in Object.values(mulmoError?.script ?? {}).flat()" :key="key">
+        {{ message }}
+      </div>
+    </div>
+
+    <TabsContent value="text" class="mt-2">
       <div
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-
-        <div class="font-mono text-sm space-y-6 p-4 max-w-2xl mx-auto">
-          <div v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 border rounded space-y-2">
+        <div class="space-y-6 mx-auto">
+          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 space-y-1 gap-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
-
             <div>
-              <label class="block mb-1 text-gray-500">Speaker</label>
+              <label class="block text-sm text-gray-600 mb-1">Speaker</label>
               <input
                 :value="beat.speaker"
                 @input="update(index, 'speaker', $event.target.value)"
-                type="text"
-                class="w-full p-2 border rounded"
                 placeholder="e.g. Alice"
+                class="w-full p-1 border rounded text-sm"
               />
             </div>
-
             <div>
-              <label class="block mb-1 text-gray-500">Text</label>
+              <label class="block text-sm text-gray-600 mb-1">Text</label>
               <input
                 :value="beat.text"
                 @input="update(index, 'text', $event.target.value)"
-                type="text"
-                class="w-full p-2 border rounded"
                 placeholder="e.g. What is AI?"
+                class="w-full p-1 border rounded text-sm"
               />
             </div>
-
-            <Button variant="outline" size="sm" @click="generateAudio(index)">generate audio</Button>
-            {{ store.sessionState?.[projectId]?.["beat"]["audio"]?.[index] ? "generating" : "" }}
+            <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+            <span v-if="store.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
             <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-          </div>
+          </Card>
         </div>
       </div>
     </TabsContent>
@@ -50,17 +54,17 @@
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-200': !isValidScriptData },
+          { 'border-red-400 border-2': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <textarea
+        <CodeEditor
           v-model="yamlText"
-          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
-          @input="onYamlInput"
+          language="yaml"
+          @update:modelValue="onYamlInput"
           @focus="onFocus"
           @blur="onBlur"
-        ></textarea>
+        />
       </div>
     </TabsContent>
 
@@ -68,17 +72,17 @@
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-200': !isValidScriptData },
+          { 'border-red-400 border-2': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <textarea
+        <CodeEditor
           v-model="jsonText"
-          class="text-sm font-mono w-full flex-1 bg-transparent outline-none resize-none"
-          @input="onJsonInput"
+          language="json"
+          @update:modelValue="onJsonInput"
           @focus="onFocus"
           @blur="onBlur"
-        ></textarea>
+        />
       </div>
     </TabsContent>
 
@@ -94,14 +98,25 @@
               :index="index"
               :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
               :imageFile="imageFiles[index]"
+              :mulmoError="mulmoError?.['beats']?.[index] ?? []"
               @update="update"
               @generateImage="generateImage"
               @deleteBeat="deleteBeat"
               @positionUp="positionUp"
             />
           </Card>
-          <BeatAdd @addBeat="addBeatTail" />
+          <BeatAdd @addBeat="addBeatTail" v-if="mulmoValue?.beats && mulmoValue?.beats.length > 0" />
         </div>
+      </div>
+    </TabsContent>
+    <TabsContent value="parameters" class="mt-4">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
+        <p class="text-sm text-gray-500 mb-2">Parameters - Presentation style editing</p>
+        <PresentationStyleEditor
+          :presentationStyle="mulmoValue"
+          @update:presentationStyle="updatePresentationStyle"
+          :mulmoError="mulmoError"
+        />
       </div>
     </TabsContent>
   </Tabs>
@@ -114,30 +129,46 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import BeatEditor from "./beat_editor.vue";
 import BeatAdd from "./beat_add.vue";
+import CodeEditor from "@/components/code_editor.vue";
+import PresentationStyleEditor from "./presentation_style_editor.vue";
 
 import YAML from "yaml";
-import type { MulmoScript, MulmoBeat } from "mulmocast";
+import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
+
+import { MulmoError } from "../../../../types";
 
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
   imageFiles: (ArrayBuffer | null)[];
   audioFiles: (ArrayBuffer | null)[];
+  mulmoError: MulmoError | null;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:mulmoValue", "update:isValidScriptData", "generateImage", "generateAudio"]);
+const emit = defineEmits([
+  "update:mulmoValue",
+  "update:isValidScriptData",
+  "generateImage",
+  "generateAudio",
+  "formatAndPushHistoryMulmoScript",
+]);
 
 const route = useRoute();
 const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
+const currentTab = ref("text");
+watch(currentTab, () => {
+  console.log(currentTab.value);
+  emit("formatAndPushHistoryMulmoScript");
+});
+
 const jsonText = ref("");
 const yamlText = ref("");
 const internalValue = ref({});
-
 const syncTextFromInternal = () => {
   jsonText.value = JSON.stringify(internalValue.value, null, 2);
   yamlText.value = YAML.stringify(internalValue.value);
@@ -150,6 +181,10 @@ const onFocus = () => {
 const onBlur = () => {
   isEditing.value = false;
 };
+const hasScriptError = computed(() => {
+  return Object.values(props.mulmoError.script ?? {}).flat().length;
+});
+
 watch(isEditing, () => {
   if (isEditing.value) {
     syncTextFromInternal();
@@ -167,9 +202,10 @@ watch(
   { deep: true, immediate: true },
 );
 
-const onJsonInput = () => {
+const onJsonInput = (value: string) => {
+  jsonText.value = value;
   try {
-    const parsed = JSON.parse(jsonText.value);
+    const parsed = JSON.parse(value);
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
     emit("update:mulmoValue", parsed);
@@ -180,9 +216,10 @@ const onJsonInput = () => {
   }
 };
 
-const onYamlInput = () => {
+const onYamlInput = (value: string) => {
+  yamlText.value = value;
   try {
-    const parsed = YAML.parse(yamlText.value);
+    const parsed = YAML.parse(value);
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
     emit("update:mulmoValue", parsed);
@@ -243,7 +280,7 @@ const positionUp = (index: number) => {
 };
 
 const addBeatHead = (beat: MulmoBeat) => {
-  const newBeats = [...props.mulmoValue.beats];
+  const newBeats = [...(props.mulmoValue.beats ?? [])];
   newBeats.unshift(beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
@@ -252,11 +289,19 @@ const addBeatHead = (beat: MulmoBeat) => {
 };
 
 const addBeatTail = (beat: MulmoBeat) => {
-  const newBeats = [...props.mulmoValue.beats];
+  const newBeats = [...(props.mulmoValue.beats ?? [])];
   newBeats.push(beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,
+  });
+};
+
+const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
+  console.log("updatePresentationStyle", style);
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    ...style,
   });
 };
 </script>

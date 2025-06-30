@@ -27,3 +27,16 @@ export type MulmoProgressLog<T = unknown> = {
   type: string;
   data: T;
 };
+
+export type MulmoError = {
+  beats: Record<string, string[]>;
+  script: Record<string, string[]>;
+  canvasSize: string[];
+  speechParams: string[];
+  imageParams: string[];
+  movieParams: string[];
+  htmlImageParams: string[];
+  textSlideParams: string[];
+  captionParams: string[];
+  audioParams: string[];
+};

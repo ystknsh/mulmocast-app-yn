@@ -83,6 +83,8 @@
         </div>
       </div>
       <Button variant="outline" size="sm" @click="handleAddSpeaker">Add Speaker</Button>
+      <div></div>
+      <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
       <p class="text-sm text-gray-500 mb-2">No speakers defined</p>
@@ -95,6 +97,7 @@
 import { ref, computed } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import MulmoError from "./mulmo_error.vue";
 import { VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast";
 
@@ -111,6 +114,7 @@ const DEFAULT_VOICE_IDS: Record<string, string> = {
 
 const props = defineProps<{
   speechParams?: SpeechParams;
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{

@@ -1,15 +1,13 @@
-name: CI
+name: Build for Mac
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     
     strategy:
       matrix:
@@ -28,23 +26,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Type check
-        run: yarn type-check
-
-      - name: Run ESLint
-        run: yarn lint
-
-      - name: Check Prettier formatting
-        run: yarn format:check
-        
-      - name: Run test
-        run: yarn test
-
       - name: Run package
         run: yarn run package
+
+      - name: Remove quarantine attributes
+        run: xattr -c out/mulmocast-app-darwin-arm64/mulmocast-app.app
         
       - name: Upload generated media
         uses: actions/upload-artifact@v4
         with:
-          name: bin-${{ matrix.node-version }}
+          name: bin-mac-${{ matrix.node-version }}
           path: out/
