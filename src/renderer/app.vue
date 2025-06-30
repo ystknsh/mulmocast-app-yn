@@ -29,7 +29,7 @@ export default defineComponent({
           store.graphaiLogCallback(message);
         }
         if (message.type === "error") {
-          if (typeof message.data?.message) {
+          if (message.data?.message) {
             notifyError("Error", message.data.message);
           }
         }

@@ -11,7 +11,7 @@ type SessionState = Record<string, { beat: BeatSessionStateEntry; artifact: Sess
 export const useStore = defineStore("store", () => {
   const mulmoEvent = ref<Record<string, SessionProgressEvent>>({});
   const sessionState = ref<SessionState>({});
-  const zodError = ref<Record<string, unknown>>({});
+  const zodError = ref<Record<string, unknown[]>>({});
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
 
