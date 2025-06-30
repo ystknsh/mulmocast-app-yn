@@ -1,9 +1,7 @@
-name: CI Mac
+name: Build for Mac
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
