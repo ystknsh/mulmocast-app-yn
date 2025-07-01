@@ -5,7 +5,7 @@
       <TabsTrigger value="yaml">YAML</TabsTrigger>
       <TabsTrigger value="json">JSON</TabsTrigger>
       <TabsTrigger value="media">Media</TabsTrigger>
-      <TabsTrigger value="parameters">Parameters</TabsTrigger>
+      <TabsTrigger value="style">Style</TabsTrigger>
     </TabsList>
 
     <div
@@ -109,9 +109,9 @@
         </div>
       </div>
     </TabsContent>
-    <TabsContent value="parameters" class="mt-4">
+    <TabsContent value="style" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
-        <p class="text-sm text-gray-500 mb-2">Parameters - Presentation style editing</p>
+        <p class="text-sm text-gray-500 mb-2">Style - Presentation style editing</p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
