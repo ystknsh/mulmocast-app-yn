@@ -6,6 +6,10 @@ import { MakerRpm } from "@electron-forge/maker-rpm";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
+import path from "path";
+import fs from "fs";
+import ffmpegPath from "ffmpeg-static";
+import ffprobeStatic from "ffprobe-static";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -49,6 +53,20 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+
+  hooks: {
+    postPackage: async (forgeConfig, buildResult) => {
+      const destDir = path.resolve(__dirname, ".vite/build/ffmpeg");
+
+      fs.mkdirSync(destDir, { recursive: true });
+      const destPath = path.join(destDir, path.basename(ffmpegPath));
+      const ffprobeDest = path.join(destDir, path.basename(ffprobeStatic.path));
+      fs.copyFileSync(ffmpegPath, destPath);
+      fs.copyFileSync(ffprobeStatic.path, ffprobeDest);
+
+      console.log(`[postPackage] ffmpeg copied to ${destPath}`);
+    },
+  },
 };
 
 export default config;
