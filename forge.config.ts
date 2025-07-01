@@ -55,7 +55,7 @@ const config: ForgeConfig = {
   ],
 
   hooks: {
-    postPackage: async (forgeConfig, buildResult) => {
+    prePackage: async (forgeConfig, buildResult) => {
       const destDir = path.resolve(__dirname, ".vite/build/ffmpeg");
 
       fs.mkdirSync(destDir, { recursive: true });
