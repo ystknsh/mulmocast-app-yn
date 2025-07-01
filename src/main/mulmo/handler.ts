@@ -35,16 +35,14 @@ import os from "os";
 
 const platform = os.platform();
 const arch = os.arch();
-const command = platform === 'win32' ? 'ffprobe.exe' : 'ffprobe'
+const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
 // end of ffprobePath
 
 const isDev = !app.isPackaged;
 
-
-
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-static/ffmpeg");
-const ffprobePath = path.resolve(__dirname, "../../node_modules/ffprobe-static/bin/", platform, arch,  command);
+const ffprobePath = path.resolve(__dirname, "../../node_modules/ffprobe-static/bin/", platform, arch, command);
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
