@@ -70,7 +70,7 @@ const config: ForgeConfig = {
       fs.copyFileSync(ffmpegPath, destPath);
       fs.copyFileSync(ffprobeStatic.path, ffprobeDest);
 
-      console.log(`[postPackage] ffmpeg copied to ${destPath}`);
+      console.log(`[prePackage] ffmpeg copied to ${destPath}`);
     },
   },
 };
