@@ -16,6 +16,8 @@ import {
   generateBeatImage,
   generateBeatAudio,
   MulmoPresentationStyleMethods,
+  setFfmpegPath,
+  setFfprobePath,
 } from "mulmocast";
 import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
@@ -26,8 +28,16 @@ import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
 import { z } from "zod";
+import { app } from "electron";
+
+const isDev = !app.isPackaged;
 
 updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-static/ffmpeg");
+const ffprobePath = path.resolve(__dirname, "../../node_modules/ffprobe-static/bin/darwin/arm64/ffprobe");
+
+setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
+setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
 
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);

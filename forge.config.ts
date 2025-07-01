@@ -14,6 +14,12 @@ import ffprobeStatic from "ffprobe-static";
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    extraResources: [
+      {
+        from: ".vite/build/ffmpeg",
+        to: "ffmpeg",
+      },
+    ],
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ["darwin"]), new MakerRpm({}), new MakerDeb({})],
