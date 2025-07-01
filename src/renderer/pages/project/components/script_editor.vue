@@ -299,9 +299,21 @@ const addBeatTail = (beat: MulmoBeat) => {
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   console.log("updatePresentationStyle", style);
-  emit("update:mulmoValue", {
+
+  const newScript = {
     ...props.mulmoValue,
     ...style,
-  });
+  };
+
+  // delete empty parameters
+  Object.keys(style)
+    .filter((key) => {
+      return style[key as keyof typeof style] === undefined;
+    })
+    .forEach((key) => {
+      delete newScript[key as keyof typeof newScript];
+    });
+
+  emit("update:mulmoValue", newScript);
 };
 </script>
