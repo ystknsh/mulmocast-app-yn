@@ -10,7 +10,7 @@
           @change="handleLangInput(($event.target as HTMLSelectElement).value)"
           class="w-full p-2 border rounded text-sm"
         >
-          <option value="">Auto</option>
+          <option value="">None</option>
           <option v-for="language in LANGUAGES" :key="language.id" :value="language.id">
             {{ language.name }}
           </option>
@@ -22,8 +22,13 @@
         <textarea
           v-model="styles"
           placeholder="e.g. color: #FF6B6B;&#10;font-family: 'Arial Black', sans-serif;&#10;text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"
-          class="w-full p-2 border rounded text-sm font-mono"
+          :class="[
+            'w-full p-2 border rounded text-sm font-mono',
+            { 'bg-gray-100 text-gray-400 cursor-not-allowed': !props.captionParams?.lang },
+          ]"
           rows="6"
+          :disabled="!props.captionParams?.lang"
+          @change="handleStylesInput"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -50,9 +55,20 @@ const emit = defineEmits<{
 const styles = ref("");
 
 const handleLangInput = (value: string) => {
+  if (value) {
+    emit("update", {
+      ...props.captionParams,
+      lang: value,
+    });
+  } else {
+    emit("update", undefined);
+  }
+};
+
+const handleStylesInput = () => {
   emit("update", {
     ...props.captionParams,
-    lang: value || undefined,
+    styles: styles.value.split("\n").filter((line) => line.trim() !== ""),
   });
 };
 
@@ -63,14 +79,6 @@ watch(
     if (styles.value) return;
     styles.value = newVal?.styles?.join("\n") || "";
   },
-);
-watch(
-  () => styles.value,
-  (newVal) => {
-    emit("update", {
-      ...props.captionParams,
-      styles: newVal.split("\n").filter((line) => line.trim() !== ""),
-    });
-  },
+  { immediate: true },
 );
 </script>
