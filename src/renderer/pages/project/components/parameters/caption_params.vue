@@ -10,7 +10,7 @@
             <SelectValue placeholder="None" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">None</SelectItem>
+            <SelectItem :value="undefined">None</SelectItem>
             <SelectItem v-for="language in LANGUAGES" :key="language.id" :value="language.id">
               {{ language.name }}
             </SelectItem>
