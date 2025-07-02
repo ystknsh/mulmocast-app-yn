@@ -11,24 +11,22 @@
       <!-- left: Edit area -->
       <div>
         <div v-if="beat.image && beat.image.type">
-          <label class="text-sm font-medium block mb-1">
+          <Label class="block mb-1">
             {{ getPromptLabel(beat) }}
-          </label>
+          </Label>
 
           <!-- image/movie: URL or  path -->
           <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
-            <input
+            <Input
               v-if="beat.image?.source?.kind === 'url'"
-              :value="beat.image?.source?.url"
-              @input="update('image.source.url', $event.target.value)"
-              class="w-full p-2 border rounded text-sm"
+              :model-value="beat.image?.source?.url"
+              @update:model-value="(value) => update('image.source.url', String(value))"
               type="text"
             />
-            <input
+            <Input
               v-else-if="beat.image?.source?.kind === 'path'"
-              :value="beat.image?.source?.path"
-              @input="update('image.source.path', $event.target.value)"
-              class="w-full p-2 border rounded text-sm"
+              :model-value="beat.image?.source?.path"
+              @update:model-value="(value) => update('image.source.path', String(value))"
               type="text"
             />
             <div
@@ -44,72 +42,72 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
-            <input
-              :value="beat.image?.slide?.title"
-              @input="update('image.slide.title', $event.target.value)"
-              class="w-full p-2 border rounded text-sm mb-2"
+            <Input
+              :model-value="beat.image?.slide?.title"
+              @update:model-value="(value) => update('image.slide.title', String(value))"
+              class="mb-2"
             />
-            <textarea
-              :value="beat.image?.slide?.bullets?.join('\n')"
-              @input="update('image.slide.bullets', $event.target.value.split('\n'))"
-              class="w-full p-2 border rounded text-sm"
+            <Textarea
+              :model-value="beat.image?.slide?.bullets?.join('\n')"
+              @update:model-value="(value) => update('image.slide.bullets', String(value).split('\n'))"
               rows="4"
             />
           </template>
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <textarea
-              class="w-full p-2 border rounded font-mono text-sm"
+            <Textarea
+              :model-value="
+                Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
+              "
+              @update:model-value="(value) => update('image.markdown', String(value).split('\n'))"
+              class="font-mono"
               rows="6"
-              :value="Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown"
-              @input="update('image.markdown', $event.target.value.split('\n'))"
-            ></textarea>
+            />
           </template>
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <textarea
-              :value="JSON.stringify(beat.image?.chartData, null, 2)"
-              @input="
-                (() => {
+            <Textarea
+              :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
+              @update:model-value="
+                (value) => {
                   try {
-                    update('image.chartData', JSON.parse($event.target.value));
+                    update('image.chartData', JSON.parse(String(value)));
                   } catch (_) {}
-                })()
+                }
               "
-              class="w-full p-2 border rounded font-mono text-sm"
+              class="font-mono"
               rows="8"
-            ></textarea>
+            />
           </template>
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <textarea
-              :value="beat?.image?.code?.text"
-              @input="update('image.code.text', $event.target.value)"
-              class="w-full p-2 border rounded font-mono text-sm"
+            <Textarea
+              :model-value="beat?.image?.code?.text"
+              @update:model-value="(value) => update('image.code.text', String(value))"
+              class="font-mono"
               rows="6"
-            ></textarea>
+            />
           </template>
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <textarea
-              :value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
-              @input="update('image.html', $event.target.value.split('\n'))"
-              class="w-full p-2 border rounded font-mono text-sm"
+            <Textarea
+              :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
+              @update:model-value="(value) => update('image.html', String(value).split('\n'))"
+              class="font-mono"
               rows="10"
-            ></textarea>
+            />
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
             reference
 
-            <input
-              :value="beat.image.id"
-              @input="update('image.id', $event.target.value)"
-              class="w-full p-2 border rounded text-sm"
+            <Input
+              :model-value="beat.image.id"
+              @update:model-value="(value) => update('image.id', String(value))"
               type="text"
             />
           </template>
@@ -120,26 +118,25 @@
         </div>
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <textarea
-              :value="beat.htmlPrompt?.prompt"
-              @input="update('htmlPrompt.prompt', $event.target.value)"
-              class="w-full p-2 border rounded font-mono text-sm"
+            <Textarea
+              :model-value="beat.htmlPrompt?.prompt"
+              @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
+              class="font-mono"
               rows="6"
-            ></textarea>
+            />
           </template>
           <template v-else>
-            Image Promot:
-            <input
-              :value="beat.imagePrompt"
-              @input="update('imagePrompt', $event.target.value)"
-              class="w-full p-2 border rounded text-sm"
+            <Label>Image Prompt:</Label>
+            <Input
+              :model-value="beat.imagePrompt"
+              @update:model-value="(value) => update('imagePrompt', String(value))"
               type="text"
+              class="mb-2"
             />
-            Movie Promot:
-            <input
-              :value="beat.moviePrompt"
-              @input="update('moviePrompt', $event.target.value)"
-              class="w-full p-2 border rounded text-sm"
+            <Label>Movie Prompt:</Label>
+            <Input
+              :model-value="beat.moviePrompt"
+              @update:model-value="(value) => update('moviePrompt', String(value))"
               type="text"
             />
           </template>
@@ -194,6 +191,9 @@
 import { computed } from "vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast";
 

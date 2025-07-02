@@ -26,21 +26,21 @@
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 space-y-1 gap-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Speaker</label>
-              <input
-                :value="beat.speaker"
-                @input="update(index, 'speaker', $event.target.value)"
+              <Label>Speaker</Label>
+              <Input
+                :model-value="beat.speaker"
+                @update:model-value="(value) => update(index, 'speaker', String(value))"
                 placeholder="e.g. Alice"
-                class="w-full p-1 border rounded text-sm"
+                class="h-8"
               />
             </div>
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Text</label>
-              <input
-                :value="beat.text"
-                @input="update(index, 'text', $event.target.value)"
+              <Label>Text</Label>
+              <Input
+                :model-value="beat.text"
+                @update:model-value="(value) => update(index, 'text', String(value))"
                 placeholder="e.g. What is AI?"
-                class="w-full p-1 border rounded text-sm"
+                class="h-8"
               />
             </div>
             <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
@@ -127,6 +127,8 @@ import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import BeatEditor from "./beat_editor.vue";
 import BeatAdd from "./beat_add.vue";
 import CodeEditor from "@/components/code_editor.vue";

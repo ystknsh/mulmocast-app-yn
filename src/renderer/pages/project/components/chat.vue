@@ -13,15 +13,15 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
-        <label class="text-sm font-medium text-gray-700 mb-2 block"> Enter your message: </label>
+        <Label class="mb-2"> Enter your message: </Label>
         <div
           class="chat-input-container border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2 transition-colors duration-200 flex justify-between"
         >
-          <textarea
+          <Textarea
             v-model="userInput"
             :disabled="events.length == 0"
             placeholder="ex) Thank you very much! Please proceed with the creation."
-            class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0"
+            class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0"
             @keydown="handleKeydown"
           />
           <Button
@@ -44,21 +44,22 @@
       <!-- Template selection section -->
       <div class="template-section">
         <div class="rounded-lg p-1">
-          <label class="text-sm font-medium text-gray-700 mb-3 block">
+          <Label class="mb-3 block">
             To create a script with the content so far, please select a template and press the Create button.
-          </label>
+          </Label>
 
           <!-- Template dropdown and create button -->
           <div class="template-dropdown-container flex items-center gap-4">
-            <select
-              v-model="selectedTemplateFileName"
-              class="template-dropdown border-2 border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
-              :disabled="isCreatingScript"
-            >
-              <option v-for="(template, k) in templates" :key="k" :value="template.filename">
-                {{ template.title }}
-              </option>
-            </select>
+            <Select v-model="selectedTemplateFileName" :disabled="isCreatingScript">
+              <SelectTrigger class="w-auto">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="(template, k) in templates" :key="k" :value="template.filename">
+                  {{ template.title }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               size="sm"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full"
@@ -80,6 +81,9 @@ import { Loader2 } from "lucide-vue-next";
 import { ref, onMounted, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { GraphAI, GraphData } from "graphai";
 import { useStreamData } from "@/lib/stream";

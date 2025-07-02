@@ -3,46 +3,52 @@
     <h4 class="font-medium mb-3">Movie Parameters</h4>
     <div class="space-y-3">
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Provider</label>
-        <select
-          :value="movieParams?.provider || DEFAULT_VALUES.provider"
-          @change="handleProviderChange($event)"
-          class="w-full p-2 border rounded text-sm"
+        <Label>Provider</Label>
+        <Select
+          :model-value="movieParams?.provider || DEFAULT_VALUES.provider"
+          @update:model-value="handleProviderChange"
         >
-          <option value="google">Google</option>
-          <option value="openai">OpenAI</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="google">Google</SelectItem>
+            <SelectItem value="openai">OpenAI</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Model</label>
-        <input
-          :value="movieParams?.model || DEFAULT_VALUES.model"
-          @input="handleModelChange($event)"
+        <Label>Model</Label>
+        <Input
+          :model-value="movieParams?.model || DEFAULT_VALUES.model"
+          @update:model-value="handleModelChange"
           placeholder="Provider specific model (optional)"
-          class="w-full p-2 border rounded text-sm"
         />
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Transition Type</label>
-        <select
-          :value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
-          @change="handleTransitionTypeChange($event)"
-          class="w-full p-2 border rounded text-sm"
+        <Label>Transition Type</Label>
+        <Select
+          :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
+          @update:model-value="handleTransitionTypeChange"
         >
-          <option value="fade">Fade</option>
-          <option value="slideout_left">Slide Out Left</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="fade">Fade</SelectItem>
+            <SelectItem value="slideout_left">Slide Out Left</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Transition Duration (seconds)</label>
-        <input
-          :value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
-          @input="handleTransitionDurationChange($event)"
+        <Label>Transition Duration (seconds)</Label>
+        <Input
+          :model-value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
+          @update:model-value="handleTransitionDurationChange"
           type="number"
           min="0"
           max="2"
           step="0.1"
-          class="w-full p-2 border rounded text-sm"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -53,6 +59,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
@@ -60,7 +69,7 @@ type MovieParams = MulmoPresentationStyle["movieParams"];
 
 const props = defineProps<{
   movieParams?: MovieParams;
-  mulmoError: MulmoError | null;
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{
@@ -100,23 +109,21 @@ const updateParams = (partial: Partial<MovieParams>) => {
   });
 };
 
-const handleProviderChange = (event: Event) => {
-  const value = (event.target as HTMLSelectElement).value as "google" | "openai";
-  updateParams({ provider: value });
+const handleProviderChange = (value: string) => {
+  updateParams({ provider: value as "google" | "openai" });
 };
 
-const handleModelChange = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  updateParams({ model: value });
+const handleModelChange = (value: string | number) => {
+  updateParams({ model: String(value) });
 };
 
-const handleTransitionTypeChange = (event: Event) => {
-  const value = (event.target as HTMLSelectElement).value as "fade" | "slideout_left";
-  updateParams({ transition: { type: value, duration: currentParams.value.transition.duration } });
+const handleTransitionTypeChange = (value: string) => {
+  updateParams({
+    transition: { type: value as "fade" | "slideout_left", duration: currentParams.value.transition.duration },
+  });
 };
 
-const handleTransitionDurationChange = (event: Event) => {
-  const value = Number((event.target as HTMLInputElement).value);
-  updateParams({ transition: { type: currentParams.value.transition.type, duration: value } });
+const handleTransitionDurationChange = (value: string | number) => {
+  updateParams({ transition: { type: currentParams.value.transition.type, duration: Number(value) } });
 };
 </script>

@@ -3,41 +3,42 @@
     <h4 class="font-medium mb-3">Image Parameters</h4>
     <div class="space-y-3">
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Provider</label>
-        <select
-          :value="imageParams?.provider || DEFAULT_VALUES.provider"
-          @change="handleUpdate('provider', ($event.target as HTMLSelectElement).value)"
-          class="w-full p-2 border rounded text-sm"
+        <Label>Provider</Label>
+        <Select
+          :model-value="imageParams?.provider || DEFAULT_VALUES.provider"
+          @update:model-value="(value) => handleUpdate('provider', value)"
         >
-          <option value="openai">OpenAI</option>
-          <option value="google">Google</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="openai">OpenAI</SelectItem>
+            <SelectItem value="google">Google</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Model</label>
-        <input
-          :value="imageParams?.model || DEFAULT_VALUES.model"
-          @input="handleUpdate('model', ($event.target as HTMLInputElement).value)"
+        <Label>Model</Label>
+        <Input
+          :model-value="imageParams?.model || DEFAULT_VALUES.model"
+          @update:model-value="(value) => handleUpdate('model', String(value))"
           placeholder="e.g. dall-e-3, gpt-image-1"
-          class="w-full p-2 border rounded text-sm"
         />
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Style</label>
-        <input
-          :value="imageParams?.style || DEFAULT_VALUES.style"
-          @input="handleUpdate('style', ($event.target as HTMLInputElement).value)"
+        <Label>Style</Label>
+        <Input
+          :model-value="imageParams?.style || DEFAULT_VALUES.style"
+          @update:model-value="(value) => handleUpdate('style', String(value))"
           placeholder="e.g. vivid, natural"
-          class="w-full p-2 border rounded text-sm"
         />
       </div>
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Moderation</label>
-        <input
-          :value="imageParams?.moderation || DEFAULT_VALUES.moderation"
-          @input="handleUpdate('moderation', ($event.target as HTMLInputElement).value)"
+        <Label>Moderation</Label>
+        <Input
+          :model-value="imageParams?.moderation || DEFAULT_VALUES.moderation"
+          @update:model-value="(value) => handleUpdate('moderation', String(value))"
           placeholder="e.g. low, auto"
-          class="w-full p-2 border rounded text-sm"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -47,6 +48,9 @@
 
 <script setup lang="ts">
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
