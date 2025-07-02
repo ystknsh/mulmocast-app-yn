@@ -10,9 +10,7 @@
         </SelectItem>
       </SelectContent>
     </Select>
-    <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="addBeat">
-      Add
-    </Button>
+    <Button size="sm" @click="addBeat"> Add </Button>
   </div>
 </template>
 <script setup lang="ts">

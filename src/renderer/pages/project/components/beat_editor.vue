@@ -143,7 +143,9 @@
         </div>
         <!-- end of beat.image -->
         <template v-if="shouldShowGenerateButton">
-          <Button variant="outline" size="sm" @click="generateImage()" v-if="!isGenerating">Generate image</Button>
+          <Button variant="outline" size="sm" @click="generateImage()" v-if="!isGenerating" class="mt-4">
+            Generate image
+          </Button>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </div>
