@@ -5,7 +5,6 @@
       <Input
         :model-value="props.modelValue"
         @update:model-value="(value) => emit('update:modelValue', String(value))"
-        @keyup.enter="handleCreate"
         type="text"
         placeholder="Enter project title"
         auto-focus
