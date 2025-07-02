@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue";
+import { type HTMLAttributes, onMounted, useTemplateRef } from "vue";
 import { useVModel } from "@vueuse/core";
 import { cn } from "@/lib/utils";
 
@@ -7,7 +7,10 @@ const props = defineProps<{
   defaultValue?: string | number;
   modelValue?: string | number;
   class?: HTMLAttributes["class"];
+  autoFocus?: boolean;
 }>();
+
+const inputRef = useTemplateRef<HTMLInputElement>("input");
 
 const emits = defineEmits<{
   (e: "update:modelValue", payload: string | number): void;
@@ -16,6 +19,12 @@ const emits = defineEmits<{
 const modelValue = useVModel(props, "modelValue", emits, {
   passive: true,
   defaultValue: props.defaultValue,
+});
+
+onMounted(() => {
+  if (props.autoFocus) {
+    inputRef.value.focus();
+  }
 });
 </script>
 
@@ -31,5 +40,6 @@ const modelValue = useVModel(props, "modelValue", emits, {
         props.class,
       )
     "
+    ref="input"
   />
 </template>
