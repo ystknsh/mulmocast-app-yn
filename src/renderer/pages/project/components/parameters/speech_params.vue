@@ -3,17 +3,18 @@
     <h4 class="font-medium mb-3">Speech Parameters</h4>
     <div v-if="speechParams" class="space-y-4">
       <div>
-        <label class="block text-sm text-gray-600 mb-1">Provider</label>
-        <select
-          :value="speechParams.provider || 'openai'"
-          @change="handleProviderChange"
-          class="w-full p-2 border rounded text-sm"
-        >
-          <option value="openai">OpenAI</option>
-          <option value="nijivoice">Nijivoice</option>
-          <option value="google">Google</option>
-          <option value="elevenlabs">ElevenLabs</option>
-        </select>
+        <Label>Provider</Label>
+        <Select :model-value="speechParams.provider || 'openai'" @update:model-value="handleProviderChange">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="openai">OpenAI</SelectItem>
+            <SelectItem value="nijivoice">Nijivoice</SelectItem>
+            <SelectItem value="google">Google</SelectItem>
+            <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div
         v-if="speechParams.speakers"
@@ -35,48 +36,50 @@
         </div>
         <div class="space-y-2">
           <div>
-            <label class="block text-xs text-gray-600 mb-1">Voice ID</label>
-            <select
-              :value="speaker.voiceId"
-              @change="handleSpeakerVoiceChange(name, ($event.target as HTMLSelectElement).value)"
-              class="w-full p-1 border rounded text-sm"
+            <Label class="text-xs">Voice ID</Label>
+            <Select
+              :model-value="speaker.voiceId"
+              @update:model-value="(value) => handleSpeakerVoiceChange(name, value)"
             >
-              <option
-                v-for="voice in getVoiceList(speechParams.provider || 'openai')"
-                :key="voice.id"
-                :value="voice.id"
-              >
-                {{ voice.name }}
-              </option>
-            </select>
+              <SelectTrigger class="h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="voice in getVoiceList(speechParams.provider || 'openai')"
+                  :key="voice.id"
+                  :value="voice.id"
+                >
+                  {{ voice.name }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
-              <label class="block text-xs text-gray-600 mb-1">Language</label>
-              <select
-                :value="selectedLanguages[name] || DEFAULT_LANGUAGE"
-                @change="handleLanguageChange(name, ($event.target as HTMLSelectElement).value)"
-                class="w-full p-1 border rounded text-sm"
+              <Label class="text-xs">Language</Label>
+              <Select
+                :model-value="selectedLanguages[name] || DEFAULT_LANGUAGE"
+                @update:model-value="(value) => handleLanguageChange(name, value)"
               >
-                <option v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
-                  {{ lang.name }}
-                </option>
-              </select>
+                <SelectTrigger class="h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
+                    {{ lang.name }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <label class="block text-xs text-gray-600 mb-1">
-                Display Name ({{ selectedLanguages[name] || DEFAULT_LANGUAGE }})
-              </label>
-              <input
-                :value="speaker.displayName[selectedLanguages[name] || DEFAULT_LANGUAGE] || ''"
-                @input="
-                  handleDisplayNameChange(
-                    name,
-                    selectedLanguages[name] || DEFAULT_LANGUAGE,
-                    ($event.target as HTMLInputElement).value,
-                  )
+              <Label class="text-xs"> Display Name ({{ selectedLanguages[name] || DEFAULT_LANGUAGE }}) </Label>
+              <Input
+                :model-value="speaker.displayName[selectedLanguages[name] || DEFAULT_LANGUAGE] || ''"
+                @update:model-value="
+                  (value) => handleDisplayNameChange(name, selectedLanguages[name] || DEFAULT_LANGUAGE, String(value))
                 "
-                class="w-full p-1 border rounded text-sm"
+                class="h-8"
               />
             </div>
           </div>
@@ -97,6 +100,9 @@
 import { ref, computed } from "vue";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import { VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast";
@@ -175,8 +181,8 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-const handleProviderChange = (event: Event) => {
-  const newProvider = (event.target as HTMLSelectElement).value as Provider;
+const handleProviderChange = (value: string) => {
+  const newProvider = value as Provider;
   const defaultVoiceId = getDefaultVoiceId(newProvider);
 
   const updatedSpeakers = Object.entries(speakers.value).reduce(

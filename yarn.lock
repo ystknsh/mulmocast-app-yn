@@ -6908,10 +6908,10 @@ regexp.prototype.flags@^1.5.4:
     gopd "^1.2.0"
     set-function-name "^2.0.2"
 
-reka-ui@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.3.1.tgz#1a5f465eaaba82be30904e459f4fdc62a3d864dc"
-  integrity sha512-2SjGeybd7jvD8EQUkzjgg7GdOQdf4cTwdVMq/lDNTMqneUFNnryGO43dg8WaM/jaG9QpSCZBvstfBFWlDdb2Zg==
+reka-ui@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.3.2.tgz#aedae51d85dcc61e418f12ffc0b013fccd5bb00c"
+  integrity sha512-lCysSCILH2uqShEnt93/qzlXnB7ySvK7scR0Q5C+a2iXwFVzHhvZQsMaSnbQYueoCihx6yyUZTYECepnmKrbRA==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
     "@floating-ui/vue" "^1.1.6"

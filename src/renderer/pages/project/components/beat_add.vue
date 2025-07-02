@@ -1,20 +1,21 @@
 <template>
   <div class="template-dropdown-container flex items-center gap-4">
-    <select
-      v-model="selectedBeat"
-      class="template-dropdown border-2 border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
-    >
-      <option v-for="(template, k) in templates" :key="k" :value="k">
-        {{ template.name }}
-      </option>
-    </select>
-    <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="addBeat">
-      Add
-    </Button>
+    <Select v-model="selectedBeat">
+      <SelectTrigger class="w-auto">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
+          {{ template.name }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+    <Button size="sm" @click="addBeat"> Add </Button>
   </div>
 </template>
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
 
 const emit = defineEmits(["addBeat"]);
