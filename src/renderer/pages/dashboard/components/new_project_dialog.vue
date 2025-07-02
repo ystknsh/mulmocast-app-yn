@@ -2,15 +2,13 @@
   <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="handleBackdropClick">
     <div class="bg-white rounded-lg p-6 w-96 max-w-full" @click.stop>
       <h2 class="text-xl font-semibold mb-4">Create New Project</h2>
-      <input
-        :value="props.modelValue"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      <Input
+        :model-value="props.modelValue"
+        @update:model-value="(value) => emit('update:modelValue', String(value))"
         @keyup.enter="handleCreate"
         type="text"
         placeholder="Enter project title"
-        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
-        :disabled="props.creating"
-        ref="inputRef"
+        auto-focus
       />
       <div class="flex justify-end space-x-3 mt-4">
         <button @click="handleCancel" class="px-4 py-2 text-gray-600 hover:text-gray-800" :disabled="props.creating">
@@ -29,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { Input } from "@/components/ui/input";
 
 const props = defineProps<{
   modelValue: string;
@@ -41,8 +39,6 @@ const emit = defineEmits<{
   create: [];
   cancel: [];
 }>();
-
-const inputRef = ref<HTMLInputElement>();
 
 const handleCreate = () => {
   if (props.creating) return;
@@ -58,9 +54,4 @@ const handleBackdropClick = () => {
     handleCancel();
   }
 };
-
-// Focus input when mounted
-onMounted(() => {
-  inputRef.value?.focus();
-});
 </script>
