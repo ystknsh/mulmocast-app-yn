@@ -5,35 +5,33 @@
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center space-x-4">
-            <button
+            <Button
               @click="
                 showNewProjectDialog = true;
                 newProjectName = '';
               "
-              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              class="flex items-center space-x-2"
             >
               <Plus class="w-5 h-5" />
               <span>Create New</span>
-            </button>
+            </Button>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
-              <button
+              <Button
                 @click="viewMode = 'list'"
-                :class="[
-                  'p-2 rounded-md transition-colors',
-                  viewMode === 'list' ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600',
-                ]"
+                :variant="viewMode === 'list' ? 'default' : 'ghost'"
+                size="icon"
+                :class="['transition-colors', viewMode === 'list' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
               >
                 <List class="w-5 h-5" />
-              </button>
-              <button
+              </Button>
+              <Button
                 @click="viewMode = 'grid'"
-                :class="[
-                  'p-2 rounded-md transition-colors',
-                  viewMode === 'grid' ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600',
-                ]"
+                :variant="viewMode === 'grid' ? 'default' : 'ghost'"
+                size="icon"
+                :class="['transition-colors', viewMode === 'grid' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
               >
                 <Grid class="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
           <div class="text-sm text-gray-500">{{ projects.length }} projects</div>
@@ -82,6 +80,7 @@ import GridView from "./components/grid_view.vue";
 import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/project_api";
 import dayjs from "dayjs";
+import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const viewMode = ref<"list" | "grid">("list");

@@ -38,12 +38,14 @@
           </div>
         </div>
         <div class="flex justify-end mt-2">
-          <button
+          <Button
             @click.stop="deleteProject(project)"
-            class="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+            variant="ghost"
+            size="icon"
+            class="h-8 w-8 text-gray-400 hover:text-red-600"
           >
             <Trash2 class="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -54,6 +56,7 @@
 import { Calendar, FileText, Trash2 } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 const emit = defineEmits<{
   open: [project: Project];
   delete: [project: Project];

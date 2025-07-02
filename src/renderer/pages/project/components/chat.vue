@@ -24,21 +24,14 @@
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0"
             @keydown="handleKeydown"
           />
-          <Button
-            size="sm"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 m-1 rounded-md"
-            @click="submitText(events[0])"
-            :disabled="isCreatingScript"
-          >
+          <Button size="sm" @click="submitText(events[0])" :disabled="isCreatingScript">
             <Send :size="16" />
           </Button>
         </div>
       </div>
 
       <div>
-        <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="clearChat">
-          clear chat
-        </Button>
+        <Button @click="clearChat" variant="outline" size="xs"> clear chat </Button>
       </div>
 
       <!-- Template selection section -->
@@ -60,12 +53,7 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Button
-              size="sm"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full"
-              @click="createScript"
-              :disabled="!canCreateScript"
-            >
+            <Button size="sm" @click="createScript" :disabled="!canCreateScript">
               <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
               {{ isCreatingScript ? "Creating..." : "Create Script" }}
             </Button>
@@ -236,6 +224,6 @@ const handleKeydown = (e: KeyboardEvent) => {
 <style scoped>
 .chat-input-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 </style>

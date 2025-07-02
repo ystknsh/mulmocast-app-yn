@@ -31,15 +31,17 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <button class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+            <Button variant="ghost" size="icon" class="text-gray-400 hover:text-blue-600">
               <Eye class="w-5 h-5" />
-            </button>
-            <button
+            </Button>
+            <Button
               @click.stop="deleteProject(project)"
-              class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              variant="ghost"
+              size="icon"
+              class="text-gray-400 hover:text-red-600"
             >
               <Trash2 class="w-5 h-5" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -51,6 +53,7 @@
 import { Trash2, Eye, Calendar, Activity, AlertTriangle, FileText } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 const emit = defineEmits<{
   open: [project: Project];
   delete: [project: Project];
