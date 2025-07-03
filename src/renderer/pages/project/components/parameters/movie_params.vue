@@ -32,9 +32,10 @@
           @update:model-value="handleTransitionTypeChange"
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="None" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem :value="undefined">None</SelectItem>
             <SelectItem value="fade">Fade</SelectItem>
             <SelectItem value="slideout_left">Slide Out Left</SelectItem>
           </SelectContent>
@@ -49,6 +50,7 @@
           min="0"
           max="2"
           step="0.1"
+          :disabled="!movieParams?.transition?.type"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -80,7 +82,7 @@ const DEFAULT_VALUES: MovieParams = {
   provider: "google",
   model: "",
   transition: {
-    type: "fade",
+    type: undefined,
     duration: 0.3,
   },
 };
@@ -97,7 +99,7 @@ const currentParams = computed((): MovieParams => {
 });
 
 const updateParams = (partial: Partial<MovieParams>) => {
-  emit("update", {
+  const params = {
     ...currentParams.value,
     ...partial,
     transition: partial.transition
@@ -106,7 +108,11 @@ const updateParams = (partial: Partial<MovieParams>) => {
           ...partial.transition,
         }
       : currentParams.value.transition,
-  });
+  };
+  if (params.transition.type === undefined) {
+    delete params.transition;
+  }
+  emit("update", params);
 };
 
 const handleProviderChange = (value: string) => {
