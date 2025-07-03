@@ -43,9 +43,9 @@ const readJsonFile = async (filePath: string) => {
   }
 };
 
-const writeJsonFile = (filePath: string, data: unknown) => {
+const writeJsonFile = async (filePath: string, data: unknown) => {
   try {
-    fs.writeFile(filePath, JSON.stringify(data, null, 2));
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
     return true;
   } catch {
     return false;
@@ -58,10 +58,10 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
   return readJsonFile(getProjectScriptPath(projectId));
 };
 
-export const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+export const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<boolean> => {
   return await writeJsonFile(getProjectMetaPath(projectId), data);
 };
-export const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<void> => {
+export const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<boolean> => {
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
