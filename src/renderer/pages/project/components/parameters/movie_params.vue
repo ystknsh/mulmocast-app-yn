@@ -14,6 +14,7 @@
           <SelectContent>
             <SelectItem value="google">Google</SelectItem>
             <SelectItem value="openai">OpenAI</SelectItem>
+            <SelectItem value="replicate">Replicate</SelectItem>
           </SelectContent>
         </Select>
       </div>
