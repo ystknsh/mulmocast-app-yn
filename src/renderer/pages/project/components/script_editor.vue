@@ -53,8 +53,8 @@
     <TabsContent value="yaml" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-400 border-2': !isValidScriptData },
+          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
@@ -71,14 +71,15 @@
     <TabsContent value="json" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-400 border-2': !isValidScriptData },
+          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
         <CodeEditor
           v-model="jsonText"
           language="json"
+          :jsonSchema="mulmoJsonSchema"
           @update:modelValue="onJsonInput"
           @focus="onFocus"
           @blur="onBlur"
@@ -136,6 +137,8 @@ import PresentationStyleEditor from "./presentation_style_editor.vue";
 
 import YAML from "yaml";
 import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast/browser";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
@@ -163,6 +166,9 @@ const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref("text");
+
+const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
+
 watch(currentTab, () => {
   console.log(currentTab.value);
   emit("formatAndPushHistoryMulmoScript");
