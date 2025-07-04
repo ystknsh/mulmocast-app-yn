@@ -1,42 +1,20 @@
 <template>
-  <div class="relative flex-1" style="overflow: hidden">
-    <div
-      v-if="highlighted"
-      v-html="highlighted"
-      class="syntax-highlighted"
-      ref="highlightRef"
-      :style="{ minHeight: minHeight, maxHeight: maxHeight }"
-    />
-    <textarea
-      :value="modelValue"
-      class="code-textarea"
-      ref="textareaRef"
-      @input="handleInput"
-      @focus="$emit('focus')"
-      @blur="$emit('blur')"
-      @scroll="syncScroll"
-      :style="{ minHeight: minHeight, maxHeight: maxHeight }"
-      :spellcheck="false"
-    ></textarea>
-  </div>
+  <div ref="editorContainer" class="code-editor-container" :style="{ minHeight: minHeight }"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
-import { createHighlighter } from "shiki";
-
-const THEME = "github-dark";
+import { ref, onMounted, onUnmounted, watch, shallowRef } from "vue";
+import loader from "@monaco-editor/loader";
+import type { editor } from "monaco-editor";
 
 interface Props {
   modelValue: string;
   language: "json" | "yaml";
   minHeight?: string;
-  maxHeight?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  minHeight: "350px",
-  maxHeight: "600px",
+  minHeight: "560px",
 });
 
 const emit = defineEmits<{
@@ -45,98 +23,116 @@ const emit = defineEmits<{
   blur: [];
 }>();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const highlighter = ref<any>(null);
-const highlighted = ref("");
+const editorContainer = ref<HTMLDivElement | null>(null);
+const editorInstance = shallowRef<editor.IStandaloneCodeEditor | null>(null);
+const monacoRef = shallowRef<typeof import("monaco-editor") | null>(null);
 
-const textareaRef = ref<HTMLTextAreaElement | null>(null);
-const highlightRef = ref<HTMLDivElement | null>(null);
+let isUpdatingModel = false;
 
 onMounted(async () => {
-  highlighter.value = await createHighlighter({
-    themes: [THEME],
-    langs: [props.language],
-  });
-  updateHighlight();
+  const monaco = await loader.init();
+  monacoRef.value = monaco;
+
+  if (editorContainer.value) {
+    editorInstance.value = monaco.editor.create(editorContainer.value as unknown as HTMLElement, {
+      value: props.modelValue || "",
+      language: props.language,
+      theme: "vs-dark",
+      minimap: {
+        enabled: false,
+      },
+      fontSize: 13,
+      fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+      lineHeight: 1.5,
+      padding: {
+        top: 15,
+        bottom: 15,
+      },
+      wordWrap: "on",
+      wrappingStrategy: "advanced",
+      renderLineHighlight: "all",
+      contextmenu: true,
+      smoothScrolling: true,
+      cursorBlinking: "blink",
+      cursorSmoothCaretAnimation: "on",
+      tabSize: 2,
+      insertSpaces: true,
+      formatOnPaste: true,
+      scrollBeyondLastLine: false,
+      quickSuggestions: {
+        other: true,
+        strings: true,
+      },
+      suggestOnTriggerCharacters: true,
+      acceptSuggestionOnCommitCharacter: true,
+      guides: {
+        bracketPairs: true,
+        indentation: true,
+      },
+    });
+
+    editorInstance.value.onDidChangeModelContent(() => {
+      if (!isUpdatingModel) {
+        const value = editorInstance.value?.getValue() || "";
+        emit("update:modelValue", value);
+      }
+    });
+
+    editorInstance.value.onDidFocusEditorText(() => {
+      emit("focus");
+    });
+
+    editorInstance.value.onDidBlurEditorText(() => {
+      emit("blur");
+    });
+  }
 });
 
-const updateHighlight = () => {
-  if (highlighter.value) {
-    try {
-      highlighted.value = highlighter.value.codeToHtml(props.modelValue || "", {
-        lang: props.language,
-        theme: THEME,
-      });
-    } catch (e) {
-      console.error("Highlighting error:", e);
-    }
-  }
-};
-
-watch(() => props.modelValue, updateHighlight);
-
 watch(
-  () => props.language,
-  async (newLang) => {
-    if (highlighter.value) {
-      await highlighter.value.loadLanguage(newLang);
-      updateHighlight();
+  () => props.modelValue,
+  (newValue) => {
+    if (editorInstance.value && editorInstance.value.getValue() !== newValue) {
+      isUpdatingModel = true;
+      editorInstance.value.setValue(newValue || "");
+      isUpdatingModel = false;
     }
   },
 );
 
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLTextAreaElement;
-  emit("update:modelValue", target.value);
-  updateHighlight();
-};
+watch(
+  () => props.language,
+  (newLanguage) => {
+    if (editorInstance.value && monacoRef.value) {
+      const model = editorInstance.value.getModel();
+      if (model) {
+        monacoRef.value.editor.setModelLanguage(model, newLanguage);
+      }
+    }
+  },
+);
 
-const syncScroll = () => {
-  if (textareaRef.value && highlightRef.value) {
-    highlightRef.value.scrollTop = textareaRef.value.scrollTop;
-    highlightRef.value.scrollLeft = textareaRef.value.scrollLeft;
-  }
-};
+onUnmounted(() => {
+  editorInstance.value?.dispose();
+});
 </script>
 
 <style scoped>
-.syntax-highlighted,
-.code-textarea {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-  white-space: pre;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  border-radius: 8px;
-  overflow: auto;
-}
-
-.code-textarea {
-  position: absolute;
-  inset: 0;
+.code-editor-container {
   width: 100%;
-  background-color: transparent;
-  outline: none;
-  resize: none;
-  border: none;
-  letter-spacing: normal;
-  color: transparent;
-  caret-color: white;
-  -webkit-text-fill-color: transparent;
-  padding: 20px;
-  padding-bottom: 6px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1e1e1e;
 }
 
-.syntax-highlighted {
-  overflow: auto;
+.code-editor-container :deep(.monaco-editor) {
+  border-radius: 8px;
 }
 
-:deep(.syntax-highlighted > pre) {
-  padding: 20px;
-  width: fit-content;
-  min-width: 100%;
-  min-height: 350px;
+.code-editor-container :deep(.monaco-editor .margin) {
+  background-color: #1e1e1e;
+}
+
+.code-editor-container :deep(.monaco-editor .monaco-editor-background) {
+  background-color: #1e1e1e;
 }
 </style>
