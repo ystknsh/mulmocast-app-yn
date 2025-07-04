@@ -11,6 +11,7 @@ interface Props {
   modelValue: string;
   language: "json" | "yaml";
   minHeight?: string;
+  jsonSchema?: Record<string, unknown>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,9 +30,26 @@ const monacoRef = shallowRef<typeof import("monaco-editor") | null>(null);
 
 let isUpdatingModel = false;
 
+const setDiagnosticsOptions = (monaco: typeof import("monaco-editor")) => {
+  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+    validate: true,
+    schemas: [
+      {
+        uri: "mulmocast://schema.json",
+        fileMatch: ["*"],
+        schema: props.jsonSchema,
+      },
+    ],
+  });
+};
+
 onMounted(async () => {
   const monaco = await loader.init();
   monacoRef.value = monaco;
+
+  if (props.language === "json" && props.jsonSchema) {
+    setDiagnosticsOptions(monaco);
+  }
 
   if (editorContainer.value) {
     editorInstance.value = monaco.editor.create(editorContainer.value as unknown as HTMLElement, {
@@ -106,6 +124,10 @@ watch(
       const model = editorInstance.value.getModel();
       if (model) {
         monacoRef.value.editor.setModelLanguage(model, newLanguage);
+
+        if (newLanguage === "json" && props.jsonSchema) {
+          setDiagnosticsOptions(monacoRef.value);
+        }
       }
     }
   },

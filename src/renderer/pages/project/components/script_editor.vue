@@ -79,6 +79,7 @@
         <CodeEditor
           v-model="jsonText"
           language="json"
+          :jsonSchema="mulmoJsonSchema"
           @update:modelValue="onJsonInput"
           @focus="onFocus"
           @blur="onBlur"
@@ -136,6 +137,8 @@ import PresentationStyleEditor from "./presentation_style_editor.vue";
 
 import YAML from "yaml";
 import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
+import { mulmoScriptSchema } from "mulmocast/browser";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
@@ -163,6 +166,9 @@ const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref("text");
+
+const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
+
 watch(currentTab, () => {
   console.log(currentTab.value);
   emit("formatAndPushHistoryMulmoScript");
