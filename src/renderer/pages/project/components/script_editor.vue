@@ -53,8 +53,8 @@
     <TabsContent value="yaml" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-400 border-2': !isValidScriptData },
+          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
@@ -71,8 +71,8 @@
     <TabsContent value="json" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col',
-          { 'border-red-400 border-2': !isValidScriptData },
+          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
