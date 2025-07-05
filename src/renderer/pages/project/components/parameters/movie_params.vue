@@ -9,9 +9,10 @@
           @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="None" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem :value="undefined">None</SelectItem>
             <SelectItem value="google">Google</SelectItem>
             <SelectItem value="openai">OpenAI</SelectItem>
             <SelectItem value="replicate">Replicate</SelectItem>
@@ -24,6 +25,7 @@
           :model-value="movieParams?.model || DEFAULT_VALUES.model"
           @update:model-value="handleModelChange"
           placeholder="Provider specific model (optional)"
+          :disabled="!movieParams?.provider"
         />
       </div>
       <div>
@@ -31,6 +33,7 @@
         <Select
           :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
           @update:model-value="handleTransitionTypeChange"
+          :disabled="!movieParams?.provider"
         >
           <SelectTrigger>
             <SelectValue placeholder="None" />
@@ -51,7 +54,7 @@
           min="0"
           max="2"
           step="0.1"
-          :disabled="!movieParams?.transition?.type"
+          :disabled="!movieParams?.transition?.type || !movieParams?.provider"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -80,11 +83,11 @@ const emit = defineEmits<{
 }>();
 
 const DEFAULT_VALUES: MovieParams = {
-  provider: "google",
+  provider: undefined,
   model: "",
   transition: {
     type: undefined,
-    duration: 0.3,
+    duration: 0,
   },
 };
 
