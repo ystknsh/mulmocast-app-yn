@@ -6,24 +6,38 @@
         <Label>Provider</Label>
         <Select
           :model-value="imageParams?.provider || DEFAULT_VALUES.provider"
-          @update:model-value="(value) => handleUpdate('provider', value)"
+          @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="openai">OpenAI</SelectItem>
-            <SelectItem value="google">Google</SelectItem>
+            <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
+              {{ provider.name }}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
         <Label>Model</Label>
-        <Input
+        <Select
           :model-value="imageParams?.model || DEFAULT_VALUES.model"
           @update:model-value="(value) => handleUpdate('model', String(value))"
-          placeholder="e.g. dall-e-3, gpt-image-1"
-        />
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Auto" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem :value="undefined">Auto</SelectItem>
+            <SelectItem
+              v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
+              :key="model"
+              :value="model"
+            >
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <Label>Style</Label>
@@ -55,7 +69,21 @@ import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
-type ImageParamField = "provider" | "model" | "style" | "moderation";
+type ImageParamField = keyof ImageParams;
+
+// TODO: import from mulmocast schema
+const PROVIDERS = [
+  {
+    name: "OpenAI",
+    value: "openai",
+    models: ["dall-e-3", "gpt-image-1"],
+  },
+  {
+    name: "Google",
+    value: "google",
+    models: ["imagen-3.0-fast-generate-001", "imagen-3.0-generate-002", "imagen-3.0-capability-001"],
+  },
+];
 
 const props = defineProps<{
   imageParams?: ImageParams;
@@ -68,9 +96,15 @@ const emit = defineEmits<{
 
 const DEFAULT_VALUES: ImageParams = {
   provider: "openai",
-  model: "",
-  style: "",
-  moderation: "",
+  model: undefined,
+  style: undefined,
+  moderation: undefined,
+};
+
+const handleProviderChange = (value: ImageParams["provider"]) => {
+  if (value !== props.imageParams?.provider) {
+    emit("update", { ...props.imageParams, provider: value, model: undefined });
+  }
 };
 
 const handleUpdate = (field: ImageParamField, value: string) => {

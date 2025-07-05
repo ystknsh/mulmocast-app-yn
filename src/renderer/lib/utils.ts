@@ -25,7 +25,7 @@ export const removeEmptyValues = <T>(obj: T): T | undefined => {
     return Object.keys(cleaned).length > 0 ? (cleaned as T) : undefined;
   }
 
-  if (obj === "") return undefined;
+  if (obj === "" || obj === "undefined") return undefined;
 
   return obj;
 };
