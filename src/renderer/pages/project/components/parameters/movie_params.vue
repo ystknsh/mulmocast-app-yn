@@ -13,20 +13,33 @@
           </SelectTrigger>
           <SelectContent>
             <SelectItem :value="undefined">None</SelectItem>
-            <SelectItem value="google">Google</SelectItem>
-            <SelectItem value="openai">OpenAI</SelectItem>
-            <SelectItem value="replicate">Replicate</SelectItem>
+            <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
+              {{ provider.name }}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
         <Label>Model</Label>
-        <Input
+        <Select
           :model-value="movieParams?.model || DEFAULT_VALUES.model"
           @update:model-value="handleModelChange"
-          placeholder="Provider specific model (optional)"
           :disabled="!movieParams?.provider"
-        />
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Auto" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem :value="undefined">Auto</SelectItem>
+            <SelectItem
+              v-for="model in PROVIDERS.find((p) => p.value === movieParams?.provider)?.models || []"
+              :key="model"
+              :value="model"
+            >
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <Label>Transition Type</Label>
@@ -72,6 +85,37 @@ import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
+
+// TODO: import from mulmocast schema
+const PROVIDERS = [
+  {
+    name: "Google",
+    value: "google",
+    models: ["veo-2.0-generate-001", "veo-3.0-generate-001"],
+  },
+  {
+    name: "OpenAI",
+    value: "openai",
+    models: ["sora-1"],
+  },
+  {
+    name: "Replicate",
+    value: "replicate",
+    models: [
+      "kwaivgi/kling-v1.6-pro",
+      "google/veo-2",
+      "runwayml/gen-2",
+      "runwayml/gen-1",
+      "lumaai/dream-machine",
+      "pika-art/pika-v1",
+      "heygen/heygen-v1",
+      "colossyan/colossyan-v1",
+      "niji-video/niji-video-v1",
+      "moonvalley/moondream-v1",
+      "pixverse/pixverse-v1",
+    ],
+  },
+];
 
 const props = defineProps<{
   movieParams?: MovieParams;
@@ -119,21 +163,21 @@ const updateParams = (partial: Partial<MovieParams>) => {
   emit("update", params);
 };
 
-const handleProviderChange = (value: string) => {
-  updateParams({ provider: value as "google" | "openai" });
+const handleProviderChange = (value: MovieParams["provider"]) => {
+  updateParams({ provider: value, model: undefined });
 };
 
-const handleModelChange = (value: string | number) => {
-  updateParams({ model: String(value) });
+const handleModelChange = (value: MovieParams["model"]) => {
+  updateParams({ model: value });
 };
 
-const handleTransitionTypeChange = (value: string) => {
+const handleTransitionTypeChange = (value: MovieParams["transition"]["type"]) => {
   updateParams({
     transition: { type: value as "fade" | "slideout_left", duration: currentParams.value.transition.duration },
   });
 };
 
-const handleTransitionDurationChange = (value: string | number) => {
-  updateParams({ transition: { type: currentParams.value.transition.type, duration: Number(value) } });
+const handleTransitionDurationChange = (value: MovieParams["transition"]["duration"]) => {
+  updateParams({ transition: { type: currentParams.value.transition.type, duration: value } });
 };
 </script>
