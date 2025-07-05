@@ -7,3 +7,25 @@ export const formatDate = (dateString: string | undefined | null): string => {
   if (!dateString) return "Unknown";
   return new Date(dateString).toLocaleDateString();
 };
+
+export const removeEmptyValues = <T>(obj: T): T | undefined => {
+  if (obj === null || obj === undefined) return undefined;
+
+  if (Array.isArray(obj)) {
+    const filtered = obj.map((item) => removeEmptyValues(item)).filter((item) => item !== undefined);
+    return filtered.length > 0 ? (filtered as T) : undefined;
+  }
+
+  if (typeof obj === "object" && obj !== null) {
+    const cleaned = Object.fromEntries(
+      Object.entries(obj)
+        .map(([key, value]) => [key, removeEmptyValues(value)])
+        .filter(([, value]) => value !== undefined),
+    );
+    return Object.keys(cleaned).length > 0 ? (cleaned as T) : undefined;
+  }
+
+  if (obj === "" || obj === "undefined") return undefined;
+
+  return obj;
+};

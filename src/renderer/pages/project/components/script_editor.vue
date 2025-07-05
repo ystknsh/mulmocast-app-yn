@@ -143,6 +143,7 @@ import { useStore } from "../../../store";
 import { useRoute } from "vue-router";
 
 import { MulmoError } from "../../../../types";
+import { removeEmptyValues } from "@/lib/utils";
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -308,20 +309,9 @@ const addBeatTail = (beat: MulmoBeat) => {
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   console.log("updatePresentationStyle", style);
 
-  const newScript = {
+  emit("update:mulmoValue", {
     ...props.mulmoValue,
-    ...style,
-  };
-
-  // delete empty parameters
-  Object.keys(style)
-    .filter((key) => {
-      return style[key as keyof typeof style] === undefined;
-    })
-    .forEach((key) => {
-      delete newScript[key as keyof typeof newScript];
-    });
-
-  emit("update:mulmoValue", newScript);
+    ...removeEmptyValues(style),
+  });
 };
 </script>
