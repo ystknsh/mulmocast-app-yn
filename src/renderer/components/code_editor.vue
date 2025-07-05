@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, shallowRef } from "vue";
-import loader from "@monaco-editor/loader";
+import loader, { type Monaco } from "@monaco-editor/loader";
 import type { editor } from "monaco-editor";
 import { configureMonacoYaml } from "monaco-yaml";
 
@@ -31,7 +31,7 @@ const monacoRef = shallowRef<typeof import("monaco-editor") | null>(null);
 
 let isUpdatingModel = false;
 
-const setDiagnosticsOptions = (monaco: typeof import("monaco-editor"), language: "json" | "yaml") => {
+const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
   const schema = {
     uri: "mulmocast://schema.json",
     fileMatch: ["*"],
