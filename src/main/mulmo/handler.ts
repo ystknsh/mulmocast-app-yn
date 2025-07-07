@@ -39,7 +39,13 @@ import { app } from "electron";
 
 const isDev = !app.isPackaged;
 
-updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+// mulmocastのアセットパスを設定
+if (isDev) {
+  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+} else {
+  // 本番環境では、extraResourcesにコピーされたmulmocast/assetsを使用
+  updateNpmRoot(path.join(process.resourcesPath, "mulmocast"));
+}
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
 
