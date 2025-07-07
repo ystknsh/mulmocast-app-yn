@@ -91,33 +91,12 @@ const PROVIDERS = [
   {
     name: "Google",
     value: "google",
-    models: ["veo-2.0-generate-001", "veo-3.0-generate-001"],
-  },
-  {
-    name: "OpenAI",
-    value: "openai",
-    models: ["sora-1"],
+    models: ["veo-2.0-generate-001"],
   },
   {
     name: "Replicate",
     value: "replicate",
-    models: [
-      "google/veo-3",
-      "google/veo-2",
-      "bytedance/seedance-1-pro",
-      "bytedance/seedance-1-lite",
-      "kwaivgi/kling-v2.1",
-      "pixverse/pixverse-v4.5",
-      "minimax/video-01",
-      "luma/ray",
-      "luma/ray-2-720p",
-      "luma/ray-flash-2-720p",
-      "leonardoai/motion-2.0",
-      "tencent/hunyuan-video",
-      "wavespeedai/wan-2.1-t2v-480p",
-      "wavespeedai/wan-2.1-t2v-720p",
-      "lightricks/ltx-video",
-    ],
+    models: ["bytedance/seedance-1-lite", "kwaivgi/kling-v2.1", "google/veo-3"],
   },
 ];
 
