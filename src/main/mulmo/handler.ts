@@ -31,11 +31,10 @@ import { z } from "zod";
 import { app } from "electron";
 
 // from ffprobePath
-import os from "os";
-
-const platform = os.platform();
-const arch = os.arch();
-const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
+// import os from "os";
+// const platform = os.platform();
+// const arch = os.arch();
+// const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
 // end of ffprobePath
 
 const isDev = !app.isPackaged;
