@@ -43,8 +43,8 @@ const isDev = !app.isPackaged;
 if (isDev) {
   updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 } else {
-  // 本番環境では、extraResourcesにコピーされたmulmocast/assetsを使用
-  updateNpmRoot(path.join(process.resourcesPath, "mulmocast"));
+  // 本番環境では、extraResourcesにコピーされたassetsを使用
+  updateNpmRoot(process.resourcesPath);
 }
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
