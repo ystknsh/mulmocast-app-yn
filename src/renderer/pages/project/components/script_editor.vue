@@ -131,10 +131,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import BeatEditor from "./beat_editor.vue";
-import BeatAdd from "./beat_add.vue";
+import BeatEditor from "./script_editor/beat_editor.vue";
+import BeatAdd from "./script_editor/beat_add.vue";
+import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
 import CodeEditor from "@/components/code_editor.vue";
-import PresentationStyleEditor from "./presentation_style_editor.vue";
 
 import YAML from "yaml";
 import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
