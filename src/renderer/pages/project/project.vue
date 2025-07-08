@@ -274,6 +274,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
+import { isNull } from "graphai/lib/utils/utils";
 import { useRoute, useRouter } from "vue-router";
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import {
@@ -420,6 +421,12 @@ const mulmoError = computed<MulmoError>(() => {
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScript.value);
   if (data.success) {
+    data.data.beats.map(beat => {
+      if (isNull(beat.id)) {
+        beat.id = crypto.randomUUID();
+      }
+      return beat;
+    });
     mulmoScript.value = data.data;
     // push store //
   }
