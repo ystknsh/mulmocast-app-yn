@@ -48,7 +48,7 @@ import MovieParams from "./parameters/movie_params.vue";
 import TextSlideParams from "./parameters/text_slide_params.vue";
 import CaptionParams from "./parameters/caption_params.vue";
 
-import { MulmoError } from "../../../../types";
+import { MulmoError } from "../../../../../types";
 
 interface Props {
   presentationStyle?: Partial<MulmoPresentationStyle>;
