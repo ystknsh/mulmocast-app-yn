@@ -421,7 +421,7 @@ const mulmoError = computed<MulmoError>(() => {
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScript.value);
   if (data.success) {
-    data.data.beats.map(beat => {
+    data.data.beats.map((beat) => {
       if (isNull(beat.id)) {
         beat.id = crypto.randomUUID();
       }
