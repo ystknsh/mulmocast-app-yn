@@ -1702,10 +1702,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@^24.0.10":
-  version "24.0.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.10.tgz#f65a169779bf0d70203183a1890be7bee8ca2ddb"
-  integrity sha512-ENHwaH+JIRTDIEEbDK6QSQntAYGtbvdDXnMXnZaZ6k13Du1dPMmprkEHIL7ok2Wl2aZevetwTAb5S+7yIF+enA==
+"@types/node@^24.0.11":
+  version "24.0.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.11.tgz#ea6d221eecc9f30f6a9af6ae10e2702b3a1b42cf"
+  integrity sha512-CJV8eqrYnwQJGMrvcRhQmZfpyniDavB+7nAZYJc6w99hFYJyFN3INV1/2W3QfQrqM36WTLrijJ1fxxvGBmCSxA==
   dependencies:
     undici-types "~7.8.0"
 
@@ -3243,10 +3243,10 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-dotenv@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.0.1.tgz#79bc4d232fadb42a4092685ff1206d31b2a43f95"
-  integrity sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==
+dotenv@^17.1.0:
+  version "17.1.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.1.0.tgz#164fa6ac1392165f5e2d8eb55296b0894e7d6a22"
+  integrity sha512-tG9VUTJTuju6GcXgbdsOuRhupE8cb4mRgY5JLRCh4MtGoVo3/gfGUtOMwmProM6d0ba2mCFvv+WrpYJV6qgJXQ==
 
 dunder-proto@^1.0.0, dunder-proto@^1.0.1:
   version "1.0.1"
@@ -4666,10 +4666,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^2.0.11:
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.11.tgz#df68694a7440e685ac8a67e59aaed034083e1311"
-  integrity sha512-JD5XwQPCM80JgXQk1B2Zqg3Vc9WHILYi57c99HQkjUxRGHGhRj8gxHZzH1lMRUrbI7+VNcQ2b2Z8tTiZn5lmJA==
+graphai@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.12.tgz#f4d2689ba4140e97632d18ad68dbcc3e1197184a"
+  integrity sha512-i5ZU+0SJevOYUSD0EjyjB3UgEmSxVesIdWpmchNOBwzX6FHvCpZQ1vXOuKAwBr2yXMF6VqZ9ryoMxr3b2QAimg==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -5891,10 +5891,10 @@ ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mulmocast@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.1.1.tgz#ee9abf4f6618443724bbe810334000f0ef2e3528"
-  integrity sha512-3OZywMYdcuHpOYoRko2pZT/nqIX8f0LDV4nrdT9d7chP2WsVc9erl2/WCGk2OiQPIjfpv0M1wlg9nhoS3xvRNA==
+mulmocast@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-0.1.2.tgz#ec0f52b92f39b147031048b2ccb22056eaa4e58e"
+  integrity sha512-ZOHE78B6ghACRfamOXaGUCUgMIrvIkm9sSLaA6c9ouosDYJ1//nLYOEhTy89MUVmNPcKS5BKcZDgp2pl+Ay+8w==
   dependencies:
     "@google-cloud/text-to-speech" "^6.1.0"
     "@graphai/anthropic_agent" "^2.0.5"
@@ -5910,18 +5910,18 @@ mulmocast@^0.1.1:
     "@tavily/core" "^0.5.9"
     canvas "^3.1.2"
     clipboardy "^4.0.0"
-    dotenv "^17.0.1"
+    dotenv "^17.1.0"
     fluent-ffmpeg "^2.1.3"
     google-auth-library "^9.15.1"
-    graphai "^2.0.11"
+    graphai "^2.0.12"
     inquirer "^12.7.0"
     marked "^16.0.0"
     ora "^8.2.0"
-    puppeteer "^24.11.2"
+    puppeteer "^24.12.0"
     replicate "^1.0.1"
     yaml "^2.8.0"
     yargs "^18.0.0"
-    zod "^3.25.74"
+    zod "^3.25.76"
     zod-to-json-schema "^3.24.6"
 
 mute-stream@^2.0.0:
@@ -6660,7 +6660,7 @@ puppeteer-core@24.12.0:
     typed-query-selector "^2.12.0"
     ws "^8.18.3"
 
-puppeteer@^24.11.2:
+puppeteer@^24.12.0:
   version "24.12.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.12.0.tgz#73e2a86f9616303c5830dca34acc389ac5cea27c"
   integrity sha512-MJtM71qex8h03bDBZTyPfSC7tfvDLILnWWl4rNdo3+HODiFZX+3yj/qLVwVu/gXoxQ7U8dNDKyFz4e8VBHdcmw==
@@ -8011,10 +8011,10 @@ vite-plugin-monaco-editor@^1.1.0:
   resolved "https://registry.yarnpkg.com/vite-plugin-monaco-editor/-/vite-plugin-monaco-editor-1.1.0.tgz#a6238c2e13d5e98dd54a1bc51f6f189325219de3"
   integrity sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==
 
-vite@^7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.0.2.tgz#66ddf890c4357f4fb6803a787dc210538591b917"
-  integrity sha512-hxdyZDY1CM6SNpKI4w4lcUc3Mtkd9ej4ECWVHSMrOdSinVc2zYOAppHeGc/hzmRo3pxM5blMzkuWHOJA/3NiFw==
+vite@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.0.3.tgz#3bf15e1a6d054960406a70fa1052043938b39c5a"
+  integrity sha512-y2L5oJZF7bj4c0jgGYgBNSdIu+5HF+m68rn2cQXFbGoShdhV1phX9rbnxy9YXj82aS8MMsCLAAFkRxZeWdldrQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.6"
@@ -8388,7 +8388,7 @@ zod@^3.23.8, zod@^3.24.1:
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.67.tgz#62987e4078e2ab0f63b491ef0c4f33df24236da8"
   integrity sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==
 
-zod@^3.25.74:
-  version "3.25.75"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.75.tgz#8ff9be2fbbcb381a9236f9f74a8879ca29dcc504"
-  integrity sha512-OhpzAmVzabPOL6C3A3gpAifqr9MqihV/Msx3gor2b2kviCgcb+HM9SEOpMWwwNp9MRunWnhtAKUoo0AHhjyPPg==
+zod@^3.25.76:
+  version "3.25.76"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
+  integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
