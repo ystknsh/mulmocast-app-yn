@@ -199,7 +199,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast";
 
-import { useStore } from "../../../store";
+import { useStore } from "../../../../store";
 import { useRoute } from "vue-router";
 
 interface Props {
