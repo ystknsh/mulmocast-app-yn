@@ -19,9 +19,20 @@ yarn install
 yarn run start
 ```
 
-## GitHub Actions Build
+## Build Application
 
-### Running Mac Build via GitHub Actions
+There are two ways to build the application:
+
+### Option 1: Local Build
+
+```bash
+# Build the app for your platform
+yarn run package
+
+# The built app will be in: out/mulmocast-app-darwin-arm64/
+```
+
+### Option 2: GitHub Actions Build
 
 1. Navigate to the repository: https://github.com/receptron/mulmocast-app
 2. Go to the "Actions" tab
@@ -29,13 +40,12 @@ yarn run start
 4. Click "Run workflow" button
 5. Select the target branch (default: `main`)
 6. Once complete, download from Artifacts section
+7. Fixing Downloaded App Permissions
 
-### Fixing Downloaded App Permissions
-
-```bash
-# Remove all extended attributes
-xattr -c mulmocast-app.app
-```
+    ```bash
+    # Remove all extended attributes
+    xattr -c mulmocast-app.app
+    ```
 
 ### Debug Mode
 
