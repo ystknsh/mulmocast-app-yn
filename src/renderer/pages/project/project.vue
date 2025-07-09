@@ -102,11 +102,11 @@
                     </span>
                   </div>
                   <!-- Undo/Redo buttons -->
-                  <Button variant="ghost" size="sm">
-                    <Undo :size="16" />
+                  <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
+                    <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <Redo :size="16" />
+                  <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
+                    <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
                   </Button>
                   <!-- Collapse/Expand Button -->
                   <CollapsibleTrigger as-child>
@@ -359,7 +359,7 @@ const isPreviewAreaVisible = ref(false);
 onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
-    store.updateMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
+    store.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -425,7 +425,7 @@ const formatAndPushHistoryMulmoScript = () => {
       }
       return beat;
     });
-    store.updateMulmoScript(data.data);
+    store.updateMulmoScriptAndPushToHiory(data.data);
     // push store //
   }
   console.log(data);

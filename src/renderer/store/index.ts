@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
 import type { SessionType, BeatSessionType, SessionProgressEvent, MulmoScript } from "mulmocast";
 
+import cloneDeep from "clone-deep";
+
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
 
@@ -15,10 +17,55 @@ export const useStore = defineStore("store", () => {
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
 
+  // for history
+  const index = ref(0);
+  const histories = ref<{ data: MulmoScript; name: string }[]>([]);
   const currentMulmoScript = ref<MulmoScript | null>(null);
   const updateMulmoScript = (data: MulmoScript) => {
     currentMulmoScript.value = data;
   };
+
+  const initMulmoScript = (data: MulmoScript) => {
+    currentMulmoScript.value = data;
+    index.value = 0;
+    pushDataToHistory("init", data);
+  };
+
+  const updateMulmoScriptAndPushToHiory = (data: MulmoScript) => {
+    currentMulmoScript.value = data;
+    pushDataToHistory("push", data);
+  };
+
+  const pushDataToHistory = (name: string, data: MulmoScript) => {
+    // don't call directory.
+    histories.value.length = index.value;
+    histories.value.push({ data: cloneDeep(data), name });
+    index.value = index.value + 1;
+    // console.log(histories.value);
+  };
+  // history api
+  const undoable = computed(() => {
+    return index.value > 1;
+  });
+  const undo = () => {
+    if (undoable.value) {
+      console.log("UNDO");
+      currentMulmoScript.value = histories.value[index.value - 2].data;
+      index.value = index.value - 1;
+    }
+  };
+
+  const redoable = computed(() => {
+    return index.value < histories.value.length;
+  });
+  const redo = () => {
+    if (redoable.value) {
+      console.log("REDO");
+      currentMulmoScript.value = histories.value[index.value].data;
+      index.value = index.value + 1;
+    }
+  };
+  // end of history
 
   const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent>) => {
     const { projectId, data } = log;
@@ -96,6 +143,13 @@ export const useStore = defineStore("store", () => {
     isBeatGenerating,
 
     currentMulmoScript,
+    initMulmoScript,
     updateMulmoScript,
+    updateMulmoScriptAndPushToHiory,
+
+    undoable,
+    undo,
+    redoable,
+    redo,
   };
 });
