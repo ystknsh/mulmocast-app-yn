@@ -1617,6 +1617,11 @@
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.5.tgz#db9468cb1b1b5a925b8f34822f1669df0c5472f5"
   integrity sha512-hWtVTC2q7hc7xZ/RLbxapMvDMgUnDvKvMOpKal4DrMyfGBUfB1oKaZlIRr6mJL+If3bAP6sV/QneGzF6tJjZDg==
 
+"@types/clone-deep@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@types/clone-deep/-/clone-deep-4.0.4.tgz#6932f2d0a4b4ef337d97cb72e6ecdf091c05145d"
+  integrity sha512-vXh6JuuaAha6sqEbJueYdh5zNBPPgG1OYumuz2UvLvriN6ABHDSW8ludREGWJb1MLIzbwZn4q4zUbUCerJTJfA==
+
 "@types/electron-squirrel-startup@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/electron-squirrel-startup/-/electron-squirrel-startup-1.0.2.tgz#80c4b4c63dc5be3aa7d4ffe64471ba45aa73ae69"
