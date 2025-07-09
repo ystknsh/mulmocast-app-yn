@@ -35,6 +35,7 @@ export const useStore = defineStore("store", () => {
           multiLingual: {},
           caption: {},
           movie: {},
+          html: {},
         },
       };
     }
