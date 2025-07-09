@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
-import type { SessionType, BeatSessionType, SessionProgressEvent } from "mulmocast";
+import type { SessionType, BeatSessionType, SessionProgressEvent, MulmoScript } from "mulmocast";
 
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
@@ -14,6 +14,11 @@ export const useStore = defineStore("store", () => {
   const zodError = ref<Record<string, unknown[]>>({});
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
+
+  const currentMulmoScript = ref<MulmoScript | null>(null);
+  const updateMulmoScript = (data: MulmoScript) => {
+    currentMulmoScript.value = data;
+  };
 
   const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent>) => {
     const { projectId, data } = log;
@@ -89,5 +94,8 @@ export const useStore = defineStore("store", () => {
 
     isArtifactGenerating,
     isBeatGenerating,
+
+    currentMulmoScript,
+    updateMulmoScript,
   };
 });

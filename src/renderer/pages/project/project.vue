@@ -124,9 +124,9 @@
             >
               <CardContent>
                 <ScriptEditor
-                  :mulmoValue="mulmoScript"
+                  :mulmoValue="store.currentMulmoScript"
                   :imageFiles="imageFiles"
-                  @update:mulmoValue="(val) => (mulmoScript = val)"
+                  @update:mulmoValue="store.updateMulmoScript"
                   :isValidScriptData="isValidScriptData"
                   @update:isValidScriptData="(val) => (isValidScriptData = val)"
                   @generateImage="(val) => generateImage(val)"
@@ -345,8 +345,6 @@ const store = useStore();
 const projectId = computed(() => route.params.id as string);
 const project = ref<ProjectMetadata | null>(null);
 
-const mulmoScript = ref<MulmoScript | null>(null);
-
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
@@ -361,7 +359,7 @@ const isPreviewAreaVisible = ref(false);
 onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
-    mulmoScript.value = await projectApi.getProjectMulmoScript(projectId.value);
+    store.updateMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -369,7 +367,7 @@ onMounted(async () => {
 });
 
 const handleUpdateScript = (script: MulmoScript) => {
-  mulmoScript.value = script;
+  store.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
   notifySuccess("Script created successfully 🎉");
 };
@@ -393,25 +391,25 @@ const saveCacheEnabled = (enabled: boolean) => {
 
 const saveMulmo = async (data) => {
   console.log("saved", data);
-  await projectApi.saveProjectScript(projectId.value, mulmoScript.value);
+  await projectApi.saveProjectScript(projectId.value, store.currentMulmoScript);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
 };
 const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(
-  mulmoScript,
+  () => store.currentMulmoScript,
   () => {
     // Be careful not to save a page just by opening it.
-    saveMulmoScript(mulmoScript.value);
+    saveMulmoScript(store.currentMulmoScript);
   },
   { deep: true },
 );
 
-const beatsData = computed(() => mulmoScript.value?.beats ?? []);
+const beatsData = computed(() => store.currentMulmoScript?.beats ?? []);
 
 const mulmoError = computed<MulmoError>(() => {
-  const zodError = mulmoScriptSchema.safeParse(mulmoScript.value);
+  const zodError = mulmoScriptSchema.safeParse(store.currentMulmoScript);
   if (!zodError.success) {
     return zodError2MulmoError(zodError.error);
   }
@@ -419,7 +417,7 @@ const mulmoError = computed<MulmoError>(() => {
 });
 
 const formatAndPushHistoryMulmoScript = () => {
-  const data = mulmoScriptSchema.safeParse(mulmoScript.value);
+  const data = mulmoScriptSchema.safeParse(store.currentMulmoScript);
   if (data.success) {
     data.data.beats.map((beat) => {
       if (isNull(beat.id)) {
@@ -427,7 +425,7 @@ const formatAndPushHistoryMulmoScript = () => {
       }
       return beat;
     });
-    mulmoScript.value = data.data;
+    store.updateMulmoScript(data.data);
     // push store //
   }
   console.log(data);
@@ -444,7 +442,7 @@ const generatePodcast = async () => {
 };
 
 const generateImage = async (index) => {
-  await saveMulmo(mulmoScript.value);
+  await saveMulmo(store.currentMulmoScript);
   await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index);
   console.log(index);
 };
@@ -491,7 +489,7 @@ const isValidScriptData = ref(true);
 
 const logContainer = ref<HTMLElement | null>(null);
 const validateLog = computed(() => {
-  // mulmoScriptSchema.parse(mulmoScript.value)
+  // mulmoScriptSchema.parse(store.currentMulmoScript)
   return [];
 });
 
