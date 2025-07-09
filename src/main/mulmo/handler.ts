@@ -31,18 +31,23 @@ import { z } from "zod";
 import { app } from "electron";
 
 // from ffprobePath
-import os from "os";
-
-const platform = os.platform();
-const arch = os.arch();
-const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
+// import os from "os";
+// const platform = os.platform();
+// const arch = os.arch();
+// const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
 // end of ffprobePath
 
 const isDev = !app.isPackaged;
 
-updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
-const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-static/ffmpeg");
-const ffprobePath = path.resolve(__dirname, "../../node_modules/ffprobe-static/bin/", platform, arch, command);
+// mulmocastのアセットパスを設定
+if (isDev) {
+  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+} else {
+  // 本番環境では、extraResourcesにコピーされたassetsを使用
+  updateNpmRoot(process.resourcesPath);
+}
+const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
+const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
