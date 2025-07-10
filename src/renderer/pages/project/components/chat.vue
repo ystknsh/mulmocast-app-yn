@@ -159,6 +159,7 @@ const agentFilters = [
 
 const clearChat = () => {
   messages.value = [];
+  emit("update:updateChatMessages", []);
 };
 const run = async (initialMessages: ChatMessage[]) => {
   const env = await window.electronAPI.getEnv();
