@@ -180,7 +180,10 @@
         {{ error }}
       </div>
     </div>
-    <div class="flex justify-end mt-2 py-1 rounded border border-gray-300">
+    <div class="flex justify-between mt-2 py-1 rounded border border-gray-300">
+      <div class="px-2 py-1">
+        <BeatAdd @addBeat="addBeat" />
+      </div>
       <div class="flex items-center gap-1 px-2 py-1 pr-3">
         <ArrowUp
           v-if="index !== 0"
@@ -210,6 +213,7 @@ import type { MulmoBeat } from "mulmocast";
 
 import { useStore } from "../../../../store";
 import { useRoute } from "vue-router";
+import BeatAdd from "./beat_add.vue";
 
 interface Props {
   beat: MulmoBeat;
@@ -327,5 +331,9 @@ const positionDown = () => {
 };
 const trash = () => {
   emit("deleteBeat", props.index);
+};
+
+const addBeat = (beat: MulmoBeat) => {
+  emit("addBeat", beat, props.index);
 };
 </script>
