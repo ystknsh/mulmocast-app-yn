@@ -168,13 +168,19 @@ const store = useStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref("text");
-
-const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
+const lastTab = ref("text");
 
 watch(currentTab, () => {
   console.log(currentTab.value);
-  emit("formatAndPushHistoryMulmoScript");
+  if (!props.isValidScriptData && !["json", "yaml"].includes(currentTab.value)) {
+    currentTab.value = lastTab.value;
+  } else {
+    lastTab.value = currentTab.value;
+    emit("formatAndPushHistoryMulmoScript");
+  }
 });
+
+const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
 
 const jsonText = ref("");
 const yamlText = ref("");
@@ -192,7 +198,7 @@ const onBlur = () => {
   isEditing.value = false;
 };
 const hasScriptError = computed(() => {
-  return Object.values(props.mulmoError.script ?? {}).flat().length;
+  return Object.values(props.mulmoError?.script ?? {}).flat().length;
 });
 
 watch(isEditing, () => {
