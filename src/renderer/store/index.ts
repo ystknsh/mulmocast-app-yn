@@ -4,6 +4,7 @@ import { MulmoProgressLog } from "../../types";
 import type { SessionType, BeatSessionType, SessionProgressEvent, MulmoScript } from "mulmocast";
 
 import cloneDeep from "clone-deep";
+import deepEqual from "deep-equal";
 
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
@@ -38,10 +39,14 @@ export const useStore = defineStore("store", () => {
 
   const pushDataToHistory = (name: string, data: MulmoScript) => {
     // don't call directory.
+    if (index.value > 0 && deepEqual(histories.value[index.value - 1].data, data)) {
+      console.log("equal");
+      return;
+    }
+    console.log("push history");
     histories.value.length = index.value;
     histories.value.push({ data: cloneDeep(data), name });
     index.value = index.value + 1;
-    // console.log(histories.value);
   };
   // history api
   const undoable = computed(() => {
