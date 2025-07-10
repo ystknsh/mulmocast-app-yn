@@ -169,21 +169,30 @@
             <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
           </template>
         </div>
-        <div class="flex justify-end pt-2">
-          <div class="inline-flex gap-2">
-            <ArrowUp v-if="index !== 0" @click="positionUp" class="cursor-pointer" />
-            <ArrowDown v-if="!isEnd" @click="positionDown" class="cursor-pointer" />
-            <Trash @click="trash" class="cursor-pointer" />
-          </div>
-        </div>
       </div>
     </div>
+
     <div
       v-if="mulmoError && mulmoError.length > 0"
       class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
     >
       <div v-for="(error, key) in mulmoError" :key="key">
         {{ error }}
+      </div>
+    </div>
+    <div class="flex justify-end mt-2 py-1 rounded border border-gray-300">
+      <div class="flex items-center gap-1 px-2 py-1 pr-3">
+        <ArrowUp
+          v-if="index !== 0"
+          @click="positionUp"
+          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+        />
+        <ArrowDown
+          v-if="!isEnd"
+          @click="positionDown"
+          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+        />
+        <Trash @click="trash" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
       </div>
     </div>
   </div>
