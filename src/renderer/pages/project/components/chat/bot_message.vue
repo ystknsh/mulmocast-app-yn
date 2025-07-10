@@ -7,7 +7,7 @@
       <div
         class="bg-gray-100 text-gray-800 p-3 rounded-lg block max-w-md text-sm break-words whitespace-pre-wrap chat-markdown"
         v-html="safeHtml"
-        />
+      />
       <p class="text-xs text-gray-500 mt-1">{{ time }}</p>
     </div>
   </div>
@@ -26,7 +26,7 @@ const props = defineProps<{
 
 function markdownCodeBlocks(input: string): string {
   return input.replace(/```markdown\s*\n([\s\S]*?)\n```/g, (_, code) => {
-    return marked.parse( code.trim())
+    return marked.parse(code.trim());
   });
 }
 
