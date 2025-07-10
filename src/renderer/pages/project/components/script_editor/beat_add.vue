@@ -10,7 +10,7 @@
         </SelectItem>
       </SelectContent>
     </Select>
-    <Button size="sm" @click="addBeat"> Add </Button>
+    <Button size="sm" @click="addBeat"> Insert </Button>
   </div>
 </template>
 <script setup lang="ts">

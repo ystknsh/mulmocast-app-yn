@@ -93,7 +93,7 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
-          <BeatAdd @addBeat="addBeatHead" />
+          <BeatAdd @addBeat="addBeatHead" v-if="!mulmoValue?.beats || mulmoValue?.beats.length === 0" />
           <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
             <BeatEditor
               :beat="beat"
@@ -105,9 +105,9 @@
               @generateImage="generateImage"
               @deleteBeat="deleteBeat"
               @positionUp="positionUp"
+              @addBeat="addBeat"
             />
           </Card>
-          <BeatAdd @addBeat="addBeatTail" v-if="mulmoValue?.beats && mulmoValue?.beats.length > 0" />
         </div>
       </div>
     </TabsContent>
@@ -304,12 +304,13 @@ const addBeatHead = (beat: MulmoBeat) => {
   });
 };
 
-const addBeatTail = (beat: MulmoBeat) => {
-  const newBeats = [...(props.mulmoValue.beats ?? [])];
-  newBeats.push(beat);
+const addBeat = (beat: MulmoBeat, index: number) => {
+  const updatedBeats = [...(props.mulmoValue.beats ?? [])];
+  updatedBeats.splice(index + 1, 0, beat);
+
   emit("update:mulmoValue", {
     ...props.mulmoValue,
-    beats: newBeats,
+    beats: updatedBeats,
   });
 };
 
