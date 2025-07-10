@@ -4,17 +4,36 @@
       <Bot :size="16" class="text-blue-600" />
     </div>
     <div class="flex-1">
-      <div class="bg-gray-100 text-gray-800 p-3 rounded-lg inline-block max-w-md">
-        <p class="text-sm">{{ message }}</p>
-      </div>
+      <div
+        class="bg-gray-100 text-gray-800 p-3 rounded-lg block max-w-md text-sm break-words whitespace-pre-wrap chat-markdown"
+        v-html="safeHtml"
+      />
       <p class="text-xs text-gray-500 mt-1">{{ time }}</p>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { Bot } from "lucide-vue-next";
-defineProps<{
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { computed } from "vue";
+
+const props = defineProps<{
   message: string;
   time: string;
 }>();
+
+const safeHtml = computed(() => DOMPurify.sanitize(marked.parse(props.message)));
 </script>
+
+<style>
+.chat-markdown pre,
+.chat-markdown code,
+.chat-markdown pre code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  display: block !important;
+}
+</style>
