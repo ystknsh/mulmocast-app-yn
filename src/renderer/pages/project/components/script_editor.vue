@@ -172,7 +172,7 @@ const lastTab = ref("text");
 
 watch(currentTab, () => {
   console.log(currentTab.value);
-  if (!props.isValidScript && !["json", "yaml"].includes(currentTab.value)) {
+  if (!props.isValidScriptData && !["json", "yaml"].includes(currentTab.value)) {
     currentTab.value = lastTab.value;
   } else {
     lastTab.value = currentTab.value;
