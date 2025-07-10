@@ -1622,6 +1622,11 @@
   resolved "https://registry.yarnpkg.com/@types/clone-deep/-/clone-deep-4.0.4.tgz#6932f2d0a4b4ef337d97cb72e6ecdf091c05145d"
   integrity sha512-vXh6JuuaAha6sqEbJueYdh5zNBPPgG1OYumuz2UvLvriN6ABHDSW8ludREGWJb1MLIzbwZn4q4zUbUCerJTJfA==
 
+"@types/deep-equal@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/deep-equal/-/deep-equal-1.0.4.tgz#c0a854be62d6b9fae665137a6639aab53389a147"
+  integrity sha512-tqdiS4otQP4KmY0PR3u6KbZ5EWvhNdUoS/jc93UuK23C220lOZ/9TvjfxdPcKvqwwDVtmtSCrnr0p/2dirAxkA==
+
 "@types/electron-squirrel-startup@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/electron-squirrel-startup/-/electron-squirrel-startup-1.0.2.tgz#80c4b4c63dc5be3aa7d4ffe64471ba45aa73ae69"
