@@ -425,7 +425,7 @@ const formatAndPushHistoryMulmoScript = () => {
       }
       return beat;
     });
-    store.updateMulmoScriptAndPushToHiory(data.data);
+    store.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
   }
   console.log(data);

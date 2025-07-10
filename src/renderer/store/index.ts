@@ -32,7 +32,7 @@ export const useStore = defineStore("store", () => {
     pushDataToHistory("init", data);
   };
 
-  const updateMulmoScriptAndPushToHiory = (data: MulmoScript) => {
+  const updateMulmoScriptAndPushToHistory = (data: MulmoScript) => {
     currentMulmoScript.value = data;
     pushDataToHistory("push", data);
   };
@@ -150,7 +150,7 @@ export const useStore = defineStore("store", () => {
     currentMulmoScript,
     initMulmoScript,
     updateMulmoScript,
-    updateMulmoScriptAndPushToHiory,
+    updateMulmoScriptAndPushToHistory,
 
     undoable,
     undo,
