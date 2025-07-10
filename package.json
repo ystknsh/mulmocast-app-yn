@@ -72,6 +72,7 @@
     "clone-deep": "^4.0.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "deep-equal": "^2.2.3",
     "electron-squirrel-startup": "^1.0.1",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.12",
