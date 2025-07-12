@@ -52,7 +52,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-[calc(100vh-250px)]">
           <!-- Left Column - AI Chat -->
           <div class="h-full overflow-y-auto pr-2">
-            <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`">
+            <Card
+              :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
+            >
               <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
                 <CardTitle
                   :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
@@ -70,7 +72,10 @@
                   }}
                 </p>
               </CardHeader>
-              <CardContent :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`" v-if="project">
+              <CardContent
+                :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
+                v-if="project"
+              >
                 <component
                   :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
                   :selectedTheme="selectedTheme"
@@ -315,7 +320,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
@@ -560,4 +565,3 @@ watch(
   { deep: true },
 );
 </script>
-
