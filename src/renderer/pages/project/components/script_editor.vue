@@ -58,7 +58,7 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <div class="flex-1 min-h-0" style="height: 0;">
+        <div class="flex-1 min-h-0" style="height: 0">
           <CodeEditor
             v-model="yamlText"
             language="yaml"
@@ -80,7 +80,7 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <div class="flex-1 min-h-0" style="height: 0;">
+        <div class="flex-1 min-h-0" style="height: 0">
           <CodeEditor
             v-model="jsonText"
             language="json"
