@@ -1,5 +1,5 @@
 <template>
-  <div ref="editorContainer" class="code-editor-container" :style="{ minHeight: minHeight }"></div>
+  <div ref="editorContainer" class="code-editor-container h-full" :style="{ minHeight: minHeight }"></div>
 </template>
 
 <script setup lang="ts">
@@ -147,6 +147,7 @@ onUnmounted(() => {
 <style scoped>
 .code-editor-container {
   width: 100%;
+  height: 100%;
   border-radius: 8px;
   overflow: hidden;
   background-color: #1e1e1e;
