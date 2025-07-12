@@ -67,21 +67,21 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
+import { mulmoOpenAIImageModelSchema, mulmoGoogleImageModelSchema } from "mulmocast/browser";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
 type ImageParamField = keyof ImageParams;
 
-// TODO: import from mulmocast schema
 const PROVIDERS = [
   {
     name: "OpenAI",
-    value: "openai",
-    models: ["dall-e-3", "gpt-image-1"],
+    value: mulmoOpenAIImageModelSchema.shape.provider.value,
+    models: mulmoOpenAIImageModelSchema.shape.model.unwrap().options,
   },
   {
     name: "Google",
-    value: "google",
-    models: ["imagen-3.0-fast-generate-001", "imagen-3.0-generate-002", "imagen-3.0-capability-001"],
+    value: mulmoGoogleImageModelSchema.shape.provider.value,
+    models: mulmoGoogleImageModelSchema.shape.model.unwrap().options,
   },
 ];
 
