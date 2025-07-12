@@ -86,7 +86,7 @@ export const mulmoGenerateImage = async (projectId: string, index: number, webCo
   try {
     const context = await getContext(projectId);
     context.force = true;
-    await generateBeatImage(index, context, settings);
+    await generateBeatImage({index, context, settings});
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
