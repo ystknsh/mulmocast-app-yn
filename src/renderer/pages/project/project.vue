@@ -355,7 +355,7 @@ const project = ref<ProjectMetadata | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
-const isDevelopment = ref(false);
+const isDevelopment = import.meta.env.DEV;
 
 const validationMessage = ref("");
 
@@ -368,8 +368,6 @@ onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
     store.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
-
-    isDevelopment.value = import.meta.env.DEV;
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
