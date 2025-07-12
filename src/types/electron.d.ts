@@ -18,6 +18,7 @@ export interface ElectronAPI {
     getPath: (name: string) => Promise<string>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<boolean>;
     saveProjectScript: (id: string, data: unknown) => Promise<boolean>;
+    openProjectFolder: (id: string) => Promise<void>;
   };
   settings: {
     get: () => Promise<Settings>;

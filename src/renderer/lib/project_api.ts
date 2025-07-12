@@ -30,4 +30,8 @@ export const projectApi = {
   async saveProjectScript(id: string, data: unknown): Promise<boolean> {
     return await window.electronAPI.project.saveProjectScript(id, JSON.parse(JSON.stringify(data)));
   },
+
+  async openProjectFolder(id: string): Promise<void> {
+    return await window.electronAPI.project.openProjectFolder(id);
+  },
 };
