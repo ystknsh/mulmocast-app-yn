@@ -28,7 +28,7 @@ import type { MulmoPresentationStyle } from "mulmocast";
 
 const props = defineProps<{
   textSlideParams?: MulmoPresentationStyle["textSlideParams"];
-  mulmoError: MulmoError | null;
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{

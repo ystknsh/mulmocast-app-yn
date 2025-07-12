@@ -87,7 +87,7 @@ const PROVIDERS = [
 
 const props = defineProps<{
   imageParams?: ImageParams;
-  mulmoError: MulmoError | null;
+  mulmoError: string[];
 }>();
 
 const emit = defineEmits<{

@@ -106,7 +106,7 @@ const DEFAULT_VALUES = {
 } as const;
 
 const handleUpdate = (field: keyof typeof DEFAULT_VALUES, value: number) => {
-  const currentParams = props.audioParams || {};
+  const currentParams = props.audioParams || ({} as AudioParams);
   emit("update", {
     ...DEFAULT_VALUES,
     ...currentParams,
