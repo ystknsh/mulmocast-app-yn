@@ -58,15 +58,17 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <CodeEditor
-          v-model="yamlText"
-          language="yaml"
-          :jsonSchema="mulmoJsonSchema"
-          @update:modelValue="onYamlInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          minHeight="100% - 0px"
-        />
+        <div class="flex-1 min-h-0" style="height: 0;">
+          <CodeEditor
+            v-model="yamlText"
+            language="yaml"
+            :jsonSchema="mulmoJsonSchema"
+            @update:modelValue="onYamlInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            minHeight="100%"
+          />
+        </div>
       </div>
     </TabsContent>
 
@@ -78,15 +80,17 @@
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <CodeEditor
-          v-model="jsonText"
-          language="json"
-          :jsonSchema="mulmoJsonSchema"
-          @update:modelValue="onJsonInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          minHeight="100% - 0px"
-        />
+        <div class="flex-1 min-h-0" style="height: 0;">
+          <CodeEditor
+            v-model="jsonText"
+            language="json"
+            :jsonSchema="mulmoJsonSchema"
+            @update:modelValue="onJsonInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            minHeight="100%"
+          />
+        </div>
       </div>
     </TabsContent>
 
