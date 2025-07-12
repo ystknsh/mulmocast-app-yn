@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from "electron";
+import { ipcMain, dialog, shell } from "electron";
 import { mulmoTest } from "./mulmo/test";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
@@ -50,5 +50,10 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("settings:set", async (_event, settings: settingsManager.Settings) => {
     await settingsManager.saveSettings(settings);
+  });
+
+  ipcMain.handle("project:openProjectFolder", async (_event, id: string) => {
+    const projectPath = projectManager.getProjectPath(id);
+    await shell.openPath(projectPath);
   });
 };

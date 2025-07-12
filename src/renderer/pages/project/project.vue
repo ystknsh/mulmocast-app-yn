@@ -40,6 +40,12 @@
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
             </div>
           </div>
+          <div v-if="isDevelopment">
+            <Button variant="outline" size="sm" @click="openProjectFolder">
+              <FolderOpen :size="16" class="mr-1" />
+              Open Project Folder
+            </Button>
+          </div>
         </div>
 
         <!-- AI Assistant Section -->
@@ -293,6 +299,7 @@ import {
   Globe,
   Lightbulb,
   Bot,
+  FolderOpen,
 } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -348,6 +355,7 @@ const project = ref<ProjectMetadata | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
+const isDevelopment = import.meta.env.DEV;
 
 const validationMessage = ref("");
 
@@ -439,6 +447,10 @@ const generateMovie = async () => {
 const generatePodcast = async () => {
   console.log("generateMovie");
   await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
+};
+
+const openProjectFolder = async () => {
+  await projectApi.openProjectFolder(projectId.value);
 };
 
 const generateImage = async (index) => {

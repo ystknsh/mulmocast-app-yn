@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
+    openProjectFolder: (id: string) => ipcRenderer.invoke("project:openProjectFolder", id),
   },
   settings: {
     get: () => ipcRenderer.invoke("settings:get"),
