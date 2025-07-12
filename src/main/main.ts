@@ -45,8 +45,6 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     height,
     maxWidth: 1920,
     maxHeight: 1080,
-    frame: false,
-    titleBarStyle: "hidden",
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
