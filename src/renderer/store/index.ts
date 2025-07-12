@@ -93,6 +93,7 @@ export const useStore = defineStore("store", () => {
           caption: {},
           movie: {},
           html: {},
+          imageReference: {},
         },
       };
     }
