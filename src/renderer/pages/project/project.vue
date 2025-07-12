@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div :class="`max-w-7xl mx-auto ${getCardPadding} ${getContainerSpacing}`">
+      <div :class="`max-w-[95%] mx-auto ${getCardPadding} ${getContainerSpacing}`">
         <!-- Developer Mode Toggle - Always at the top -->
         <div class="bg-gray-50 dark:bg-gray-900 border rounded-lg p-3" v-if="false">
           <div class="flex items-center justify-between space-x-2 text-sm">
@@ -48,231 +48,242 @@
           </div>
         </div>
 
-        <!-- AI Assistant Section -->
-        <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 ${getTimelineFocusClass}`">
-          <CardHeader :class="selectedTheme === 'compact' ? 'pb-3' : ''">
-            <CardTitle
-              :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-            >
-              <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
-              <span>
-                {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
-              </span>
-            </CardTitle>
-            <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-              {{
-                selectedTheme === "beginner"
-                  ? "Let's Create Scripts Through Conversation with AI Assistants"
-                  : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
-              }}
-            </p>
-          </CardHeader>
-          <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''" v-if="project">
-            <component
-              :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
-              :selectedTheme="selectedTheme"
-              :initialMessages="project?.chatMessages"
-              @update:updateChatMessages="handleUpdateChatMessages"
-              @update:updateMulmoScript="handleUpdateScript"
-            />
-          </CardContent>
-        </Card>
-
-        <Separator v-if="hasProjectData" :class="getTimelineFocusClass" />
-
-        <!-- MulmoScript Viewer Section -->
-        <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" :class="getTimelineFocusClass">
-          <Card>
-            <CardHeader>
-              <div class="flex items-center justify-between">
-                <CollapsibleTrigger as-child>
-                  <CardTitle class="flex items-center space-x-2 cursor-pointer">
-                    <Code2 :size="20" />
-                    <span>Script</span>
-                  </CardTitle>
-                </CollapsibleTrigger>
-                <div class="flex items-center space-x-2">
-                  <!-- Validation Status -->
-                  <div class="flex items-center space-x-2">
-                    <div v-if="isValidScriptData" class="group relative">
-                      <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
-                      <span
-                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
-                      >
-                        Validation Status
-                      </span>
-                    </div>
-                    <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
-                    <span v-if="!isValidScriptData" class="text-sm text-gray-600">
-                      {{ validationMessage }}
-                    </span>
-                  </div>
-                  <!-- Undo/Redo buttons -->
-                  <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
-                    <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
-                  </Button>
-                  <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
-                    <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
-                  </Button>
-                  <!-- Collapse/Expand Button -->
-                  <CollapsibleTrigger as-child>
-                    <Button variant="ghost" size="sm">
-                      <component :is="isScriptViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                    </Button>
-                  </CollapsibleTrigger>
-                </div>
-              </div>
-            </CardHeader>
-            <CollapsibleContent
-              :class="`transition-all duration-300 overflow-hidden ${
-                isScriptViewerOpen ? 'max-h-[800px]' : 'max-h-[180px]'
-              }`"
-            >
-              <CardContent>
-                <ScriptEditor
-                  :mulmoValue="store.currentMulmoScript"
-                  :imageFiles="imageFiles"
-                  @update:mulmoValue="store.updateMulmoScript"
-                  :isValidScriptData="isValidScriptData"
-                  @update:isValidScriptData="(val) => (isValidScriptData = val)"
-                  @generateImage="(val) => generateImage(val)"
-                  @generateAudio="(val) => generateAudio(val)"
-                  @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                  :audioFiles="audioFiles"
-                  :mulmoError="mulmoError"
+        <!-- 3 Split Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-[calc(100vh-250px)]">
+          <!-- Left Column - AI Chat -->
+          <div class="h-full overflow-y-auto pr-2">
+            <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`">
+              <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
+                <CardTitle
+                  :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                >
+                  <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                  <span>
+                    {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                  </span>
+                </CardTitle>
+                <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                  {{
+                    selectedTheme === "beginner"
+                      ? "Let's Create Scripts Through Conversation with AI Assistants"
+                      : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                  }}
+                </p>
+              </CardHeader>
+              <CardContent :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`" v-if="project">
+                <component
+                  :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                  :selectedTheme="selectedTheme"
+                  :initialMessages="project?.chatMessages"
+                  @update:updateChatMessages="handleUpdateChatMessages"
+                  @update:updateMulmoScript="handleUpdateScript"
+                  class="h-full flex flex-col"
                 />
               </CardContent>
-            </CollapsibleContent>
-          </Card>
-        </Collapsible>
-        <!-- Output Section -->
-        <Card v-if="hasProjectData">
-          <CardHeader>
-            <CardTitle class="flex items-center space-x-2">
-              <Settings :size="20" />
-              <span>Output Settings & Generation</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent class="p-4">
-            <div class="space-y-6">
-              <!-- General Settings -->
-              <div class="border rounded-lg p-4 bg-gray-50">
-                <h3 class="text-sm font-medium mb-4">General Settings</h3>
-                <div class="space-y-4">
-                  <!-- Cache Toggle -->
-                  <div class="flex items-center justify-between p-4 bg-white rounded-lg">
-                    <div class="flex flex-col">
-                      <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
-                      <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+            </Card>
+          </div>
+
+          <!-- Middle Column - Script Editor -->
+          <div class="h-full">
+            <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" class="h-full">
+              <Card class="h-full flex flex-col">
+                <CardHeader class="flex-shrink-0">
+                  <div class="flex items-center justify-between">
+                    <CollapsibleTrigger as-child>
+                      <CardTitle class="flex items-center space-x-2 cursor-pointer">
+                        <Code2 :size="20" />
+                        <span>Script</span>
+                      </CardTitle>
+                    </CollapsibleTrigger>
+                    <div class="flex items-center space-x-2">
+                      <!-- Validation Status -->
+                      <div class="flex items-center space-x-2">
+                        <div v-if="isValidScriptData" class="group relative">
+                          <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
+                          <span
+                            class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
+                          >
+                            Validation Status
+                          </span>
+                        </div>
+                        <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
+                        <span v-if="!isValidScriptData" class="text-sm text-gray-600">
+                          {{ validationMessage }}
+                        </span>
+                      </div>
+                      <!-- Undo/Redo buttons -->
+                      <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
+                        <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
+                      </Button>
+                      <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
+                        <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
+                      </Button>
+                      <!-- Collapse/Expand Button -->
+                      <CollapsibleTrigger as-child>
+                        <Button variant="ghost" size="sm">
+                          <component :is="isScriptViewerOpen ? ChevronUp : ChevronDown" :size="16" />
+                        </Button>
+                      </CollapsibleTrigger>
                     </div>
-                    <Switch
-                      id="cache-toggle"
-                      :model-value="project?.useCache ?? false"
-                      @update:model-value="saveCacheEnabled"
+                  </div>
+                </CardHeader>
+                <CollapsibleContent
+                  :class="`transition-all duration-300 overflow-hidden flex-1 ${
+                    isScriptViewerOpen ? 'h-full' : 'max-h-[180px]'
+                  }`"
+                >
+                  <CardContent class="h-full">
+                    <ScriptEditor
+                      :mulmoValue="store.currentMulmoScript"
+                      :imageFiles="imageFiles"
+                      @update:mulmoValue="store.updateMulmoScript"
+                      :isValidScriptData="isValidScriptData"
+                      @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                      @generateImage="(val) => generateImage(val)"
+                      @generateAudio="(val) => generateAudio(val)"
+                      @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                      :audioFiles="audioFiles"
+                      :mulmoError="mulmoError"
                     />
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          </div>
+
+          <!-- Right Column - Output & Product -->
+          <div class="space-y-4 overflow-y-auto pl-2">
+            <!-- Output Section -->
+            <Card v-if="hasProjectData">
+              <CardHeader>
+                <CardTitle class="flex items-center space-x-2">
+                  <Settings :size="20" />
+                  <span>Output Settings & Generation</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="p-4">
+                <div class="space-y-6">
+                  <!-- General Settings -->
+                  <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="text-sm font-medium mb-4">General Settings</h3>
+                    <div class="space-y-4">
+                      <!-- Cache Toggle -->
+                      <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                        <div class="flex flex-col">
+                          <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                          <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                        </div>
+                        <Switch
+                          id="cache-toggle"
+                          :model-value="project?.useCache ?? false"
+                          @update:model-value="saveCacheEnabled"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Output Buttons -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button
+                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      @click="generateMovie"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Monitor :size="24" />
+                      <span>Generate Movie</span>
+                    </Button>
+                    <Button
+                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <FileText :size="24" />
+                      <span>Generate PDF</span>
+                    </Button>
+                    <Button
+                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      @click="generatePodcast"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Globe :size="24" />
+                      <span>Generate Podcast</span>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <!-- Output Buttons -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button
-                  class="flex flex-col items-center space-y-2 h-auto py-4"
-                  @click="generateMovie"
-                  :disabled="store.isArtifactGenerating[projectId]"
-                >
-                  <Monitor :size="24" />
-                  <span>Generate Movie</span>
-                </Button>
-                <Button
-                  class="flex flex-col items-center space-y-2 h-auto py-4"
-                  :disabled="store.isArtifactGenerating[projectId]"
-                >
-                  <FileText :size="24" />
-                  <span>Generate PDF</span>
-                </Button>
-                <Button
-                  class="flex flex-col items-center space-y-2 h-auto py-4"
-                  @click="generatePodcast"
-                  :disabled="store.isArtifactGenerating[projectId]"
-                >
-                  <Globe :size="24" />
-                  <span>Generate Podcast</span>
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <!-- Beats Viewer Section -->
+            <Collapsible v-if="false" v-model:open="isBeatsViewerOpen">
+              <Card>
+                <CardHeader>
+                  <div class="flex items-center justify-between">
+                    <CardTitle class="flex items-center space-x-2">
+                      <Play :size="20" />
+                      <span>Beats</span>
+                      <Badge variant="secondary" class="ml-2"> {{ beatsData.length }} beats </Badge>
+                    </CardTitle>
+                    <CollapsibleTrigger as-child>
+                      <Button variant="ghost" size="sm">
+                        <component :is="isBeatsViewerOpen ? ChevronUp : ChevronDown" :size="16" />
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                </CardHeader>
+                <CollapsibleContent>
+                  <CardContent>
+                    <BeatsViewer
+                      :beatsData="beatsData"
+                      :audioFiles="audioFiles"
+                      v-model:viewMode="beatsViewMode"
+                      v-model:currentBeatIndex="currentBeatIndex"
+                      v-model:timelinePosition="timelinePosition"
+                      v-model:isPreviewAreaVisible="isPreviewAreaVisible"
+                    />
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
 
-        <!-- Beats Viewer Section -->
-        <Collapsible v-if="false" v-model:open="isBeatsViewerOpen">
-          <Card>
-            <CardHeader>
-              <div class="flex items-center justify-between">
+            <!-- Product Section -->
+            <Card v-if="hasProjectData">
+              <CardHeader>
                 <CardTitle class="flex items-center space-x-2">
                   <Play :size="20" />
-                  <span>Beats</span>
-                  <Badge variant="secondary" class="ml-2"> {{ beatsData.length }} beats </Badge>
+                  <span>Product</span>
                 </CardTitle>
-                <CollapsibleTrigger as-child>
-                  <Button variant="ghost" size="sm">
-                    <component :is="isBeatsViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-            </CardHeader>
-            <CollapsibleContent>
+              </CardHeader>
               <CardContent>
-                <BeatsViewer
-                  :beatsData="beatsData"
-                  :audioFiles="audioFiles"
-                  v-model:viewMode="beatsViewMode"
-                  v-model:currentBeatIndex="currentBeatIndex"
-                  v-model:timelinePosition="timelinePosition"
-                  v-model:isPreviewAreaVisible="isPreviewAreaVisible"
-                />
+                <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
               </CardContent>
-            </CollapsibleContent>
-          </Card>
-        </Collapsible>
+            </Card>
 
-        <!-- Product Section -->
-        <Card v-if="hasProjectData" class="mb-8">
-          <CardHeader>
-            <CardTitle class="flex items-center space-x-2">
-              <Play :size="20" />
-              <span>Product</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
-          </CardContent>
-        </Card>
+            <!-- Debug Log Section -->
+            <Card>
+              <CardContent class="p-4 space-y-4">
+                <!-- System Logs -->
+                <div class="p-4 bg-gray-50 rounded-lg">
+                  <h3 class="text-sm font-medium mb-2">Validate Logs</h3>
+                  <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded">
+                    <div v-for="(entry, i) in validateLog" :key="'system-' + i" class="whitespace-pre-wrap">
+                      {{ entry }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Debug Logs -->
+                <div class="p-4 bg-gray-50 rounded-lg">
+                  <h3 class="text-sm font-medium mb-2">Debug Logs</h3>
+                  <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded" ref="logContainer">
+                    <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
+                      {{ entry }}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <!-- Debug Log Section -->
-        <Card>
-          <CardContent class="p-4 space-y-4">
-            <!-- System Logs -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-              <h3 class="text-sm font-medium mb-2">Validate Logs</h3>
-              <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded">
-                <div v-for="(entry, i) in validateLog" :key="'system-' + i" class="whitespace-pre-wrap">
-                  {{ entry }}
-                </div>
-              </div>
-            </div>
-            <!-- Debug Logs -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-              <h3 class="text-sm font-medium mb-2">Debug Logs</h3>
-              <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded" ref="logContainer">
-                <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
-                  {{ entry }}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <ConcurrentTaskStatus :projectId="projectId" />
+            <ConcurrentTaskStatus :projectId="projectId" />
+          </div>
+        </div>
       </div>
     </TooltipProvider>
   </Layout>
@@ -549,3 +560,4 @@ watch(
   { deep: true },
 );
 </script>
+

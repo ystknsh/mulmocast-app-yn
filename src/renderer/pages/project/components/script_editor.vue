@@ -19,7 +19,7 @@
 
     <TabsContent value="text" class="mt-2">
       <div
-        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto font-mono text-sm space-y-6"
+        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
@@ -89,7 +89,7 @@
     </TabsContent>
 
     <TabsContent value="media" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
@@ -112,7 +112,7 @@
       </div>
     </TabsContent>
     <TabsContent value="style" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[600px] overflow-y-auto">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Style - Presentation style editing</p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
