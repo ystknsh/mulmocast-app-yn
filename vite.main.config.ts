@@ -21,5 +21,15 @@ export default defineConfig({
         console.log("✅ ffmpeg and ffprobe copied by Vite plugin");
       },
     },
+    {
+      name: "copy-splash-html",
+      apply: "build",
+      closeBundle() {
+        const srcPath = path.resolve(__dirname, "splash.html");
+        const destPath = path.resolve(__dirname, ".vite/build/splash.html");
+        fs.copyFileSync(srcPath, destPath);
+        console.log("✅ splash.html copied to build directory");
+      },
+    },
   ],
 });

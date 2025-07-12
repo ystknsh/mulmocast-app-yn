@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, screen } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 
@@ -14,11 +14,40 @@ if (started) {
   app.quit();
 }
 
-const createWindow = () => {
+const createSplashWindow = () => {
+  const splashWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    frame: false,
+    alwaysOnTop: true,
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  // Load splash.html - in dev mode it's in root, in prod it's in build directory
+  if (isDev) {
+    splashWindow.loadFile(path.join(__dirname, "../../splash.html"));
+  } else {
+    splashWindow.loadFile(path.join(__dirname, "splash.html"));
+  }
+  splashWindow.center();
+  return splashWindow;
+};
+
+const createWindow = (splashWindow?: BrowserWindow) => {
   // Create the browser window.
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width,
+    height,
+    maxWidth: 1920,
+    maxHeight: 1080,
+    frame: false,
+    titleBarStyle: "hidden",
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -35,6 +64,17 @@ const createWindow = () => {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
   }
+
+  // Show main window when it's ready and close splash
+  mainWindow.once("ready-to-show", () => {
+    setTimeout(() => {
+      if (splashWindow) {
+        splashWindow.close();
+        splashWindow = null;
+      }
+      mainWindow?.show();
+    }, 2000);
+  });
 
   ipcMain.on("request-env", async (event) => {
     const settings = await settingsManager.loadSettings();
@@ -53,6 +93,8 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  const splashWindow = createSplashWindow();
+
   await projectManager.ensureProjectBaseDirectory();
 
   const settings = await settingsManager.loadSettings();
@@ -64,7 +106,7 @@ app.on("ready", async () => {
     }
   }
 
-  createWindow();
+  createWindow(splashWindow);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
