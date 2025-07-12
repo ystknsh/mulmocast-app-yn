@@ -220,7 +220,7 @@ interface Props {
   index: number;
   imageFile: ArrayBuffer | null;
   isEnd: boolean;
-  mulmoError: unknown;
+  mulmoError: string[];
 }
 
 const props = defineProps<Props>();

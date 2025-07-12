@@ -58,7 +58,7 @@ const PRESET_CANVAS_SIZE = {
 
 const props = defineProps<{
   canvasSize?: MulmoPresentationStyle["canvasSize"];
-  mulmoError: MulmoError | null;
+  mulmoError: string[];
 }>();
 
 const showCustom = ref(false);
@@ -68,11 +68,11 @@ const emit = defineEmits<{
   update: [value: { width: number; height: number }];
 }>();
 
-const handlePresetChange = (value: string) => {
+const handlePresetChange = (value: keyof typeof PRESET_CANVAS_SIZE | "custom") => {
   selectedPreset.value = value;
   if (value !== "custom" && value in PRESET_CANVAS_SIZE) {
     showCustom.value = false;
-    const preset = PRESET_CANVAS_SIZE[value as keyof typeof PRESET_CANVAS_SIZE];
+    const preset = PRESET_CANVAS_SIZE[value];
     emit("update", { width: preset.width, height: preset.height });
   } else {
     showCustom.value = true;

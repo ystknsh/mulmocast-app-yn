@@ -83,20 +83,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
+import { mulmoGoogleMovieModelSchema, mulmoReplicateMovieModelSchema } from "mulmocast/browser";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
-// TODO: import from mulmocast schema
 const PROVIDERS = [
   {
     name: "Google",
-    value: "google",
-    models: ["veo-2.0-generate-001"],
+    value: mulmoGoogleMovieModelSchema.shape.provider.value,
+    models: mulmoGoogleMovieModelSchema.shape.model.unwrap().options,
   },
   {
     name: "Replicate",
-    value: "replicate",
-    models: ["bytedance/seedance-1-lite", "kwaivgi/kling-v2.1", "google/veo-3"],
+    value: mulmoReplicateMovieModelSchema.shape.provider.value,
+    models: mulmoReplicateMovieModelSchema.shape.model.unwrap().options,
   },
 ];
 
