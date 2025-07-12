@@ -53,7 +53,7 @@
     <TabsContent value="yaml" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-400px)] flex flex-col mb-[2px]',
           { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
@@ -65,6 +65,7 @@
           @update:modelValue="onYamlInput"
           @focus="onFocus"
           @blur="onBlur"
+          minHeight="100%"
         />
       </div>
     </TabsContent>
@@ -72,7 +73,7 @@
     <TabsContent value="json" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 min-h-[400px] flex flex-col mb-[2px]',
+          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-400px)] flex flex-col mb-[2px]',
           { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
@@ -84,6 +85,7 @@
           @update:modelValue="onJsonInput"
           @focus="onFocus"
           @blur="onBlur"
+          minHeight="100%"
         />
       </div>
     </TabsContent>
