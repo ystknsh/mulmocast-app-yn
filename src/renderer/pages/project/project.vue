@@ -144,8 +144,8 @@
                       @update:mulmoValue="store.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
-                      @generateImage="(val) => generateImage(val)"
-                      @generateAudio="(val) => generateAudio(val)"
+                      @generateImage="generateImage"
+                      @generateAudio="generateAudio"
                       @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                       :audioFiles="audioFiles"
                       :mulmoError="mulmoError"
@@ -469,9 +469,9 @@ const openProjectFolder = async () => {
   await projectApi.openProjectFolder(projectId.value);
 };
 
-const generateImage = async (index) => {
+const generateImage = async (index: number, target: string) => {
   await saveMulmo(store.currentMulmoScript);
-  await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index);
+  await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target);
   console.log(index);
 };
 const generateAudio = async (index) => {

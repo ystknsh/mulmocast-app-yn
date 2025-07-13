@@ -143,9 +143,11 @@
         </div>
         <!-- end of beat.image -->
         <template v-if="shouldShowGenerateButton">
-          <Button variant="outline" size="sm" @click="generateImage()" v-if="!isGenerating" class="mt-4">
-            Generate image
-          </Button>
+          <template v-if="!isGenerating">
+            <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4"> Generate image </Button>
+            <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4"> Generate movie </Button>
+            <Button variant="outline" size="sm" @click="generateImage()" class="mt-4"> Generate all </Button>
+          </template>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </div>
@@ -156,6 +158,10 @@
       <div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
           <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
+          <template v-if="isGenerating">
+            <!-- TODO update design -->
+            <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+          </template>
           <template v-else-if="imageFile">
             <template v-if="beat?.image?.type === 'movie'">
               <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFile" />
@@ -316,7 +322,13 @@ const handleDrop = (event: DragEvent, imageType: string) => {
 };
 
 const generateImage = () => {
-  emit("generateImage", props.index);
+  emit("generateImage", props.index, "all");
+};
+const generateImageOnlyImage = () => {
+  emit("generateImage", props.index, "image");
+};
+const generateImageOnlyMovie = () => {
+  emit("generateImage", props.index, "movie");
 };
 
 const update = (path: string, value: unknown) => {

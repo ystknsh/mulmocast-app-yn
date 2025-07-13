@@ -271,8 +271,8 @@ const update = (index: number, path: string, value: unknown) => {
 
 // end of mulmo editor
 
-const generateImage = (index: number) => {
-  emit("generateImage", index);
+const generateImage = (index: number, target: string) => {
+  emit("generateImage", index, target);
   console.log(index);
 };
 const generateAudio = (index: number) => {
