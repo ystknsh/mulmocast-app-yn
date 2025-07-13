@@ -79,13 +79,28 @@ const mulmoCallbackGenerator = (projectId: string, webContents) => {
   };
 };
 
-export const mulmoGenerateImage = async (projectId: string, index: number, webContents) => {
+export const mulmoGenerateImage = async (projectId: string, index: number, target: string, webContents) => {
   const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
-    context.force = true;
+
+    const beat = context.studio.script.beats[index];
+    if (target === "image") {
+      context.forceImage = true;
+      beat.moviePrompt = "";
+    }
+    if (target === "movie") {
+      context.forceMovie = true;
+    }
+    if (target === "all") {
+      context.force = true;
+    }
+    if ((target === "movie" || target === "all") && !beat.moviePrompt) {
+      beat.moviePrompt = " ";
+    }
+    console.log(target, beat);
     await generateBeatImage({ index, context, settings });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -316,7 +331,7 @@ export const mulmoHandler = async (method, webContents, ...args) => {
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
       case "mulmoImageGenerate":
-        return await mulmoGenerateImage(args[0], args[1], webContents);
+        return await mulmoGenerateImage(args[0], args[1], args[2], webContents);
       case "mulmoAudioGenerate":
         return await mulmoGenerateAudio(args[0], args[1], webContents);
       case "downloadFile":
