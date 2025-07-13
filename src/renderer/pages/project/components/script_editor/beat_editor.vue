@@ -144,9 +144,12 @@
         <!-- end of beat.image -->
         <template v-if="shouldShowGenerateButton">
           <template v-if="!isGenerating">
-            <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4"> Generate image </Button>
-            <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4"> Generate movie </Button>
-            <Button variant="outline" size="sm" @click="generateImage()" class="mt-4"> Generate all </Button>
+            <template v-if="shouldBeGeneratedWithPrompt">
+              <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4">Generate image</Button>
+              <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4">Generate movie</Button>
+              <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
+            </template>
+            <Button variant="outline" size="sm" @click="generateImage()" class="mt-4" v-else>Generate image</Button>
           </template>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
@@ -235,6 +238,10 @@ const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]
 const route = useRoute();
 const store = useStore();
 const projectId = computed(() => route.params.id as string);
+
+const shouldBeGeneratedWithPrompt = computed(() => {
+  return !props.beat.htmlPrompt && !props.beat.image;
+});
 
 const shouldShowGenerateButton = computed(() => {
   return (
