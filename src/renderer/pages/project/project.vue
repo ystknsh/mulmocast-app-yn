@@ -117,11 +117,21 @@
                         </span>
                       </div>
                       <!-- Undo/Redo buttons -->
-                      <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
-                        <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        :disabled="!mulmoScriptHistoryStore.undoable"
+                        @click="mulmoScriptHistoryStore.undo"
+                      >
+                        <Undo :size="16" :class="mulmoScriptHistoryStore.undoable ? 'text-black' : 'text-gray-400'" />
                       </Button>
-                      <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
-                        <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        :disabled="!mulmoScriptHistoryStore.redoable"
+                        @click="mulmoScriptHistoryStore.redo"
+                      >
+                        <Redo :size="16" :class="mulmoScriptHistoryStore.redoable ? 'text-black' : 'text-gray-400'" />
                       </Button>
                       <!-- Collapse/Expand Button -->
                       <CollapsibleTrigger as-child>
@@ -139,9 +149,9 @@
                 >
                   <CardContent class="h-full">
                     <ScriptEditor
-                      :mulmoValue="store.currentMulmoScript"
+                      :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript"
                       :imageFiles="imageFiles"
-                      @update:mulmoValue="store.updateMulmoScript"
+                      @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
                       @generateImage="generateImage"
@@ -192,14 +202,14 @@
                     <Button
                       class="flex flex-col items-center space-y-2 h-auto py-4"
                       @click="generateMovie"
-                      :disabled="store.isArtifactGenerating[projectId]"
+                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
                       <Monitor :size="24" />
                       <span>Generate Movie</span>
                     </Button>
                     <Button
                       class="flex flex-col items-center space-y-2 h-auto py-4"
-                      :disabled="store.isArtifactGenerating[projectId]"
+                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
                       <FileText :size="24" />
                       <span>Generate PDF</span>
@@ -207,7 +217,7 @@
                     <Button
                       class="flex flex-col items-center space-y-2 h-auto py-4"
                       @click="generatePodcast"
-                      :disabled="store.isArtifactGenerating[projectId]"
+                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
                       <Globe :size="24" />
                       <span>Generate Podcast</span>
@@ -340,7 +350,7 @@ import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
-import { useStore } from "../../store";
+import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../../store";
 
 import {
   selectedTheme,
@@ -362,7 +372,8 @@ import { zodError2MulmoError } from "../../lib/error";
 const route = useRoute();
 const router = useRouter();
 
-const store = useStore();
+const mulmoEventStore = useMulmoEventStore();
+const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const projectId = computed(() => route.params.id as string);
 const project = ref<ProjectMetadata | null>(null);
@@ -371,6 +382,8 @@ const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
+
+const graphAIDebugStore = useGraphAIDebugLogStore();
 
 const validationMessage = ref("");
 
@@ -382,7 +395,7 @@ const isPreviewAreaVisible = ref(false);
 onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
-    store.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
+    mulmoScriptHistoryStore.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -390,7 +403,7 @@ onMounted(async () => {
 });
 
 const handleUpdateScript = (script: MulmoScript) => {
-  store.updateMulmoScript(script);
+  mulmoScriptHistoryStore.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
   notifySuccess("Script created successfully 🎉");
 };
@@ -414,25 +427,25 @@ const saveCacheEnabled = (enabled: boolean) => {
 
 const saveMulmo = async (data) => {
   console.log("saved", data);
-  await projectApi.saveProjectScript(projectId.value, store.currentMulmoScript);
+  await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
 };
 const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(
-  () => store.currentMulmoScript,
+  () => mulmoScriptHistoryStore.currentMulmoScript,
   () => {
     // Be careful not to save a page just by opening it.
-    saveMulmoScript(store.currentMulmoScript);
+    saveMulmoScript(mulmoScriptHistoryStore.currentMulmoScript);
   },
   { deep: true },
 );
 
-const beatsData = computed(() => store.currentMulmoScript?.beats ?? []);
+const beatsData = computed(() => mulmoScriptHistoryStore.currentMulmoScript?.beats ?? []);
 
 const mulmoError = computed<MulmoError>(() => {
-  const zodError = mulmoScriptSchema.safeParse(store.currentMulmoScript);
+  const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
     return zodError2MulmoError(zodError.error);
   }
@@ -440,7 +453,7 @@ const mulmoError = computed<MulmoError>(() => {
 });
 
 const formatAndPushHistoryMulmoScript = () => {
-  const data = mulmoScriptSchema.safeParse(store.currentMulmoScript);
+  const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map((beat) => {
       if (isNull(beat.id)) {
@@ -448,7 +461,7 @@ const formatAndPushHistoryMulmoScript = () => {
       }
       return beat;
     });
-    store.updateMulmoScriptAndPushToHistory(data.data);
+    mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
   }
   console.log(data);
@@ -469,7 +482,7 @@ const openProjectFolder = async () => {
 };
 
 const generateImage = async (index: number, target: string) => {
-  await saveMulmo(store.currentMulmoScript);
+  await saveMulmo(mulmoScriptHistoryStore.currentMulmoScript);
   await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target);
   console.log(index);
 };
@@ -516,7 +529,7 @@ const isValidScriptData = ref(true);
 
 const logContainer = ref<HTMLElement | null>(null);
 const validateLog = computed(() => {
-  // mulmoScriptSchema.parse(store.currentMulmoScript)
+  // mulmoScriptSchema.parse(mulmoScriptHistoryStore.currentMulmoScript)
   return [];
 });
 
@@ -530,7 +543,7 @@ const playVideo = async (callback?: () => void) => {
 };
 
 watch(
-  () => store.mulmoEvent[projectId.value],
+  () => mulmoEventStore.mulmoEvent[projectId.value],
   async (mulmoEvent) => {
     // session
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
@@ -554,7 +567,7 @@ watch(
   { immediate: true },
 );
 
-const debugLog = computed(() => store?.graphaiDebugLog[projectId.value]);
+const debugLog = computed(() => graphAIDebugStore.graphaiDebugLog[projectId.value]);
 
 watch(
   () => debugLog,

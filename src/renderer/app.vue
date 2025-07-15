@@ -7,9 +7,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
-import { useStore } from "./store";
+import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore } from "./store";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
+import type { MulmoProgressLog } from "@/types";
+import type { SessionProgressEvent } from "mulmocast/browser";
 
 import { notifyError } from "@/lib/notification";
 
@@ -18,24 +20,27 @@ export default defineComponent({
     Toaster,
   },
   setup() {
-    const store = useStore();
+    const mulmoEventStore = useMulmoEventStore();
+    const graphAIDebugStore = useGraphAIDebugLogStore();
+    const zodErrorStore = useZodErrorStore();
 
     onMounted(() => {
-      window.electronAPI.onProgress(async (event, message) => {
+      window.electronAPI.onProgress(async (_event, message) => {
         if (message.type === "mulmo") {
-          store.mulmoLogCallback(message);
+          mulmoEventStore.mulmoLogCallback(message as MulmoProgressLog<SessionProgressEvent>);
         }
         if (message.type === "graphai") {
-          store.graphaiLogCallback(message);
+          graphAIDebugStore.graphaiLogCallback(message);
         }
         if (message.type === "error") {
-          if (message.data?.message) {
-            notifyError("Error", message.data.message);
+          const errorData = message.data as { message?: string };
+          if (errorData?.message) {
+            notifyError("Error", errorData.message);
           }
         }
 
         if (message.type === "zod_error") {
-          store.zodErrorLogCallback(message);
+          zodErrorStore.zodErrorLogCallback(message);
         }
       });
     });

@@ -11,17 +11,17 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from "../../../store";
+import { useMulmoEventStore } from "../../../store";
 
 interface Props {
   projectId: string;
 }
 const props = defineProps<Props>();
 
-const store = useStore();
+const mulmoEventStore = useMulmoEventStore();
 
 const tasks = computed(() => {
-  const data = store.sessionState?.[props.projectId] ?? {};
+  const data = mulmoEventStore.sessionState?.[props.projectId] ?? {};
   // console.log(Object.keys(data));
   // ['artifact', 'beat']
   const ret = [];

@@ -220,7 +220,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 
-import { useStore } from "../../../../store";
+import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import BeatAdd from "./beat_add.vue";
 
@@ -233,10 +233,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]);
+const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat", "addBeat"]);
 
 const route = useRoute();
-const store = useStore();
+const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
 const shouldBeGeneratedWithPrompt = computed(() => {
@@ -251,7 +251,7 @@ const shouldShowGenerateButton = computed(() => {
 });
 
 const isGenerating = computed(() => {
-  return store.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
 });
 const getPromptLabel = (beat: MulmoBeat) => {
   if (beat.image.type) {
