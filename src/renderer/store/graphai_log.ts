@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export const useGraphAIDebugStore = defineStore("graphaiDebug", () => {
+export const useGraphAILogStore = defineStore("graphaiLog", () => {
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
   const zodError = ref<Record<string, unknown[]>>({});
 

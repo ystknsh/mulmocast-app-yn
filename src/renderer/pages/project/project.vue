@@ -350,7 +350,7 @@ import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
-import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugStore } from "../../store";
+import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAILogStore } from "../../store";
 
 import {
   selectedTheme,
@@ -383,7 +383,7 @@ const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
 
-const graphAIDebugStore = useGraphAIDebugStore();
+const graphAIDebugStore = useGraphAILogStore();
 
 const validationMessage = ref("");
 

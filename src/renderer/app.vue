@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
-import { useMulmoEventStore, useGraphAIDebugStore } from "./store";
+import { useMulmoEventStore, useGraphAILogStore } from "./store";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -21,7 +21,7 @@ export default defineComponent({
   },
   setup() {
     const mulmoEventStore = useMulmoEventStore();
-    const graphAIDebugStore = useGraphAIDebugStore();
+    const graphAIDebugStore = useGraphAILogStore();
 
     onMounted(() => {
       window.electronAPI.onProgress(async (_event, message) => {
