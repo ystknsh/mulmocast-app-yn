@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
-import { useMulmoEventStore, useGraphAILogStore } from "./store";
+import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore } from "./store";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -21,7 +21,8 @@ export default defineComponent({
   },
   setup() {
     const mulmoEventStore = useMulmoEventStore();
-    const graphAIDebugStore = useGraphAILogStore();
+    const graphAIDebugStore = useGraphAIDebugLogStore();
+    const zodErrorStore = useZodErrorStore();
 
     onMounted(() => {
       window.electronAPI.onProgress(async (_event, message) => {
@@ -39,7 +40,7 @@ export default defineComponent({
         }
 
         if (message.type === "zod_error") {
-          graphAIDebugStore.zodErrorLogCallback(message);
+          zodErrorStore.zodErrorLogCallback(message);
         }
       });
     });
