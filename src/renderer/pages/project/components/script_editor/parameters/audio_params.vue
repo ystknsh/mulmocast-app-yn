@@ -82,7 +82,7 @@
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import type { MulmoPresentationStyle } from "mulmocast";
+import type { MulmoPresentationStyle } from "mulmocast/browser";
 import MulmoError from "./mulmo_error.vue";
 
 type AudioParams = MulmoPresentationStyle["audioParams"];

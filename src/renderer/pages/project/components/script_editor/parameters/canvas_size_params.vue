@@ -46,7 +46,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import type { MulmoPresentationStyle } from "mulmocast";
+import type { MulmoPresentationStyle } from "mulmocast/browser";
 
 const PRESET_CANVAS_SIZE = {
   "1792x1024": { width: 1792, height: 1024 },

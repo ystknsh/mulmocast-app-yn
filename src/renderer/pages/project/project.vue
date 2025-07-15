@@ -337,8 +337,7 @@ import ProductTabs from "./components/product_tabs.vue";
 import ConcurrentTaskStatus from "./components/concurrent_task_status.vue";
 import dayjs from "dayjs";
 
-import type { MulmoScript } from "mulmocast";
-import { mulmoScriptSchema } from "mulmocast/browser";
+import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
 import { useDebounceFn } from "@vueuse/core";
 import { useStore } from "../../store";

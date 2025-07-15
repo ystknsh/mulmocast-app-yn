@@ -82,8 +82,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import type { MulmoPresentationStyle } from "mulmocast";
-import { provider2MovieAgent } from "mulmocast/browser";
+import { provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 

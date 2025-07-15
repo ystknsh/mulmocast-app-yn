@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MulmoPresentationStyle } from "mulmocast";
+import type { MulmoPresentationStyle } from "mulmocast/browser";
 import CanvasSizeParams from "./parameters/canvas_size_params.vue";
 import ImageParams from "./parameters/image_params.vue";
 import SpeechParams from "./parameters/speech_params.vue";

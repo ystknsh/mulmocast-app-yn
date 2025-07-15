@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
-import type { SessionType, BeatSessionType, SessionProgressEvent, MulmoScript } from "mulmocast";
+import type { SessionType, BeatSessionType, SessionProgressEvent, MulmoScript } from "mulmocast/browser";
 
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
