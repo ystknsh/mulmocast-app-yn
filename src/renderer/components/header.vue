@@ -14,18 +14,6 @@
 
       <!-- Navigation -->
       <div class="flex items-center space-x-3">
-        <!-- Dashboard Button - Always visible -->
-        <RouterLink :to="dashboardItem.path">
-          <Button
-            :variant="isDashboardActive ? 'default' : 'ghost'"
-            size="sm"
-            class="relative hover:scale-105 transition-transform duration-200"
-          >
-            <component :is="dashboardItem.icon" :size="16" class="mr-2" />
-            {{ dashboardItem.label }}
-          </Button>
-        </RouterLink>
-
         <!-- Status indicators -->
         <div v-if="mulmoEventStore.generatingProjectCount > 0" class="flex items-center space-x-1">
           <Activity :size="16" class="text-green-500" />
@@ -37,6 +25,18 @@
           <AlertTriangle :size="16" class="text-red-500" />
           <Badge variant="destructive" class="text-xs"> Errors </Badge>
         </div> -->
+
+        <!-- Dashboard Button - Always visible -->
+        <RouterLink :to="dashboardItem.path">
+          <Button
+            :variant="isDashboardActive ? 'default' : 'ghost'"
+            size="sm"
+            class="relative hover:scale-105 transition-transform duration-200"
+          >
+            <component :is="dashboardItem.icon" :size="16" class="mr-2" />
+            {{ dashboardItem.label }}
+          </Button>
+        </RouterLink>
 
         <!-- Hamburger menu for other items -->
         <DropdownMenu>
