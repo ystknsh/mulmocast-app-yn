@@ -44,7 +44,7 @@
               />
             </div>
             <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-            <span v-if="store.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+            <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
             <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
           </Card>
         </div>
@@ -145,7 +145,7 @@ import CodeEditor from "@/components/code_editor.vue";
 import YAML from "yaml";
 import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useStore } from "../../../store";
+import { useMulmoEventStore } from "../../../store";
 import { useRoute } from "vue-router";
 
 import { MulmoError } from "../../../../types";
@@ -169,7 +169,7 @@ const emit = defineEmits([
 ]);
 
 const route = useRoute();
-const store = useStore();
+const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref("text");
