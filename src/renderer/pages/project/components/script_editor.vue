@@ -143,8 +143,7 @@ import PresentationStyleEditor from "./script_editor/presentation_style_editor.v
 import CodeEditor from "@/components/code_editor.vue";
 
 import YAML from "yaml";
-import type { MulmoScript, MulmoBeat, MulmoPresentationStyle } from "mulmocast";
-import { mulmoScriptSchema } from "mulmocast/browser";
+import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { useStore } from "../../../store";
 import { useRoute } from "vue-router";

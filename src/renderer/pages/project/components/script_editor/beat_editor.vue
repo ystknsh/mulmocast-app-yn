@@ -218,7 +218,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
-import type { MulmoBeat } from "mulmocast";
+import type { MulmoBeat } from "mulmocast/browser";
 
 import { useStore } from "../../../../store";
 import { useRoute } from "vue-router";

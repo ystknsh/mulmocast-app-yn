@@ -24,7 +24,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import MulmoError from "./mulmo_error.vue";
-import type { MulmoPresentationStyle } from "mulmocast";
+import type { MulmoPresentationStyle } from "mulmocast/browser";
 
 const props = defineProps<{
   textSlideParams?: MulmoPresentationStyle["textSlideParams"];

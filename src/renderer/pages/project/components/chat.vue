@@ -86,7 +86,7 @@ import UserMessage from "./chat/user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast";
+import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { notifyError } from "@/lib/notification";

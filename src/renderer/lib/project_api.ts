@@ -1,5 +1,5 @@
 import { Project, ProjectMetadata } from "@/types";
-import type { MulmoScript } from "mulmocast";
+import type { MulmoScript } from "mulmocast/browser";
 
 export type { Project, ProjectMetadata };
 
