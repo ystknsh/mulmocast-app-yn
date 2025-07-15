@@ -2,7 +2,7 @@
   <header
     class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 transition-colors duration-200 relative"
   >
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="mx-auto flex items-center justify-between">
       <!-- Logo/Brand -->
       <RouterLink to="/">
         <h1
