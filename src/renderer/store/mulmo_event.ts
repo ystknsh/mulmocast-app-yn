@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import { MulmoProgressLog } from "../../types";
 import type { SessionType, BeatSessionType, SessionProgressEvent } from "mulmocast";
@@ -62,11 +62,18 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
     }, {});
   });
 
+  const generatingProjectCount = computed(() => {
+    return Object.keys(sessionState.value).filter((projectId) => {
+      return isArtifactGenerating.value[projectId] || isBeatGenerating.value[projectId];
+    }).length;
+  });
+
   return {
     mulmoEvent,
     mulmoLogCallback,
     sessionState,
     isArtifactGenerating,
     isBeatGenerating,
+    generatingProjectCount,
   };
 });

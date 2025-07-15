@@ -27,15 +27,16 @@
         </RouterLink>
 
         <!-- Status indicators -->
-        <div v-if="mockStatus.activeSessionCount > 0" class="flex items-center space-x-1">
+        <div v-if="mulmoEventStore.generatingProjectCount > 0" class="flex items-center space-x-1">
           <Activity :size="16" class="text-green-500" />
-          <Badge variant="secondary" class="text-xs"> {{ mockStatus.activeSessionCount }} generating </Badge>
+          <Badge variant="secondary" class="text-xs"> {{ mulmoEventStore.generatingProjectCount }} generating </Badge>
         </div>
 
-        <div v-if="mockStatus.hasErrors" class="flex items-center space-x-1">
+        <!-- TODO: Add error indicator -->
+        <!-- <div class="flex items-center space-x-1">
           <AlertTriangle :size="16" class="text-red-500" />
           <Badge variant="destructive" class="text-xs"> Errors </Badge>
-        </div>
+        </div> -->
 
         <!-- Hamburger menu for other items -->
         <DropdownMenu>
@@ -76,13 +77,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMulmoEventStore } from "../store";
 const route = useRoute();
-
-// Mock project status data
-const mockStatus = {
-  activeSessionCount: 2,
-  hasErrors: true,
-};
+const mulmoEventStore = useMulmoEventStore();
 
 const dashboardItem = { path: "/", icon: Home, label: "Dashboard" };
 const menuItems = [
