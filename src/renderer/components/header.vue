@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, Activity, AlertTriangle, Menu } from "lucide-vue-next";
+import { Home, Settings, Activity, Menu } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
