@@ -83,22 +83,17 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
-import { mulmoGoogleMovieModelSchema, mulmoReplicateMovieModelSchema } from "mulmocast/browser";
+import { provider2MovieAgent } from "mulmocast/browser";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
-const PROVIDERS = [
-  {
-    name: "Google",
-    value: mulmoGoogleMovieModelSchema.shape.provider.value,
-    models: mulmoGoogleMovieModelSchema.shape.model.unwrap().options,
-  },
-  {
-    name: "Replicate",
-    value: mulmoReplicateMovieModelSchema.shape.provider.value,
-    models: mulmoReplicateMovieModelSchema.shape.model.unwrap().options,
-  },
-];
+const PROVIDERS = Object.entries(provider2MovieAgent).map(([provider, agent]) => {
+  return {
+    name: provider,
+    value: provider,
+    models: agent.models,
+  };
+});
 
 const props = defineProps<{
   movieParams?: MovieParams;

@@ -67,23 +67,16 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast";
-import { mulmoOpenAIImageModelSchema, mulmoGoogleImageModelSchema } from "mulmocast/browser";
+import { provider2ImageAgent } from "mulmocast/browser";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
 type ImageParamField = keyof ImageParams;
 
-const PROVIDERS = [
-  {
-    name: "OpenAI",
-    value: mulmoOpenAIImageModelSchema.shape.provider.value,
-    models: mulmoOpenAIImageModelSchema.shape.model.unwrap().options,
-  },
-  {
-    name: "Google",
-    value: mulmoGoogleImageModelSchema.shape.provider.value,
-    models: mulmoGoogleImageModelSchema.shape.model.unwrap().options,
-  },
-];
+const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) => ({
+  name: provider,
+  value: provider,
+  models: agent.models,
+}));
 
 const props = defineProps<{
   imageParams?: ImageParams;
