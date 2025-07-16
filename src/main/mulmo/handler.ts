@@ -23,7 +23,7 @@ import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import path from "path";
 import fs from "fs";
-import { getProjectPath, SCRIPT_FILE_NAME, / * getProjectMetadata */ } from "../project_manager";
+import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
