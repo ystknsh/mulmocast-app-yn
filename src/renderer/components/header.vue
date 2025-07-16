@@ -2,7 +2,7 @@
   <header
     class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 transition-colors duration-200 relative"
   >
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="mx-auto flex items-center justify-between">
       <!-- Logo/Brand -->
       <RouterLink to="/">
         <h1
@@ -14,6 +14,18 @@
 
       <!-- Navigation -->
       <div class="flex items-center space-x-3">
+        <!-- Status indicators -->
+        <div v-if="mulmoEventStore.generatingProjectCount > 0" class="flex items-center space-x-1">
+          <Activity :size="16" class="text-green-500" />
+          <Badge variant="secondary" class="text-xs"> {{ mulmoEventStore.generatingProjectCount }} generating </Badge>
+        </div>
+
+        <!-- TODO: Add error indicator -->
+        <!-- <div class="flex items-center space-x-1">
+          <AlertTriangle :size="16" class="text-red-500" />
+          <Badge variant="destructive" class="text-xs"> Errors </Badge>
+        </div> -->
+
         <!-- Dashboard Button - Always visible -->
         <RouterLink :to="dashboardItem.path">
           <Button
@@ -25,17 +37,6 @@
             {{ dashboardItem.label }}
           </Button>
         </RouterLink>
-
-        <!-- Status indicators -->
-        <div v-if="mockStatus.activeSessionCount > 0" class="flex items-center space-x-1">
-          <Activity :size="16" class="text-green-500" />
-          <Badge variant="secondary" class="text-xs"> {{ mockStatus.activeSessionCount }} generating </Badge>
-        </div>
-
-        <div v-if="mockStatus.hasErrors" class="flex items-center space-x-1">
-          <AlertTriangle :size="16" class="text-red-500" />
-          <Badge variant="destructive" class="text-xs"> Errors </Badge>
-        </div>
 
         <!-- Hamburger menu for other items -->
         <DropdownMenu>
@@ -67,7 +68,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, Activity, AlertTriangle, Menu } from "lucide-vue-next";
+import { Home, Settings, Activity, Menu } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -76,13 +77,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMulmoEventStore } from "../store";
 const route = useRoute();
-
-// Mock project status data
-const mockStatus = {
-  activeSessionCount: 2,
-  hasErrors: true,
-};
+const mulmoEventStore = useMulmoEventStore();
 
 const dashboardItem = { path: "/", icon: Home, label: "Dashboard" };
 const menuItems = [
