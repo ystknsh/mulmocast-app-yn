@@ -8,6 +8,7 @@ import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 
 const isDev = process.env.NODE_ENV === "development";
+const isNormal = process.env.DISPLAYMODE === "normal";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -41,10 +42,15 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const mainWindow = new BrowserWindow({
-    width,
-    height,
-    maxWidth: 1920,
-    maxHeight: 1080,
+    ...(isNormal ? {
+      width: 1280,
+      height: 720,
+    } : {
+      width,
+      height,
+      maxWidth: 1920,
+      maxHeight: 1080,
+    }),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
