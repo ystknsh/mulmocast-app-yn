@@ -42,15 +42,17 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const mainWindow = new BrowserWindow({
-    ...(isNormal ? {
-      width: 1280,
-      height: 720,
-    } : {
-      width,
-      height,
-      maxWidth: 1920,
-      maxHeight: 1080,
-    }),
+    ...(isNormal
+      ? {
+          width: 1280,
+          height: 720,
+        }
+      : {
+          width,
+          height,
+          maxWidth: 1920,
+          maxHeight: 1080,
+        }),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),

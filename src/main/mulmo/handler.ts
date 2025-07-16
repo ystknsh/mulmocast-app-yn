@@ -23,7 +23,7 @@ import type { MulmoStudioContext } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import path from "path";
 import fs from "fs";
-import { getProjectPath, SCRIPT_FILE_NAME, getProjectMetadata } from "../project_manager";
+import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
@@ -52,7 +52,7 @@ setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", 
 
 const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
-  const projectMetadata = await getProjectMetadata(projectId);
+  // const projectMetadata = await getProjectMetadata(projectId);
 
   const argv = {
     v: true,
@@ -90,12 +90,10 @@ export const mulmoGenerateImage = async (
     const context = await getContext(projectId);
 
     const beat = context.studio.script.beats[index];
-    if (target === "image") {
-      context.forceImage = true;
+    const forceImage = target === "image";
+    const forceMovie = target === "movie";
+    if (forceImage) {
       beat.moviePrompt = "";
-    }
-    if (target === "movie") {
-      context.forceMovie = true;
     }
     if (target === "all") {
       context.force = true;
@@ -105,7 +103,7 @@ export const mulmoGenerateImage = async (
     }
     console.log(context);
     console.log(target, beat);
-    await generateBeatImage({ index, context, settings });
+    await generateBeatImage({ index, context, settings, forceImage, forceMovie });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
