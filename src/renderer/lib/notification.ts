@@ -1,3 +1,4 @@
+import { Component } from "vue";
 import { toast } from "vue-sonner";
 
 export const notifySuccess = (message: string, description?: string) => {
@@ -9,5 +10,20 @@ export const notifySuccess = (message: string, description?: string) => {
 export const notifyError = (message: string, description?: string) => {
   toast.error(message, {
     description,
+  });
+};
+
+export const notifyProgress = <T>(
+  promise: Promise<T>,
+  {
+    loadingMessage,
+    successMessage,
+    errorMessage,
+  }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
+) => {
+  toast.promise(promise, {
+    loading: loadingMessage,
+    success: successMessage,
+    error: errorMessage,
   });
 };
