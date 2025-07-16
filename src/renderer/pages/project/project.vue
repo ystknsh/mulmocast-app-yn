@@ -576,10 +576,18 @@ watch(
       playVideo();
     }
     // beats
-    if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
+    if (
+      mulmoEvent &&
+      mulmoEvent.kind === "beat" &&
+      ["image", "movie"].includes(mulmoEvent.sessionType) &&
+      !mulmoEvent.inSession
+    ) {
       const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, mulmoEvent.index);
       if (data && data.imageData) {
         imageFiles.value[mulmoEvent.index] = bufferToUrl(data.imageData, "image/png");
+      }
+      if (data && data.movieData) {
+        movieFiles.value[mulmoEvent.index] = bufferToUrl(data.movieData, "video/mp4");
       }
     }
     if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
