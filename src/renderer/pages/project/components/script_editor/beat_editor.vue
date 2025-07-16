@@ -181,7 +181,6 @@
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
           <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" />
         </div>
-
       </div>
     </div>
 

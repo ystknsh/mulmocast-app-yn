@@ -39,11 +39,9 @@ import { app, WebContents } from "electron";
 
 const isDev = !app.isPackaged;
 
-// mulmocastのアセットパスを設定
 if (isDev) {
   updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 } else {
-  // 本番環境では、extraResourcesにコピーされたassetsを使用
   updateNpmRoot(process.resourcesPath);
 }
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
@@ -79,7 +77,12 @@ const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => 
   };
 };
 
-export const mulmoGenerateImage = async (projectId: string, index: number, target: string, webContents: WebContents) => {
+export const mulmoGenerateImage = async (
+  projectId: string,
+  index: number,
+  target: string,
+  webContents: WebContents,
+) => {
   const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
@@ -117,7 +120,7 @@ export const mulmoGenerateImage = async (projectId: string, index: number, targe
   }
 };
 
-export const mulmoGenerateAudio = async (projectId: string, index: number, webContents) => {
+export const mulmoGenerateAudio = async (projectId: string, index: number, webContents: WebContents) => {
   const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
@@ -140,7 +143,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   }
 };
 
-export const mulmoActionRunner = async (projectId: string, actionName: string, webContents) => {
+export const mulmoActionRunner = async (projectId: string, actionName: string, webContents: WebContents) => {
   const settings = await loadSettings();
   try {
     const context = await getContext(projectId);
@@ -227,7 +230,7 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
-const beatAudio = (context) => {
+const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {
     try {
       const { text } = beat; // TODO: multiLingual
@@ -264,7 +267,7 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
   }
 };
 
-const beatImage = (context, imageAgentInfo) => {
+const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
   return async (beat, index) => {
     try {
       const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
@@ -324,7 +327,7 @@ export const mulmoImageUpload = async (projectId: string, index: number, bufferA
   return path.join("upload_image", String(index), filename);
 };
 
-export const mulmoHandler = async (method, webContents, ...args) => {
+export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
   try {
     switch (method) {
       case "readTemplatePrompt":
