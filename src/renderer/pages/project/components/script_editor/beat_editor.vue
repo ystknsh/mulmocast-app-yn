@@ -161,7 +161,7 @@
       <div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
           <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
-          <template v-if="isGenerating">
+          <template v-if="isImageGenerating">
             <!-- TODO update design -->
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </template>
@@ -179,7 +179,8 @@
           </template>
         </div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
-          <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" />
+          <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
+          <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" v-else />
         </div>
       </div>
     </div>
@@ -254,9 +255,16 @@ const shouldShowGenerateButton = computed(() => {
   );
 });
 
-const isGenerating = computed(() => {
+const isImageGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
 });
+const isMovieGenerating = computed(() => {
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index];
+});
+const isGenerating = computed(() => {
+  return isImageGenerating.value || isMovieGenerating.value;
+});
+
 const getPromptLabel = (beat: MulmoBeat) => {
   if (beat.image.type) {
     switch (beat.image.type) {
