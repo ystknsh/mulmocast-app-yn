@@ -151,6 +151,7 @@
                     <ScriptEditor
                       :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript"
                       :imageFiles="imageFiles"
+                      :movieFiles="movieFiles"
                       @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
@@ -499,6 +500,8 @@ const bufferToUrl = (buffer: Buffer, mimeType: string) => {
 
 const audioFiles = ref<(ArrayBuffer | null)[]>([]);
 const imageFiles = ref<(ArrayBuffer | null)[]>([]);
+const movieFiles = ref<(ArrayBuffer | null)[]>([]);
+
 const downloadAudioFiles = async () => {
   console.log("audioFiles");
   const res = await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value);
@@ -517,6 +520,12 @@ const downloadImageFiles = async () => {
   imageFiles.value = res2.map((data) => {
     if (data && data.imageData) {
       return bufferToUrl(data.imageData, "image/png");
+    }
+    return "";
+  });
+  movieFiles.value = res2.map((data) => {
+    if (data && data.movieData) {
+      return bufferToUrl(data.movieData, "video/mp4");
     }
     return "";
   });
