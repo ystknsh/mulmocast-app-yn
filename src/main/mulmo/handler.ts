@@ -59,7 +59,7 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
     b: projectPath,
     o: path.join(projectPath, "output"),
     file: SCRIPT_FILE_NAME,
-    f: projectMetadata?.useCache ? false : true,
+    // f: projectMetadata?.useCache ? false : true,
   };
 
   return await initializeContext(argv);
@@ -103,6 +103,7 @@ export const mulmoGenerateImage = async (
     if ((target === "movie" || target === "all") && !beat.moviePrompt) {
       beat.moviePrompt = " ";
     }
+    console.log(context);
     console.log(target, beat);
     await generateBeatImage({ index, context, settings });
     removeSessionProgressCallback(mulmoCallback);
