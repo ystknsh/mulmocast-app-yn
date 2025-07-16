@@ -179,9 +179,7 @@
           </template>
         </div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
-          <template v-if="isMovieGenerating">
-            <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-          </template>
+          <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
           <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" v-else />
         </div>
       </div>
