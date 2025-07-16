@@ -27,7 +27,9 @@ const message = computed(() => {
   });
   Object.keys(data["beat"] ?? {}).forEach((key: BeatSessionType) => {
     if (data["beat"][key] && Object.values(data["beat"][key]).some((value) => value)) {
-      const indexes = Object.keys(data["beat"][key]).map((index: string) => Number(index) + 1);
+      const indexes = Object.keys(data["beat"][key])
+        .filter((index: string) => data["beat"][key][Number(index)])
+        .map((index: string) => Number(index) + 1);
       ret.push(`beat_${key}_${indexes.join(",")}`);
     }
   });
