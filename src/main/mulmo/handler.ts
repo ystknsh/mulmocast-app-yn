@@ -28,7 +28,7 @@ import { loadSettings } from "../settings_manager";
 import { createMulmoScript } from "./scripting";
 
 import { z } from "zod";
-import { app } from "electron";
+import { app, WebContents } from "electron";
 
 // from ffprobePath
 // import os from "os";
@@ -67,7 +67,7 @@ const getContext = async (projectId: string): Promise<MulmoStudioContext | null>
   return await initializeContext(argv);
 };
 
-const mulmoCallbackGenerator = (projectId: string, webContents) => {
+const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => {
   return (data) => {
     if (webContents) {
       webContents.send("progress-update", {
@@ -79,7 +79,7 @@ const mulmoCallbackGenerator = (projectId: string, webContents) => {
   };
 };
 
-export const mulmoGenerateImage = async (projectId: string, index: number, target: string, webContents) => {
+export const mulmoGenerateImage = async (projectId: string, index: number, target: string, webContents: WebContents) => {
   const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
@@ -281,7 +281,10 @@ const beatImage = (context, imageAgentInfo) => {
           res.imageData = buffer.buffer;
         }
       }
-      // console.log(res);
+      if (res.movieFile && fs.existsSync(res.movieFile)) {
+        const buffer = fs.readFileSync(res.movieFile);
+        res.movieData = buffer.buffer;
+      }
       return res;
     } catch (e) {
       console.log(e);

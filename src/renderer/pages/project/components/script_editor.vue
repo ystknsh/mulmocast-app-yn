@@ -106,6 +106,7 @@
               :index="index"
               :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
               :imageFile="imageFiles[index]"
+              :movieFile="movieFiles[index]"
               :mulmoError="mulmoError?.['beats']?.[index] ?? []"
               @update="update"
               @generateImage="generateImage"
@@ -155,6 +156,7 @@ interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
   imageFiles: (ArrayBuffer | null)[];
+  movieFiles: (ArrayBuffer | null)[];
   audioFiles: (ArrayBuffer | null)[];
   mulmoError: MulmoError | null;
 }

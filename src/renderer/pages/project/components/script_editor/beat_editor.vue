@@ -178,6 +178,10 @@
             <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
           </template>
         </div>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
+          <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" />
+        </div>
+
       </div>
     </div>
 
@@ -228,6 +232,7 @@ interface Props {
   beat: MulmoBeat;
   index: number;
   imageFile: ArrayBuffer | null;
+  movieFile: ArrayBuffer | null;
   isEnd: boolean;
   mulmoError: string[];
 }
