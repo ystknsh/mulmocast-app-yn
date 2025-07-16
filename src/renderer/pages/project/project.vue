@@ -296,8 +296,6 @@
                 </div>
               </CardContent>
             </Card>
-
-            <ConcurrentTaskStatus :projectId="projectId" />
           </div>
         </div>
       </div>
@@ -306,7 +304,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, defineComponent, h } from "vue";
 import { isNull } from "graphai/lib/utils/utils";
 import { useRoute, useRouter } from "vue-router";
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
@@ -365,7 +363,7 @@ import {
   getTimelineFocusClass,
 } from "./composable/style";
 import { ChatMessage, MulmoError } from "@/types";
-import { notifySuccess } from "@/lib/notification";
+import { notifySuccess, notifyProgress } from "@/lib/notification";
 
 import { zodError2MulmoError } from "../../lib/error";
 
@@ -468,14 +466,26 @@ const formatAndPushHistoryMulmoScript = () => {
   console.log(data);
 };
 
+const ConcurrentTaskStatusMessageComponent = defineComponent({
+  setup() {
+    return () => h(ConcurrentTaskStatus, { projectId: projectId.value });
+  },
+});
+
 const generateMovie = async () => {
-  console.log("generateMovie");
-  await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie");
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie"), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Movie generated successfully",
+    errorMessage: "Failed to generate movie",
+  });
 };
 
 const generatePodcast = async () => {
-  console.log("generateMovie");
-  await window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio");
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio"), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Podcast generated successfully",
+    errorMessage: "Failed to generate podcast",
+  });
 };
 
 const openProjectFolder = async () => {
@@ -484,12 +494,19 @@ const openProjectFolder = async () => {
 
 const generateImage = async (index: number, target: string) => {
   await saveMulmo(mulmoScriptHistoryStore.currentMulmoScript);
-  await window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target);
-  console.log(index);
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Image generated successfully",
+    errorMessage: "Failed to generate image",
+  });
 };
-const generateAudio = async (index) => {
-  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index);
-  console.log(index);
+
+const generateAudio = async (index: number) => {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Audio generated successfully",
+    errorMessage: "Failed to generate audio",
+  });
 };
 
 const bufferToUrl = (buffer: Buffer, mimeType: string) => {

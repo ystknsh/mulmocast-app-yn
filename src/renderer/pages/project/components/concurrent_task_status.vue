@@ -1,17 +1,11 @@
 <template>
-  <div
-    class="fixed bottom-0 right-0 m-4 w-80 bg-yellow-100 border border-yellow-400 text-yellow-900 p-4 rounded shadow-lg z-50"
-    v-if="tasks.length > 0"
-  >
-    <div v-for="task in tasks" :key="task.id" class="p-2">
-      {{ task.name }}: <span class="text-xs text-gray-500">{{ task.status }}</span>
-    </div>
-  </div>
+  <span>{{ message }}</span>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { useMulmoEventStore } from "../../../store";
+import { BeatSessionType, SessionType } from "mulmocast/browser";
 
 interface Props {
   projectId: string;
@@ -20,27 +14,26 @@ const props = defineProps<Props>();
 
 const mulmoEventStore = useMulmoEventStore();
 
-const tasks = computed(() => {
-  const data = mulmoEventStore.sessionState?.[props.projectId] ?? {};
-  // console.log(Object.keys(data));
-  // ['artifact', 'beat']
-  const ret = [];
-  Object.keys(data["artifact"] ?? {}).forEach((key) => {
+const message = computed(() => {
+  const data = mulmoEventStore.sessionState?.[props.projectId];
+  if (!data) {
+    return "";
+  }
+  const ret: string[] = [];
+  Object.keys(data["artifact"] ?? {}).forEach((key: SessionType) => {
     if (data["artifact"][key]) {
-      // console.log(data['artifact'][key]);
-      ret.push({ name: "artifact_" + key, status: true });
+      ret.push(`${key}`);
     }
   });
-  Object.keys(data["beat"] ?? {}).forEach((key) => {
-    if (data["beat"][key]) {
-      Object.keys(data["beat"][key]).forEach((index) => {
-        // console.log(data['beat'][key][index]);
-        if (data["beat"][key][index]) {
-          ret.push({ name: "beat_" + key + "_" + index, status: data["beat"][key][index] });
-        }
-      });
+  Object.keys(data["beat"] ?? {}).forEach((key: BeatSessionType) => {
+    if (data["beat"][key] && Object.values(data["beat"][key]).some((value) => value)) {
+      const indexes = Object.keys(data["beat"][key]).map((index: string) => Number(index) + 1);
+      ret.push(`beat_${key}_${indexes.join(",")}`);
     }
   });
-  return ret;
+  if (ret.length === 0) {
+    return "";
+  }
+  return `Generating ${ret.join(", ")}...`;
 });
 </script>
