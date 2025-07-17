@@ -313,10 +313,10 @@ const handleDrop = (event: DragEvent) => {
   if (files.length > 0) {
     const file = files[0];
     // console.log("File dropped:", file.name);
-    const fileExtension = file.name.split('.').pop()?.toLowerCase() ?? "";
+    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
     const mimeType = file.type.split("/")[1] ?? "";
     const fileType = mimeType || fileExtension;
-    
+
     const imageType = (() => {
       if (["jpg", "jpeg", "png"].includes(fileType)) {
         return "image";
