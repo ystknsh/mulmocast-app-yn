@@ -307,7 +307,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, defineComponent, h } from "vue";
+import { ref, computed, watch, onMounted, defineComponent, h, markRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { isNull } from "graphai/lib/utils/utils";
 import { useRoute, useRouter } from "vue-router";
@@ -471,11 +471,13 @@ const formatAndPushHistoryMulmoScript = () => {
   console.log(data);
 };
 
-const ConcurrentTaskStatusMessageComponent = defineComponent({
-  setup() {
-    return () => h(ConcurrentTaskStatus, { projectId: projectId.value });
-  },
-});
+const ConcurrentTaskStatusMessageComponent = markRaw(
+  defineComponent({
+    setup() {
+      return () => h(ConcurrentTaskStatus, { projectId: projectId.value });
+    },
+  }),
+);
 
 const generateMovie = async () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie"), {
