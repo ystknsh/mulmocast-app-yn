@@ -204,7 +204,7 @@
                   <!-- Output Buttons -->
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
                       @click="generateMovie"
                       :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
@@ -212,14 +212,14 @@
                       <span>Generate Movie</span>
                     </Button>
                     <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
                       :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
                       <FileText :size="24" />
                       <span>Generate PDF</span>
                     </Button>
                     <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4"
+                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
                       @click="generatePodcast"
                       :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
                     >
