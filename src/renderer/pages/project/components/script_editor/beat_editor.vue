@@ -316,7 +316,7 @@ const handleDrop = (event: DragEvent) => {
     const fileType = (file.type ?? "").split("/")[1] ?? "";
     const imageType = (() => {
       if (["jpg", "jpeg", "png"].includes(fileType)) {
-        return "image"
+        return "image";
       }
       if (["mov", "mp4", "mpg"].includes(fileType)) {
         return "movie";
