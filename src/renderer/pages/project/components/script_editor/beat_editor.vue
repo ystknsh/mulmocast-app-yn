@@ -313,7 +313,10 @@ const handleDrop = (event: DragEvent) => {
   if (files.length > 0) {
     const file = files[0];
     // console.log("File dropped:", file.name);
-    const fileType = (file.type ?? "").split("/")[1] ?? "";
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() ?? "";
+    const mimeType = file.type.split("/")[1] ?? "";
+    const fileType = mimeType || fileExtension;
+    
     const imageType = (() => {
       if (["jpg", "jpeg", "png"].includes(fileType)) {
         return "image";
@@ -324,6 +327,8 @@ const handleDrop = (event: DragEvent) => {
       return;
     })();
     if (!imageType) {
+      console.warn(`Unsupported file type: ${fileType}`);
+      // TODO: Consider showing a toast notification or alert
       return;
     }
     update("image.type", imageType);
