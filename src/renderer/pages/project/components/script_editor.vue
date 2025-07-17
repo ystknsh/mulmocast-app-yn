@@ -23,12 +23,12 @@
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
-          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4 space-y-1 gap-2">
+          <Card v-for="(beat, index) in safeBeats ?? []" :key="index" class="p-4 space-y-1 gap-2">
             <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
             <div>
               <Label>Speaker</Label>
               <Input
-                :model-value="beat.speaker"
+                :model-value="beat?.speaker"
                 @update:model-value="(value) => update(index, 'speaker', String(value))"
                 placeholder="e.g. Alice"
                 class="h-8"
@@ -99,8 +99,11 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
-          <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" v-if="!mulmoValue?.beats || mulmoValue?.beats.length === 0" />
-          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="beat.id ?? index" class="p-4">
+          <Card class="px-4">
+            <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
+          </Card>
+
+          <Card v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="p-4">
             <BeatEditor
               :beat="beat"
               :index="index"
@@ -151,6 +154,7 @@ import { useRoute } from "vue-router";
 
 import { MulmoError } from "../../../../types";
 import { removeEmptyValues } from "@/lib/utils";
+import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -168,6 +172,7 @@ const emit = defineEmits([
   "generateImage",
   "generateAudio",
   "formatAndPushHistoryMulmoScript",
+  "addBeat",
   "deleteBeat",
   "positionUp",
 ]);
@@ -179,8 +184,13 @@ const projectId = computed(() => route.params.id as string);
 const currentTab = ref("text");
 const lastTab = ref("text");
 
+const safeBeats = computed(() => {
+  return (props.mulmoValue?.beats ?? []).map((beat) => {
+    return beat || {};
+  });
+});
+
 watch(currentTab, () => {
-  console.log(currentTab.value);
   if (!props.isValidScriptData && !["json", "yaml"].includes(currentTab.value)) {
     currentTab.value = lastTab.value;
   } else {
@@ -284,8 +294,7 @@ const generateAudio = (index: number) => {
 };
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoValue.beats.length) {
-    const newBeats = [...props.mulmoValue.beats];
-    newBeats.splice(index, 1);
+    const newBeats = arrayRemoveAt(props.mulmoValue.beats, index);
     emit("update:mulmoValue", {
       ...props.mulmoValue,
       beats: newBeats,
@@ -295,10 +304,7 @@ const deleteBeat = (index: number) => {
 };
 const positionUp = (index: number) => {
   if (index <= 0 || index >= props.mulmoValue.beats.length) return;
-  const newBeats = [...props.mulmoValue.beats];
-  const temp = newBeats[index - 1];
-  newBeats[index - 1] = newBeats[index];
-  newBeats[index] = temp;
+  const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoValue.beats, index);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,
@@ -307,19 +313,15 @@ const positionUp = (index: number) => {
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  const updatedBeats = [...(props.mulmoValue.beats ?? [])];
-  updatedBeats.splice(index + 1, 0, beat);
-
+  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, beat);
   emit("update:mulmoValue", {
     ...props.mulmoValue,
-    beats: updatedBeats,
+    beats: newBeats,
   });
   emit("addBeat", index);
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  console.log("updatePresentationStyle", style);
-
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     ...removeEmptyValues(style),

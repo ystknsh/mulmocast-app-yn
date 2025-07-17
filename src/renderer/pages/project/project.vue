@@ -149,7 +149,7 @@
                 >
                   <CardContent class="h-full">
                     <ScriptEditor
-                      :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript"
+                      :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
                       :imageFiles="imageFiles"
                       :movieFiles="movieFiles"
                       :audioFiles="audioFiles"
@@ -251,7 +251,7 @@
                 <CollapsibleContent>
                   <CardContent>
                     <BeatsViewer
-                      :beatsData="beatsData"
+                      :beatsData="beatsData || {}"
                       :audioFiles="audioFiles"
                       v-model:viewMode="beatsViewMode"
                       v-model:currentBeatIndex="currentBeatIndex"
@@ -308,9 +308,12 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, defineComponent, h } from "vue";
+import { useDebounceFn } from "@vueuse/core";
 import { isNull } from "graphai/lib/utils/utils";
 import { useRoute, useRouter } from "vue-router";
+
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
+import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import {
   ArrowLeft,
   Code2,
@@ -351,7 +354,6 @@ import dayjs from "dayjs";
 
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { useDebounceFn } from "@vueuse/core";
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../../store";
 
 import {
@@ -522,23 +524,6 @@ const audioFiles = ref<(ArrayBuffer | null)[]>([]);
 const imageFiles = ref<(ArrayBuffer | null)[]>([]);
 const movieFiles = ref<(ArrayBuffer | null)[]>([]);
 
-const arrayPositionUp = <T,>(dataSet: T[], index: number) => {
-  const newData = [...dataSet];
-  const temp = newData[index - 1];
-  newData[index - 1] = newData[index];
-  newData[index] = temp;
-  return newData;
-};
-const arrayAdd = <T,>(dataSet: T[], index: number, data: T) => {
-  const newData = [...(dataSet ?? [])];
-  newData.splice(index + 1, 0, data);
-  return newData;
-};
-const arrayDelete = <T,>(dataSet: T[], index: number) => {
-  const newData = [...dataSet];
-  newData.splice(index, 1);
-  return newData;
-};
 const positionUp = (index: number) => {
   imageFiles.value = arrayPositionUp<ArrayBuffer | null>(imageFiles.value, index);
   movieFiles.value = arrayPositionUp<ArrayBuffer | null>(movieFiles.value, index);
@@ -546,14 +531,14 @@ const positionUp = (index: number) => {
 };
 
 const addBeat = (index: number) => {
-  imageFiles.value = arrayAdd<ArrayBuffer | null>(imageFiles.value, index, null);
-  movieFiles.value = arrayAdd<ArrayBuffer | null>(movieFiles.value, index, null);
-  audioFiles.value = arrayAdd<ArrayBuffer | null>(audioFiles.value, index, null);
+  imageFiles.value = arrayInsertAfter<ArrayBuffer | null>(imageFiles.value, index, null);
+  movieFiles.value = arrayInsertAfter<ArrayBuffer | null>(movieFiles.value, index, null);
+  audioFiles.value = arrayInsertAfter<ArrayBuffer | null>(audioFiles.value, index, null);
 };
 const deleteBeat = (index: number) => {
-  imageFiles.value = arrayDelete<ArrayBuffer | null>(imageFiles.value, index);
-  movieFiles.value = arrayDelete<ArrayBuffer | null>(movieFiles.value, index);
-  audioFiles.value = arrayDelete<ArrayBuffer | null>(audioFiles.value, index);
+  imageFiles.value = arrayRemoveAt<ArrayBuffer | null>(imageFiles.value, index);
+  movieFiles.value = arrayRemoveAt<ArrayBuffer | null>(movieFiles.value, index);
+  audioFiles.value = arrayRemoveAt<ArrayBuffer | null>(audioFiles.value, index);
 };
 
 const downloadAudioFiles = async () => {
