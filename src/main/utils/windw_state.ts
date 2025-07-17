@@ -22,10 +22,9 @@ export const getWindowState = (): WindowState => {
   } catch {
     if (isNormal) {
       return { width: 1280, height: 720, x: undefined, y: undefined };
-    } else {
-      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-      return { width, height, x: undefined, y: undefined };
     }
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    return { width, height, x: undefined, y: undefined };
   }
 };
 
