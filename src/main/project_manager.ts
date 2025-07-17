@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { Project, ProjectMetadata } from "../types";
 import type { MulmoScript } from "mulmocast";
 import { mulmoScriptSchema } from "mulmocast";
+import { SCRIPT_EDITOR_TABS } from "../shared/constants";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
@@ -114,6 +115,7 @@ export const createProject = async (title: string): Promise<Project> => {
       hasErrors: false,
       chatMessages: [],
       useCache: false,
+      scriptEditorActiveTab: SCRIPT_EDITOR_TABS.TEXT,
     };
 
     const script = {

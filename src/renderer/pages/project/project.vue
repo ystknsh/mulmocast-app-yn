@@ -153,6 +153,7 @@
                       :imageFiles="imageFiles"
                       :movieFiles="movieFiles"
                       :audioFiles="audioFiles"
+                      :scriptEditorActiveTab="project?.scriptEditorActiveTab"
                       @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
@@ -162,6 +163,7 @@
                       @positionUp="positionUp"
                       @addBeat="addBeat"
                       @deleteBeat="deleteBeat"
+                      @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                       :mulmoError="mulmoError"
                     />
                   </CardContent>
@@ -368,6 +370,7 @@ import {
   getTimelineFocusClass,
 } from "./composable/style";
 import { ChatMessage, MulmoError } from "@/types";
+import { type ScriptEditorTab } from "../../../shared/constants";
 import { notifySuccess, notifyProgress } from "@/lib/notification";
 
 import { zodError2MulmoError } from "../../lib/error";
@@ -426,6 +429,11 @@ const handleUpdateChatMessages = (messages: ChatMessage[]) => {
 
 const saveCacheEnabled = (enabled: boolean) => {
   project.value.useCache = enabled;
+  saveProjectMetadata(project.value);
+};
+
+const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
+  project.value.scriptEditorActiveTab = tab;
   saveProjectMetadata(project.value);
 };
 
