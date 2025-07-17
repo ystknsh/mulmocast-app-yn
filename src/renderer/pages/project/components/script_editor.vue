@@ -184,8 +184,8 @@ const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
-const currentTab = ref<ScriptEditorTab>((props.scriptEditorActiveTab as ScriptEditorTab) || SCRIPT_EDITOR_TABS.TEXT);
-const lastTab = ref<ScriptEditorTab>((props.scriptEditorActiveTab as ScriptEditorTab) || SCRIPT_EDITOR_TABS.TEXT);
+const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
+const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const safeBeats = computed(() => {
   return (props.mulmoValue?.beats ?? []).map((beat) => {
