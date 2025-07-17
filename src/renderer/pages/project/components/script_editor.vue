@@ -1,11 +1,11 @@
 <template>
   <Tabs class="w-full" v-model="currentTab">
     <TabsList class="grid w-full grid-cols-5">
-      <TabsTrigger value="text">Text</TabsTrigger>
-      <TabsTrigger value="yaml">YAML</TabsTrigger>
-      <TabsTrigger value="json">JSON</TabsTrigger>
-      <TabsTrigger value="media">Media</TabsTrigger>
-      <TabsTrigger value="style">Style</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT">Text</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML">YAML</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON">JSON</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA">Media</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE">Style</TabsTrigger>
     </TabsList>
 
     <div
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <TabsContent value="text" class="mt-2">
+    <TabsContent :value="SCRIPT_EDITOR_TABS.TEXT" class="mt-2">
       <div
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
       >
@@ -50,7 +50,7 @@
         </div>
       </div>
     </TabsContent>
-    <TabsContent value="yaml" class="mt-4">
+    <TabsContent :value="SCRIPT_EDITOR_TABS.YAML" class="mt-4">
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
@@ -72,7 +72,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="json" class="mt-4">
+    <TabsContent :value="SCRIPT_EDITOR_TABS.JSON" class="mt-4">
       <div
         :class="[
           'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
@@ -94,7 +94,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="media" class="mt-4">
+    <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
@@ -121,7 +121,7 @@
         </div>
       </div>
     </TabsContent>
-    <TabsContent value="style" class="mt-4">
+    <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Style - Presentation style editing</p>
         <PresentationStyleEditor
@@ -155,6 +155,7 @@ import { useRoute } from "vue-router";
 import { MulmoError } from "../../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
+import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -163,6 +164,7 @@ interface Props {
   movieFiles: (ArrayBuffer | null)[];
   audioFiles: (ArrayBuffer | null)[];
   mulmoError: MulmoError | null;
+  scriptEditorActiveTab?: ScriptEditorTab;
 }
 
 const props = defineProps<Props>();
@@ -175,14 +177,15 @@ const emit = defineEmits([
   "addBeat",
   "deleteBeat",
   "positionUp",
+  "update:scriptEditorActiveTab",
 ]);
 
 const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
-const currentTab = ref("text");
-const lastTab = ref("text");
+const currentTab = ref<ScriptEditorTab>((props.scriptEditorActiveTab as ScriptEditorTab) || SCRIPT_EDITOR_TABS.TEXT);
+const lastTab = ref<ScriptEditorTab>((props.scriptEditorActiveTab as ScriptEditorTab) || SCRIPT_EDITOR_TABS.TEXT);
 
 const safeBeats = computed(() => {
   return (props.mulmoValue?.beats ?? []).map((beat) => {
@@ -191,11 +194,12 @@ const safeBeats = computed(() => {
 });
 
 watch(currentTab, () => {
-  if (!props.isValidScriptData && !["json", "yaml"].includes(currentTab.value)) {
+  if (!props.isValidScriptData && ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value)) {
     currentTab.value = lastTab.value;
   } else {
     lastTab.value = currentTab.value;
     emit("formatAndPushHistoryMulmoScript");
+    emit("update:scriptEditorActiveTab", currentTab.value);
   }
 });
 
@@ -235,6 +239,15 @@ watch(
     }
   },
   { deep: true, immediate: true },
+);
+
+watch(
+  () => props.scriptEditorActiveTab,
+  (newTab) => {
+    if (newTab && newTab !== currentTab.value) {
+      currentTab.value = newTab;
+    }
+  },
 );
 
 const onJsonInput = (value: string) => {

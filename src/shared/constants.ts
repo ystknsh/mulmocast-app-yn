@@ -194,6 +194,16 @@ export const VOICE_LISTS = {
   ],
 } as const;
 
+export const SCRIPT_EDITOR_TABS = {
+  TEXT: "text",
+  YAML: "yaml",
+  JSON: "json",
+  MEDIA: "media",
+  STYLE: "style",
+} as const;
+
+export type ScriptEditorTab = (typeof SCRIPT_EDITOR_TABS)[keyof typeof SCRIPT_EDITOR_TABS];
+
 export const LANGUAGES = [
   { id: "en", name: "English" },
   { id: "es", name: "Spanish" },

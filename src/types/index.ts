@@ -1,4 +1,5 @@
 import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
+import type { ScriptEditorTab } from "../shared/constants";
 
 export type ChatMessage = {
   role: "user" | "assistant";
@@ -17,6 +18,7 @@ export type ProjectMetadata = {
   chatMessages: ChatMessage[];
   useCache?: boolean;
   presentationStyle?: MulmoPresentationStyle;
+  scriptEditorActiveTab: ScriptEditorTab; // Currently active tab in script editor
 };
 export type Project = {
   metadata: ProjectMetadata;
