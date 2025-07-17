@@ -1,5 +1,14 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/renderer/**/*.vue"],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["src/renderer/*"],
+      "@/types/*": ["src/types/*"]
+    }
+  },
+  "include": ["src/renderer/**/*.vue", "src/types/*"],
   "exclude": ["node_modules", "dist"]
 }
