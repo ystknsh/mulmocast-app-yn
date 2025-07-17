@@ -18,7 +18,7 @@ export type ProjectMetadata = {
   chatMessages: ChatMessage[];
   useCache?: boolean;
   presentationStyle?: MulmoPresentationStyle;
-  scriptEditorActiveTab: ScriptEditorTab; // Currently active tab in script editor
+  scriptEditorActiveTab: ScriptEditorTab;
 };
 export type Project = {
   metadata: ProjectMetadata;
