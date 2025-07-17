@@ -170,10 +170,20 @@
           </template>
           <template v-else-if="imageFile">
             <template v-if="beat?.image?.type === 'movie'">
-              <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="imageFile" />
+              <video
+                :size="64"
+                class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                controls
+                :src="getMediaSrc(imageFile)"
+                @click="openModal('video', imageFile)"
+              />
             </template>
             <template v-else>
-              <img :src="imageFile" />
+              <img
+                :src="getMediaSrc(imageFile)"
+                class="cursor-pointer hover:opacity-80 transition-opacity"
+                @click="openModal('image', imageFile)"
+              />
             </template>
           </template>
           <template v-else>
@@ -183,7 +193,14 @@
         </div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
           <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
-          <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="movieFile" v-else />
+          <video
+            :size="64"
+            class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+            controls
+            :src="getMediaSrc(movieFile)"
+            @click="openModal('video', movieFile)"
+            v-else
+          />
         </div>
       </div>
     </div>
@@ -214,11 +231,13 @@
         <Trash @click="trash" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
       </div>
     </div>
+
+    <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -230,12 +249,13 @@ import type { MulmoBeat } from "mulmocast/browser";
 import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import BeatAdd from "./beat_add.vue";
+import MediaModal from "@/components/media_modal.vue";
 
 interface Props {
   beat: MulmoBeat;
   index: number;
-  imageFile: ArrayBuffer | null;
-  movieFile: ArrayBuffer | null;
+  imageFile: ArrayBuffer | string | null;
+  movieFile: ArrayBuffer | string | null;
   isEnd: boolean;
   mulmoError: string[];
 }
@@ -247,6 +267,10 @@ const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
+const modalOpen = ref(false);
+const modalType = ref<"image" | "video" | "audio" | "other">("image");
+const modalSrc = ref("");
+
 const shouldBeGeneratedWithPrompt = computed(() => {
   return !props.beat.htmlPrompt && !props.beat.image;
 });
@@ -254,7 +278,12 @@ const shouldBeGeneratedWithPrompt = computed(() => {
 const shouldShowGenerateButton = computed(() => {
   return (
     props.beat?.image?.type !== "beat" &&
-    !(["image", "movie"].includes(props.beat?.image?.type) && props.beat.image.source.kind === "path")
+    !(
+      ["image", "movie"].includes(props.beat?.image?.type || "") &&
+      props.beat?.image &&
+      "source" in props.beat.image &&
+      props.beat.image?.source?.kind === "path"
+    )
   );
 });
 
@@ -328,7 +357,7 @@ const handleDrop = (event: DragEvent, imageType: string) => {
 
     const reader = new FileReader();
     reader.onload = async () => {
-      const uint8Array = new Uint8Array(reader.result);
+      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
       const path = await window.electronAPI.mulmoHandler(
         "mulmoImageUpload",
         projectId.value,
@@ -369,5 +398,18 @@ const trash = () => {
 
 const addBeat = (beat: MulmoBeat) => {
   emit("addBeat", beat, props.index);
+};
+
+const getMediaSrc = (file: ArrayBuffer | string | null): string => {
+  if (!file) return "";
+  if (typeof file === "string") return file;
+  return URL.createObjectURL(new Blob([file]));
+};
+
+const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
+  if (!src) return;
+  modalType.value = type;
+  modalSrc.value = getMediaSrc(src);
+  modalOpen.value = true;
 };
 </script>
