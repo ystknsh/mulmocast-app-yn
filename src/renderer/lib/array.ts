@@ -13,7 +13,6 @@ export const arrayInsertAfter = <T>(dataSet: T[], index: number, data: T) => {
 };
 
 export const arrayRemoveAt = <T>(dataSet: T[], index: number) => {
-  console.log(dataSet);
   const newData = [...dataSet];
   newData.splice(index, 1);
   return newData;

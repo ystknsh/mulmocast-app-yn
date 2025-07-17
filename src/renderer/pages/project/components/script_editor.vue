@@ -191,7 +191,6 @@ const safeBeats = computed(() => {
 });
 
 watch(currentTab, () => {
-  console.log(currentTab.value);
   if (!props.isValidScriptData && !["json", "yaml"].includes(currentTab.value)) {
     currentTab.value = lastTab.value;
   } else {
@@ -323,8 +322,6 @@ const addBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  console.log("updatePresentationStyle", style);
-
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     ...removeEmptyValues(style),
