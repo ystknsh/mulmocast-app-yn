@@ -32,7 +32,7 @@
             <div
               v-if="beat.image?.source?.kind === 'path'"
               @dragover.prevent
-              @drop.prevent="(e) => handleDrop(e, beat.image.type)"
+              @drop.prevent="(e) => handleDrop(e)"
               draggable="true"
               class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
             >
@@ -314,16 +314,25 @@ const getMediaIcon = (type: string) => {
   }
 };
 
-const handleDrop = (event: DragEvent, imageType: string) => {
+const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
     // console.log("File dropped:", file.name);
     const fileType = (file.type ?? "").split("/")[1] ?? "";
-
-    if (!(imageType === "image" ? ["jpg", "jpeg", "png"] : ["mov", "mp4", "mpg"]).includes(fileType)) {
+    const imageType = (() => {
+      if (["jpg", "jpeg", "png"].includes(fileType)) {
+        return "image"
+      }
+      if (["mov", "mp4", "mpg"].includes(fileType)) {
+        return "movie";
+      }
+      return;
+    })();
+    if (!imageType) {
       return;
     }
+    update("image.type", imageType);
     const extention = fileType === "jpeg" ? "jpg" : fileType;
 
     const reader = new FileReader();
