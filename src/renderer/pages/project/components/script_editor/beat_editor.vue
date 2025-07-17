@@ -23,12 +23,6 @@
               @update:model-value="(value) => update('image.source.url', String(value))"
               type="text"
             />
-            <Input
-              v-else-if="beat.image?.source?.kind === 'path'"
-              :model-value="beat.image?.source?.path"
-              @update:model-value="(value) => update('image.source.path', String(value))"
-              type="text"
-            />
             <div
               v-if="beat.image?.source?.kind === 'path'"
               @dragover.prevent
@@ -346,7 +340,7 @@ const handleDrop = (event: DragEvent) => {
         extention,
       );
       update("image.source.path", "./" + path);
-      generateImage();
+      generateImageOnlyImage();
     };
     reader.readAsArrayBuffer(file);
   }
