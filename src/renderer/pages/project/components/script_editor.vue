@@ -99,8 +99,8 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
-          <BeatAdd @addBeat="addBeatHead" v-if="!mulmoValue?.beats || mulmoValue?.beats.length === 0" />
-          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="index" class="p-4">
+          <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" v-if="!mulmoValue?.beats || mulmoValue?.beats.length === 0" />
+          <Card v-for="(beat, index) in mulmoValue?.beats ?? []" :key="beat.id ?? index" class="p-4">
             <BeatEditor
               :beat="beat"
               :index="index"
@@ -168,6 +168,8 @@ const emit = defineEmits([
   "generateImage",
   "generateAudio",
   "formatAndPushHistoryMulmoScript",
+  "deleteBeat",
+  "positionUp",
 ]);
 
 const route = useRoute();
@@ -288,6 +290,7 @@ const deleteBeat = (index: number) => {
       ...props.mulmoValue,
       beats: newBeats,
     });
+    emit("deleteBeat", index);
   }
 };
 const positionUp = (index: number) => {
@@ -300,15 +303,7 @@ const positionUp = (index: number) => {
     ...props.mulmoValue,
     beats: newBeats,
   });
-};
-
-const addBeatHead = (beat: MulmoBeat) => {
-  const newBeats = [...(props.mulmoValue.beats ?? [])];
-  newBeats.unshift(beat);
-  emit("update:mulmoValue", {
-    ...props.mulmoValue,
-    beats: newBeats,
-  });
+  emit("positionUp", index);
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
@@ -319,6 +314,7 @@ const addBeat = (beat: MulmoBeat, index: number) => {
     ...props.mulmoValue,
     beats: updatedBeats,
   });
+  emit("addBeat", index);
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {

@@ -159,7 +159,10 @@
 
       <!-- right: preview -->
       <div>
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+        <div
+          class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+          :key="`beat_editor_${beat.id ?? index}`"
+        >
           <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
           <template v-if="isImageGenerating">
             <!-- TODO update design -->

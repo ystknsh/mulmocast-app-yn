@@ -152,13 +152,16 @@
                       :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript"
                       :imageFiles="imageFiles"
                       :movieFiles="movieFiles"
+                      :audioFiles="audioFiles"
                       @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
                       @generateImage="generateImage"
                       @generateAudio="generateAudio"
                       @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                      :audioFiles="audioFiles"
+                      @positionUp="positionUp"
+                      @addBeat="addBeat"
+                      @deleteBeat="deleteBeat"
                       :mulmoError="mulmoError"
                     />
                   </CardContent>
@@ -519,34 +522,65 @@ const audioFiles = ref<(ArrayBuffer | null)[]>([]);
 const imageFiles = ref<(ArrayBuffer | null)[]>([]);
 const movieFiles = ref<(ArrayBuffer | null)[]>([]);
 
+const arrayPositionUp = <T,>(dataSet: T[], index: number) => {
+  const newData = [...dataSet];
+  const temp = newData[index - 1];
+  newData[index - 1] = newData[index];
+  newData[index] = temp;
+  return newData;
+};
+const arrayAdd = <T,>(dataSet: T[], index: number, data: T) => {
+  const newData = [...(dataSet ?? [])];
+  newData.splice(index + 1, 0, data);
+  return newData;
+};
+const arrayDelete = <T,>(dataSet: T[], index: number) => {
+  const newData = [...dataSet];
+  newData.splice(index, 1);
+  return newData;
+};
+const positionUp = (index: number) => {
+  imageFiles.value = arrayPositionUp<ArrayBuffer | null>(imageFiles.value, index);
+  movieFiles.value = arrayPositionUp<ArrayBuffer | null>(movieFiles.value, index);
+  audioFiles.value = arrayPositionUp<ArrayBuffer | null>(audioFiles.value, index);
+};
+
+const addBeat = (index: number) => {
+  imageFiles.value = arrayAdd<ArrayBuffer | null>(imageFiles.value, index, null);
+  movieFiles.value = arrayAdd<ArrayBuffer | null>(movieFiles.value, index, null);
+  audioFiles.value = arrayAdd<ArrayBuffer | null>(audioFiles.value, index, null);
+};
+const deleteBeat = (index: number) => {
+  imageFiles.value = arrayDelete<ArrayBuffer | null>(imageFiles.value, index);
+  movieFiles.value = arrayDelete<ArrayBuffer | null>(movieFiles.value, index);
+  audioFiles.value = arrayDelete<ArrayBuffer | null>(audioFiles.value, index);
+};
+
 const downloadAudioFiles = async () => {
   console.log("audioFiles");
   const res = await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value);
-  console.log(res);
   audioFiles.value = res.map((buffer) => {
     if (buffer) {
       return bufferToUrl(buffer, "audio/mp3");
     }
     return "";
   });
-  console.log(audioFiles.value);
 };
+
 const downloadImageFiles = async () => {
-  const res2 = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
-  console.log(res2);
-  imageFiles.value = res2.map((data) => {
+  const res = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
+  imageFiles.value = res.map((data) => {
     if (data && data.imageData) {
       return bufferToUrl(data.imageData, "image/png");
     }
     return "";
   });
-  movieFiles.value = res2.map((data) => {
+  movieFiles.value = res.map((data) => {
     if (data && data.movieData) {
       return bufferToUrl(data.movieData, "video/mp4");
     }
     return "";
   });
-  console.log(imageFiles.value);
 };
 downloadAudioFiles();
 downloadImageFiles();
