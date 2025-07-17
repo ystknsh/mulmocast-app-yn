@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, screen } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 
@@ -6,9 +6,9 @@ import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
+import { getWindowState, saveWindowState } from "./utils/windw_state";
 
 const isDev = process.env.NODE_ENV === "development";
-const isNormal = process.env.DISPLAYMODE === "normal";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -40,19 +40,9 @@ const createSplashWindow = () => {
 
 const createWindow = (splashWindow?: BrowserWindow) => {
   // Create the browser window.
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const windowState = getWindowState();
   const mainWindow = new BrowserWindow({
-    ...(isNormal
-      ? {
-          width: 1280,
-          height: 720,
-        }
-      : {
-          width,
-          height,
-          maxWidth: 1920,
-          maxHeight: 1080,
-        }),
+    ...windowState,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -81,6 +71,9 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       mainWindow?.show();
     }, 2000);
   });
+
+  // Save window state when closed
+  mainWindow.on("close", () => saveWindowState(mainWindow));
 
   ipcMain.on("request-env", async (event) => {
     const settings = await settingsManager.loadSettings();
