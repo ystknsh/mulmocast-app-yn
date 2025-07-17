@@ -531,7 +531,7 @@ const arrayPositionUp = <T,>(dataSet: T[], index: number) => {
 };
 const arrayAdd = <T,>(dataSet: T[], index: number, data: T) => {
   const newData = [...(dataSet ?? [])];
-  newData.splice(index + 1, 0, T);
+  newData.splice(index + 1, 0, data);
   return newData;
 };
 const arrayDelete = <T,>(dataSet: T[], index: number) => {
