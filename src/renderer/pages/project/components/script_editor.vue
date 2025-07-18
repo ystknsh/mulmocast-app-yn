@@ -55,7 +55,9 @@
               <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
               <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
             </Card>
-            <div class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm">
+            <div
+              class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+            >
               <ArrowUp
                 v-if="index !== 0"
                 @click="() => positionUp(index)"
@@ -144,7 +146,9 @@
                 @generateImage="generateImage"
               />
             </Card>
-            <div class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm">
+            <div
+              class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+            >
               <ArrowUp
                 v-if="index !== 0"
                 @click="() => positionUp(index)"
