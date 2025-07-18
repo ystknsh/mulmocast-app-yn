@@ -16,15 +16,15 @@
           </Label>
 
           <!-- image/movie: URL or  path -->
-          <template v-if="beat.image.type === 'image' || beat.image.type === 'movie'">
+          <template v-if="isMediaBeat(beat)">
             <Input
-              v-if="beat.image?.source?.kind === 'url'"
+              v-if="isURLSourceMediaBeat(beat)"
               :model-value="beat.image?.source?.url"
               @update:model-value="(value) => update('image.source.url', String(value))"
               type="text"
             />
             <div
-              v-if="beat.image?.source?.kind === 'path'"
+              v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e)"
               draggable="true"
@@ -151,7 +151,9 @@
               >
               <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
             </template>
-            <Button variant="outline" size="sm" @click="generateImage()" class="mt-4" v-else>Generate image</Button>
+            <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4" v-else
+              >Generate image</Button
+            >
           </template>
           <div v-else class="inline-flex items-center whitespace-nowrap">
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
@@ -234,7 +236,7 @@ import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import MediaModal from "@/components/media_modal.vue";
 
-import { getBadge } from "@/lib/beat_util.js";
+import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 interface Props {
   beat: MulmoBeat;

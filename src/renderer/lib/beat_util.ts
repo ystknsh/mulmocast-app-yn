@@ -20,3 +20,15 @@ export const getBadge = (beat: MulmoBeat) => {
   }
   return "Image Prompt";
 };
+
+export const isMediaBeat = (beat: MulmoBeat) => {
+  return beat.image.type === "image" || beat.image.type === "movie";
+};
+
+export const isURLSourceMediaBeat = (beat: MulmoBeat) => {
+  return "source" in beat.image && beat.image?.source?.kind === "url";
+};
+
+export const isLocalSourceMediaBeat = (beat: MulmoBeat) => {
+  return "source" in beat.image && beat.image?.source?.kind === "path";
+};
