@@ -215,10 +215,7 @@
         {{ error }}
       </div>
     </div>
-    <div class="flex justify-between mt-2 py-1 rounded border border-gray-300">
-      <div class="px-2 py-1">
-        <BeatAdd @addBeat="addBeat" />
-      </div>
+    <div class="flex justify-end mt-2 py-1 rounded border border-gray-300">
       <div class="flex items-center gap-1 px-2 py-1 pr-3">
         <ArrowUp
           v-if="index !== 0"
@@ -250,7 +247,6 @@ import type { MulmoBeat } from "mulmocast/browser";
 
 import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
-import BeatAdd from "./beat_add.vue";
 import MediaModal from "@/components/media_modal.vue";
 
 import { getBadge } from "@/lib/beat_util.js";
@@ -265,7 +261,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat", "addBeat"]);
+const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]);
 
 const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
@@ -409,10 +405,6 @@ const positionDown = () => {
 };
 const trash = () => {
   emit("deleteBeat", props.index);
-};
-
-const addBeat = (beat: MulmoBeat) => {
-  emit("addBeat", beat, props.index);
 };
 
 const getMediaSrc = (file: ArrayBuffer | string | null): string => {

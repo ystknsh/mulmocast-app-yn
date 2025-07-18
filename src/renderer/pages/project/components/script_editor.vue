@@ -145,7 +145,6 @@
                 @generateImage="generateImage"
                 @deleteBeat="deleteBeat"
                 @positionUp="positionUp"
-                @addBeat="addBeat"
               />
             </Card>
             <div class="px-4 pt-4">
