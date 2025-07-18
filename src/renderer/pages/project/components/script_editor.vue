@@ -194,9 +194,9 @@ import { getBadge } from "@/lib/beat_util.js";
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
-  imageFiles: (ArrayBuffer | null)[];
-  movieFiles: (ArrayBuffer | null)[];
-  audioFiles: (ArrayBuffer | null)[];
+  imageFiles: (string | null)[];
+  movieFiles: (string | null)[];
+  audioFiles: (string | null)[];
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
