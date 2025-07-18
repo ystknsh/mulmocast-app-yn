@@ -127,26 +127,31 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
-        <div class="space-y-4">
-          <Card class="px-4">
+        <div class="space-y-4 mx-auto">
+          <div class="px-2 py-1">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
-          </Card>
+          </div>
 
-          <Card v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="p-4">
-            <BeatEditor
-              :beat="beat"
-              :index="index"
-              :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-              :imageFile="imageFiles[index]"
-              :movieFile="movieFiles[index]"
-              :mulmoError="mulmoError?.['beats']?.[index] ?? []"
-              @update="update"
-              @generateImage="generateImage"
-              @deleteBeat="deleteBeat"
-              @positionUp="positionUp"
-              @addBeat="addBeat"
-            />
-          </Card>
+          <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index">
+            <Card class="p-4">
+              <BeatEditor
+                :beat="beat"
+                :index="index"
+                :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
+                :imageFile="imageFiles[index]"
+                :movieFile="movieFiles[index]"
+                :mulmoError="mulmoError?.['beats']?.[index] ?? []"
+                @update="update"
+                @generateImage="generateImage"
+                @deleteBeat="deleteBeat"
+                @positionUp="positionUp"
+                @addBeat="addBeat"
+              />
+            </Card>
+            <div class="px-4 pt-4">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+            </div>
+          </div>
         </div>
       </div>
     </TabsContent>
