@@ -22,12 +22,12 @@
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-        <div class="space-y-6 mx-auto">
+        <div class="space-y-2 mx-auto">
           <div class="px-2 py-1">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
 
-          <div v-for="(beat, index) in safeBeats ?? []" :key="index">
+          <div v-for="(beat, index) in safeBeats ?? []" :key="index" class="relative">
             <Card class="p-4 space-y-1 gap-2">
               <div class="font-bold text-gray-700 flex justify-between items-center">
                 <span>Beat {{ index + 1 }}</span>
@@ -54,25 +54,26 @@
               <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
               <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
               <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-
-              <div class="flex items-center gap-1 px-2 py-1 pr-3">
-                <ArrowUp
-                  v-if="index !== 0"
-                  @click="() => positionUp(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-                />
-                <ArrowDown
-                  v-if="(mulmoValue?.beats ?? []).length !== index + 1"
-                  @click="() => positionUp(index + 1)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-                />
-                <Trash
-                  @click="deleteBeat(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
-                />
-              </div>
             </Card>
-            <div class="px-4 pt-4">
+            <div
+              class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+            >
+              <ArrowUp
+                v-if="index !== 0"
+                @click="() => positionUp(index)"
+                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+              />
+              <ArrowDown
+                v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                @click="() => positionUp(index + 1)"
+                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+              />
+              <Trash
+                @click="deleteBeat(index)"
+                class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+              />
+            </div>
+            <div class="px-4 pt-2">
               <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
             </div>
           </div>
@@ -127,26 +128,46 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
-        <div class="space-y-4">
-          <Card class="px-4">
+        <div class="space-y-2 mx-auto">
+          <div class="px-2 py-1">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
-          </Card>
+          </div>
 
-          <Card v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="p-4">
-            <BeatEditor
-              :beat="beat"
-              :index="index"
-              :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-              :imageFile="imageFiles[index]"
-              :movieFile="movieFiles[index]"
-              :mulmoError="mulmoError?.['beats']?.[index] ?? []"
-              @update="update"
-              @generateImage="generateImage"
-              @deleteBeat="deleteBeat"
-              @positionUp="positionUp"
-              @addBeat="addBeat"
-            />
-          </Card>
+          <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">
+            <Card class="p-4">
+              <BeatEditor
+                :beat="beat"
+                :index="index"
+                :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
+                :imageFile="imageFiles[index]"
+                :movieFile="movieFiles[index]"
+                :mulmoError="mulmoError?.['beats']?.[index] ?? []"
+                @update="update"
+                @generateImage="generateImage"
+              />
+            </Card>
+            <div
+              class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+            >
+              <ArrowUp
+                v-if="index !== 0"
+                @click="() => positionUp(index)"
+                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+              />
+              <ArrowDown
+                v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                @click="() => positionUp(index + 1)"
+                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+              />
+              <Trash
+                @click="deleteBeat(index)"
+                class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+              />
+            </div>
+            <div class="px-4 pt-2">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+            </div>
+          </div>
         </div>
       </div>
     </TabsContent>
