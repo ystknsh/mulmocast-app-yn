@@ -8,7 +8,7 @@ export const getBadge = (beat: MulmoBeat) => {
         return "Remote File";
       }
       */
-      if (beat.image?.source?.kind === "path") {
+      if ("source" in beat.image && beat.image?.source?.kind === "path") {
         return "Local File";
       }
     }
