@@ -1,5 +1,4 @@
 import { ipcMain, dialog, shell } from "electron";
-import { mulmoTest } from "./mulmo/test";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
@@ -15,11 +14,6 @@ export const registerIPCHandler = () => {
     });
     if (canceled) return null;
     return filePaths[0];
-  });
-
-  ipcMain.handle("mulmo:test", async (event, option) => {
-    const webContents = event.sender;
-    mulmoTest(option, webContents);
   });
 
   ipcMain.handle("mulmoHandler", async (event, method, ...args) => {
