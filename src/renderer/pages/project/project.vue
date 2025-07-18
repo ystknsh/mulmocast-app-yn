@@ -608,7 +608,7 @@ watch(
     if (
       mulmoEvent &&
       mulmoEvent.kind === "beat" &&
-      ["image", "movie"].includes(mulmoEvent.sessionType) &&
+      ["image", "movie", "html"].includes(mulmoEvent.sessionType) &&
       !mulmoEvent.inSession
     ) {
       const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, mulmoEvent.index);
