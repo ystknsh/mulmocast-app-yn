@@ -23,30 +23,39 @@
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
-          <Card v-for="(beat, index) in safeBeats ?? []" :key="index" class="p-4 space-y-1 gap-2">
-            <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
-            <div>
-              <Label>Speaker</Label>
-              <Input
-                :model-value="beat?.speaker"
-                @update:model-value="(value) => update(index, 'speaker', String(value))"
-                placeholder="e.g. Alice"
-                class="h-8"
-              />
+          <div class="px-2 py-1">
+            <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
+          </div>
+
+          <div v-for="(beat, index) in safeBeats ?? []" :key="index">
+            <Card class="p-4 space-y-1 gap-2">
+              <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
+              <div>
+                <Label>Speaker</Label>
+                <Input
+                  :model-value="beat?.speaker"
+                  @update:model-value="(value) => update(index, 'speaker', String(value))"
+                  placeholder="e.g. Alice"
+                  class="h-8"
+                />
+              </div>
+              <div>
+                <Label>Text</Label>
+                <Input
+                  :model-value="beat.text"
+                  @update:model-value="(value) => update(index, 'text', String(value))"
+                  placeholder="e.g. What is AI?"
+                  class="h-8"
+                />
+              </div>
+              <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+              <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+              <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+            </Card>
+            <div class="px-4 pt-4">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
             </div>
-            <div>
-              <Label>Text</Label>
-              <Input
-                :model-value="beat.text"
-                @update:model-value="(value) => update(index, 'text', String(value))"
-                placeholder="e.g. What is AI?"
-                class="h-8"
-              />
-            </div>
-            <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-            <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-            <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-          </Card>
+          </div>
         </div>
       </div>
     </TabsContent>
