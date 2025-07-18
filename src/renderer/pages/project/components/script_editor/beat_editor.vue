@@ -253,6 +253,8 @@ import { useRoute } from "vue-router";
 import BeatAdd from "./beat_add.vue";
 import MediaModal from "@/components/media_modal.vue";
 
+import { getBadge } from "@/lib/beat_util.js";
+
 interface Props {
   beat: MulmoBeat;
   index: number;
@@ -326,27 +328,6 @@ const getPromptLabel = (beat: MulmoBeat) => {
       default:
         return "Prompt";
     }
-  }
-  if (beat.htmlPrompt) {
-    return "Html Prompt";
-  }
-  return "Image Prompt";
-};
-
-const getBadge = (beat: MulmoBeat) => {
-  if (beat?.image) {
-    if (["image", "movie"].includes(beat.image.type)) {
-      /*
-      if (beat.image?.source?.kind === 'url') {
-        return "Remote File";
-      }
-      */
-      if (beat.image?.source?.kind === "path") {
-        return "Local File";
-      }
-    }
-
-    return beat?.image?.type;
   }
   if (beat.htmlPrompt) {
     return "Html Prompt";

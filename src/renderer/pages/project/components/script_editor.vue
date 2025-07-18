@@ -29,7 +29,10 @@
 
           <div v-for="(beat, index) in safeBeats ?? []" :key="index">
             <Card class="p-4 space-y-1 gap-2">
-              <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
+              <div class="font-bold text-gray-700 flex justify-between items-center">
+                <span>Beat {{ index + 1 }}</span>
+                <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+              </div>
               <div>
                 <Label>Speaker</Label>
                 <Input
@@ -148,6 +151,7 @@ import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BeatEditor from "./script_editor/beat_editor.vue";
@@ -165,6 +169,8 @@ import { MulmoError } from "../../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
+
+import { getBadge } from "@/lib/beat_util.js";
 
 interface Props {
   mulmoValue: MulmoScript;
