@@ -158,7 +158,7 @@
           :key="`beat_editor_${beat.id ?? index}`"
         >
           <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
-          <template v-if="isImageGenerating">
+          <template v-if="isImageGenerating || isHtmlGenerating">
             <!-- TODO update design -->
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </template>
@@ -287,8 +287,11 @@ const isImageGenerating = computed(() => {
 const isMovieGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index];
 });
+const isHtmlGenerating = computed(() => {
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index];
+});
 const isGenerating = computed(() => {
-  return isImageGenerating.value || isMovieGenerating.value;
+  return isImageGenerating.value || isMovieGenerating.value || isHtmlGenerating.value;
 });
 
 const getPromptLabel = (beat: MulmoBeat) => {
