@@ -146,7 +146,7 @@
                 size="sm"
                 @click="generateImageOnlyMovie()"
                 class="mt-4"
-                :disabled="!enableMovieGenearate"
+                :disabled="!enableMovieGenerate"
                 >Generate movie</Button
               >
               <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
@@ -289,7 +289,7 @@ const shouldShowGenerateButton = computed(() => {
   );
 });
 
-const enableMovieGenearate = computed(() => {
+const enableMovieGenerate = computed(() => {
   return !!props.beat.moviePrompt;
 });
 
