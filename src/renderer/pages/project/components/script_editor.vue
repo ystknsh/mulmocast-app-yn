@@ -22,7 +22,7 @@
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-        <div class="space-y-6 mx-auto">
+        <div class="space-y-2 mx-auto">
           <div class="px-2 py-1">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
@@ -71,7 +71,7 @@
                 class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
               />
             </div>
-            <div class="px-4 pt-4">
+            <div class="px-4 pt-2">
               <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
             </div>
           </div>
@@ -126,7 +126,7 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
-        <div class="space-y-4 mx-auto">
+        <div class="space-y-2 mx-auto">
           <div class="px-2 py-1">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
@@ -160,7 +160,7 @@
                 class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
               />
             </div>
-            <div class="px-4 pt-4">
+            <div class="px-4 pt-2">
               <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
             </div>
           </div>
