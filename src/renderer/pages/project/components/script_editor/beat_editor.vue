@@ -132,6 +132,7 @@
               :model-value="beat.moviePrompt"
               @update:model-value="(value) => update('moviePrompt', String(value))"
               type="text"
+              placeholder="Blank won't work, space will."
             />
           </template>
         </div>
@@ -140,7 +141,7 @@
           <template v-if="!isGenerating">
             <template v-if="shouldBeGeneratedWithPrompt">
               <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4">Generate image</Button>
-              <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4">Generate movie</Button>
+              <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4" :disabled="!enableMovieGenearate">Generate movie</Button>
               <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
             </template>
             <Button variant="outline" size="sm" @click="generateImage()" class="mt-4" v-else>Generate image</Button>
@@ -279,6 +280,10 @@ const shouldShowGenerateButton = computed(() => {
       props.beat.image?.source?.kind === "path"
     )
   );
+});
+
+const enableMovieGenearate = computed(() => {
+  return !!props.beat.moviePrompt;
 });
 
 const isImageGenerating = computed(() => {
