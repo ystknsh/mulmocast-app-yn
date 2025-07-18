@@ -209,7 +209,7 @@ const createScript = async () => {
 const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
   run(initialMessages);
-  templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
+  templates.value = (await window.electronAPI.mulmoHandler("getAvailableTemplates")) as MulmoScriptTemplateFile[];
   selectedTemplateFileName.value = templates.value[0].filename;
 });
 
