@@ -1,3 +1,5 @@
+import type { MulmoBeat } from "mulmocast/browser";
+
 export const getBadge = (beat: MulmoBeat) => {
   if (beat?.image) {
     if (["image", "movie"].includes(beat.image.type)) {
@@ -6,7 +8,7 @@ export const getBadge = (beat: MulmoBeat) => {
         return "Remote File";
       }
       */
-      if (beat.image?.source?.kind === "path") {
+      if ("source" in beat.image && beat.image?.source?.kind === "path") {
         return "Local File";
       }
     }
