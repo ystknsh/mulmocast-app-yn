@@ -67,24 +67,11 @@ const templates = ref([
     },
   },
   {
-    name: "local image",
+    name: "local media file",
     beat: {
       text: "",
       image: {
         type: "image",
-        source: {
-          kind: "path",
-          path: "",
-        },
-      },
-    },
-  },
-  {
-    name: "local movie",
-    beat: {
-      text: "",
-      image: {
-        type: "movie",
         source: {
           kind: "path",
           path: "",
