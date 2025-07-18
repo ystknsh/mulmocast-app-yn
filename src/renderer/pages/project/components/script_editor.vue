@@ -228,7 +228,7 @@ const safeBeats = computed(() => {
 watch(currentTab, () => {
   if (
     !props.isValidScriptData &&
-    ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value as string)
+    ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value as "yaml" | "json")
   ) {
     currentTab.value = lastTab.value;
   } else {

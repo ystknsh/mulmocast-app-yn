@@ -39,7 +39,7 @@
             <Label class="text-xs">Voice ID</Label>
             <Select
               :model-value="speaker.voiceId"
-              @update:model-value="(value) => handleSpeakerVoiceChange(name, value)"
+              @update:model-value="(value) => handleSpeakerVoiceChange(name, String(value))"
             >
               <SelectTrigger class="h-8">
                 <SelectValue />
@@ -60,7 +60,7 @@
               <Label class="text-xs">Language</Label>
               <Select
                 :model-value="selectedLanguages[name] || DEFAULT_LANGUAGE"
-                @update:model-value="(value) => handleLanguageChange(name, value)"
+                @update:model-value="(value) => handleLanguageChange(name, String(value))"
               >
                 <SelectTrigger class="h-8">
                   <SelectValue />
