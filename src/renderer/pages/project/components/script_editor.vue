@@ -243,13 +243,14 @@ const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_ED
 const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const safeBeats = computed(() => {
-  return (props.mulmoValue?.beats ?? []).map((beat) => {
-    return beat || {};
-  });
+  return props.mulmoValue?.beats ?? [];
 });
 
 watch(currentTab, () => {
-  if (!props.isValidScriptData && ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value)) {
+  if (
+    !props.isValidScriptData &&
+    ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value as "yaml" | "json")
+  ) {
     currentTab.value = lastTab.value;
   } else {
     lastTab.value = currentTab.value;

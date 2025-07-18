@@ -140,7 +140,7 @@ const playVideo = () => {
 };
 
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
-  const buffer = await window.electronAPI.mulmoHandler("downloadFile", projectId.value, fileType);
+  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, fileType)) as ArrayBuffer;
   const blob = new Blob([buffer], { type: mimeType });
   const url = URL.createObjectURL(blob);
 
