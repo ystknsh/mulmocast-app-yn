@@ -326,7 +326,7 @@ const getBadge = (beat: MulmoBeat) => {
         return "Remote File";
       }
       */
-      if (beat.image?.source?.kind === 'path') {
+      if (beat.image?.source?.kind === "path") {
         return "Local File";
       }
     }
