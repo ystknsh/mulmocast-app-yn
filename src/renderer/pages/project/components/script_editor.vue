@@ -54,6 +54,23 @@
               <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
               <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
               <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+
+              <div class="flex items-center gap-1 px-2 py-1 pr-3">
+                <ArrowUp
+                  v-if="index !== 0"
+                  @click="() => positionUp(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <ArrowDown
+                  v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                  @click="() => positionUp(index + 1)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <Trash
+                  @click="deleteBeat(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+                />
+              </div>
             </Card>
             <div class="px-4 pt-4">
               <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
@@ -158,6 +175,8 @@ import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatAdd from "./script_editor/beat_add.vue";
 import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
 import CodeEditor from "@/components/code_editor.vue";
+
+import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 
 import YAML from "yaml";
 import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
