@@ -1,3 +1,5 @@
+import type { MulmoBeat } from "mulmocast/browser";
+
 export const getBadge = (beat: MulmoBeat) => {
   if (beat?.image) {
     if (["image", "movie"].includes(beat.image.type)) {
