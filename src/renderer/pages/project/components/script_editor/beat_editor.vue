@@ -215,21 +215,6 @@
         {{ error }}
       </div>
     </div>
-    <div class="flex justify-end mt-2 py-1 rounded border border-gray-300">
-      <div class="flex items-center gap-1 px-2 py-1 pr-3">
-        <ArrowUp
-          v-if="index !== 0"
-          @click="positionUp"
-          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-        />
-        <ArrowDown
-          v-if="!isEnd"
-          @click="positionDown"
-          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-        />
-        <Trash @click="trash" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
-      </div>
-    </div>
 
     <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
@@ -242,7 +227,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FileImage, Video, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
+import { FileImage, Video, Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 
 import { useMulmoEventStore } from "../../../../store";
@@ -261,7 +246,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]);
+const emit = defineEmits(["update", "generateImage"]);
 
 const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
@@ -395,16 +380,6 @@ const generateImageOnlyMovie = () => {
 
 const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
-};
-
-const positionUp = () => {
-  emit("positionUp", props.index);
-};
-const positionDown = () => {
-  emit("positionUp", props.index + 1);
-};
-const trash = () => {
-  emit("deleteBeat", props.index);
 };
 
 const getMediaSrc = (file: ArrayBuffer | string | null): string => {
