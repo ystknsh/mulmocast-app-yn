@@ -27,9 +27,9 @@
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
 
-          <TransitionGroup 
-            name="beat-list" 
-            tag="div" 
+          <TransitionGroup
+            name="beat-list"
+            tag="div"
             class="space-y-2"
             enter-active-class="transition-all duration-300 ease-out"
             enter-from-class="opacity-0 translate-y-2 scale-95"
@@ -144,9 +144,9 @@
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
 
-          <TransitionGroup 
-            name="beat-list" 
-            tag="div" 
+          <TransitionGroup
+            name="beat-list"
+            tag="div"
             class="space-y-2"
             enter-active-class="transition-all duration-300 ease-out"
             enter-from-class="opacity-0 translate-y-2 scale-95"
@@ -154,7 +154,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">          
+            <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">
               <Card class="p-4">
                 <BeatEditor
                   :beat="beat"
