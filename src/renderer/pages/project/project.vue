@@ -302,11 +302,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, defineComponent, h, markRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
-import { isNull } from "graphai/lib/utils/utils";
 import { useRoute, useRouter } from "vue-router";
 
-import { projectApi, type ProjectMetadata } from "@/lib/project_api";
-import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import {
   ArrowLeft,
   Code2,
@@ -325,6 +322,9 @@ import {
   Bot,
   FolderOpen,
 } from "lucide-vue-next";
+import dayjs from "dayjs";
+import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -343,9 +343,11 @@ import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
 import ProductTabs from "./components/product_tabs.vue";
 import ConcurrentTaskStatus from "./components/concurrent_task_status.vue";
-import dayjs from "dayjs";
 
-import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
+import { projectApi, type ProjectMetadata } from "@/lib/project_api";
+import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
+import { notifySuccess, notifyProgress } from "@/lib/notification";
+import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../../store";
 
@@ -362,7 +364,6 @@ import {
 } from "./composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab } from "../../../shared/constants";
-import { notifySuccess, notifyProgress } from "@/lib/notification";
 
 import { zodError2MulmoError } from "../../lib/error";
 
@@ -458,12 +459,7 @@ const mulmoError = computed<MulmoError>(() => {
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
-    data.data.beats.map((beat) => {
-      if (isNull(beat.id)) {
-        beat.id = crypto.randomUUID();
-      }
-      return beat;
-    });
+    data.data.beats.map(setRandomBeatId);
     mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
   }

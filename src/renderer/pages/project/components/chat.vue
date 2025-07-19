@@ -89,7 +89,9 @@ import { openAIAgent } from "@graphai/llm_agents";
 import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
+
 import { notifyError } from "@/lib/notification";
+import { setRandomBeatId } from "@/lib/beat_util.js";
 
 const { initialMessages = [] } = defineProps<{
   initialMessages: ChatMessage[];
@@ -192,15 +194,13 @@ const isCreatingScript = ref(false);
 const createScript = async () => {
   try {
     isCreatingScript.value = true;
-    const script = await window.electronAPI.mulmoHandler(
+    const script = (await window.electronAPI.mulmoHandler(
       "createMulmoScript",
       messages.value.map((m) => ({ role: m.role, content: m.content })),
       selectedTemplateFileName.value,
-    );
-    script.beats.map(beat => {
-      beat.id = crypto.randomUUID();
-    });
-    emit("update:updateMulmoScript", script as MulmoScript);
+    )) as MulmoScript;
+    script.beats.map(setRandomBeatId);
+    emit("update:updateMulmoScript", script);
   } catch (error) {
     console.error("Failed to create script:", error);
     notifyError("Failed to create script", "Please try again");
