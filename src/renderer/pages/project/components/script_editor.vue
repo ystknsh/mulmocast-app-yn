@@ -37,7 +37,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats ?? []" :key="index" class="relative">
+            <div v-for="(beat, index) in beatsWithTempId" :key="beat._tempId" class="relative">
               <Card class="p-4 space-y-1 gap-2">
                 <div class="font-bold text-gray-700 flex justify-between items-center">
                   <span>Beat {{ index + 1 }}</span>
@@ -154,7 +154,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">          
+            <div v-for="(beat, index) in beatsWithTempId" :key="beat._tempId" class="relative">          
               <Card class="p-4">
                 <BeatEditor
                   :beat="beat"
@@ -265,7 +265,22 @@ const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_ED
 const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const safeBeats = computed(() => {
-  return props.mulmoValue?.beats ?? [];
+  const beats = props.mulmoValue?.beats ?? [];
+  console.log("=== BEATS STATUS ===");
+  console.log("Total beats:", beats.length);
+  beats.forEach((beat, i) => {
+    const tempId = beat.id || `temp-${i}-${beat.text?.slice(0,10) || 'empty'}`;
+    console.log(`Beat ${i}: id=${beat.id || 'NO_ID'}, tempId=${tempId}, text="${beat.text?.slice(0, 20) || 'empty'}..."`);
+  });
+  console.log("==================");
+  return beats;
+});
+
+const beatsWithTempId = computed(() => {
+  return safeBeats.value.map((beat, index) => ({
+    ...beat,
+    _tempId: beat.id || `temp-${index}-${beat.text?.slice(0,10) || 'empty'}`
+  }));
 });
 
 watch(currentTab, () => {
