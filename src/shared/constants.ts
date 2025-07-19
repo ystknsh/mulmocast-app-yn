@@ -222,3 +222,8 @@ export const LANGUAGES = [
   { id: "uk", name: "Ukrainian" },
   { id: "el", name: "Greek" },
 ] as const;
+
+export const I18N_SUPPORTED_LANGUAGES = [
+  { id: "en", name: "English" },
+  { id: "ja", name: "日本語" },
+] as const;

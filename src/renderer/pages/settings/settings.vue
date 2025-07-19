@@ -18,8 +18,9 @@
                   <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="ja">日本語</SelectItem>
+                  <SelectItem v-for="language in I18N_SUPPORTED_LANGUAGES" :key="language.id" :value="language.id">
+                    {{ language.name }}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <p class="text-sm text-muted-foreground">{{ t("settings.appSettings.language.description") }}</p>
@@ -70,6 +71,7 @@ import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
 import { ENV_KEYS } from "../../../shared/constants";
 import { useI18n } from "vue-i18n";
+import { I18N_SUPPORTED_LANGUAGES } from "../../../shared/constants";
 
 const { locale, t } = useI18n();
 
