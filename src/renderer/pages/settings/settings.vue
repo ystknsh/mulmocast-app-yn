@@ -1,28 +1,28 @@
 <template>
   <Layout>
     <div class="container mx-auto p-6 max-w-2xl">
-      <h1 class="text-3xl font-bold mb-8">Settings</h1>
+      <h1 class="text-3xl font-bold mb-8">{{ t("settings.title") }}</h1>
 
       <div class="space-y-6">
         <!-- App Settings Section -->
         <Card>
           <CardHeader>
-            <CardTitle>App Settings</CardTitle>
-            <CardDescription>Configure application settings</CardDescription>
+            <CardTitle>{{ t("settings.appSettings.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.appSettings.description") }}</CardDescription>
           </CardHeader>
           <CardContent>
             <div class="space-y-2">
-              <Label for="language">Display Language</Label>
+              <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
               <Select v-model="selectedLanguage">
                 <SelectTrigger id="language">
-                  <SelectValue placeholder="Select a language" />
+                  <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
                   <SelectItem value="ja">日本語</SelectItem>
                 </SelectContent>
               </Select>
-              <p class="text-sm text-muted-foreground">Select your preferred display language for the application</p>
+              <p class="text-sm text-muted-foreground">{{ t("settings.appSettings.language.description") }}</p>
             </div>
           </CardContent>
         </Card>
@@ -30,8 +30,8 @@
         <!-- API Key Settings Section -->
         <Card>
           <CardHeader>
-            <CardTitle>API Key Settings</CardTitle>
-            <CardDescription>Configure API keys for external services</CardDescription>
+            <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2">
@@ -72,7 +72,7 @@ import Layout from "@/components/layout.vue";
 import { ENV_KEYS } from "../../../shared/constants";
 import { useI18n } from "vue-i18n";
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
@@ -110,10 +110,10 @@ onMounted(async () => {
 const saveSettings = async () => {
   try {
     await window.electronAPI.settings.set({ ...apiKeys, APP_LANGUAGE: selectedLanguage.value });
-    notifySuccess("Settings saved");
+    notifySuccess(t("settings.notifications.success"));
   } catch (error) {
     console.error("Failed to save settings:", error);
-    notifyError("Error", "Failed to save settings");
+    notifyError("Error", t("settings.notifications.error"));
   }
 };
 
