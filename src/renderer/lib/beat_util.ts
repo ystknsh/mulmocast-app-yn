@@ -1,4 +1,5 @@
 import type { MulmoBeat } from "mulmocast/browser";
+import { isNull } from "graphai/lib/utils/utils";
 
 export const getBadge = (beat: MulmoBeat) => {
   if (beat?.image) {
@@ -31,4 +32,11 @@ export const isURLSourceMediaBeat = (beat: MulmoBeat) => {
 
 export const isLocalSourceMediaBeat = (beat: MulmoBeat) => {
   return "source" in beat.image && beat.image?.source?.kind === "path";
+};
+
+export const setRandomBeatId = (beat: MulmoBeat) => {
+  if (isNull(beat.id)) {
+    beat.id = crypto.randomUUID();
+  }
+  return beat;
 };

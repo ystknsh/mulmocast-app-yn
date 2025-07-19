@@ -17,6 +17,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
+import { setRandomBeatId } from "@/lib/beat_util.js";
 
 const emit = defineEmits(["addBeat"]);
 
@@ -26,6 +27,7 @@ const templates = ref([
   {
     name: "Html prompt",
     beat: {
+      speaker: "",
       text: "",
       htmlPrompt: {
         prompt: "",
@@ -35,6 +37,7 @@ const templates = ref([
   {
     name: "Image prompt",
     beat: {
+      speaker: "",
       text: "",
       imagePrompt: "",
       moviePrompt: "",
@@ -44,6 +47,7 @@ const templates = ref([
     name: "remote image",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "image",
         source: {
@@ -57,6 +61,7 @@ const templates = ref([
     name: "remote movie",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "movie",
         source: {
@@ -70,6 +75,7 @@ const templates = ref([
     name: "local media file",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "image",
         source: {
@@ -83,6 +89,7 @@ const templates = ref([
     name: "Text Slide",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "textSlide",
         slide: {
@@ -96,6 +103,7 @@ const templates = ref([
     name: "Markdown",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "markdown",
         markdown: [],
@@ -106,6 +114,7 @@ const templates = ref([
     name: "Chart",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "chart",
         title: "",
@@ -117,6 +126,7 @@ const templates = ref([
     name: "Mermaid",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "mermaid",
         title: "",
@@ -131,6 +141,7 @@ const templates = ref([
     name: "Tailwind html",
     beat: {
       text: "",
+      speaker: "",
       image: {
         type: "html_tailwind",
         html: [],
@@ -140,6 +151,9 @@ const templates = ref([
 ]);
 
 const addBeat = () => {
-  emit("addBeat", templates.value[selectedBeat.value].beat);
+  const beat = { ...templates.value[selectedBeat.value].beat };
+  setRandomBeatId(beat);
+
+  emit("addBeat", beat);
 };
 </script>
