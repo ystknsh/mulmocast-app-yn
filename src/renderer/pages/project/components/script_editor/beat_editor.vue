@@ -196,14 +196,19 @@
         </div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
           <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
-          <video
-            :size="64"
-            class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
-            controls
-            :src="getMediaSrc(movieFile)"
-            @click="openModal('video', movieFile)"
-            v-else
-          />
+          <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else>
+            <video
+              :size="64"
+              class="mx-auto text-gray-400 cursor-pointer"
+              :src="getMediaSrc(movieFile)"
+              @click="openModal('video', movieFile)"
+            />
+            <Play
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-black/50 rounded-full p-2"
+              :size="40"
+              @click="openModal('video', movieFile)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -228,7 +233,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FileImage, Video, Loader2 } from "lucide-vue-next";
+import { FileImage, Video, Loader2, Play } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 
 import { useMulmoEventStore } from "../../../../store";

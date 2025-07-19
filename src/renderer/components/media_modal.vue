@@ -18,6 +18,7 @@
           v-else-if="type === 'video'"
           :src="src"
           controls
+          autoplay
           class="max-w-full max-h-[90vh] cursor-pointer"
           @click.stop
         />
