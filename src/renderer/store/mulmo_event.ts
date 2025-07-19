@@ -5,17 +5,21 @@ import type { SessionType, BeatSessionType, SessionProgressEvent } from "mulmoca
 
 type SessionStateEntry = Record<SessionType, boolean>;
 type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
-type SessionState = Record<string, { beat: BeatSessionStateEntry; artifact: SessionStateEntry }>;
+type SessionState = Record<
+  string,
+  { beat: BeatSessionStateEntry; artifact: SessionStateEntry; beatGenerate: BeatSessionStateEntry }
+>;
+
+type AppSessionProgressEvent = { kind: "beatGenerate"; sessionType: "image"; index: number; inSession: boolean };
 
 export const useMulmoEventStore = defineStore("mulmoEvent", () => {
-  const mulmoEvent = ref<Record<string, SessionProgressEvent>>({});
+  const mulmoEvent = ref<Record<string, SessionProgressEvent | AppSessionProgressEvent>>({});
   const sessionState = ref<SessionState>({});
 
-  const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent>) => {
+  const mulmoLogCallback = (log: MulmoProgressLog<SessionProgressEvent | AppSessionProgressEvent>) => {
     const { projectId, data } = log;
     const { kind, sessionType, inSession } = data;
     mulmoEvent.value[projectId] = data;
-
     if (!sessionState.value[projectId]) {
       sessionState.value[projectId] = {
         artifact: {
@@ -35,6 +39,15 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
           html: {},
           imageReference: {},
         },
+        beatGenerate: {
+          audio: {},
+          image: {},
+          multiLingual: {},
+          caption: {},
+          movie: {},
+          html: {},
+          imageReference: {},
+        },
       };
     }
 
@@ -43,6 +56,9 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
     }
     if (kind === "beat") {
       sessionState.value[projectId]["beat"][sessionType][data.index] = inSession;
+    }
+    if (kind === "beatGenerate") {
+      sessionState.value[projectId]["beatGenerate"][sessionType][data.index] = inSession;
     }
   };
 

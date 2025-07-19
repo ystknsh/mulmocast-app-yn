@@ -149,7 +149,6 @@
                 :disabled="!enableMovieGenerate"
                 >Generate movie</Button
               >
-              <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
             </template>
             <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4" v-else
               >Generate image</Button
@@ -370,9 +369,6 @@ const handleDrop = (event: DragEvent) => {
   }
 };
 
-const generateImage = () => {
-  emit("generateImage", props.index, "all");
-};
 const generateImageOnlyImage = () => {
   emit("generateImage", props.index, "image");
 };

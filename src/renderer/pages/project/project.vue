@@ -597,8 +597,8 @@ watch(
     // beats
     if (
       mulmoEvent &&
-      mulmoEvent.kind === "beat" &&
-      ["image", "movie", "html"].includes(mulmoEvent.sessionType) &&
+      mulmoEvent.kind === "beatGenerate" &&
+      ["image"].includes(mulmoEvent.sessionType) &&
       !mulmoEvent.inSession
     ) {
       const data: { imageData?: Buffer; movieData?: Buffer } = await window.electronAPI.mulmoHandler(
