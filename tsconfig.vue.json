@@ -4,6 +4,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["src/renderer/*"],
       "@/types": ["src/types/index"],
