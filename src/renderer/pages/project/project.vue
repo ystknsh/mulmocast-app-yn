@@ -394,7 +394,9 @@ const isPreviewAreaVisible = ref(false);
 onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
-    mulmoScriptHistoryStore.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
+    const data = await projectApi.getProjectMulmoScript(projectId.value);
+    data.beats.map(setRandomBeatId);
+    mulmoScriptHistoryStore.initMulmoScript(data);
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
