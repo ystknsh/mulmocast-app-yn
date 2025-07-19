@@ -49,7 +49,6 @@
                   <EyeOff v-else class="h-4 w-4" />
                 </Button>
               </div>
-              <p class="text-sm text-muted-foreground">{{ config.description }}</p>
             </div>
           </CardContent>
         </Card>
@@ -76,7 +75,7 @@ const { locale, t } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
-const selectedLanguage = ref("en");
+const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
 // Initialize all keys
