@@ -2,10 +2,11 @@ import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
+import { mulmoScriptSchema, type MulmoScript } from "mulmocast";
+
 import { Project, ProjectMetadata } from "../types";
-import type { MulmoScript } from "mulmocast";
-import { mulmoScriptSchema } from "mulmocast";
 import { SCRIPT_EDITOR_TABS } from "../shared/constants";
+import { initMulmoScript } from "../shared/beat_data";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
@@ -118,20 +119,7 @@ export const createProject = async (title: string): Promise<Project> => {
       scriptEditorActiveTab: SCRIPT_EDITOR_TABS.TEXT,
     };
 
-    const script = {
-      $mulmocast: {
-        version: "1.0",
-        credit: "closing",
-      },
-      beats: [
-        {
-          speaker: "Presenter",
-          text: "",
-          imagePrompt: "",
-        },
-      ],
-    };
-    const newScript = mulmoScriptSchema.strip().safeParse(script);
+    const newScript = mulmoScriptSchema.strip().safeParse(initMulmoScript);
     console.log(newScript);
     const mulmoScript = newScript.data;
 

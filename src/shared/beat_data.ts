@@ -1,4 +1,20 @@
-export const beatTemplate = [
+import { type MulmoBeat } from "mulmocast";
+
+export const initMulmoScript = {
+  $mulmocast: {
+    version: "1.0",
+    credit: "closing",
+  },
+  beats: [
+    {
+      speaker: "Presenter",
+      text: "",
+      imagePrompt: "",
+    },
+  ],
+};
+
+export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
   {
     name: "Html prompt",
     beat: {
