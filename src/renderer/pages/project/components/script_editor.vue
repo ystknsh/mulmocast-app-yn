@@ -37,7 +37,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats ?? []" :key="getBeatId(beat)" class="relative">
+            <div v-for="(beat, index) in safeBeats" :key="beat?.id || `beat-${index}`" class="relative">
               <Card class="p-4 space-y-1 gap-2">
                 <div class="font-bold text-gray-700 flex justify-between items-center">
                   <span>Beat {{ index + 1 }}</span>
@@ -252,17 +252,6 @@ const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-
-// TransitionGroup 向け 一時的な BeatIDを管理
-const beatIdMap = new WeakMap();
-const getBeatId = (beat: MulmoBeat | undefined) => {
-  if (!beat) return `empty-beat-${Date.now()}-${Math.random()}`;
-  
-  if (!beatIdMap.has(beat)) {
-    beatIdMap.set(beat, `beat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
-  }
-  return beatIdMap.get(beat);
-};
 
 const safeBeats = computed(() => {
   return props.mulmoValue?.beats ?? [];
