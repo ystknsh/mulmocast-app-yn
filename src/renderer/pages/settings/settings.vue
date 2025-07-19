@@ -70,6 +70,9 @@ import { Eye, EyeOff } from "lucide-vue-next";
 import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
 import { ENV_KEYS } from "../../../shared/constants";
+import { useI18n } from "vue-i18n";
+
+const { locale } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
@@ -104,8 +107,7 @@ onMounted(async () => {
   }
 });
 
-// Auto-save function with debounce
-const autoSave = async () => {
+const saveSettings = async () => {
   try {
     await window.electronAPI.settings.set({ ...apiKeys, APP_LANGUAGE: selectedLanguage.value });
     notifySuccess("Settings saved");
@@ -115,7 +117,7 @@ const autoSave = async () => {
   }
 };
 
-const debouncedSave = useDebounceFn(autoSave, 1000);
+const debouncedSave = useDebounceFn(saveSettings, 1000);
 
 // Watch for changes in apiKeys
 watch(
@@ -129,10 +131,11 @@ watch(
   { deep: true },
 );
 
-// Watch for changes in language selection - save immediately
-watch(selectedLanguage, () => {
+// Watch for changes in language selection - save immediately and update i18n locale
+watch(selectedLanguage, (newLang) => {
   if (!isInitialLoad.value) {
-    autoSave();
+    locale.value = newLang;
+    saveSettings();
   }
 });
 </script>
