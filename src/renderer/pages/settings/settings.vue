@@ -29,13 +29,6 @@
               <p class="text-sm text-muted-foreground">{{ config.description }}</p>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button @click="saveSettings" :disabled="isSaving">
-              <Save v-if="!isSaving" class="mr-2 h-4 w-4" />
-              <Loader2 v-else class="mr-2 h-4 w-4 animate-spin" />
-              Save
-            </Button>
-          </CardFooter>
         </Card>
       </div>
     </div>
@@ -43,19 +36,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, watch, nextTick } from "vue";
+import { useDebounceFn } from "@vueuse/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Save, Loader2 } from "lucide-vue-next";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-vue-next";
 import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
 import { ENV_KEYS } from "../../../shared/constants";
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
-const isSaving = ref(false);
+const isInitialLoad = ref(true);
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -72,21 +66,37 @@ onMounted(async () => {
         apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
+    // Wait for the next tick to avoid triggering save during initial load
+    await nextTick();
+    isInitialLoad.value = false;
   } catch (error) {
     console.error("Failed to load settings:", error);
+    isInitialLoad.value = false;
   }
 });
 
-const saveSettings = async () => {
-  isSaving.value = true;
+// Auto-save function with debounce
+const autoSave = async () => {
   try {
     await window.electronAPI.settings.set({ ...apiKeys });
-    notifySuccess("Settings saved", "API keys have been saved successfully");
+    notifySuccess("Settings saved");
   } catch (error) {
     console.error("Failed to save settings:", error);
     notifyError("Error", "Failed to save settings");
-  } finally {
-    isSaving.value = false;
   }
 };
+
+const debouncedSave = useDebounceFn(autoSave, 1000);
+
+// Watch for changes in apiKeys
+watch(
+  apiKeys,
+  () => {
+    // Skip save during initial load
+    if (!isInitialLoad.value) {
+      debouncedSave();
+    }
+  },
+  { deep: true },
+);
 </script>
