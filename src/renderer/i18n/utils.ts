@@ -1,6 +1,7 @@
 import { App, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
+import i18nConf, { languages } from "./index";
 
 export const i18nUtils = (app: App) => {
   app.config.globalProperties.localizedUrl = (path: string) => {
@@ -20,4 +21,15 @@ export const useI18nParam = () => {
     i18n.locale.value = lang.value;
   });
   i18n.locale.value = lang.value;
+};
+
+export const loadLanguagePreference = async () => {
+  try {
+    const settings = await window.electronAPI.settings.get();
+    if (settings.APP_LANGUAGE && languages.includes(settings.APP_LANGUAGE)) {
+      i18nConf.locale = settings.APP_LANGUAGE;
+    }
+  } catch (error) {
+    console.error("Failed to load language preference:", error);
+  }
 };
