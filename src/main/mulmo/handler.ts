@@ -101,9 +101,34 @@ export const mulmoGenerateImage = async (
     if ((target === "movie" || target === "all") && !beat.moviePrompt) {
       beat.moviePrompt = " ";
     }
-    console.log(context);
-    console.log(target, beat);
-    await generateBeatImage({ index, context, settings, forceImage, forceMovie });
+    const graphaiCallbacks = ({ nodeId, state }) => {
+      if (nodeId === "preprocessor" && state === "executing") {
+        webContents.send("progress-update", {
+          projectId,
+          type: "mulmo",
+          data: {
+            kind: "beatGenerate",
+            sessionType: "image",
+            inSession: true,
+            index,
+          },
+        });
+      }
+      if (nodeId === "output" && state === "completed") {
+        webContents.send("progress-update", {
+          projectId,
+          type: "mulmo",
+          data: {
+            kind: "beatGenerate",
+            sessionType: "image",
+            inSession: false,
+            index,
+          },
+        });
+      }
+    };
+
+    await generateBeatImage({ index, context, settings, forceImage, forceMovie, callbacks: [graphaiCallbacks] });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
