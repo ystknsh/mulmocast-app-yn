@@ -4,22 +4,16 @@ import { isNull } from "graphai/lib/utils/utils";
 export const getBadge = (beat: MulmoBeat) => {
   if (beat?.image) {
     if (["image", "movie"].includes(beat.image.type)) {
-      /*
-      if (beat.image?.source?.kind === 'url') {
-        return "Remote File";
-      }
-      */
       if ("source" in beat.image && beat.image?.source?.kind === "path") {
-        return "Local File";
+        return "media_file";
       }
     }
-
     return beat?.image?.type;
   }
   if (beat.htmlPrompt) {
-    return "Html Prompt";
+    return "html_prompt";
   }
-  return "Image Prompt";
+  return "image_prompt";
 };
 
 export const isMediaBeat = (beat: MulmoBeat) => {

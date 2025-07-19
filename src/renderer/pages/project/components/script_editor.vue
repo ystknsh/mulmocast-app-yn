@@ -41,7 +41,7 @@
               <Card class="p-4 space-y-1 gap-2">
                 <div class="font-bold text-gray-700 flex justify-between items-center">
                   <span>Beat {{ index + 1 }}</span>
-                  <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+                  <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
                 </div>
                 <div>
                   <Label>Speaker</Label>

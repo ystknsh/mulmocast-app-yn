@@ -31,6 +31,9 @@ const lang = {
       error: "Failed to save settings",
     },
   },
+  beat: {
+    badge: beat_badge,
+  },
   languages,
 };
 

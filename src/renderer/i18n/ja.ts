@@ -31,6 +31,9 @@ const lang = {
       error: "設定の保存に失敗しました",
     },
   },
+  beat: {
+    badge: beat_badge,
+  },
   languages,
 };
 

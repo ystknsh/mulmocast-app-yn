@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-2">
       <h4 class="font-medium">Beat: {{ index + 1 }}</h4>
-      <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+      <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
     </div>
 
     <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
