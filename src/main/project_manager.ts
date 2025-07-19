@@ -123,7 +123,13 @@ export const createProject = async (title: string): Promise<Project> => {
         version: "1.0",
         credit: "closing",
       },
-      beats: [{}],
+      beats: [
+        {
+          speaker: "Presenter",
+          text: "",
+          imagePrompt: "",
+        },
+      ],
     };
     const newScript = mulmoScriptSchema.strip().safeParse(script);
     console.log(newScript);
