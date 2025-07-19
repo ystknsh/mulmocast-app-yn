@@ -32,6 +32,10 @@
             >
               Drop file here
             </div>
+            or
+            <div class="flex">
+              <Input placeholder="url" v-model="mediaUrl" /><Button @click="submitUrlImage">Fetch</Button>
+            </div>
           </template>
 
           <!-- textSlide: title & bullets -->
@@ -256,6 +260,7 @@ const projectId = computed(() => route.params.id as string);
 const modalOpen = ref(false);
 const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
+const mediaUrl = ref("");
 
 const shouldBeGeneratedWithPrompt = computed(() => {
   return !props.beat.htmlPrompt && !props.beat.image;
@@ -366,6 +371,25 @@ const handleDrop = (event: DragEvent) => {
       generateImageOnlyImage();
     };
     reader.readAsArrayBuffer(file);
+  }
+};
+
+const submitUrlImage = async () => {
+  try {
+    const res = (await window.electronAPI.mulmoHandler(
+      "mulmoImageFetchURL",
+      projectId.value,
+      props.index,
+      mediaUrl.value,
+    )) as { result: boolean; imageType: string; path: string };
+    if (res.result) {
+      update("image.type", res.imageType);
+      update("image.source.path", "./" + res.path);
+      generateImageOnlyImage();
+      mediaUrl.value = "";
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 

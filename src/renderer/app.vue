@@ -34,6 +34,7 @@ export default defineComponent({
         }
         if (message.type === "error") {
           const errorData = message.data as { message?: string };
+          console.log(errorData);
           if (errorData?.message) {
             notifyError("Error", errorData.message);
           }

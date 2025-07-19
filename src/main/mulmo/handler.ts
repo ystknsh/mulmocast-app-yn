@@ -30,6 +30,8 @@ import { createMulmoScript } from "./scripting";
 import { z } from "zod";
 import { app, WebContents } from "electron";
 
+import { fetchAndSave } from "./fetch_url";
+
 // from ffprobePath
 // import os from "os";
 // const platform = os.platform();
@@ -341,14 +343,53 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
   }
 };
 
-export const mulmoImageUpload = async (projectId: string, index: number, bufferArray, extention: string) => {
+export const mulmoImageUpload = async (
+  projectId: string,
+  index: number,
+  bufferArray: Uint8Array,
+  extention: string,
+) => {
+  const dirPath = "upload_image";
   const projectPath = getProjectPath(projectId);
-  const dir = path.resolve(projectPath, "upload_image", String(index));
+  const dir = path.resolve(projectPath, dirPath, String(index));
   fs.mkdirSync(dir, { recursive: true });
   const filename = `${Date.now()}.${extention}`;
   fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
 
-  return path.join("upload_image", String(index), filename);
+  return path.join(dirPath, String(index), filename);
+};
+export const mulmoImageFetchURL = async (projectId: string, index: number, url: string, webContents: WebContents) => {
+  try {
+    const dirPath = "fetch_image";
+    const projectPath = getProjectPath(projectId);
+    const dir = path.resolve(projectPath, dirPath, String(index));
+
+    const res = await fetchAndSave(url, dir);
+
+    if (res.result) {
+      return {
+        result: true,
+        imageType: res.imageType,
+        path: path.join(dirPath, String(index), res.filename),
+      };
+    }
+    if (res.error) {
+      webContents.send("progress-update", {
+        projectId,
+        type: "error",
+        data: res.error,
+      });
+    }
+  } catch (error) {
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+  }
+  return {
+    result: false,
+  };
 };
 
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
@@ -380,6 +421,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":
         return await mulmoImageUpload(args[0], args[1], args[2], args[3]);
+      case "mulmoImageFetchURL":
+        return await mulmoImageFetchURL(args[0], args[1], args[2], webContents);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
