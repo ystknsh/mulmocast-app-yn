@@ -37,7 +37,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats" :key="beat?.id || `beat-${index}`" class="relative">
+            <div v-for="(beat, index) in safeBeats ?? []" :key="index" class="relative">
               <Card class="p-4 space-y-1 gap-2">
                 <div class="font-bold text-gray-700 flex justify-between items-center">
                   <span>Beat {{ index + 1 }}</span>
@@ -154,7 +154,7 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats" :key="beat?.id || `beat-${index}`" class="relative">          
+            <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">          
               <Card class="p-4">
                 <BeatEditor
                   :beat="beat"
