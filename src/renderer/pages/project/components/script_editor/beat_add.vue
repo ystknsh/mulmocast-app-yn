@@ -140,6 +140,9 @@ const templates = ref([
 ]);
 
 const addBeat = () => {
-  emit("addBeat", templates.value[selectedBeat.value].beat);
+  const beat = {...templates.value[selectedBeat.value].beat};
+  beat.id = crypto.randomUUID();
+
+  emit("addBeat", beat);
 };
 </script>

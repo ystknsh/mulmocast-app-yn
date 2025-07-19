@@ -197,6 +197,9 @@ const createScript = async () => {
       messages.value.map((m) => ({ role: m.role, content: m.content })),
       selectedTemplateFileName.value,
     );
+    script.beats.map(beat => {
+      beat.id = crypto.randomUUID();
+    });
     emit("update:updateMulmoScript", script as MulmoScript);
   } catch (error) {
     console.error("Failed to create script:", error);
