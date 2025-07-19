@@ -27,56 +27,67 @@
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </div>
 
-          <div v-for="(beat, index) in safeBeats ?? []" :key="index" class="relative">
-            <Card class="p-4 space-y-1 gap-2">
-              <div class="font-bold text-gray-700 flex justify-between items-center">
-                <span>Beat {{ index + 1 }}</span>
-                <Badge variant="outline">{{ getBadge(beat) }}</Badge>
-              </div>
-              <div>
-                <Label>Speaker</Label>
-                <Input
-                  :model-value="beat?.speaker"
-                  @update:model-value="(value) => update(index, 'speaker', String(value))"
-                  placeholder="e.g. Alice"
-                  class="h-8"
+          <TransitionGroup 
+            name="beat-list" 
+            tag="div" 
+            class="space-y-2"
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 translate-y-2 scale-95"
+            leave-active-class="transition-all duration-300 ease-in"
+            leave-to-class="opacity-0 translate-y-2 scale-95"
+            move-class="transition-all duration-300 ease-in-out"
+          >
+            <div v-for="(beat, index) in safeBeats ?? []" :key="getBeatId(beat)" class="relative">
+              <Card class="p-4 space-y-1 gap-2">
+                <div class="font-bold text-gray-700 flex justify-between items-center">
+                  <span>Beat {{ index + 1 }}</span>
+                  <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+                </div>
+                <div>
+                  <Label>Speaker</Label>
+                  <Input
+                    :model-value="beat?.speaker"
+                    @update:model-value="(value) => update(index, 'speaker', String(value))"
+                    placeholder="e.g. Alice"
+                    class="h-8"
+                  />
+                </div>
+                <div>
+                  <Label>Text</Label>
+                  <Input
+                    :model-value="beat.text"
+                    @update:model-value="(value) => update(index, 'text', String(value))"
+                    placeholder="e.g. What is AI?"
+                    class="h-8"
+                  />
+                </div>
+                <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+                <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+                <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+              </Card>
+              <div
+                class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+              >
+                <ArrowUp
+                  v-if="index !== 0"
+                  @click="() => positionUp(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <ArrowDown
+                  v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                  @click="() => positionUp(index + 1)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <Trash
+                  @click="deleteBeat(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
                 />
               </div>
-              <div>
-                <Label>Text</Label>
-                <Input
-                  :model-value="beat.text"
-                  @update:model-value="(value) => update(index, 'text', String(value))"
-                  placeholder="e.g. What is AI?"
-                  class="h-8"
-                />
+              <div class="px-4 pt-2">
+                <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
               </div>
-              <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-              <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-              <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-            </Card>
-            <div
-              class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
-            >
-              <ArrowUp
-                v-if="index !== 0"
-                @click="() => positionUp(index)"
-                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-              />
-              <ArrowDown
-                v-if="(mulmoValue?.beats ?? []).length !== index + 1"
-                @click="() => positionUp(index + 1)"
-                class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-              />
-              <Trash
-                @click="deleteBeat(index)"
-                class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
-              />
             </div>
-            <div class="px-4 pt-2">
-              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
-            </div>
-          </div>
+          </TransitionGroup>
         </div>
       </div>
     </TabsContent>
@@ -241,6 +252,17 @@ const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
+
+// TransitionGroup 向け 一時的な BeatIDを管理
+const beatIdMap = new WeakMap();
+const getBeatId = (beat: MulmoBeat | undefined) => {
+  if (!beat) return `empty-beat-${Date.now()}-${Math.random()}`;
+  
+  if (!beatIdMap.has(beat)) {
+    beatIdMap.set(beat, `beat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  }
+  return beatIdMap.get(beat);
+};
 
 const safeBeats = computed(() => {
   return props.mulmoValue?.beats ?? [];
