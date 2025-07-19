@@ -21,9 +21,7 @@ import { setRandomBeatId } from "@/lib/beat_util";
 import { beatTemplate } from "../../../../../shared/beat_data";
 
 const emit = defineEmits(["addBeat"]);
-
 const selectedBeat = ref(0);
-
 const templates = ref(beatTemplate);
 
 const addBeat = () => {
