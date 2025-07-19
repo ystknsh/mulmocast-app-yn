@@ -1,4 +1,5 @@
 import languages from "./languages";
+import { beat_badge } from "./common";
 
 const lang = {
   message: {
