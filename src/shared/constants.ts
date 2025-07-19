@@ -33,6 +33,8 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
+export type AppSettingKey = "APP_LANGUAGE";
+
 export const VOICE_LISTS = {
   openai: [
     { id: "shimmer", name: "Shimmer" },
