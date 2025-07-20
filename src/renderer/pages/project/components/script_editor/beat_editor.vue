@@ -195,7 +195,8 @@
             </template>
           </template>
           <template v-else>
-            <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
+            <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
+            <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
             <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
           </template>
         </div>
@@ -245,7 +246,13 @@ import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import MediaModal from "@/components/media_modal.vue";
 
-import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
+import {
+  getBadge,
+  getPromptLabel,
+  isMediaBeat,
+  isURLSourceMediaBeat,
+  isLocalSourceMediaBeat,
+} from "@/lib/beat_util.js";
 
 interface Props {
   beat: MulmoBeat;
@@ -299,42 +306,6 @@ const isHtmlGenerating = computed(() => {
 const isGenerating = computed(() => {
   return isImageGenerating.value || isMovieGenerating.value || isHtmlGenerating.value;
 });
-
-const getPromptLabel = (beat: MulmoBeat) => {
-  if (beat.image.type) {
-    switch (beat.image.type) {
-      case "image":
-        return "Image Prompt (URL or path)";
-      case "movie":
-        return "Movie Source";
-      case "textSlide":
-        return "Slide Content";
-      case "markdown":
-        return "Markdown Text";
-      case "chart":
-        return "Chart JSON";
-      case "mermaid":
-        return "Mermaid Diagram";
-      case "html_tailwind":
-        return "HTML (Tailwind)";
-      default:
-        return "Prompt";
-    }
-  }
-  if (beat.htmlPrompt) {
-    return "Html Prompt";
-  }
-  return "Image Prompt";
-};
-
-const getMediaIcon = (type: string) => {
-  switch (type) {
-    case "video":
-      return Video;
-    default:
-      return FileImage;
-  }
-};
 
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
