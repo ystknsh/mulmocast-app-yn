@@ -1,4 +1,5 @@
 import languages from "./languages";
+import { beat_badge } from "./common";
 
 const lang = {
   message: {
@@ -30,6 +31,9 @@ const lang = {
       success: "Settings saved",
       error: "Failed to save settings",
     },
+  },
+  beat: {
+    badge: beat_badge,
   },
   languages,
 };

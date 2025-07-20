@@ -1,4 +1,5 @@
 import languages from "./languages";
+import { beat_badge } from "./common";
 
 const lang = {
   message: {
@@ -30,6 +31,9 @@ const lang = {
       success: "設定を保存しました",
       error: "設定の保存に失敗しました",
     },
+  },
+  beat: {
+    badge: beat_badge,
   },
   languages,
 };

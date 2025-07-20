@@ -35,35 +35,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "remote image",
-    beat: {
-      text: "",
-      speaker: "",
-      image: {
-        type: "image",
-        source: {
-          kind: "url",
-          url: "",
-        },
-      },
-    },
-  },
-  {
-    name: "remote movie",
-    beat: {
-      text: "",
-      speaker: "",
-      image: {
-        type: "movie",
-        source: {
-          kind: "url",
-          url: "",
-        },
-      },
-    },
-  },
-  {
-    name: "local media file",
+    name: "Media file",
     beat: {
       text: "",
       speaker: "",
