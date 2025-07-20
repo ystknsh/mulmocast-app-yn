@@ -195,7 +195,8 @@
             </template>
           </template>
           <template v-else>
-            <component :is="getMediaIcon(beat?.image?.type)" :size="32" class="mx-auto text-gray-400 mb-2" />
+            <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
+            <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
             <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
           </template>
         </div>
@@ -248,7 +249,6 @@ import MediaModal from "@/components/media_modal.vue";
 import {
   getBadge,
   getPromptLabel,
-  getMediaIcon,
   isMediaBeat,
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,

@@ -43,15 +43,6 @@ export const getPromptLabel = (beat: MulmoBeat) => {
   return "Image Prompt";
 };
 
-export const getMediaIcon = (type: string) => {
-  switch (type) {
-    case "video":
-      return Video;
-    default:
-      return FileImage;
-  }
-};
-
 export const isMediaBeat = (beat: MulmoBeat) => {
   return beat.image.type === "image" || beat.image.type === "movie";
 };
