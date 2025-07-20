@@ -78,6 +78,10 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
     }, {});
   });
 
+  const isGenerating = (projectId: string) => {
+    return isArtifactGenerating.value[projectId] || isBeatGenerating.value[projectId];
+  };
+
   const generatingProjectCount = computed(() => {
     return Object.keys(sessionState.value).filter((projectId) => {
       return isArtifactGenerating.value[projectId] || isBeatGenerating.value[projectId];
@@ -90,6 +94,7 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
     sessionState,
     isArtifactGenerating,
     isBeatGenerating,
+    isGenerating,
     generatingProjectCount,
   };
 });

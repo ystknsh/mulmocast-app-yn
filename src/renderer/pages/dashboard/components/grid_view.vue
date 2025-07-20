@@ -26,12 +26,13 @@
               <span>{{ formatDate(project.metadata.updatedAt || project.metadata.createdAt) }}</span>
             </div>
             <div class="flex items-center space-x-1">
-              <span v-if="project.metadata.sessionActive" class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
-                Generating
-              </span>
-              <span v-if="project.metadata.hasErrors" class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">
-                Error
-              </span>
+              <div
+                v-if="mulmoEventStore.isGenerating(project.metadata.id)"
+                class="inline-flex items-center space-x-1 px-2 py-1 bg-blue-100 rounded"
+              >
+                <Loader2 class="w-3 h-3 text-blue-500 animate-spin" />
+                <span class="text-xs text-blue-600 font-medium">Generating</span>
+              </div>
               <span class="px-2 py-1 bg-gray-100 rounded">
                 {{ project.metadata.version }}
               </span>
@@ -54,10 +55,12 @@
 </template>
 
 <script setup lang="ts">
-import { Calendar, FileText, Trash2 } from "lucide-vue-next";
+import { Calendar, FileText, Trash2, Loader2 } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useMulmoEventStore } from "@/store/mulmo_event";
+
 const emit = defineEmits<{
   delete: [project: Project];
 }>();
@@ -65,6 +68,8 @@ const emit = defineEmits<{
 defineProps<{
   projects: Project[];
 }>();
+
+const mulmoEventStore = useMulmoEventStore();
 
 const deleteProject = (project: Project) => {
   emit("delete", project);
