@@ -25,7 +25,9 @@
             </div>
             or
             <div class="flex">
-              <Input placeholder="url" v-model="mediaUrl" /><Button @click="submitUrlImage">Fetch</Button>
+              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" /><Button @click="submitUrlImage"
+                >Fetch</Button
+              >
             </div>
           </template>
 
@@ -41,11 +43,13 @@
           <template v-else-if="beat.image.type === 'textSlide'">
             <Label class="block mb-1"> SlideContent </Label>
             <Input
+              :placeholder="t('beat.form.textSlide.title')"
               :model-value="beat.image?.slide?.title"
               @update:model-value="(value) => update('image.slide.title', String(value))"
               class="mb-2"
             />
             <Textarea
+              :placeholder="t('beat.form.textSlide.contents')"
               :model-value="beat.image?.slide?.bullets?.join('\n')"
               @update:model-value="(value) => update('image.slide.bullets', String(value).split('\n'))"
               rows="4"
@@ -243,20 +247,22 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { FileImage, Video, Loader2, Play } from "lucide-vue-next";
+import type { MulmoBeat } from "mulmocast/browser";
+import { useI18n } from "vue-i18n";
+
+// components
+import MediaModal from "@/components/media_modal.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FileImage, Video, Loader2, Play } from "lucide-vue-next";
-import type { MulmoBeat } from "mulmocast/browser";
 
+// lib
 import { useMulmoEventStore } from "../../../../store";
-import { useRoute } from "vue-router";
-import MediaModal from "@/components/media_modal.vue";
-
 import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
-
 import { mediaUri } from "@/lib/utils";
 
 interface Props {
@@ -272,6 +278,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update", "generateImage"]);
 
 const route = useRoute();
+const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
