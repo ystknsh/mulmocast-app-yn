@@ -49,10 +49,10 @@ const lang = {
         contents: "Enter HTML prompt to generate custom slide content.",
       },
       chart: {
-        contents: "Enter chart data in JSON format\n" + '{\n  "type": "bar",\n  "data": {\n    "labels": ["January", "February", "March"],\n    "datasets": [{\n      "label": "Sales",\n      "data": [65, 59, 80]\n    }]\n  }\n}',
+        contents: "Enter chart data in JSON format\n" + '{\n}',
       },
       mermaid: {
-        contents: "Enter Mermaid diagram code\n" + "graph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Do something]\n    B -->|No| D[Do something else]\n    C --> E[End]\n    D --> E",
+        contents: "Enter Mermaid diagram code.",
       },
       htmlTailwind: {
         contents: "Enter HTML with Tailwind CSS classes.",
