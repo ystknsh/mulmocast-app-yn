@@ -1,11 +1,14 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-2">
-      <h4 class="font-medium">Beat: {{ index + 1 }}</h4>
+      <div class="font-medium flex items-center gap-3">
+        <span class="text-base">Beat: {{ index + 1 }}</span>
+        <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
+      </div>
       <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
     </div>
 
-    <p class="text-sm text-gray-600 mb-2">{{ beat.speaker }}: {{ beat.text }}</p>
+    <p class="text-sm text-gray-600 mb-2">{{ beat.text }}</p>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -60,6 +63,7 @@
           <template v-else-if="beat.image.type === 'markdown'">
             <Label class="block mb-1"> Markdown Text </Label>
             <Textarea
+              :placeholder="t('beat.form.markdown.contents')"
               :model-value="
                 Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
               "
