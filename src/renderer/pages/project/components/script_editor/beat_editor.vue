@@ -77,6 +77,7 @@
           <template v-else-if="beat.image.type === 'chart'">
             <Label class="block mb-1"> Chart JSON </Label>
             <Textarea
+              :placeholder="t('beat.form.chart.contents')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
               @update:model-value="
                 (value) => {
@@ -94,6 +95,7 @@
           <template v-else-if="beat.image.type === 'mermaid'">
             <Label class="block mb-1"> Mermaid Diagram </Label>
             <Textarea
+              :placeholder="t('beat.form.mermaid.contents')"
               :model-value="beat?.image?.code?.text"
               @update:model-value="(value) => update('image.code.text', String(value))"
               class="font-mono"
@@ -105,6 +107,7 @@
           <template v-else-if="beat.image.type === 'html_tailwind'">
             <Label class="block mb-1"> HTML(Tailwind) </Label>
             <Textarea
+              :placeholder="t('beat.form.htmlTailwind.contents')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
               class="font-mono"
@@ -115,6 +118,7 @@
           <template v-else-if="beat.image.type === 'beat'">
             <Label class="block mb-1"> Reference </Label>
             <Input
+              :placeholder="t('beat.form.reference.id')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
               type="text"
@@ -129,6 +133,7 @@
           <template v-if="beat.htmlPrompt">
             <Label class="block mb-1"> HTML Prompt: </Label>
             <Textarea
+              :placeholder="t('beat.form.htmlPrompt.contents')"
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
               class="font-mono"
@@ -138,6 +143,7 @@
           <template v-else>
             <Label class="block mb-1"> Image Prompt: </Label>
             <Input
+              :placeholder="t('beat.form.imagePrompt.contents')"
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
               type="text"
@@ -145,10 +151,10 @@
             />
             <Label class="block mb-1"> Movie Prompt: </Label>
             <Input
+              :placeholder="t('beat.form.moviePrompt.contents')"
               :model-value="beat.moviePrompt"
               @update:model-value="(value) => update('moviePrompt', String(value))"
               type="text"
-              placeholder="Blank won't work, space will."
             />
           </template>
         </div>
