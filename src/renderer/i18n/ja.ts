@@ -49,7 +49,8 @@ const lang = {
         contents: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
       },
       chart: {
-        contents: "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+        contents:
+          "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
       },
       mermaid: {
         contents: "Mermaidダイアグラムコードを入力してください。",
