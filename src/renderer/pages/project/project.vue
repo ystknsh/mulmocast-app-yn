@@ -471,7 +471,7 @@ const formatAndPushHistoryMulmoScript = () => {
 const ConcurrentTaskStatusMessageComponent = markRaw(
   defineComponent({
     setup() {
-      return () => h(ConcurrentTaskStatus, { projectId: projectId.value });
+      return () => h(ConcurrentTaskStatus, { projectId: projectId.value ?? "" });
     },
   }),
 );
