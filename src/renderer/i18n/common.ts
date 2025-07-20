@@ -8,4 +8,5 @@ export const beat_badge = {
   mermaid: "Mermaid",
   html_tailwind: "Tailwind",
   image: "Image",
+  movie: "Movie",
 };
