@@ -29,3 +29,13 @@ export const removeEmptyValues = <T>(obj: T): T | undefined => {
 
   return obj;
 };
+
+export const mediaUri = (file: ArrayBuffer | string | null): string => {
+  if (!file) {
+    return "";
+  }
+  if (typeof file === "string") {
+    return file;
+  }
+  return URL.createObjectURL(new Blob([file]));
+};
