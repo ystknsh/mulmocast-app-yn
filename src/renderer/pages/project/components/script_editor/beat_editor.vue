@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-2">
       <div class="font-medium flex items-center gap-3">
         <span class="text-base">Beat: {{ index + 1 }}</span>
-        <Badge variant="outline">{{ beat.speaker }}</Badge>
+        <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
     </div>
