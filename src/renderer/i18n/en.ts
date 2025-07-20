@@ -36,13 +36,13 @@ const lang = {
     badge: beat_badge,
     form: {
       image: {
-        url: "url"
+        url: "url",
       },
       textSlide: {
         title: "Slide Title",
-        contents: "Slide Contents\nMarkdown bullets\n- one\n- two"
+        contents: "Slide Contents\nMarkdown bullets\n- one\n- two",
       },
-    }
+    },
   },
   languages,
 };

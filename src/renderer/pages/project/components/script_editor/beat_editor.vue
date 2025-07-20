@@ -25,7 +25,9 @@
             </div>
             or
             <div class="flex">
-              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" /><Button @click="submitUrlImage">Fetch</Button>
+              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" /><Button @click="submitUrlImage"
+                >Fetch</Button
+              >
             </div>
           </template>
 
@@ -248,7 +250,7 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { FileImage, Video, Loader2, Play } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -262,7 +264,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMulmoEventStore } from "../../../../store";
 import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
-
 
 interface Props {
   beat: MulmoBeat;
