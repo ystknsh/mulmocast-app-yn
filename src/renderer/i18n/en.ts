@@ -49,7 +49,7 @@ const lang = {
         contents: "Enter HTML prompt to generate custom slide content.",
       },
       chart: {
-        contents: "Enter chart data in JSON format\n" + '{\n}',
+        contents: "Enter chart data in JSON format\n" + "{\n}",
       },
       mermaid: {
         contents: "Enter Mermaid diagram code.",
