@@ -34,6 +34,15 @@ const lang = {
   },
   beat: {
     badge: beat_badge,
+    form: {
+      image: {
+        url: "url"
+      },
+      textSlide: {
+        title: "Slide Title",
+        contents: "Slide Contents\nMarkdown bullets\n- one\n- two"
+      },
+    }
   },
   languages,
 };
