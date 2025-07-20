@@ -16,6 +16,42 @@ export const getBadge = (beat: MulmoBeat) => {
   return "image_prompt";
 };
 
+export const getPromptLabel = (beat: MulmoBeat) => {
+  if (beat.image.type) {
+    switch (beat.image.type) {
+      case "image":
+        return "Image Prompt (URL or path)";
+      case "movie":
+        return "Movie Source";
+      case "textSlide":
+        return "Slide Content";
+      case "markdown":
+        return "Markdown Text";
+      case "chart":
+        return "Chart JSON";
+      case "mermaid":
+        return "Mermaid Diagram";
+      case "html_tailwind":
+        return "HTML (Tailwind)";
+      default:
+        return "Prompt";
+    }
+  }
+  if (beat.htmlPrompt) {
+    return "Html Prompt";
+  }
+  return "Image Prompt";
+};
+
+export const getMediaIcon = (type: string) => {
+  switch (type) {
+    case "video":
+      return Video;
+    default:
+      return FileImage;
+  }
+};
+
 export const isMediaBeat = (beat: MulmoBeat) => {
   return beat.image.type === "image" || beat.image.type === "movie";
 };
