@@ -34,6 +34,39 @@ const lang = {
   },
   beat: {
     badge: beat_badge,
+    form: {
+      image: {
+        url: "URL",
+      },
+      textSlide: {
+        title: "スライドタイトル",
+        contents: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
+      },
+      markdown: {
+        contents: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
+      },
+      htmlPrompt: {
+        contents: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
+      },
+      chart: {
+        contents: "チャートデータをJSON形式で入力してください。",
+      },
+      mermaid: {
+        contents: "Mermaidダイアグラムコードを入力してください。",
+      },
+      htmlTailwind: {
+        contents: "Tailwind CSSクラスを使用したHTMLを入力してください。",
+      },
+      reference: {
+        id: "参照するビートIDを入力してください（例: beat_1）",
+      },
+      imagePrompt: {
+        contents: "画像を生成するためのプロンプトを入力してください。",
+      },
+      moviePrompt: {
+        contents: "空白では動作しません。スペースを入力してください。",
+      },
+    },
   },
   languages,
 };
