@@ -179,6 +179,7 @@
             <!-- TODO update design -->
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </template>
+          <!-- image pewview -->
           <template v-else-if="imageFile">
             <template v-if="beat?.image?.type === 'movie'">
               <video
@@ -200,12 +201,13 @@
           <template v-else>
             <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
             <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
-            <p class="text-sm text-gray-500">{{ beat?.image?.type }} Preview</p>
+            <p class="text-sm text-gray-500">{{ beat?.image?.type === "movie" ? "Video" : "Image" }} Preview</p>
           </template>
         </div>
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="movieFile">
+        <!-- movie pewview -->
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="enableMovieGenerate">
           <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
-          <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else>
+          <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else-if="movieFile">
             <video
               :size="64"
               class="mx-auto text-gray-400 cursor-pointer"
@@ -217,6 +219,10 @@
               :size="40"
               @click="openModal('video', movieFile)"
             />
+          </div>
+          <div v-else>
+            <Video :size="32" class="mx-auto text-gray-400 mb-2" />
+            <p class="text-sm text-gray-500">Video Preview</p>
           </div>
         </div>
       </div>
