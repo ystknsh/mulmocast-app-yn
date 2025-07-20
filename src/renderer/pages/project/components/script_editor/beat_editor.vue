@@ -34,7 +34,7 @@
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
-            <div v-if="beat.image.source.kind === 'url'" class="break-words whitespace-pre-wrap">
+            <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
           </template>
@@ -278,8 +278,7 @@ const shouldShowGenerateButton = computed(() => {
     !(
       ["image", "movie"].includes(props.beat?.image?.type || "") &&
       props.beat?.image &&
-      "source" in props.beat.image &&
-      props.beat.image?.source?.kind === "path"
+      isLocalSourceMediaBeat(props.beat)
     )
   );
 });
