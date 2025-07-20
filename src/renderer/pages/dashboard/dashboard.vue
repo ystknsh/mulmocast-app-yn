@@ -49,12 +49,12 @@
 
         <!-- Project List -->
         <div v-else-if="viewMode === 'list'">
-          <ListView :projects="sortedProjects" @open="handleOpenProject" @delete="handleDeleteProject" />
+          <ListView :projects="sortedProjects" @delete="handleDeleteProject" />
         </div>
 
         <!-- Project Grid -->
         <div v-else>
-          <GridView :projects="sortedProjects" @open="handleOpenProject" @delete="handleDeleteProject" />
+          <GridView :projects="sortedProjects" @delete="handleDeleteProject" />
         </div>
       </div>
     </div>
@@ -131,11 +131,6 @@ const handleCancelDialog = () => {
   showNewProjectDialog.value = false;
   newProjectName.value = "";
   creating.value = false;
-};
-
-// TODO remove this
-const handleOpenProject = (project: Project) => {
-  router.push(`/project/${project.metadata.id}`);
 };
 
 const handleDeleteProject = async (project: Project) => {

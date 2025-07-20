@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div v-for="project in projects" :key="project.metadata.id" @click="openProject(project)">
+    <router-link :to="`/project/${project.metadata.id}`" v-for="project in projects" :key="project.metadata.id">
       <div
         class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
       >
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -55,17 +55,12 @@ import type { Project } from "@/lib/project_api";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 const emit = defineEmits<{
-  open: [project: Project];
   delete: [project: Project];
 }>();
 
 defineProps<{
   projects: Project[];
 }>();
-
-const openProject = (project: Project) => {
-  emit("open", project);
-};
 
 const deleteProject = (project: Project) => {
   emit("delete", project);
