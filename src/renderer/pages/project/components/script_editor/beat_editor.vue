@@ -174,61 +174,17 @@
 
       <!-- right: preview -->
       <div>
-        <div
-          class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
-          :key="`beat_editor_${beat.id ?? index}`"
-        >
-          <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
-          <template v-if="isImageGenerating || isHtmlGenerating">
-            <!-- TODO update design -->
-            <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-          </template>
-          <!-- image pewview -->
-          <template v-else-if="imageFile">
-            <template v-if="beat?.image?.type === 'movie'">
-              <video
-                :size="64"
-                class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
-                controls
-                :src="mediaUri(imageFile)"
-                @click="openModal('video', imageFile)"
-              />
-            </template>
-            <template v-else>
-              <img
-                :src="mediaUri(imageFile)"
-                class="cursor-pointer hover:opacity-80 transition-opacity"
-                @click="openModal('image', imageFile)"
-              />
-            </template>
-          </template>
-          <template v-else>
-            <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
-            <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
-            <p class="text-sm text-gray-500">{{ beat?.image?.type === "movie" ? "Video" : "Image" }} Preview</p>
-          </template>
-        </div>
-        <!-- movie pewview -->
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="enableMovieGenerate">
-          <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
-          <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else-if="movieFile">
-            <video
-              :size="64"
-              class="mx-auto text-gray-400 cursor-pointer"
-              :src="mediaUri(movieFile)"
-              @click="openModal('video', movieFile)"
-            />
-            <Play
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-black/50 rounded-full p-2"
-              :size="40"
-              @click="openModal('video', movieFile)"
-            />
-          </div>
-          <div v-else>
-            <Video :size="32" class="mx-auto text-gray-400 mb-2" />
-            <p class="text-sm text-gray-500">Video Preview</p>
-          </div>
-        </div>
+        <BeatPreview
+          :beat="beat"
+          :index="index"
+          :isImageGenerating="isImageGenerating"
+          :isHtmlGenerating="isHtmlGenerating"
+          :isMovieGenerating="isMovieGenerating"
+          :enableMovieGenerate="enableMovieGenerate"
+          :imageFile="imageFile"
+          :movieFile="movieFile"
+          @openModal="openModal"
+        />
       </div>
     </div>
 
@@ -248,7 +204,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { FileImage, Video, Loader2, Play } from "lucide-vue-next";
+import { Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -259,6 +215,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import BeatPreview from "./beat_preview.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../../store";
@@ -307,13 +264,13 @@ const enableMovieGenerate = computed(() => {
 });
 
 const isImageGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index] ?? false;
 });
 const isMovieGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index];
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index] ?? false;
 });
 const isHtmlGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index];
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
 });
 const isGenerating = computed(() => {
   return isImageGenerating.value || isMovieGenerating.value || isHtmlGenerating.value;
