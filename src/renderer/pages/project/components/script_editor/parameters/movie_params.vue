@@ -104,11 +104,11 @@ const emit = defineEmits<{
 }>();
 
 const DEFAULT_VALUES: MovieParams = {
-  provider: undefined,
+  provider: provider2MovieAgent.replicate.agentName,
   model: "",
   transition: {
     type: undefined,
-    duration: 0,
+    duration: 0.3,
   },
 };
 
