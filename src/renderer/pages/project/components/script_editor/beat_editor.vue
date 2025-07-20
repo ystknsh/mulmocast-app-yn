@@ -182,13 +182,13 @@
                 :size="64"
                 class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
                 controls
-                :src="getMediaSrc(imageFile)"
+                :src="mediaUri(imageFile)"
                 @click="openModal('video', imageFile)"
               />
             </template>
             <template v-else>
               <img
-                :src="getMediaSrc(imageFile)"
+                :src="mediaUri(imageFile)"
                 class="cursor-pointer hover:opacity-80 transition-opacity"
                 @click="openModal('image', imageFile)"
               />
@@ -206,7 +206,7 @@
             <video
               :size="64"
               class="mx-auto text-gray-400 cursor-pointer"
-              :src="getMediaSrc(movieFile)"
+              :src="mediaUri(movieFile)"
               @click="openModal('video', movieFile)"
             />
             <Play
@@ -253,6 +253,8 @@ import {
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,
 } from "@/lib/beat_util.js";
+
+import { mediaUri } from "@/lib/utils";
 
 interface Props {
   beat: MulmoBeat;
@@ -380,16 +382,10 @@ const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
 };
 
-const getMediaSrc = (file: ArrayBuffer | string | null): string => {
-  if (!file) return "";
-  if (typeof file === "string") return file;
-  return URL.createObjectURL(new Blob([file]));
-};
-
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
   if (!src) return;
   modalType.value = type;
-  modalSrc.value = getMediaSrc(src);
+  modalSrc.value = mediaUri(src);
   modalOpen.value = true;
 };
 </script>
