@@ -7,4 +7,6 @@ export const beat_badge = {
   chart: "Chart",
   mermaid: "Mermaid",
   html_tailwind: "Tailwind",
+  image: "Image",
+  movie: "Movie",
 };

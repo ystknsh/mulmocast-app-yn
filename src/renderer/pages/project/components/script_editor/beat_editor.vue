@@ -16,13 +16,7 @@
           </Label>
 
           <!-- image/movie: URL or  path -->
-          <template v-if="isMediaBeat(beat)">
-            <Input
-              v-if="isURLSourceMediaBeat(beat)"
-              :model-value="beat.image?.source?.url"
-              @update:model-value="(value) => update('image.source.url', String(value))"
-              type="text"
-            />
+          <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
@@ -35,6 +29,13 @@
             or
             <div class="flex">
               <Input placeholder="url" v-model="mediaUrl" /><Button @click="submitUrlImage">Fetch</Button>
+            </div>
+          </template>
+
+          <!-- image/movie: URL or  path -->
+          <template v-else-if="isMediaBeat(beat)">
+            <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
+              {{ beat.image.source.url }}
             </div>
           </template>
 
@@ -277,8 +278,7 @@ const shouldShowGenerateButton = computed(() => {
     !(
       ["image", "movie"].includes(props.beat?.image?.type || "") &&
       props.beat?.image &&
-      "source" in props.beat.image &&
-      props.beat.image?.source?.kind === "path"
+      isLocalSourceMediaBeat(props.beat)
     )
   );
 });
