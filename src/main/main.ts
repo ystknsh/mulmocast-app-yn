@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
@@ -93,6 +94,11 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   const splashWindow = createSplashWindow();
+
+  // Install Vue.js DevTools in development mode
+  if (isDev) {
+    await installExtension(VUEJS_DEVTOOLS);
+  }
 
   await projectManager.ensureProjectBaseDirectory();
 
