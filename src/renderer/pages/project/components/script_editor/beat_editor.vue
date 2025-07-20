@@ -174,7 +174,7 @@
 
       <!-- right: preview -->
       <div>
-        <BearPreview
+        <BeatPreview
           :beat="beat"
           :index="index"
           :isImageGenerating="isImageGenerating"
@@ -215,7 +215,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import BearPreview from "./beat_preview.vue";
+import BeatPreview from "./beat_preview.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../../store";
