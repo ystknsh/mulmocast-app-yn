@@ -63,6 +63,7 @@
           <template v-else-if="beat.image.type === 'markdown'">
             <Label class="block mb-1"> Markdown Text </Label>
             <Textarea
+              :placeholder="t('beat.form.markdown.contents')"
               :model-value="
                 Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
               "

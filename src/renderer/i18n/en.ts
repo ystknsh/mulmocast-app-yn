@@ -42,6 +42,9 @@ const lang = {
         title: "Slide Title",
         contents: "Slide Contents\nMarkdown bullets\n- one\n- two",
       },
+      markdown: {
+        contents: "Markdown Contents\n# Title\nWrite your content here...\n- Item 1\n- Item 2\n- Item 3",
+      },
     },
   },
   languages,
