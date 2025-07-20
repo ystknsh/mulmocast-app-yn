@@ -56,8 +56,8 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
       image: {
         type: "textSlide",
         slide: {
-          title: "No Audio",
-          bullets: ["0.5 seconds"],
+          title: "",
+          bullets: [""],
         },
       },
     },
