@@ -11,12 +11,9 @@
       <!-- left: Edit area -->
       <div>
         <div v-if="beat.image && beat.image.type">
-          <Label class="block mb-1">
-            {{ getPromptLabel(beat) }}
-          </Label>
-
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
+            <Label class="block mb-1"> Image or Movie </Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
@@ -34,6 +31,7 @@
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
+            <Label class="block mb-1"> Remote Media: </Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
@@ -41,6 +39,7 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
+            <Label class="block mb-1"> SlideContent </Label>
             <Input
               :model-value="beat.image?.slide?.title"
               @update:model-value="(value) => update('image.slide.title', String(value))"
@@ -55,6 +54,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
+            <Label class="block mb-1"> Markdown Text </Label>
             <Textarea
               :model-value="
                 Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
@@ -67,6 +67,7 @@
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
+            <Label class="block mb-1"> Chart JSON </Label>
             <Textarea
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
               @update:model-value="
@@ -83,6 +84,7 @@
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
+            <Label class="block mb-1"> Mermaid Diagram </Label>
             <Textarea
               :model-value="beat?.image?.code?.text"
               @update:model-value="(value) => update('image.code.text', String(value))"
@@ -93,6 +95,7 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
+            <Label class="block mb-1"> HTML(Tailwind) </Label>
             <Textarea
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
@@ -102,8 +105,7 @@
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
-            reference
-
+            <Label class="block mb-1"> Reference </Label>
             <Input
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
@@ -117,6 +119,7 @@
         </div>
         <div v-else>
           <template v-if="beat.htmlPrompt">
+            <Label class="block mb-1"> HTML Prompt: </Label>
             <Textarea
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
@@ -125,14 +128,14 @@
             />
           </template>
           <template v-else>
-            <Label>Image Prompt:</Label>
+            <Label class="block mb-1"> Image Prompt: </Label>
             <Input
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
               type="text"
               class="mb-2"
             />
-            <Label>Movie Prompt:</Label>
+            <Label class="block mb-1"> Movie Prompt: </Label>
             <Input
               :model-value="beat.moviePrompt"
               @update:model-value="(value) => update('moviePrompt', String(value))"
@@ -246,13 +249,7 @@ import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import MediaModal from "@/components/media_modal.vue";
 
-import {
-  getBadge,
-  getPromptLabel,
-  isMediaBeat,
-  isURLSourceMediaBeat,
-  isLocalSourceMediaBeat,
-} from "@/lib/beat_util.js";
+import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { mediaUri } from "@/lib/utils";
 
