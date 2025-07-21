@@ -181,6 +181,7 @@
           :enableMovieGenerate="enableMovieGenerate"
           :imageFile="imageFile"
           :movieFile="movieFile"
+          :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
           @generateMovie="generateImageOnlyMovie"
