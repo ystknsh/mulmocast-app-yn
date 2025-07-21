@@ -153,7 +153,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId, true);
+    const context = await getContext(projectId);
     // context.force = true;
     await generateBeatAudio(index, context, settings);
     removeSessionProgressCallback(mulmoCallback);
@@ -175,7 +175,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId, true);
+    const context = await getContext(projectId);
     const images = await getImageRefs(context);
     removeSessionProgressCallback(mulmoCallback);
     return images;
@@ -186,6 +186,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
       type: "error",
       data: error,
     });
+    return null;
   }
 };
 export const mulmoReferenceImage = async (
@@ -198,8 +199,8 @@ export const mulmoReferenceImage = async (
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId, true);
-    const returnImage = generateReferenceImage({
+    const context = await getContext(projectId);
+    const returnImage = await generateReferenceImage({
       context,
       index,
       key,
@@ -216,6 +217,7 @@ export const mulmoReferenceImage = async (
       type: "error",
       data: error,
     });
+    return null;
   }
 };
 
