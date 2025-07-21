@@ -175,6 +175,8 @@
           :imageFile="imageFile"
           :movieFile="movieFile"
           @openModal="openModal"
+          @generateImage="generateImageOnlyImage"
+          @generateMovie="generateImageOnlyMovie"
         />
       </div>
     </div>
