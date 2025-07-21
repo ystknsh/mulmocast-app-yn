@@ -9,4 +9,5 @@ export const beat_badge = {
   html_tailwind: "Tailwind",
   image: "Image",
   movie: "Movie",
+  beat: "Beat",
 };
