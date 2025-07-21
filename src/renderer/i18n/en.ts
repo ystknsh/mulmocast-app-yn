@@ -32,6 +32,12 @@ const lang = {
       error: "Failed to save settings",
     },
   },
+  form: {
+    template_selector: {
+      insert: "Insert",
+      change: "Change",
+    },
+  },
   beat: {
     badge: beat_badge,
     form: {
