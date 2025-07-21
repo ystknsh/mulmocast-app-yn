@@ -125,7 +125,7 @@ const loadProjectThumbnails = async () => {
         const image = (await window.electronAPI.mulmoHandler("mulmoImageFile", project.metadata.id, 0)) as {
           imageData?: ArrayBuffer;
         };
-        projectThumbnails.value[project.metadata.id] = image.imageData;
+        projectThumbnails.value[project.metadata.id] = image?.imageData;
       } catch (error) {
         console.error(`Failed to load thumbnail for project ${project.metadata.id}:`, error);
       } finally {
