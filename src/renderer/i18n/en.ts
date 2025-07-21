@@ -38,7 +38,12 @@ const lang = {
       insert: "Insert",
       change: "Change",
     },
+    changeBeatTypeFirst: "Change beat type first",
+    generateImage: "Generate image",
+    generateMovie: "Generate movie",
+    generating: "Generating...",
   },
+  generating: "Generating...",
   beat: {
     badge: beat_badge,
     form: {
