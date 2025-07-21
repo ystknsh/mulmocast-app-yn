@@ -15,13 +15,7 @@
             class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateImage"
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
-            :title="
-              props.toggleTypeMode
-                ? 'Change beat type first'
-                : isImageGenerating || isHtmlGenerating
-                  ? 'Generating...'
-                  : 'Generate image'
-            "
+            :title="t('form.' + imageGenerateButtonTitle)"
           >
             <Sparkles :class="isImageGenerating || isHtmlGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
           </Button>
@@ -29,7 +23,7 @@
         <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
         <template v-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
-          <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+          <Loader2 class="w-4 h-4 mr-1 animate-spin" />{{ t("generating") }}
         </template>
         <!-- image pewview -->
         <template v-else-if="imageFile">
@@ -70,14 +64,14 @@
             class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateMovie"
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
-            :title="
-              props.toggleTypeMode ? 'Change beat type first' : isMovieGenerating ? 'Generating...' : 'Generate movie'
-            "
+            :title="t('form.' + movieGenerateButtonTitle)"
           >
             <Sparkles :class="isMovieGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
           </Button>
         </template>
-        <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
+        <template v-if="isMovieGenerating">
+          <Loader2 class="w-4 h-4 mr-1 animate-spin" />{{ t("generating") }}</template
+        >
         <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else-if="movieFile">
           <video
             :size="64"
@@ -104,6 +98,7 @@
 import { FileImage, Video, Play, Loader2, Sparkles } from "lucide-vue-next";
 import { computed } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
+import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
@@ -123,6 +118,8 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits(["openModal", "generateImage", "generateMovie"]);
+
+const { t } = useI18n();
 
 // Computed properties for button visibility
 const shouldShowGenerateButton = computed(() => {
@@ -151,4 +148,16 @@ const generateImage = () => {
 const generateMovie = () => {
   emit("generateMovie");
 };
+
+const imageGenerateButtonTitle = computed(() => {
+  return props.toggleTypeMode
+    ? "changeBeatTypeFirst"
+    : props.isImageGenerating || props.isHtmlGenerating
+      ? "generating"
+      : "generateImage";
+});
+
+const movieGenerateButtonTitle = computed(() => {
+  return props.toggleTypeMode ? "changeBeatTypeFirst" : props.isMovieGenerating ? "generating" : "generateMovie";
+});
 </script>
