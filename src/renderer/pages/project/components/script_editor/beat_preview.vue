@@ -15,7 +15,13 @@
             class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateImage"
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
-            :title="props.toggleTypeMode ? 'Change beat type first' : (isImageGenerating || isHtmlGenerating) ? 'Generating...' : 'Generate image'"
+            :title="
+              props.toggleTypeMode
+                ? 'Change beat type first'
+                : isImageGenerating || isHtmlGenerating
+                  ? 'Generating...'
+                  : 'Generate image'
+            "
           >
             <Sparkles :class="isImageGenerating || isHtmlGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
           </Button>
@@ -64,7 +70,9 @@
             class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateMovie"
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
-            :title="props.toggleTypeMode ? 'Change beat type first' : isMovieGenerating ? 'Generating...' : 'Generate movie'"
+            :title="
+              props.toggleTypeMode ? 'Change beat type first' : isMovieGenerating ? 'Generating...' : 'Generate movie'
+            "
           >
             <Sparkles :class="isMovieGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
           </Button>
