@@ -6,7 +6,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
-          {{ template.name }}
+          {{ t("beat.badge." + template.key) }}
         </SelectItem>
       </SelectContent>
     </Select>
@@ -19,6 +19,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ref } from "vue";
 import { setRandomBeatId } from "@/lib/beat_util";
 import { beatTemplate } from "../../../../../shared/beat_data";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const emit = defineEmits(["addBeat"]);
 const selectedBeat = ref(0);

@@ -5,15 +5,15 @@ export const getBadge = (beat: MulmoBeat) => {
   if (beat?.image) {
     if (["image", "movie"].includes(beat.image.type)) {
       if ("source" in beat.image && beat.image?.source?.kind === "path") {
-        return "media_file";
+        return "mediaFile";
       }
     }
     return beat?.image?.type;
   }
   if (beat.htmlPrompt) {
-    return "html_prompt";
+    return "htmlPrompt";
   }
-  return "image_prompt";
+  return "imagePrompt";
 };
 
 export const isMediaBeat = (beat: MulmoBeat) => {
