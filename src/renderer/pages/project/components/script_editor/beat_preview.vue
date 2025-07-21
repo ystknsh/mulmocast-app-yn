@@ -3,7 +3,14 @@
     <!-- Image section -->
     <div class="mb-4">
       <!-- Generate image button -->
-      <Button variant="outline" size="sm" class="mb-2">Generate image</Button>
+      <template v-if="shouldShowGenerateButton">
+        <template v-if="!isImageGenerating && !isHtmlGenerating">
+          <Button variant="outline" size="sm" class="mb-2" @click="generateImage">Generate image</Button>
+        </template>
+        <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
+          <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+        </div>
+      </template>
       
       <!-- Image preview -->
       <div
@@ -45,7 +52,14 @@
     <!-- Movie section -->
     <div v-if="enableMovieGenerate">
       <!-- Generate movie button -->
-      <Button variant="outline" size="sm" class="mb-2">Generate movie</Button>
+      <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
+        <template v-if="!isMovieGenerating">
+          <Button variant="outline" size="sm" class="mb-2" @click="generateMovie" :disabled="!enableMovieGenerate">Generate movie</Button>
+        </template>
+        <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
+          <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
+        </div>
+      </template>
       
       <!-- Movie preview -->
       <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
@@ -74,10 +88,12 @@
 
 <script setup lang="ts">
 import { FileImage, Video, Play, Loader2 } from "lucide-vue-next";
+import { computed } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
+import { isMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util";
 
 interface Props {
   beat: MulmoBeat;
@@ -90,10 +106,34 @@ interface Props {
   enableMovieGenerate: boolean;
 }
 
-defineProps<Props>();
-const emit = defineEmits(["openModal"]);
+const props = defineProps<Props>();
+const emit = defineEmits(["openModal", "generateImage", "generateMovie"]);
+
+// Computed properties for button visibility
+const shouldShowGenerateButton = computed(() => {
+  return (
+    props.beat?.image?.type !== "beat" &&
+    !(
+      ["image", "movie"].includes(props.beat?.image?.type || "") &&
+      props.beat?.image &&
+      isLocalSourceMediaBeat(props.beat)
+    )
+  );
+});
+
+const shouldBeGeneratedWithPrompt = computed(() => {
+  return !props.beat.htmlPrompt && !props.beat.image;
+});
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
   emit("openModal", type, src);
+};
+
+const generateImage = () => {
+  emit("generateImage");
+};
+
+const generateMovie = () => {
+  emit("generateMovie");
 };
 </script>
