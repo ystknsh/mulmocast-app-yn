@@ -99,7 +99,7 @@ import type { MulmoBeat } from "mulmocast/browser";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
-import { isMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util";
+import { isLocalSourceMediaBeat } from "@/lib/beat_util";
 
 interface Props {
   beat: MulmoBeat;

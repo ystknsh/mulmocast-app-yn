@@ -197,7 +197,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";
@@ -238,20 +237,6 @@ const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
 const mediaUrl = ref("");
 
-const shouldBeGeneratedWithPrompt = computed(() => {
-  return !props.beat.htmlPrompt && !props.beat.image;
-});
-
-const shouldShowGenerateButton = computed(() => {
-  return (
-    props.beat?.image?.type !== "beat" &&
-    !(
-      ["image", "movie"].includes(props.beat?.image?.type || "") &&
-      props.beat?.image &&
-      isLocalSourceMediaBeat(props.beat)
-    )
-  );
-});
 
 const enableMovieGenerate = computed(() => {
   return !!props.beat.moviePrompt;
@@ -265,9 +250,6 @@ const isMovieGenerating = computed(() => {
 });
 const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
-});
-const isGenerating = computed(() => {
-  return isImageGenerating.value || isMovieGenerating.value || isHtmlGenerating.value;
 });
 
 const handleDrop = (event: DragEvent) => {
