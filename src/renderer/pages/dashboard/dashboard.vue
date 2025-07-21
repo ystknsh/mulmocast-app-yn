@@ -49,12 +49,22 @@
 
         <!-- Project List -->
         <div v-else-if="viewMode === 'list'">
-          <ListView :projects="sortedProjects" @delete="handleDeleteProject" />
+          <ListView
+            :projects="sortedProjects"
+            :project-thumbnails="projectThumbnails"
+            :thumbnails-loading="thumbnailsLoading"
+            @delete="handleDeleteProject"
+          />
         </div>
 
         <!-- Project Grid -->
         <div v-else>
-          <GridView :projects="sortedProjects" @delete="handleDeleteProject" />
+          <GridView
+            :projects="sortedProjects"
+            :project-thumbnails="projectThumbnails"
+            :thumbnails-loading="thumbnailsLoading"
+            @delete="handleDeleteProject"
+          />
         </div>
       </div>
     </div>
@@ -89,6 +99,8 @@ const loading = ref(true);
 const showNewProjectDialog = ref(false);
 const creating = ref(false);
 const newProjectName = ref("");
+const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
+const thumbnailsLoading = ref<Record<string, boolean>>({});
 
 const loadProjects = async () => {
   try {
@@ -99,6 +111,34 @@ const loadProjects = async () => {
   } finally {
     loading.value = false;
   }
+  loadProjectThumbnails();
+};
+
+const loadProjectThumbnails = async () => {
+  projectThumbnails.value = {};
+  thumbnailsLoading.value = {};
+
+  await Promise.all(
+    projects.value.map(async (project) => {
+      thumbnailsLoading.value[project.metadata.id] = true;
+      try {
+        const images = (await window.electronAPI.mulmoHandler("mulmoImageFiles", project.metadata.id)) as {
+          imageData?: ArrayBuffer;
+          movieData?: ArrayBuffer;
+        }[];
+
+        // Get the first available image
+        const firstImage = images.find((img) => img?.imageData);
+        if (firstImage?.imageData) {
+          projectThumbnails.value[project.metadata.id] = firstImage.imageData;
+        }
+      } catch (error) {
+        console.error(`Failed to load thumbnail for project ${project.metadata.id}:`, error);
+      } finally {
+        thumbnailsLoading.value[project.metadata.id] = false;
+      }
+    }),
+  );
 };
 
 const sortedProjects = computed(() => {

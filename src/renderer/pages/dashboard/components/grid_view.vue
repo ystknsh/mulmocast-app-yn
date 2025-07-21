@@ -5,14 +5,26 @@
         class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 group cursor-pointer"
       >
         <div class="aspect-video bg-gray-100 relative overflow-hidden">
-          <!-- Audio/Podcast/Presentation Icon -->
-          <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
-            <div
-              class="p-8 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-            >
-              <FileText class="w-12 h-12 text-blue-600" />
+          <template v-if="thumbnailsLoading[project.metadata.id]">
+            <Skeleton class="w-full h-full" />
+          </template>
+          <template v-else-if="projectThumbnails[project.metadata.id]">
+            <img
+              :src="mediaUri(projectThumbnails[project.metadata.id])"
+              class="w-full h-full object-cover"
+              :alt="project.metadata.title"
+            />
+          </template>
+          <template v-else>
+            <!-- Audio/Podcast/Presentation Icon -->
+            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+              <div
+                class="p-8 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+              >
+                <FileText class="w-12 h-12 text-blue-600" />
+              </div>
             </div>
-          </div>
+          </template>
         </div>
         <div class="p-4">
           <div class="flex items-center justify-between mb-2">
@@ -57,9 +69,10 @@
 <script setup lang="ts">
 import { Calendar, FileText, Trash2, Loader2 } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
-import { formatDate } from "@/lib/utils";
+import { formatDate, mediaUri } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMulmoEventStore } from "@/store/mulmo_event";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const emit = defineEmits<{
   delete: [project: Project];
@@ -67,6 +80,8 @@ const emit = defineEmits<{
 
 defineProps<{
   projects: Project[];
+  projectThumbnails: Record<string, ArrayBuffer | string | null>;
+  thumbnailsLoading: Record<string, boolean>;
 }>();
 
 const mulmoEventStore = useMulmoEventStore();
