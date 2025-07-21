@@ -292,6 +292,7 @@
                 </div>
               </CardContent>
             </Card>
+            <Button @click="reference">Reference</Button>
           </div>
         </div>
       </div>
@@ -641,4 +642,8 @@ watch(
   },
   { deep: true },
 );
+
+const reference = async () => {
+  window.electronAPI.mulmoHandler("mulmoReferenceImages", projectId.value);
+};
 </script>
