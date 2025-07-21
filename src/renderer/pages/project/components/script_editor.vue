@@ -233,6 +233,7 @@ import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
 
 import { getBadge } from "@/lib/beat_util.js";
+import { setRandomBeatId } from "@/lib/beat_util";
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -404,7 +405,7 @@ const positionUp = (index: number) => {
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, beat);
+  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, setRandomBeatId(beat));
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,

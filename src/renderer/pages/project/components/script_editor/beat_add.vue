@@ -17,7 +17,6 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
-import { setRandomBeatId } from "@/lib/beat_util";
 import { beatTemplate } from "../../../../../shared/beat_data";
 
 const emit = defineEmits(["addBeat"]);
@@ -26,7 +25,6 @@ const templates = ref(beatTemplate);
 
 const addBeat = () => {
   const beat = { ...templates.value[selectedBeat.value].beat };
-  setRandomBeatId(beat);
 
   emit("addBeat", beat);
 };
