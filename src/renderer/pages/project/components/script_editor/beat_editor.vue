@@ -28,7 +28,9 @@
             </div>
             or
             <div class="flex">
-              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" /><Button @click="submitUrlImage"
+              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+                @click="submitUrlImage"
+                :disabled="!fetchEnable"
                 >Fetch</Button
               >
             </div>
@@ -217,6 +219,7 @@ import { useRoute } from "vue-router";
 import { Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import { z } from "zod";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -329,8 +332,19 @@ const handleDrop = (event: DragEvent) => {
   }
 };
 
+// image fetch
+const imageFetching = ref(false);
+const validateURL = computed(() => {
+  const urlSchema = z.string().url();
+  return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
+});
+const fetchEnable = computed(() => {
+  return mediaUrl.value !== "" && validateURL.value && !imageFetching.value;
+});
+
 const submitUrlImage = async () => {
   try {
+    imageFetching.value = true;
     const res = (await window.electronAPI.mulmoHandler(
       "mulmoImageFetchURL",
       projectId.value,
@@ -346,6 +360,7 @@ const submitUrlImage = async () => {
   } catch (error) {
     console.log(error);
   }
+  imageFetching.value = false;
 };
 
 const generateImageOnlyImage = () => {
