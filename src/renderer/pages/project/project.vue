@@ -185,7 +185,7 @@
               <CardContent class="p-4">
                 <div class="space-y-6">
                   <!-- General Settings -->
-                  <div class="border rounded-lg p-4 bg-gray-50">
+                  <div class="border rounded-lg p-4 bg-gray-50" v-if="false">
                     <h3 class="text-sm font-medium mb-4">General Settings</h3>
                     <div class="space-y-4">
                       <!-- Cache Toggle -->
