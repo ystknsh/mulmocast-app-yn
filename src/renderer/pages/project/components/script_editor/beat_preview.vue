@@ -2,12 +2,17 @@
   <div>
     <!-- Image section -->
     <div class="mb-4">
+      <!-- Image preview -->
+      <div
+        class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+        :key="`beat_editor_${beat.id ?? index}`"
+      >
       <!-- Generate image button -->
       <template v-if="shouldShowGenerateButton">
         <Button 
           variant="ghost" 
           size="icon" 
-          class="mb-2" 
+          class="absolute -left-1 -top-1 z-10" 
           @click="generateImage" 
           :disabled="isImageGenerating || isHtmlGenerating"
           :title="(isImageGenerating || isHtmlGenerating) ? 'Generating...' : 'Generate image'"
@@ -15,12 +20,6 @@
           <Sparkles :class="(isImageGenerating || isHtmlGenerating) ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
         </Button>
       </template>
-      
-      <!-- Image preview -->
-      <div
-        class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
-        :key="`beat_editor_${beat.id ?? index}`"
-      >
     <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
     <template v-if="isImageGenerating || isHtmlGenerating">
       <!-- TODO update design -->
@@ -55,12 +54,14 @@
     
     <!-- Movie section -->
     <div v-if="enableMovieGenerate">
+      <!-- Movie preview -->
+      <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
       <!-- Generate movie button -->
       <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
         <Button 
           variant="ghost" 
           size="icon" 
-          class="mb-2" 
+          class="absolute -left-1 -top-1 z-10" 
           @click="generateMovie" 
           :disabled="!enableMovieGenerate || isMovieGenerating"
           :title="isMovieGenerating ? 'Generating...' : 'Generate movie'"
@@ -68,10 +69,7 @@
           <Sparkles :class="isMovieGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
         </Button>
       </template>
-      
-      <!-- Movie preview -->
-      <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-    <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
+        <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
     <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else-if="movieFile">
       <video
         :size="64"
