@@ -161,6 +161,10 @@
           </template>
         </div>
         <!-- end of beat.image -->
+      </div>
+
+      <!-- right: preview -->
+      <div>
         <template v-if="shouldShowGenerateButton">
           <template v-if="!isGenerating">
             <template v-if="shouldBeGeneratedWithPrompt">
@@ -182,10 +186,7 @@
             <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
           </div>
         </template>
-      </div>
-
-      <!-- right: preview -->
-      <div>
+        
         <BeatPreview
           :beat="beat"
           :index="index"
