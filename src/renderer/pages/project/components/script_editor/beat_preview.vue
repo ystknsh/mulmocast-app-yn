@@ -17,7 +17,7 @@
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
             :title="t('form.' + imageGenerateButtonTitle)"
           >
-            <Sparkles :class="isImageGenerating || isHtmlGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
+            <Sparkles :class="isImageGenerating || isHtmlGenerating ? 'text-gray-400' : ''" class="w-4 h-4" />
           </Button>
         </template>
         <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
@@ -47,7 +47,9 @@
         <template v-else>
           <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
           <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
-          <p class="text-sm text-gray-500">{{ beat?.image?.type === "movie" ? "Video" : "Image" }} Preview</p>
+          <p class="text-sm text-gray-500">
+            {{ t("beat." + (beat?.image?.type === "movie" ? "videoPreview" : "imagePreview")) }}
+          </p>
         </template>
       </div>
     </div>
@@ -66,7 +68,7 @@
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
             :title="t('form.' + movieGenerateButtonTitle)"
           >
-            <Sparkles :class="isMovieGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
+            <Sparkles :class="isMovieGenerating ? 'text-gray-400' : ''" class="w-4 h-4" />
           </Button>
         </template>
         <template v-if="isMovieGenerating">
@@ -87,7 +89,7 @@
         </div>
         <div v-else>
           <Video :size="32" class="mx-auto text-gray-400 mb-2" />
-          <p class="text-sm text-gray-500">Video Preview</p>
+          <p class="text-sm text-gray-500">{{ t("beat.videoPreview") }}</p>
         </div>
       </div>
     </div>

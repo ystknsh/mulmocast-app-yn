@@ -38,8 +38,15 @@ const lang = {
       insert: "追加",
       change: "変更",
     },
+    changeBeatTypeFirst: "Change beat type first",
+    generateImage: "画像生成",
+    generateMovie: "動画生成",
+    generating: "生成中...",
   },
+  generating: "生成中...",
   beat: {
+    videoPreview: "動画プレビュー",
+    imagePreview: "画像プレビュー",
     badge: beat_badge,
     form: {
       image: {

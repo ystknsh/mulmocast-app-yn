@@ -45,6 +45,8 @@ const lang = {
   },
   generating: "Generating...",
   beat: {
+    videoPreview: "Video Preview",
+    imagePreview: "Image Preview",
     badge: beat_badge,
     form: {
       image: {
