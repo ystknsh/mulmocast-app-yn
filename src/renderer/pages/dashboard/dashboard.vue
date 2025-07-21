@@ -122,16 +122,10 @@ const loadProjectThumbnails = async () => {
     projects.value.map(async (project) => {
       thumbnailsLoading.value[project.metadata.id] = true;
       try {
-        const images = (await window.electronAPI.mulmoHandler("mulmoImageFiles", project.metadata.id)) as {
+        const image = (await window.electronAPI.mulmoHandler("mulmoImageFile", project.metadata.id, 0)) as {
           imageData?: ArrayBuffer;
-          movieData?: ArrayBuffer;
-        }[];
-
-        // Get the first available image
-        const firstImage = images.find((img) => img?.imageData);
-        if (firstImage?.imageData) {
-          projectThumbnails.value[project.metadata.id] = firstImage.imageData;
-        }
+        };
+        projectThumbnails.value[project.metadata.id] = image.imageData;
       } catch (error) {
         console.error(`Failed to load thumbnail for project ${project.metadata.id}:`, error);
       } finally {
