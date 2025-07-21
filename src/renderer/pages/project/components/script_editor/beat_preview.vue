@@ -1,8 +1,15 @@
 <template>
-  <div
-    class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
-    :key="`beat_editor_${beat.id ?? index}`"
-  >
+  <div>
+    <!-- Image section -->
+    <div class="mb-4">
+      <!-- Generate image button -->
+      <Button variant="outline" size="sm" class="mb-2">Generate image</Button>
+      
+      <!-- Image preview -->
+      <div
+        class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+        :key="`beat_editor_${beat.id ?? index}`"
+      >
     <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
     <template v-if="isImageGenerating || isHtmlGenerating">
       <!-- TODO update design -->
@@ -33,8 +40,15 @@
       <p class="text-sm text-gray-500">{{ beat?.image?.type === "movie" ? "Video" : "Image" }} Preview</p>
     </template>
   </div>
-  <!-- movie preview -->
-  <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-2" v-if="enableMovieGenerate">
+    </div>
+    
+    <!-- Movie section -->
+    <div v-if="enableMovieGenerate">
+      <!-- Generate movie button -->
+      <Button variant="outline" size="sm" class="mb-2">Generate movie</Button>
+      
+      <!-- Movie preview -->
+      <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
     <template v-if="isMovieGenerating"> <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating... </template>
     <div class="relative hover:opacity-80 transition-opacity cursor-pointer" v-else-if="movieFile">
       <video
@@ -53,14 +67,16 @@
       <Video :size="32" class="mx-auto text-gray-400 mb-2" />
       <p class="text-sm text-gray-500">Video Preview</p>
     </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { FileImage, Video, Play } from "lucide-vue-next";
+import { FileImage, Video, Play, Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 
-import { Loader2 } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 
 interface Props {
