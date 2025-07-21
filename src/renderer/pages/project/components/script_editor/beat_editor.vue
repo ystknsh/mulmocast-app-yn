@@ -165,28 +165,6 @@
 
       <!-- right: preview -->
       <div>
-        <template v-if="shouldShowGenerateButton">
-          <template v-if="!isGenerating">
-            <template v-if="shouldBeGeneratedWithPrompt">
-              <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4">Generate image</Button>
-              <Button
-                variant="outline"
-                size="sm"
-                @click="generateImageOnlyMovie()"
-                class="mt-4"
-                :disabled="!enableMovieGenerate"
-                >Generate movie</Button
-              >
-            </template>
-            <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4" v-else
-              >Generate image</Button
-            >
-          </template>
-          <div v-else class="inline-flex items-center whitespace-nowrap">
-            <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-          </div>
-        </template>
-        
         <BeatPreview
           :beat="beat"
           :index="index"
