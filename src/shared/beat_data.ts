@@ -14,19 +14,10 @@ export const initMulmoScript = {
   ],
 };
 
-export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
+// key is i18n key
+export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
   {
-    name: "Html prompt",
-    beat: {
-      speaker: "",
-      text: "",
-      htmlPrompt: {
-        prompt: "",
-      },
-    },
-  },
-  {
-    name: "Image prompt",
+    key: "imagePrompt",
     beat: {
       speaker: "",
       text: "",
@@ -35,7 +26,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Media file",
+    key: "mediaFile",
     beat: {
       text: "",
       speaker: "",
@@ -49,7 +40,17 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Text Slide",
+    key: "htmlPrompt",
+    beat: {
+      speaker: "",
+      text: "",
+      htmlPrompt: {
+        prompt: "",
+      },
+    },
+  },
+  {
+    key: "textSlide",
     beat: {
       text: "",
       speaker: "",
@@ -63,7 +64,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Markdown",
+    key: "markdown",
     beat: {
       text: "",
       speaker: "",
@@ -74,7 +75,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Chart",
+    key: "chart",
     beat: {
       text: "",
       speaker: "",
@@ -86,7 +87,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Mermaid",
+    key: "mermaid",
     beat: {
       text: "",
       speaker: "",
@@ -101,7 +102,7 @@ export const beatTemplate: { name: string; beat: MulmoBeat }[] = [
     },
   },
   {
-    name: "Tailwind html",
+    key: "html_tailwind",
     beat: {
       text: "",
       speaker: "",
