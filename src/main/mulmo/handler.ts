@@ -18,8 +18,10 @@ import {
   MulmoPresentationStyleMethods,
   setFfmpegPath,
   setFfprobePath,
+  generateReferenceImage,
+  getImageRefs,
 } from "mulmocast";
-import type { MulmoStudioContext } from "mulmocast";
+import type { MulmoStudioContext, MulmoImagePromptMedia } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import path from "path";
 import fs from "fs";
@@ -166,6 +168,54 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
       result: false,
       error,
     };
+  }
+};
+
+export const mulmoReferenceImages = async (projectId: string, webContents: WebContents) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId, true);
+    const images = await getImageRefs(context);
+    removeSessionProgressCallback(mulmoCallback);
+    return images;
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+  }
+};
+export const mulmoReferenceImage = async (
+  projectId: string,
+  index: number,
+  key: string,
+  image: MulmoImagePromptMedia,
+  webContents: WebContents,
+) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId, true);
+    const returnImage = generateReferenceImage({
+      context,
+      index,
+      key,
+      image,
+      force: true,
+    });
+    console.log(returnImage);
+    removeSessionProgressCallback(mulmoCallback);
+    return returnImage;
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
   }
 };
 
@@ -423,6 +473,10 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageUpload(args[0], args[1], args[2], args[3]);
       case "mulmoImageFetchURL":
         return await mulmoImageFetchURL(args[0], args[1], args[2], webContents);
+      case "mulmoReferenceImage":
+        return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
+      case "mulmoReferenceImages":
+        return await mulmoReferenceImages(args[0], webContents);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
