@@ -12,7 +12,7 @@
           <Button
             variant="ghost"
             size="icon"
-            class="absolute -left-1 -top-1 z-10"
+            class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateImage"
             :disabled="isImageGenerating || isHtmlGenerating"
             :title="isImageGenerating || isHtmlGenerating ? 'Generating...' : 'Generate image'"
@@ -61,7 +61,7 @@
           <Button
             variant="ghost"
             size="icon"
-            class="absolute -left-1 -top-1 z-10"
+            class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
             @click="generateMovie"
             :disabled="!enableMovieGenerate || isMovieGenerating"
             :title="isMovieGenerating ? 'Generating...' : 'Generate movie'"
