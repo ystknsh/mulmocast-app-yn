@@ -168,27 +168,6 @@
           </template>
         </div>
         <!-- end of beat.image -->
-        <template v-if="shouldShowGenerateButton">
-          <template v-if="!isGenerating">
-            <template v-if="shouldBeGeneratedWithPrompt">
-              <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4">Generate image</Button>
-              <Button
-                variant="outline"
-                size="sm"
-                @click="generateImageOnlyMovie()"
-                class="mt-4"
-                :disabled="!enableMovieGenerate"
-                >Generate movie</Button
-              >
-            </template>
-            <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4" v-else
-              >Generate image</Button
-            >
-          </template>
-          <div v-else class="inline-flex items-center whitespace-nowrap">
-            <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-          </div>
-        </template>
       </div>
 
       <!-- right: preview -->
@@ -202,7 +181,10 @@
           :enableMovieGenerate="enableMovieGenerate"
           :imageFile="imageFile"
           :movieFile="movieFile"
+          :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
+          @generateImage="generateImageOnlyImage"
+          @generateMovie="generateImageOnlyMovie"
         />
       </div>
     </div>
@@ -223,7 +205,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { Loader2 } from "lucide-vue-next";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";
@@ -267,21 +248,6 @@ const mediaUrl = ref("");
 
 const toggleTypeMode = ref(false);
 
-const shouldBeGeneratedWithPrompt = computed(() => {
-  return !props.beat.htmlPrompt && !props.beat.image;
-});
-
-const shouldShowGenerateButton = computed(() => {
-  return (
-    props.beat?.image?.type !== "beat" &&
-    !(
-      ["image", "movie"].includes(props.beat?.image?.type || "") &&
-      props.beat?.image &&
-      isLocalSourceMediaBeat(props.beat)
-    )
-  );
-});
-
 const enableMovieGenerate = computed(() => {
   return !!props.beat.moviePrompt;
 });
@@ -294,9 +260,6 @@ const isMovieGenerating = computed(() => {
 });
 const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
-});
-const isGenerating = computed(() => {
-  return isImageGenerating.value || isMovieGenerating.value || isHtmlGenerating.value;
 });
 
 const handleDrop = (event: DragEvent) => {
