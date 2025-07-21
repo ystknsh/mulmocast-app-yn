@@ -7,7 +7,19 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <div class="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-              <FileText class="w-6 h-6 text-green-500" />
+              <template v-if="thumbnailsLoading[project.metadata.id]">
+                <Skeleton class="w-full h-full" />
+              </template>
+              <template v-else-if="projectThumbnails[project.metadata.id]">
+                <img
+                  :src="mediaUri(projectThumbnails[project.metadata.id])"
+                  class="w-full h-full object-cover"
+                  :alt="project.metadata.title"
+                />
+              </template>
+              <template v-else>
+                <FileText class="w-6 h-6 text-green-500" />
+              </template>
             </div>
             <div>
               <div class="flex items-center space-x-2">
@@ -51,9 +63,10 @@
 <script setup lang="ts">
 import { Trash2, Eye, Calendar, Loader2, FileText } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
-import { formatDate } from "@/lib/utils";
+import { formatDate, mediaUri } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMulmoEventStore } from "@/store/mulmo_event";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const emit = defineEmits<{
   delete: [project: Project];
@@ -61,6 +74,8 @@ const emit = defineEmits<{
 
 defineProps<{
   projects: Project[];
+  projectThumbnails: Record<string, ArrayBuffer | string | null>;
+  thumbnailsLoading: Record<string, boolean>;
 }>();
 
 const mulmoEventStore = useMulmoEventStore();
