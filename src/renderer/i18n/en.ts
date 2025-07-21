@@ -44,6 +44,9 @@ const lang = {
     generating: "Generating...",
   },
   generating: "Generating...",
+  dashboard: {
+    createNew: "Create New",
+  },
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",

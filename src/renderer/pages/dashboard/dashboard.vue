@@ -13,7 +13,7 @@
               class="flex items-center space-x-2"
             >
               <Plus class="w-5 h-5" />
-              <span>Create New</span>
+              <span>{{ t("dashboard.createNew") }}</span>
             </Button>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
               <Button
@@ -91,8 +91,10 @@ import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/project_api";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
+const { t } = useI18n();
 const viewMode = ref<"list" | "grid">("list");
 const projects = ref<Project[]>([]);
 const loading = ref(true);

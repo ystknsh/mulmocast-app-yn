@@ -44,6 +44,9 @@ const lang = {
     generating: "生成中...",
   },
   generating: "生成中...",
+  dashboard: {
+    createNew: "新規作成",
+  },
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
