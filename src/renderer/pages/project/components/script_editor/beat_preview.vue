@@ -5,7 +5,9 @@
       <!-- Generate image button -->
       <template v-if="shouldShowGenerateButton">
         <template v-if="!isImageGenerating && !isHtmlGenerating">
-          <Button variant="outline" size="sm" class="mb-2" @click="generateImage">Generate image</Button>
+          <Button variant="ghost" size="icon" class="mb-2" @click="generateImage" title="Generate image">
+            <Sparkles class="w-4 h-4" />
+          </Button>
         </template>
         <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
           <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
@@ -54,7 +56,9 @@
       <!-- Generate movie button -->
       <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
         <template v-if="!isMovieGenerating">
-          <Button variant="outline" size="sm" class="mb-2" @click="generateMovie" :disabled="!enableMovieGenerate">Generate movie</Button>
+          <Button variant="ghost" size="icon" class="mb-2" @click="generateMovie" :disabled="!enableMovieGenerate" title="Generate movie">
+            <Sparkles class="w-4 h-4" />
+          </Button>
         </template>
         <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
           <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
@@ -87,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { FileImage, Video, Play, Loader2 } from "lucide-vue-next";
+import { FileImage, Video, Play, Loader2, Sparkles } from "lucide-vue-next";
 import { computed } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 
