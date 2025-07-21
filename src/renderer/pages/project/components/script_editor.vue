@@ -24,7 +24,7 @@
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-2 mx-auto">
           <div class="px-2 py-1">
-            <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
           </div>
 
           <TransitionGroup
@@ -84,7 +84,7 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
               </div>
             </div>
           </TransitionGroup>
@@ -141,7 +141,7 @@
 
         <div class="space-y-2 mx-auto">
           <div class="px-2 py-1">
-            <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
           </div>
 
           <TransitionGroup
@@ -165,6 +165,7 @@
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   @update="update"
                   @generateImage="generateImage"
+                  @changeBeat="changeBeat"
                 />
               </Card>
               <div
@@ -186,7 +187,7 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
               </div>
             </div>
           </TransitionGroup>
@@ -215,7 +216,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BeatEditor from "./script_editor/beat_editor.vue";
-import BeatAdd from "./script_editor/beat_add.vue";
+import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
 import CodeEditor from "@/components/code_editor.vue";
 
@@ -233,6 +234,7 @@ import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
 
 import { getBadge } from "@/lib/beat_util.js";
+import { setRandomBeatId } from "@/lib/beat_util";
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -403,8 +405,17 @@ const positionUp = (index: number) => {
   emit("positionUp", index);
 };
 
+const changeBeat = (beat: MulmoBeat, index: number) => {
+  const newBeats = [...props.mulmoValue.beats];
+  newBeats[index] = beat;
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
+};
+
 const addBeat = (beat: MulmoBeat, index: number) => {
-  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, beat);
+  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, setRandomBeatId(beat));
   emit("update:mulmoValue", {
     ...props.mulmoValue,
     beats: newBeats,

@@ -32,6 +32,13 @@ const lang = {
       error: "設定の保存に失敗しました",
     },
   },
+  form: {
+    cancel: "キャンセル",
+    template_selector: {
+      insert: "追加",
+      change: "変更",
+    },
+  },
   beat: {
     badge: beat_badge,
     form: {

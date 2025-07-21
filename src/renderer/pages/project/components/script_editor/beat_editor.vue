@@ -5,7 +5,14 @@
         <span class="text-base">Beat: {{ index + 1 }}</span>
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
-      <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
+      <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
+        {{ $t("beat.badge." + getBadge(beat)) }}</Badge
+      >
+      <div v-if="toggleTypeMode">
+        <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change">
+          <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("form.cancel") }} </Button>
+        </BeatSelector>
+      </div>
     </div>
 
     <p class="text-sm text-gray-600 mb-2">{{ beat.text }}</p>
@@ -209,6 +216,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import BeatPreview from "./beat_preview.vue";
+import BeatSelector from "./beat_selector.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../../store";
@@ -225,7 +233,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage"]);
+const emit = defineEmits(["update", "generateImage", "changeBeat"]);
 
 const route = useRoute();
 const { t } = useI18n();
@@ -237,6 +245,7 @@ const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
 const mediaUrl = ref("");
 
+const toggleTypeMode = ref(false);
 
 const enableMovieGenerate = computed(() => {
   return !!props.beat.moviePrompt;
@@ -324,6 +333,11 @@ const submitUrlImage = async () => {
     console.log(error);
   }
   imageFetching.value = false;
+};
+
+const changeBeat = (beat: MulmoBeat) => {
+  emit("changeBeat", beat, props.index);
+  toggleTypeMode.value = !toggleTypeMode.value;
 };
 
 const generateImageOnlyImage = () => {
