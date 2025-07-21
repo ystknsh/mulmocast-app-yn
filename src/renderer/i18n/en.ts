@@ -33,6 +33,7 @@ const lang = {
     },
   },
   form: {
+    cancel: "Cancel",
     template_selector: {
       insert: "Insert",
       change: "Change",

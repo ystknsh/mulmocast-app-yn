@@ -11,6 +11,7 @@
       </SelectContent>
     </Select>
     <Button size="sm" @click="emitBeat"> {{ t("form.template_selector." + buttonKey) }} </Button>
+    <slot />
   </div>
 </template>
 <script setup lang="ts">

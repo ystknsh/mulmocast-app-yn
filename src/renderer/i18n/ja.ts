@@ -33,6 +33,7 @@ const lang = {
     },
   },
   form: {
+    cancel: "キャンセル",
     template_selector: {
       insert: "追加",
       change: "変更",

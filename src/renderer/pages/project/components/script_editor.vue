@@ -165,6 +165,7 @@
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   @update="update"
                   @generateImage="generateImage"
+                  @changeBeat="changeBeat"
                 />
               </Card>
               <div
@@ -402,6 +403,15 @@ const positionUp = (index: number) => {
     beats: newBeats,
   });
   emit("positionUp", index);
+};
+
+const changeBeat = (beat: MulmoBeat, index: number) => {
+  const newBeats = [...props.mulmoValue.beats];
+  newBeats[index] = beat;
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    beats: newBeats,
+  });
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
