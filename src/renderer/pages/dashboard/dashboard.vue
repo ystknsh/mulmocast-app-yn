@@ -34,7 +34,7 @@
               </Button>
             </div>
           </div>
-          <div class="text-sm text-gray-500">{{ projects.length }} projects</div>
+          <div class="text-sm text-gray-500">{{ t("dashboard.project", { count: projects.length }) }}</div>
         </div>
 
         <!-- Loading State -->

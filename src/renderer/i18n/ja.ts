@@ -46,6 +46,7 @@ const lang = {
   generating: "生成中...",
   dashboard: {
     createNew: "新規作成",
+    project: "{count} 件のプロジェクト",
   },
   beat: {
     videoPreview: "動画プレビュー",

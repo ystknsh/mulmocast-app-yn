@@ -46,6 +46,7 @@ const lang = {
   generating: "Generating...",
   dashboard: {
     createNew: "Create New",
+    project: "No projects | One project | {count} projects",
   },
   beat: {
     videoPreview: "Video Preview",
