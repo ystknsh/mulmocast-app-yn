@@ -4,14 +4,16 @@
     <div class="mb-4">
       <!-- Generate image button -->
       <template v-if="shouldShowGenerateButton">
-        <template v-if="!isImageGenerating && !isHtmlGenerating">
-          <Button variant="ghost" size="icon" class="mb-2" @click="generateImage" title="Generate image">
-            <Sparkles class="w-4 h-4" />
-          </Button>
-        </template>
-        <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
-          <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          class="mb-2" 
+          @click="generateImage" 
+          :disabled="isImageGenerating || isHtmlGenerating"
+          :title="(isImageGenerating || isHtmlGenerating) ? 'Generating...' : 'Generate image'"
+        >
+          <Sparkles :class="(isImageGenerating || isHtmlGenerating) ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
+        </Button>
       </template>
       
       <!-- Image preview -->
@@ -55,14 +57,16 @@
     <div v-if="enableMovieGenerate">
       <!-- Generate movie button -->
       <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
-        <template v-if="!isMovieGenerating">
-          <Button variant="ghost" size="icon" class="mb-2" @click="generateMovie" :disabled="!enableMovieGenerate" title="Generate movie">
-            <Sparkles class="w-4 h-4" />
-          </Button>
-        </template>
-        <div v-else class="inline-flex items-center whitespace-nowrap mb-2">
-          <Loader2 class="w-4 h-4 mr-1 animate-spin" />Generating...
-        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          class="mb-2" 
+          @click="generateMovie" 
+          :disabled="!enableMovieGenerate || isMovieGenerating"
+          :title="isMovieGenerating ? 'Generating...' : 'Generate movie'"
+        >
+          <Sparkles :class="isMovieGenerating ? 'w-4 h-4 text-gray-400' : 'w-4 h-4'" />
+        </Button>
       </template>
       
       <!-- Movie preview -->
