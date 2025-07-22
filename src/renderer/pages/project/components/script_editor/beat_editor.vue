@@ -151,19 +151,18 @@
           </template>
           <template v-else>
             <Label class="block mb-1"> Image Prompt: </Label>
-            <Input
+            <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
-              type="text"
-              class="mb-2"
+              class="mb-2 h-20 overflow-y-auto"
             />
             <Label class="block mb-1"> Movie Prompt: </Label>
-            <Input
+            <Textarea
               :placeholder="t('beat.form.moviePrompt.contents')"
               :model-value="beat.moviePrompt"
               @update:model-value="(value) => update('moviePrompt', String(value))"
-              type="text"
+              class="mb-2 h-20 overflow-y-auto"
             />
           </template>
         </div>
