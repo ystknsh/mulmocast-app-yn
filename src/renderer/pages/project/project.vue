@@ -196,14 +196,24 @@
           </div>
 
           <!-- Right Column - Output & Product -->
-          <div class="space-y-4 overflow-y-auto pl-2">
+          <div v-if="isRightColumnOpen" class="space-y-4 overflow-y-auto pl-2">
             <!-- Output Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
-                <CardTitle class="flex items-center space-x-2">
-                  <Settings :size="20" />
-                  <span>Output Settings & Generation</span>
-                </CardTitle>
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Settings :size="20" />
+                    <span>Output Settings & Generation</span>
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    @click="isRightColumnOpen = false"
+                    class="hidden lg:inline-flex"
+                  >
+                    <ChevronRight :size="16" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent class="p-4">
                 <Generate :projectId="projectId" />
@@ -270,6 +280,17 @@
               </CardContent>
             </Card>
             <Button @click="reference">Reference</Button>
+          </div>
+          
+          <!-- Right Column - Collapsed State -->
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50 items-center justify-center">
+            <button
+              @click="isRightColumnOpen = true"
+              class="h-full w-full flex flex-col items-center justify-center p-2 hover:bg-gray-100 transition-colors"
+            >
+              <Settings :size="20" class="mb-2 text-gray-700" />
+              <span class="writing-mode-vertical text-xs text-gray-600">Output & Product</span>
+            </button>
           </div>
         </div>
       </div>
@@ -617,3 +638,11 @@ const reference = async () => {
   window.electronAPI.mulmoHandler("mulmoReferenceImages", projectId.value);
 };
 </script>
+
+<style scoped>
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+</style>
