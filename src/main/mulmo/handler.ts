@@ -35,7 +35,7 @@ import {
   mulmoAudioFile,
   mulmoImageFile,
   mulmoImageFiles,
-  mulmoRefecenceImagesFiles,
+  mulmoReferenceImagesFiles,
 } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -369,8 +369,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageFiles(args[0]);
       case "mulmoImageFile":
         return await mulmoImageFile(args[0], args[1]);
-      case "mulmoRefecenceImagesFiles":
-        return await mulmoRefecenceImagesFiles(args[0]);
+      case "mulmoReferenceImagesFiles":
+        return await mulmoReferenceImagesFiles(args[0]);
       case "createMulmoScript":
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":

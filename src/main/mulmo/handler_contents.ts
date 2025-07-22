@@ -103,27 +103,31 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
 
 // image reference
 
-export const mulmoRefecenceImagesFiles = async (projectId: string) => {
+export const mulmoReferenceImagesFiles = async (projectId: string) => {
   const context = await getContext(projectId);
   const images = context.presentationStyle.imageParams?.images;
   if (!images) {
     return {};
   }
-  const imageRefs: Record<string, string> = {};
+  const imageRefs: Record<string, ArrayBuffer> = {};
   Object.keys(images)
     .sort()
     .map((key) => {
       const image = images[key];
-      const path = (() => {
-        if (image.type === "imagePrompt") {
-          return getReferenceImagePath(context, key, "png");
-        } else if (image.type === "image" && image.source.kind === "path") {
-          return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+      try {
+        const path = (() => {
+          if (image.type === "imagePrompt") {
+            return getReferenceImagePath(context, key, "png");
+          } else if (image.type === "image" && image.source.kind === "path") {
+            return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+          }
+        })();
+        if (path && fs.existsSync(path)) {
+          const buffer = fs.readFileSync(path);
+          imageRefs[key] = buffer.buffer;
         }
-      })();
-      if (path && fs.existsSync(path)) {
-        const buffer = fs.readFileSync(path);
-        imageRefs[key] = buffer.buffer;
+      } catch (error) {
+        console.log(error);
       }
     });
   return imageRefs;
