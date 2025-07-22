@@ -262,7 +262,6 @@ import { useRoute, useRouter } from "vue-router";
 import {
   ArrowLeft,
   Code2,
-  FileText,
   Settings,
   Play,
   Undo,
@@ -271,8 +270,6 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
-  Monitor,
-  Globe,
   Lightbulb,
   Bot,
   FolderOpen,
@@ -375,11 +372,6 @@ const saveProjectMetadata = useDebounceFn(async (project: ProjectMetadata) => {
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   project.value.chatMessages = messages;
-  saveProjectMetadata(project.value);
-};
-
-const saveCacheEnabled = (enabled: boolean) => {
-  project.value.useCache = enabled;
   saveProjectMetadata(project.value);
 };
 
