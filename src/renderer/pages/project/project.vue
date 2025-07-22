@@ -101,14 +101,14 @@
           </div>
           
           <!-- Left Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50">
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
             <button
               @click="isLeftColumnOpen = true"
-              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-100 transition-colors"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
             >
               <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Bot :size="20" class="mb-2 text-blue-700" />
-              <span class="writing-mode-vertical text-xs text-gray-600">AI Assistant Chat</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">AI Assistant Chat</span>
             </button>
           </div>
 
@@ -284,14 +284,14 @@
           </div>
           
           <!-- Right Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50">
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
             <button
               @click="isRightColumnOpen = true"
-              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-100 transition-colors"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
             >
               <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Settings :size="20" class="mb-2 text-gray-700" />
-              <span class="writing-mode-vertical text-xs text-gray-600">Output & Product</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">Output & Product</span>
             </button>
           </div>
         </div>
