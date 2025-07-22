@@ -498,7 +498,7 @@ const generatePdf = async () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "pdf"), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: "Pdf generated successfully",
-    errorMessage: "Failed to generate podcast",
+    errorMessage: "Failed to generate pdf",
   });
 };
 
