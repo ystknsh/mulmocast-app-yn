@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
@@ -105,15 +105,7 @@ const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
 
 const loadProjects = async () => {
-  try {
-    loading.value = true;
-    projects.value = await projectApi.list();
-  } catch (error) {
-    console.error("Failed to load projects:", error);
-  } finally {
-    loading.value = false;
-  }
-  loadProjectThumbnails();
+  projects.value = await projectApi.list();
 };
 
 const loadProjectThumbnails = async () => {
@@ -181,7 +173,35 @@ const handleDeleteProject = async (project: Project) => {
   }
 };
 
-onMounted(() => {
-  loadProjects();
+const saveViewMode = async () => {
+  try {
+    const settings = await window.electronAPI.settings.get();
+    await window.electronAPI.settings.set({ ...settings, VIEW_MODE: viewMode.value });
+  } catch (error) {
+    console.error("Failed to save view mode setting:", error);
+  }
+};
+
+watch(viewMode, () => {
+  saveViewMode();
+});
+
+const loadViewMode = async () => {
+  const settings = await window.electronAPI.settings.get();
+  if (settings.VIEW_MODE && (settings.VIEW_MODE === "list" || settings.VIEW_MODE === "grid")) {
+    viewMode.value = settings.VIEW_MODE;
+  }
+};
+
+onMounted(async () => {
+  try {
+    loading.value = true;
+    await Promise.all([loadViewMode(), loadProjects()]);
+    loadProjectThumbnails();
+  } catch (error) {
+    console.error("Failed to load projects:", error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
