@@ -248,8 +248,8 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
       : audioContext;
 
     if (actionName === "movie") {
-      const captionCoontext = imageContext.caption ? await captions(imageContext) : imageContext;
-      await movie(captionCoontext);
+      const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
+      await movie(captioncontext);
     }
     if (actionName === "pdf") {
       // sizes = ["letter", "a4"];
