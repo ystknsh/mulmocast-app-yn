@@ -49,7 +49,7 @@
         </div>
 
         <!-- 3 Split Layout -->
-        <div :class="gridLayoutClass" class="relative">
+        <div class="grid grid-cols-1 gap-4 h-auto lg:h-[calc(100vh-180px)] relative" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
           <div
             class="h-full overflow-y-auto pr-2"
@@ -394,16 +394,14 @@ const isRightColumnOpen = ref(false); // Default: closed
 
 // Computed grid layout class based on column states
 const gridLayoutClass = computed(() => {
-  const base = "grid grid-cols-1 gap-4 h-auto";
-
   if (!isLeftColumnOpen.value && !isRightColumnOpen.value) {
-    return `${base} lg:grid-cols-[48px_1fr_48px] lg:h-[calc(100vh-180px)]`;
+    return "lg:grid-cols-[48px_1fr_48px]";
   } else if (!isLeftColumnOpen.value) {
-    return `${base} lg:grid-cols-[48px_1fr_30%] lg:h-[calc(100vh-180px)]`;
+    return "lg:grid-cols-[48px_1fr_30%]";
   } else if (!isRightColumnOpen.value) {
-    return `${base} lg:grid-cols-[30%_1fr_48px] lg:h-[calc(100vh-180px)]`;
+    return "lg:grid-cols-[30%_1fr_48px]";
   }
-  return `${base} lg:grid-cols-[30%_40%_1fr] lg:h-[calc(100vh-180px)]`;
+  return "lg:grid-cols-[30%_40%_1fr]";
 });
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
