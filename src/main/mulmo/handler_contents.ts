@@ -112,7 +112,7 @@ export const mulmoRefecenceImagesFiles = async (projectId: string) => {
   const imageRefs: Record<string, string> = {};
   Object.keys(images)
     .sort()
-    .map((key, index) => {
+    .map((key) => {
       const image = images[key];
       const path = (() => {
         if (image.type === "imagePrompt") {
