@@ -49,17 +49,17 @@ mulmocast-app/
    yarn format
    ```
 
-## Adding shadcn/ui Components
+## Adding shadcn-vue Components
 
-To add new shadcn/ui components to the project:
+To add new [shadcn-vue](https://www.shadcn-vue.com/) components to the project:
 
 ```bash
-npx shadcn@latest add [component-name]
+npx shadcn-vue@latest add [component-name]
 ```
 
 For example:
 ```bash
-npx shadcn@latest add button
-npx shadcn@latest add card
-npx shadcn@latest add dialog
+npx shadcn-vue@latest add button
+npx shadcn-vue@latest add card
+npx shadcn-vue@latest add dialog
 ```
