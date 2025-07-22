@@ -48,6 +48,15 @@ const lang = {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
   },
+  project: {
+    generate: {
+      generateContents: "Generate Contents",
+      movie: "Movie",
+      audio: "Podcast",
+      pdfSlide: "PDF (Presenter)",
+      pdfHandout: "PDF (Handout)",
+    },
+  },
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",

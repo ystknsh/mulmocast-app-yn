@@ -48,6 +48,15 @@ const lang = {
     createNew: "Create New",
     project: "No projects | One project | {count} projects",
   },
+  project: {
+    generate: {
+      generateContents: "Generate Contents",
+      movie: "Movie",
+      audio: "Podcast",
+      pdfSlide: "PDF (Presenter)",
+      pdfHandout: "PDF (Handout)",
+    },
+  },
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
