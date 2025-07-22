@@ -1,42 +1,24 @@
 <template>
   <div class="space-y-6">
     <!-- Output Buttons -->
-    <div class="space-y-4">
-      <div>
-        <Button @click="generateContents" class="w-full">Generate</Button>
-        <div class="flex flex-col space-y-2 pl-2">
-          <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
-            <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
-            <span>{{ option.label }}</span>
-          </label>
-        </div>
-      </div>
-    </div>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex flex-col space-y-2 pl-2">
+        <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
+          <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
+          <span>{{ option.label }}</span>
+        </label>
+      </div>
       <Button
+        @click="generateContents"
         class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-        @click="generateMovie"
         :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
       >
-        <Monitor :size="24" />
-        <span>Generate Movie</span>
-      </Button>
-      <Button
-        class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-        :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-        @click="generatePdf"
-      >
-        <FileText :size="24" />
-        <span>Generate PDF</span>
-      </Button>
-      <Button
-        class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-        @click="generatePodcast"
-        :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-      >
-        <Globe :size="24" />
-        <span>Generate Podcast</span>
+        <div class="flex">
+          <Monitor :size="24" v-if="options.movie" />
+          <Globe :size="24" v-if="options.audio" />
+          <FileText :size="24" v-if="options.pdfSlide || options.pdfHandout" />
+        </div>
+        <span>Generate Contents</span>
       </Button>
     </div>
   </div>
@@ -85,35 +67,11 @@ const generateContents = () => {
   console.log(keys);
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Movie generated successfully",
-    errorMessage: "Failed to generate movie",
+    successMessage: "Contents generated successfully",
+    errorMessage: "Failed to generate contents",
   });
 };
 const mulmoEventStore = useMulmoEventStore();
 
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
-
-const generateMovie = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, "movie"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Movie generated successfully",
-    errorMessage: "Failed to generate movie",
-  });
-};
-
-const generatePodcast = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, "audio"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Podcast generated successfully",
-    errorMessage: "Failed to generate podcast",
-  });
-};
-
-const generatePdf = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, "pdf"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Pdf generated successfully",
-    errorMessage: "Failed to generate pdf",
-  });
-};
 </script>
