@@ -49,7 +49,7 @@
         </div>
 
         <!-- 3 Split Layout -->
-        <div :class="gridLayoutClass">
+        <div :class="gridLayoutClass" class="relative">
           <!-- Left Column - AI Chat -->
           <div v-if="isLeftColumnOpen" class="h-full overflow-y-auto pr-2">
             <Card
@@ -80,7 +80,7 @@
                     @click="isLeftColumnOpen = false"
                     class="hidden lg:inline-flex"
                   >
-                    <ChevronLeft :size="16" />
+                    <PanelLeftClose :size="16" />
                   </Button>
                 </div>
               </CardHeader>
@@ -101,11 +101,12 @@
           </div>
           
           <!-- Left Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50 items-center justify-center">
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50">
             <button
               @click="isLeftColumnOpen = true"
-              class="h-full w-full flex flex-col items-center justify-center p-2 hover:bg-gray-100 transition-colors"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-100 transition-colors"
             >
+              <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Bot :size="20" class="mb-2 text-blue-700" />
               <span class="writing-mode-vertical text-xs text-gray-600">AI Assistant Chat</span>
             </button>
@@ -211,7 +212,7 @@
                     @click="isRightColumnOpen = false"
                     class="hidden lg:inline-flex"
                   >
-                    <ChevronRight :size="16" />
+                    <PanelRightClose :size="16" />
                   </Button>
                 </div>
               </CardHeader>
@@ -283,11 +284,12 @@
           </div>
           
           <!-- Right Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50 items-center justify-center">
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50">
             <button
               @click="isRightColumnOpen = true"
-              class="h-full w-full flex flex-col items-center justify-center p-2 hover:bg-gray-100 transition-colors"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-100 transition-colors"
             >
+              <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Settings :size="20" class="mb-2 text-gray-700" />
               <span class="writing-mode-vertical text-xs text-gray-600">Output & Product</span>
             </button>
@@ -320,6 +322,10 @@ import {
   Bot,
   FolderOpen,
   Package,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
@@ -394,7 +400,7 @@ const gridLayoutClass = computed(() => {
   if (!isLeftColumnOpen.value && !isRightColumnOpen.value) {
     return `${base} lg:grid-cols-[48px_1fr_48px] lg:h-[calc(100vh-180px)]`;
   } else if (!isLeftColumnOpen.value) {
-    return `${base} lg:grid-cols-[48px_50%_1fr] lg:h-[calc(100vh-180px)]`;
+    return `${base} lg:grid-cols-[48px_1fr_30%] lg:h-[calc(100vh-180px)]`;
   } else if (!isRightColumnOpen.value) {
     return `${base} lg:grid-cols-[30%_1fr_48px] lg:h-[calc(100vh-180px)]`;
   }
