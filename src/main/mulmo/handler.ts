@@ -12,7 +12,6 @@ import {
   movieFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  getBeatAudioPath,
   imagePreprocessAgent,
   generateBeatImage,
   generateBeatAudio,
@@ -34,6 +33,7 @@ import { z } from "zod";
 import { app, WebContents } from "electron";
 
 import { fetchAndSave } from "./fetch_url";
+import { mulmoAudioFiles, mulmoAudioFile } from "./handler_contents";
 
 // from ffprobePath
 // import os from "os";
@@ -55,7 +55,7 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
 
-const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
+export const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
   // const projectMetadata = await getProjectMetadata(projectId);
 
@@ -314,43 +314,6 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
 
 export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
-};
-
-const beatAudio = (context: MulmoStudioContext) => {
-  return (beat) => {
-    try {
-      const { text } = beat; // TODO: multiLingual
-      const fileName = getBeatAudioPath(text, context, beat);
-      if (fs.existsSync(fileName)) {
-        const buffer = fs.readFileSync(fileName);
-        return buffer.buffer;
-        // return fileName;
-      }
-      return;
-    } catch (e) {
-      console.log(e);
-      return "";
-    }
-  };
-};
-
-export const mulmoAudioFiles = async (projectId: string) => {
-  try {
-    const context = await getContext(projectId);
-    return context.studio.script.beats.map(beatAudio(context));
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};
-export const mulmoAudioFile = async (projectId: string, index: number) => {
-  try {
-    const context = await getContext(projectId);
-    const beat = context.studio.script.beats[index];
-    return beatAudio(context)(beat);
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
