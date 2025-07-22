@@ -49,7 +49,7 @@
         </div>
 
         <!-- 3 Split Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-auto lg:h-[calc(100vh-180px)]">
+        <div :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
           <div class="h-full overflow-y-auto pr-2">
             <Card
@@ -339,6 +339,20 @@ const isDevelopment = import.meta.env.DEV;
 // Column open/close states
 const isLeftColumnOpen = ref(true); // Default: open
 const isRightColumnOpen = ref(false); // Default: closed
+
+// Computed grid layout class based on column states
+const gridLayoutClass = computed(() => {
+  const base = 'grid grid-cols-1 gap-4 h-auto';
+  
+  if (!isLeftColumnOpen.value && !isRightColumnOpen.value) {
+    return `${base} lg:grid-cols-[48px_1fr_48px] lg:h-[calc(100vh-180px)]`;
+  } else if (!isLeftColumnOpen.value) {
+    return `${base} lg:grid-cols-[48px_50%_1fr] lg:h-[calc(100vh-180px)]`;
+  } else if (!isRightColumnOpen.value) {
+    return `${base} lg:grid-cols-[30%_1fr_48px] lg:h-[calc(100vh-180px)]`;
+  }
+  return `${base} lg:grid-cols-[30%_40%_1fr] lg:h-[calc(100vh-180px)]`;
+});
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
