@@ -5,7 +5,7 @@
       <div class="flex flex-col space-y-2 pl-2">
         <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
           <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
-          <span>{{ option.label }}</span>
+          <span>{{ t("project.generate." + option.key) }}</span>
         </label>
       </div>
       <Button
@@ -18,7 +18,7 @@
           <Globe :size="24" v-if="options.audio" />
           <FileText :size="24" v-if="options.pdfSlide || options.pdfHandout" />
         </div>
-        <span>Generate Contents</span>
+        <span>{{ t("project.generate.generateContents") }}</span>
       </Button>
     </div>
   </div>
@@ -32,18 +32,22 @@ import { Button } from "@/components/ui/button";
 import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 import { Checkbox } from "@/components/ui/checkbox";
 
+import { useI18n } from "vue-i18n";
+
 interface Props {
   projectId: string;
 }
 const props = defineProps<Props>();
 
+const { t } = useI18n();
+
 type OptionKey = "movie" | "audio" | "pdfSlide" | "pdfHandout";
 
-const checkboxOptions: { key: OptionKey; label: string }[] = [
-  { key: "movie", label: "Movie" },
-  { key: "audio", label: "Podcast" },
-  { key: "pdfSlide", label: "PDF (Presenter)" },
-  { key: "pdfHandout", label: "PDF (Handout)" },
+const checkboxOptions: { key: OptionKey }[] = [
+  { key: "movie" },
+  { key: "audio" },
+  { key: "pdfSlide" },
+  { key: "pdfHandout" },
 ];
 
 const options = ref<Record<OptionKey, boolean>>({
