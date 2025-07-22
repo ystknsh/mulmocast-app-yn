@@ -51,26 +51,38 @@
         <!-- 3 Split Layout -->
         <div :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
-          <div class="h-full overflow-y-auto pr-2">
+          <div v-if="isLeftColumnOpen" class="h-full overflow-y-auto pr-2">
             <Card
               :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
             >
               <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
-                <CardTitle
-                  :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-                >
-                  <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
-                  <span>
-                    {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
-                  </span>
-                </CardTitle>
-                <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-                  {{
-                    selectedTheme === "beginner"
-                      ? "Let's Create Scripts Through Conversation with AI Assistants"
-                      : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
-                  }}
-                </p>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <CardTitle
+                      :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                    >
+                      <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                      <span>
+                        {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                      </span>
+                    </CardTitle>
+                    <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                      {{
+                        selectedTheme === "beginner"
+                          ? "Let's Create Scripts Through Conversation with AI Assistants"
+                          : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                      }}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    @click="isLeftColumnOpen = false"
+                    class="hidden lg:inline-flex"
+                  >
+                    <ChevronLeft :size="16" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent
                 :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
@@ -86,6 +98,17 @@
                 />
               </CardContent>
             </Card>
+          </div>
+          
+          <!-- Left Column - Collapsed State -->
+          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-50 items-center justify-center">
+            <button
+              @click="isLeftColumnOpen = true"
+              class="h-full w-full flex flex-col items-center justify-center p-2 hover:bg-gray-100 transition-colors"
+            >
+              <Bot :size="20" class="mb-2 text-blue-700" />
+              <span class="writing-mode-vertical text-xs text-gray-600">AI Assistant Chat</span>
+            </button>
           </div>
 
           <!-- Middle Column - Script Editor -->
@@ -270,9 +293,12 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Lightbulb,
   Bot,
   FolderOpen,
+  Package,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
