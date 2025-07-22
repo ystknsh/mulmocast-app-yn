@@ -243,27 +243,15 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     const hasMatchingAction = (actions: string[], targets: string[]) =>
       actions.some((action) => targets.includes(action));
 
-    const enables = (() => {
-      if (Array.isArray(actionName)) {
-        return {
-          audio: hasMatchingAction(["audio", "movie"], actionName),
-          image: hasMatchingAction(["image", "movie", "pdf"], actionName),
-          movie: hasMatchingAction(["movie"], actionName),
-          pdfSlide: hasMatchingAction(["pdfSlide"], actionName),
-          pdfHandout: hasMatchingAction(["pdfHandout"], actionName),
-        };
-      }
-
-      return {
-        audio: ["audio", "movie"].includes(actionName),
-        image: ["image", "movie", "pdf"].includes(actionName),
-        movie: actionName === "movie",
-        pdfSlide: actionName === "pdf",
-        pdfHandout: actionName === "pdf",
-      };
-    })();
+    const actionNames = Array.isArray(actionName) ? actionName : [actionName];
+    const enables = {
+      audio: hasMatchingAction(["audio", "movie"], actionNames),
+      image: hasMatchingAction(["image", "movie", "pdf"], actionNames),
+      movie: hasMatchingAction(["movie"], actionNames),
+      pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
+      pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
+    };
     console.log(enables);
-
     const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
     const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
 
@@ -284,6 +272,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       result: true,
     };
   } catch (error) {
+    console.log(error);
     if (error instanceof z.ZodError) {
       if (error.issues) {
         error.issues.map((e) => {
