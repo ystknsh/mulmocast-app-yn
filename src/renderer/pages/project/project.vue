@@ -336,6 +336,10 @@ const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
 
+// Column open/close states
+const isLeftColumnOpen = ref(true); // Default: open
+const isRightColumnOpen = ref(false); // Default: closed
+
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
 const validationMessage = ref("");
