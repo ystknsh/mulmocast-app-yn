@@ -1,12 +1,17 @@
 import {
   getBeatAudioPath,
   MulmoPresentationStyleMethods,
+  MulmoStudioContextMethods,
   imagePreprocessAgent,
+  getReferenceImagePath,
   type MulmoStudioContext,
 } from "mulmocast";
+
 import fs from "fs";
 
 import { getContext } from "./handler_common";
+
+// audio
 
 const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {
@@ -44,7 +49,7 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
   }
 };
 
-//
+// images
 
 export const mulmoImageFiles = async (projectId: string) => {
   try {
@@ -95,3 +100,37 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
     }
   };
 };
+
+// image reference
+
+export const mulmoReferenceImagesFiles = async (projectId: string) => {
+  const context = await getContext(projectId);
+  const images = context.presentationStyle.imageParams?.images;
+  if (!images) {
+    return {};
+  }
+  const imageRefs: Record<string, ArrayBuffer> = {};
+  Object.keys(images)
+    .sort()
+    .map((key) => {
+      const image = images[key];
+      try {
+        const path = (() => {
+          if (image.type === "imagePrompt") {
+            return getReferenceImagePath(context, key, "png");
+          } else if (image.type === "image" && image.source.kind === "path") {
+            return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+          }
+        })();
+        if (path && fs.existsSync(path)) {
+          const buffer = fs.readFileSync(path);
+          imageRefs[key] = buffer.buffer;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  return imageRefs;
+};
+
+export const mulmoImageRefecenceImage = () => {};
