@@ -30,7 +30,13 @@ import { loadSettings } from "../settings_manager";
 
 import { createMulmoScript } from "./scripting";
 import { fetchAndSave } from "./fetch_url";
-import { mulmoAudioFiles, mulmoAudioFile, mulmoImageFile, mulmoImageFiles } from "./handler_contents";
+import {
+  mulmoAudioFiles,
+  mulmoAudioFile,
+  mulmoImageFile,
+  mulmoImageFiles,
+  mulmoRefecenceImagesFiles,
+} from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 // from ffprobePath
@@ -363,6 +369,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageFiles(args[0]);
       case "mulmoImageFile":
         return await mulmoImageFile(args[0], args[1]);
+      case "mulmoRefecenceImagesFiles":
+        return await mulmoRefecenceImagesFiles(args[0]);
       case "createMulmoScript":
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":
