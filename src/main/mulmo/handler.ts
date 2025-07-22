@@ -222,7 +222,7 @@ export const mulmoReferenceImage = async (
   }
 };
 
-export const mulmoActionRunner = async (projectId: string, actionName: string, webContents: WebContents) => {
+export const mulmoActionRunner = async (projectId: string, actionName: string | string[], webContents: WebContents) => {
   const settings = await loadSettings();
   try {
     const context = await getContext(projectId);
@@ -240,20 +240,42 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
     const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
 
-    const audioContext = ["audio", "movie"].includes(actionName)
-      ? await audio(context, settings, graphAICallbacks)
-      : context;
-    const imageContext = ["image", "movie", "pdf"].includes(actionName)
-      ? await images(audioContext, settings, graphAICallbacks)
-      : audioContext;
+    const hasMatchingAction = (actions: string[], targets: string[]) =>
+      actions.some((action) => targets.includes(action));
 
-    if (actionName === "movie") {
+    const enables = (() => {
+      if (Array.isArray(actionName)) {
+        return {
+          audio: hasMatchingAction(["audio", "movie"], actionName),
+          image: hasMatchingAction(["image", "movie", "pdf"], actionName),
+          movie: hasMatchingAction(["movie"], actionName),
+          pdfSlide: hasMatchingAction(["pdfSlide"], actionName),
+          pdfHandout: hasMatchingAction(["pdfHandout"], actionName),
+        };
+      }
+
+      return {
+        audio: ["audio", "movie"].includes(actionName),
+        image: ["image", "movie", "pdf"].includes(actionName),
+        movie: actionName === "movie",
+        pdfSlide: actionName === "pdf",
+        pdfHandout: actionName === "pdf",
+      };
+    })();
+    console.log(enables);
+
+    const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
+    const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
+
+    if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);
     }
-    if (actionName === "pdf") {
+    if (enables.pdfSlide) {
       // sizes = ["letter", "a4"];
       await pdf(imageContext, "slide", "a4");
+    }
+    if (enables.pdfHandout) {
       await pdf(imageContext, "handout", "a4");
     }
     removeSessionProgressCallback(mulmoCallback);
