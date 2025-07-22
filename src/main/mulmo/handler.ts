@@ -11,25 +11,24 @@ import {
   movieFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  imagePreprocessAgent,
   generateBeatImage,
   generateBeatAudio,
   setFfmpegPath,
   setFfprobePath,
   generateReferenceImage,
   getImageRefs,
+  type MulmoImagePromptMedia,
 } from "mulmocast";
-import type { MulmoStudioContext, MulmoImagePromptMedia } from "mulmocast";
 import type { TransactionLog } from "graphai";
-import path from "path";
-import fs from "fs";
-import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
-import { loadSettings } from "../settings_manager";
-import { createMulmoScript } from "./scripting";
-
 import { z } from "zod";
 import { app, WebContents } from "electron";
+import path from "path";
+import fs from "fs";
 
+import { getProjectPath } from "../project_manager";
+import { loadSettings } from "../settings_manager";
+
+import { createMulmoScript } from "./scripting";
 import { fetchAndSave } from "./fetch_url";
 import { mulmoAudioFiles, mulmoAudioFile, mulmoImageFile, mulmoImageFiles } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
