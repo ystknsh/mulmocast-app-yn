@@ -183,54 +183,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent class="p-4">
-                <div class="space-y-6">
-                  <!-- General Settings -->
-                  <div class="border rounded-lg p-4 bg-gray-50" v-if="false">
-                    <h3 class="text-sm font-medium mb-4">General Settings</h3>
-                    <div class="space-y-4">
-                      <!-- Cache Toggle -->
-                      <div class="flex items-center justify-between p-4 bg-white rounded-lg">
-                        <div class="flex flex-col">
-                          <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
-                          <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
-                        </div>
-                        <Switch
-                          id="cache-toggle"
-                          :model-value="project?.useCache ?? false"
-                          @update:model-value="saveCacheEnabled"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Output Buttons -->
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-                      @click="generateMovie"
-                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-                    >
-                      <Monitor :size="24" />
-                      <span>Generate Movie</span>
-                    </Button>
-                    <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-                      @click="generatePdf"
-                    >
-                      <FileText :size="24" />
-                      <span>Generate PDF</span>
-                    </Button>
-                    <Button
-                      class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
-                      @click="generatePodcast"
-                      :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-                    >
-                      <Globe :size="24" />
-                      <span>Generate Podcast</span>
-                    </Button>
-                  </div>
-                </div>
+                <Generate :projectId="projectId" />
               </CardContent>
             </Card>
 
@@ -302,7 +255,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, defineComponent, h, markRaw } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 
@@ -343,8 +296,10 @@ import Chat from "./components/chat.vue";
 import PromptGuide from "./components/prompt_guide.vue";
 import ScriptEditor from "./components/script_editor.vue";
 import BeatsViewer from "./components/beats_viewer.vue";
+import Generate from "./components/generate.vue";
 import ProductTabs from "./components/product_tabs.vue";
-import ConcurrentTaskStatus from "./components/concurrent_task_status.vue";
+
+import { getConcurrentTaskStatusMessageComponent } from "./components/concurrent_task_status_message";
 
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
@@ -470,37 +425,7 @@ const formatAndPushHistoryMulmoScript = () => {
   console.log(data);
 };
 
-const ConcurrentTaskStatusMessageComponent = markRaw(
-  defineComponent({
-    setup() {
-      return () => h(ConcurrentTaskStatus, { projectId: projectId.value ?? "" });
-    },
-  }),
-);
-
-const generateMovie = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "movie"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Movie generated successfully",
-    errorMessage: "Failed to generate movie",
-  });
-};
-
-const generatePodcast = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Podcast generated successfully",
-    errorMessage: "Failed to generate podcast",
-  });
-};
-
-const generatePdf = async () => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "pdf"), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Pdf generated successfully",
-    errorMessage: "Failed to generate pdf",
-  });
-};
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value ?? "");
 
 const openProjectFolder = async () => {
   await projectApi.openProjectFolder(projectId.value);
