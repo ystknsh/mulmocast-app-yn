@@ -48,6 +48,10 @@ const lang = {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
   },
+  panels: {
+    openAiChat: "AIアシスタントチャットパネルを開く",
+    openOutputProduct: "出力・成果物パネルを開く",
+  },
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",

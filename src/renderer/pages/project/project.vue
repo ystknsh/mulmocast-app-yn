@@ -105,6 +105,8 @@
             <button
               @click="isLeftColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              :aria-label="$t('panels.openAiChat')"
+              :title="$t('panels.openAiChat')"
             >
               <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Bot :size="20" class="mb-2 text-blue-700" />
@@ -286,6 +288,8 @@
             <button
               @click="isRightColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              :aria-label="$t('panels.openOutputProduct')"
+              :title="$t('panels.openOutputProduct')"
             >
               <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Settings :size="20" class="mb-2 text-gray-700" />
