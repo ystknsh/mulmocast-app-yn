@@ -102,9 +102,6 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
 };
 
 // image reference
-export const generateReferenceImage = (inputs: { context: MulmoStudioContext; key: string }) => {
-  return;
-};
 
 export const mulmoRefecenceImagesFiles = async (projectId: string) => {
   const context = await getContext(projectId);
@@ -132,4 +129,4 @@ export const mulmoRefecenceImagesFiles = async (projectId: string) => {
   return imageRefs;
 };
 
-const mulmoImageRefecenceImage = () => {};
+export const mulmoImageRefecenceImage = () => {};
