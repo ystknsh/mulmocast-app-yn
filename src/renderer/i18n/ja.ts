@@ -52,6 +52,15 @@ const lang = {
     openAiChat: "AIアシスタントチャットパネルを開く",
     openOutputProduct: "出力・成果物パネルを開く",
   },
+  project: {
+    generate: {
+      generateContents: "Generate Contents",
+      movie: "Movie",
+      audio: "Podcast",
+      pdfSlide: "PDF (Presenter)",
+      pdfHandout: "PDF (Handout)",
+    },
+  },
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",

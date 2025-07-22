@@ -52,6 +52,15 @@ const lang = {
     openAiChat: "Open AI Assistant Chat panel",
     openOutputProduct: "Open Output & Product panel",
   },
+  project: {
+    generate: {
+      generateContents: "Generate Contents",
+      movie: "Movie",
+      audio: "Podcast",
+      pdfSlide: "PDF (Presenter)",
+      pdfHandout: "PDF (Handout)",
+    },
+  },
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
