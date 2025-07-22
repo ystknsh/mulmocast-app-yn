@@ -643,7 +643,6 @@ const reference = async () => {
 <style scoped>
 .writing-mode-vertical {
   writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
+  text-orientation: sideways;
 }
 </style>
