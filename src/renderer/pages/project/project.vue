@@ -51,7 +51,10 @@
         <!-- 3 Split Layout -->
         <div :class="gridLayoutClass" class="relative">
           <!-- Left Column - AI Chat -->
-          <div class="h-full overflow-y-auto pr-2" :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }">
+          <div
+            class="h-full overflow-y-auto pr-2"
+            :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
+          >
             <Card
               :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
             >
@@ -63,7 +66,9 @@
                     >
                       <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
                       <span>
-                        {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                        {{
+                          selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide"
+                        }}
                       </span>
                     </CardTitle>
                     <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
@@ -74,12 +79,7 @@
                       }}
                     </p>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    @click="isLeftColumnOpen = false"
-                    class="hidden lg:inline-flex"
-                  >
+                  <Button variant="ghost" size="sm" @click="isLeftColumnOpen = false" class="hidden lg:inline-flex">
                     <PanelLeftClose :size="16" />
                   </Button>
                 </div>
@@ -99,7 +99,7 @@
               </CardContent>
             </Card>
           </div>
-          
+
           <!-- Left Column - Collapsed State -->
           <div v-if="!isLeftColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
             <button
@@ -197,7 +197,10 @@
           </div>
 
           <!-- Right Column - Output & Product -->
-          <div class="space-y-4 overflow-y-auto pl-2" :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }">
+          <div
+            class="space-y-4 overflow-y-auto pl-2"
+            :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
+          >
             <!-- Output Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
@@ -206,12 +209,7 @@
                     <Settings :size="20" />
                     <span>Output Settings & Generation</span>
                   </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    @click="isRightColumnOpen = false"
-                    class="hidden lg:inline-flex"
-                  >
+                  <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
                     <PanelRightClose :size="16" />
                   </Button>
                 </div>
@@ -282,7 +280,7 @@
             </Card>
             <Button @click="reference">Reference</Button>
           </div>
-          
+
           <!-- Right Column - Collapsed State -->
           <div v-if="!isRightColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
             <button
@@ -395,8 +393,8 @@ const isRightColumnOpen = ref(false); // Default: closed
 
 // Computed grid layout class based on column states
 const gridLayoutClass = computed(() => {
-  const base = 'grid grid-cols-1 gap-4 h-auto';
-  
+  const base = "grid grid-cols-1 gap-4 h-auto";
+
   if (!isLeftColumnOpen.value && !isRightColumnOpen.value) {
     return `${base} lg:grid-cols-[48px_1fr_48px] lg:h-[calc(100vh-180px)]`;
   } else if (!isLeftColumnOpen.value) {
