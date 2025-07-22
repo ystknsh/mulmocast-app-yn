@@ -51,7 +51,7 @@
         <!-- 3 Split Layout -->
         <div :class="gridLayoutClass" class="relative">
           <!-- Left Column - AI Chat -->
-          <div v-if="isLeftColumnOpen" class="h-full overflow-y-auto pr-2">
+          <div class="h-full overflow-y-auto pr-2" :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }">
             <Card
               :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
             >
@@ -101,7 +101,7 @@
           </div>
           
           <!-- Left Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
+          <div v-if="!isLeftColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
             <button
               @click="isLeftColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
@@ -197,7 +197,7 @@
           </div>
 
           <!-- Right Column - Output & Product -->
-          <div v-if="isRightColumnOpen" class="space-y-4 overflow-y-auto pl-2">
+          <div class="space-y-4 overflow-y-auto pl-2" :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }">
             <!-- Output Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
@@ -284,7 +284,7 @@
           </div>
           
           <!-- Right Column - Collapsed State -->
-          <div v-else class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
+          <div v-if="!isRightColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
             <button
               @click="isRightColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
