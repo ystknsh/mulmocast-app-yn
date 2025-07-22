@@ -6,7 +6,7 @@ import {
 } from "mulmocast";
 import fs from "fs";
 
-import { getContext } from "./handler";
+import { getContext } from "./handler_common";
 
 const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {

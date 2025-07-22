@@ -4,7 +4,6 @@ import {
   movie,
   pdf,
   captions,
-  initializeContext,
   updateNpmRoot,
   readTemplatePrompt,
   getAvailableTemplates,
@@ -33,6 +32,7 @@ import { app, WebContents } from "electron";
 
 import { fetchAndSave } from "./fetch_url";
 import { mulmoAudioFiles, mulmoAudioFile, mulmoImageFile, mulmoImageFiles } from "./handler_contents";
+import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 // from ffprobePath
 // import os from "os";
@@ -53,33 +53,6 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
-
-export const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
-  const projectPath = getProjectPath(projectId);
-  // const projectMetadata = await getProjectMetadata(projectId);
-
-  const argv = {
-    v: true,
-    b: projectPath,
-    o: path.join(projectPath, "output"),
-    file: SCRIPT_FILE_NAME,
-    // f: projectMetadata?.useCache ? false : true,
-  };
-
-  return await initializeContext(argv);
-};
-
-const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => {
-  return (data) => {
-    if (webContents) {
-      webContents.send("progress-update", {
-        projectId,
-        type: "mulmo",
-        data,
-      });
-    }
-  };
-};
 
 export const mulmoGenerateImage = async (
   projectId: string,
@@ -295,6 +268,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     };
   }
 };
+// TODO pdf
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
   if (actionName === "audio") {
@@ -315,6 +289,7 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
+// TODO dirPath
 export const mulmoImageUpload = async (
   projectId: string,
   index: number,
