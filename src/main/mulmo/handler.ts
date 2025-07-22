@@ -2,6 +2,7 @@ import {
   images,
   audio,
   movie,
+  pdf,
   captions,
   initializeContext,
   updateNpmRoot,
@@ -238,26 +239,22 @@ export const mulmoActionRunner = async (projectId: string, actionName: string, w
     ];
     const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
-    // await runTranslateIfNeeded(context, argv);
-    if (actionName === "audio") {
-      await audio(context, settings, graphAICallbacks);
-    }
-    if (actionName === "image") {
-      await images(context, settings, graphAICallbacks);
-    }
+
+    const audioContext = ["audio", "movie"].includes(actionName)
+      ? await audio(context, settings, graphAICallbacks)
+      : context;
+    const imageContext = ["image", "movie", "pdf"].includes(actionName)
+      ? await images(audioContext, settings, graphAICallbacks)
+      : audioContext;
+
     if (actionName === "movie") {
-      const audioContext = await audio(context, settings, graphAICallbacks);
-      const imageContext = await images(audioContext, settings, graphAICallbacks);
-      if (imageContext.caption) {
-        const captionCoontext = await captions(imageContext);
-        await movie(captionCoontext);
-      } else {
-        await movie(imageContext);
-      }
+      const captionCoontext = imageContext.caption ? await captions(imageContext) : imageContext;
+      await movie(captionCoontext);
     }
     if (actionName === "pdf") {
-      await images(context, settings, graphAICallbacks);
-      // await pdf(context, argv.pdf_mode, argv.pdf_size);
+      // sizes = ["letter", "a4"];
+      await pdf(imageContext, "slide", "a4");
+      await pdf(imageContext, "handout", "a4");
     }
     removeSessionProgressCallback(mulmoCallback);
 

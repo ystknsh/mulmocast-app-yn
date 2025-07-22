@@ -216,6 +216,7 @@
                     <Button
                       class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
                       :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
+                      @click="generatePdf"
                     >
                       <FileText :size="24" />
                       <span>Generate PDF</span>
@@ -489,6 +490,14 @@ const generatePodcast = async () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "audio"), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: "Podcast generated successfully",
+    errorMessage: "Failed to generate podcast",
+  });
+};
+
+const generatePdf = async () => {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", projectId.value, "pdf"), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Pdf generated successfully",
     errorMessage: "Failed to generate podcast",
   });
 };
