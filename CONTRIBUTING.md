@@ -19,9 +19,9 @@ MulmoCast is an Electron application with a React frontend and Express backend. 
 ```
 mulmocast-app/
 ├── src/
-│   ├── main/          # Backend Node.js
-│   └── react/            # Frontend React application
-│       ├── components/   # React components
+│   ├── main/            # Backend Node.js
+│   └── renderer/        # Frontend Vue application
+│       ├── pages/       # Vue components
 │       │   └── ui/      # shadcn/ui base components
 │       ├── lib/         # Utilities and helpers
 │       └── styles/      # CSS styles
