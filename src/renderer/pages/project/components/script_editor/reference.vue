@@ -16,11 +16,11 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const imageRefs = ref<Record<string, ArrayBuffer>>({});
+const imageRefs = ref<Record<string, string>>({});
 
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
-  Object.keys(imageRefs.value).map((key) => {
+  Object.keys(imageRefs.value).forEach((key) => {
     imageRefs.value[key] = bufferToUrl(imageRefs.value[key], "image/png");
   });
 };
@@ -28,6 +28,6 @@ loadReference();
 
 const reference = async () => {
   await window.electronAPI.mulmoHandler("mulmoReferenceImages", props.projectId);
-  await loadReference;
+  await loadReference();
 };
 </script>
