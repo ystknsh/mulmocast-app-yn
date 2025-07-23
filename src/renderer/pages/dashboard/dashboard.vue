@@ -17,22 +17,47 @@
             </Button>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
               <Button
-                @click="viewMode = 'list'"
-                :variant="viewMode === 'list' ? 'default' : 'ghost'"
+                @click="viewMode = VIEW_MODE.list"
+                :variant="viewMode === VIEW_MODE.list ? 'default' : 'ghost'"
                 size="icon"
-                :class="['transition-colors', viewMode === 'list' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
+                :class="[
+                  'transition-colors',
+                  viewMode === VIEW_MODE.list ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
+                ]"
               >
                 <List class="w-5 h-5" />
               </Button>
               <Button
-                @click="viewMode = 'grid'"
-                :variant="viewMode === 'grid' ? 'default' : 'ghost'"
+                @click="viewMode = VIEW_MODE.grid"
+                :variant="viewMode === VIEW_MODE.grid ? 'default' : 'ghost'"
                 size="icon"
-                :class="['transition-colors', viewMode === 'grid' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
+                :class="[
+                  'transition-colors',
+                  viewMode === VIEW_MODE.grid ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
+                ]"
               >
                 <Grid class="w-5 h-5" />
               </Button>
             </div>
+            <Select :model-value="`${sortBy}-${sortOrder}`" @update:model-value="updateSort">
+              <SelectTrigger class="w-[180px]">
+                <SelectValue :placeholder="t('dashboard.sortBy')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem :value="`${SORT_BY.updatedAt}-${SORT_ORDER.desc}`">{{
+                  t("dashboard.sort.updatedAtDesc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.updatedAt}-${SORT_ORDER.asc}`">{{
+                  t("dashboard.sort.updatedAtAsc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.title}-${SORT_ORDER.asc}`">{{
+                  t("dashboard.sort.titleAsc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.title}-${SORT_ORDER.desc}`">{{
+                  t("dashboard.sort.titleDesc")
+                }}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div class="text-sm text-gray-500">{{ t("dashboard.project", { count: projects.length }) }}</div>
         </div>
@@ -48,7 +73,7 @@
         </div>
 
         <!-- Project List -->
-        <div v-else-if="viewMode === 'list'">
+        <div v-else-if="viewMode === VIEW_MODE.list">
           <ListView
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
@@ -58,7 +83,7 @@
         </div>
 
         <!-- Project Grid -->
-        <div v-else>
+        <div v-else-if="viewMode === VIEW_MODE.grid">
           <GridView
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
@@ -81,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
@@ -91,11 +116,15 @@ import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/project_api";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
+import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
-const viewMode = ref<"list" | "grid">("list");
+const viewMode = ref<typeof VIEW_MODE.list | typeof VIEW_MODE.grid>(VIEW_MODE.list);
+const sortBy = ref<typeof SORT_BY.updatedAt | typeof SORT_BY.title>(SORT_BY.updatedAt);
+const sortOrder = ref<typeof SORT_ORDER.desc | typeof SORT_ORDER.asc>(SORT_ORDER.desc);
 const projects = ref<Project[]>([]);
 const loading = ref(true);
 const showNewProjectDialog = ref(false);
@@ -105,15 +134,7 @@ const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
 
 const loadProjects = async () => {
-  try {
-    loading.value = true;
-    projects.value = await projectApi.list();
-  } catch (error) {
-    console.error("Failed to load projects:", error);
-  } finally {
-    loading.value = false;
-  }
-  loadProjectThumbnails();
+  projects.value = await projectApi.list();
 };
 
 const loadProjectThumbnails = async () => {
@@ -139,7 +160,16 @@ const loadProjectThumbnails = async () => {
 
 const sortedProjects = computed(() => {
   return projects.value.toSorted((a, b) => {
-    return dayjs(b.metadata.updatedAt).valueOf() - dayjs(a.metadata.updatedAt).valueOf();
+    if (sortBy.value === "updatedAt") {
+      const aTime = dayjs(a.metadata.updatedAt).valueOf();
+      const bTime = dayjs(b.metadata.updatedAt).valueOf();
+      return sortOrder.value === "desc" ? bTime - aTime : aTime - bTime;
+    } else {
+      const aTitle = a.metadata.title.toLowerCase();
+      const bTitle = b.metadata.title.toLowerCase();
+      const comparison = aTitle.localeCompare(bTitle);
+      return sortOrder.value === "desc" ? -comparison : comparison;
+    }
   });
 });
 
@@ -181,7 +211,52 @@ const handleDeleteProject = async (project: Project) => {
   }
 };
 
-onMounted(() => {
-  loadProjects();
+const updateSort = (value: string) => {
+  const [newSortBy, newSortOrder] = value.split("-") as ["updatedAt" | "title", "desc" | "asc"];
+  sortBy.value = newSortBy;
+  sortOrder.value = newSortOrder;
+};
+
+const saveSettings = async () => {
+  try {
+    const settings = await window.electronAPI.settings.get();
+    await window.electronAPI.settings.set({
+      ...settings,
+      SORT_BY: sortBy.value,
+      SORT_ORDER: sortOrder.value,
+      VIEW_MODE: viewMode.value,
+    });
+  } catch (error) {
+    console.error("Failed to save sort settings:", error);
+  }
+};
+
+watch([sortBy, sortOrder, viewMode], () => {
+  saveSettings();
+});
+
+const loadSettings = async () => {
+  const settings = await window.electronAPI.settings.get();
+  if (settings.SORT_BY && (settings.SORT_BY === SORT_BY.updatedAt || settings.SORT_BY === SORT_BY.title)) {
+    sortBy.value = settings.SORT_BY;
+  }
+  if (settings.SORT_ORDER && (settings.SORT_ORDER === SORT_ORDER.desc || settings.SORT_ORDER === SORT_ORDER.asc)) {
+    sortOrder.value = settings.SORT_ORDER;
+  }
+  if (settings.VIEW_MODE && (settings.VIEW_MODE === VIEW_MODE.list || settings.VIEW_MODE === VIEW_MODE.grid)) {
+    viewMode.value = settings.VIEW_MODE;
+  }
+};
+
+onMounted(async () => {
+  try {
+    loading.value = true;
+    await Promise.all([loadSettings(), loadProjects()]);
+    loadProjectThumbnails();
+  } catch (error) {
+    console.error("Failed to load projects:", error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>

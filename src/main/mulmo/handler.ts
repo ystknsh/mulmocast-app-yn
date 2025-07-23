@@ -4,7 +4,6 @@ import {
   movie,
   pdf,
   captions,
-  initializeContext,
   updateNpmRoot,
   readTemplatePrompt,
   getAvailableTemplates,
@@ -12,28 +11,33 @@ import {
   movieFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  getBeatAudioPath,
-  imagePreprocessAgent,
   generateBeatImage,
   generateBeatAudio,
-  MulmoPresentationStyleMethods,
   setFfmpegPath,
   setFfprobePath,
   generateReferenceImage,
   getImageRefs,
+  type MulmoImagePromptMedia,
 } from "mulmocast";
-import type { MulmoStudioContext, MulmoImagePromptMedia } from "mulmocast";
 import type { TransactionLog } from "graphai";
-import path from "path";
-import fs from "fs";
-import { getProjectPath, SCRIPT_FILE_NAME } from "../project_manager";
-import { loadSettings } from "../settings_manager";
-import { createMulmoScript } from "./scripting";
-
 import { z } from "zod";
 import { app, WebContents } from "electron";
+import path from "path";
+import fs from "fs";
 
+import { getProjectPath } from "../project_manager";
+import { loadSettings } from "../settings_manager";
+
+import { createMulmoScript } from "./scripting";
 import { fetchAndSave } from "./fetch_url";
+import {
+  mulmoAudioFiles,
+  mulmoAudioFile,
+  mulmoImageFile,
+  mulmoImageFiles,
+  mulmoReferenceImagesFiles,
+} from "./handler_contents";
+import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 // from ffprobePath
 // import os from "os";
@@ -54,33 +58,6 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
-
-const getContext = async (projectId: string): Promise<MulmoStudioContext | null> => {
-  const projectPath = getProjectPath(projectId);
-  // const projectMetadata = await getProjectMetadata(projectId);
-
-  const argv = {
-    v: true,
-    b: projectPath,
-    o: path.join(projectPath, "output"),
-    file: SCRIPT_FILE_NAME,
-    // f: projectMetadata?.useCache ? false : true,
-  };
-
-  return await initializeContext(argv);
-};
-
-const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => {
-  return (data) => {
-    if (webContents) {
-      webContents.send("progress-update", {
-        projectId,
-        type: "mulmo",
-        data,
-      });
-    }
-  };
-};
 
 export const mulmoGenerateImage = async (
   projectId: string,
@@ -296,6 +273,7 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     };
   }
 };
+// TODO pdf
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
   if (actionName === "audio") {
@@ -316,93 +294,7 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
-const beatAudio = (context: MulmoStudioContext) => {
-  return (beat) => {
-    try {
-      const { text } = beat; // TODO: multiLingual
-      const fileName = getBeatAudioPath(text, context, beat);
-      if (fs.existsSync(fileName)) {
-        const buffer = fs.readFileSync(fileName);
-        return buffer.buffer;
-        // return fileName;
-      }
-      return;
-    } catch (e) {
-      console.log(e);
-      return "";
-    }
-  };
-};
-
-export const mulmoAudioFiles = async (projectId: string) => {
-  try {
-    const context = await getContext(projectId);
-    return context.studio.script.beats.map(beatAudio(context));
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};
-export const mulmoAudioFile = async (projectId: string, index: number) => {
-  try {
-    const context = await getContext(projectId);
-    const beat = context.studio.script.beats[index];
-    return beatAudio(context)(beat);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
-  return async (beat, index) => {
-    try {
-      const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-      if (res.imagePath) {
-        if (res.imagePath.startsWith("http")) {
-          const response = await fetch(res.imagePath);
-          if (!response.ok) {
-            throw new Error(`Failed to download image: ${res.imagePath}`);
-          }
-          const buffer = Buffer.from(await response.arrayBuffer());
-          res.imageData = buffer.buffer;
-        } else if (fs.existsSync(res.imagePath)) {
-          const buffer = fs.readFileSync(res.imagePath);
-          res.imageData = buffer.buffer;
-        }
-      }
-      if (res.movieFile && fs.existsSync(res.movieFile)) {
-        const buffer = fs.readFileSync(res.movieFile);
-        res.movieData = buffer.buffer;
-      }
-      return res;
-    } catch (e) {
-      console.log(e);
-      return "";
-    }
-  };
-};
-
-export const mulmoImageFiles = async (projectId: string) => {
-  try {
-    const context = await getContext(projectId);
-    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    return Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};
-export const mulmoImageFile = async (projectId: string, index: number) => {
-  try {
-    const context = await getContext(projectId);
-    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    const beat = context.studio.script.beats[index];
-    return await beatImage(context, imageAgentInfo)(beat, index);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
+// TODO dirPath
 export const mulmoImageUpload = async (
   projectId: string,
   index: number,
@@ -477,6 +369,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageFiles(args[0]);
       case "mulmoImageFile":
         return await mulmoImageFile(args[0], args[1]);
+      case "mulmoReferenceImagesFiles":
+        return await mulmoReferenceImagesFiles(args[0]);
       case "createMulmoScript":
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":

@@ -47,6 +47,13 @@ const lang = {
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
+    sortBy: "並び替え",
+    sort: {
+      updatedAtDesc: "更新日時（新しい順）",
+      updatedAtAsc: "更新日時（古い順）",
+      titleAsc: "タイトル（昇順）",
+      titleDesc: "タイトル（降順）",
+    },
   },
   panels: {
     openAiChat: "AIアシスタントチャットパネルを開く",
