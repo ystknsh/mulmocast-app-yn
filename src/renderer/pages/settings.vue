@@ -69,9 +69,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Eye, EyeOff } from "lucide-vue-next";
 import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
-import { ENV_KEYS } from "../../../shared/constants";
+import { ENV_KEYS } from "../../shared/constants";
 import { useI18n } from "vue-i18n";
-import { I18N_SUPPORTED_LANGUAGES } from "../../../shared/constants";
+import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
 
 const { locale, t } = useI18n();
 
