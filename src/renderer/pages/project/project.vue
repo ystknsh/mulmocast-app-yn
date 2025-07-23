@@ -390,18 +390,18 @@ const isDevelopment = import.meta.env.DEV;
 
 // Column open/close states
 const isLeftColumnOpen = ref(true); // Default: open
-const isRightColumnOpen = ref(false); // Default: closed
+const isRightColumnOpen = ref(true); // Default: open
 
 // Computed grid layout class based on column states
 const gridLayoutClass = computed(() => {
-  if (!isLeftColumnOpen.value && !isRightColumnOpen.value) {
-    return "lg:grid-cols-[48px_1fr_48px]";
-  } else if (!isLeftColumnOpen.value) {
-    return "lg:grid-cols-[48px_1fr_30%]";
-  } else if (!isRightColumnOpen.value) {
+  if (isLeftColumnOpen.value && isRightColumnOpen.value) {
+    return "lg:grid-cols-[30%_40%_1fr]";
+  } else if (isLeftColumnOpen.value) {
     return "lg:grid-cols-[30%_1fr_48px]";
+  } else if (isRightColumnOpen.value) {
+    return "lg:grid-cols-[48px_1fr_30%]";
   }
-  return "lg:grid-cols-[30%_40%_1fr]";
+  return "lg:grid-cols-[48px_1fr_48px]";
 });
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
