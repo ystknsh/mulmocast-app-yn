@@ -71,8 +71,8 @@ const generateContents = () => {
   console.log(keys);
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Contents generated successfully",
-    errorMessage: "Failed to generate contents",
+    successMessage: t("project.generateStatus.success"),
+    errorMessage: t("project.generateStatus.error"),
   });
 };
 const mulmoEventStore = useMulmoEventStore();
