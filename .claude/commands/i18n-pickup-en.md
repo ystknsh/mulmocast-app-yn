@@ -1,12 +1,29 @@
-# i18n Text Pickup Tool
+---
+description: "Extract hardcoded English text from Vue components for internationalization"
+args: 
+  - name: "component_path"
+    required: true
+    type: "string"
+    description: "Path to Vue component file (e.g., src/renderer/pages/project/components/script_editor.vue)"
+---
 
-## Purpose
-Vueコンポーネントからハードコードされた英語テキストを抽出し、国際化対象として整理する。
+# i18n Text Pickup
 
-## Task: Extract English Text for i18n
+Extract hardcoded English text from Vue components and categorize for internationalization.
 
-### Input Required
-対象のVueコンポーネントファイルパス（例: `src/renderer/pages/project/components/script_editor.vue`）
+## Usage
+```
+/i18n-pickup-en <component_path>
+```
+
+## Example
+```
+/i18n-pickup-en src/renderer/pages/project/components/script_editor.vue
+```
+
+## Task Instructions
+
+You will analyze the specified Vue component file ({component_path}) and extract all hardcoded English text for internationalization.
 
 ### Output Format
 ```markdown

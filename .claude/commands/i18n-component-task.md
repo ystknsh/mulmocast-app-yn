@@ -1,10 +1,33 @@
-# Vue Component i18n Task Template
+---
+description: "Implement internationalization for a Vue component"
+args: 
+  - name: "component_path"
+    required: true
+    type: "string"
+    description: "Path to Vue component file (e.g., src/renderer/pages/project/components/script_editor.vue)"
+  - name: "extracted_texts"
+    required: false
+    type: "string"
+    description: "Previously extracted texts from i18n-pickup-en (optional, will be analyzed if not provided)"
+---
 
-## Task: Internationalize Vue Component
+# Vue Component i18n Implementation
 
-### Input Required
-1. Component file path (e.g., `src/renderer/pages/project/components/script_editor.vue`)
-2. Current language context (what translations already exist)
+Implement complete internationalization for a Vue component with proper Vue 3 Composition API setup.
+
+## Usage
+```
+/i18n-component-task <component_path> [extracted_texts]
+```
+
+## Example
+```
+/i18n-component-task src/renderer/pages/project/components/script_editor.vue
+```
+
+## Task Instructions
+
+You will implement i18n for the specified Vue component ({component_path}), optionally using pre-extracted text analysis ({extracted_texts}).
 
 ### Analysis Phase
 1. **Read the component file** to identify:

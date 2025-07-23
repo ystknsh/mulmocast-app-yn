@@ -1,4 +1,32 @@
-# MulmoCast App i18n Improvement Guide
+---
+description: "Comprehensive refactoring and improvement of the existing i18n structure"
+args: 
+  - name: "scope"
+    required: false
+    type: "string"
+    description: "Scope of improvement: 'structure' (reorganize), 'translations' (fix missing), or 'all' (both)"
+    default: "all"
+---
+
+# MulmoCast App i18n Improvement
+
+Comprehensive refactoring and improvement of the existing i18n structure to fix translation gaps and improve organization.
+
+## Usage
+```
+/i18n-improve [scope]
+```
+
+## Examples
+```
+/i18n-improve structure    # Only reorganize structure
+/i18n-improve translations # Only fix missing translations  
+/i18n-improve all         # Both structure and translations (default)
+```
+
+## Task Instructions
+
+You will improve the MulmoCast app's i18n implementation based on the specified scope ({scope}).
 
 ## Current Issues to Address
 
