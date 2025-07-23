@@ -13,7 +13,7 @@
               <template v-else-if="projectThumbnails[project.metadata.id]">
                 <img
                   :src="mediaUri(projectThumbnails[project.metadata.id])"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-contain"
                   :alt="project.metadata.title"
                 />
               </template>

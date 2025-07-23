@@ -47,6 +47,13 @@ const lang = {
   dashboard: {
     createNew: "Create New",
     project: "No projects | One project | {count} projects",
+    sortBy: "Sort by",
+    sort: {
+      updatedAtDesc: "Last updated (newest first)",
+      updatedAtAsc: "Last updated (oldest first)",
+      titleAsc: "Title (A-Z)",
+      titleDesc: "Title (Z-A)",
+    },
   },
   project: {
     generate: {
