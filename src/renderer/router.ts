@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Dashboard from "./pages/dashboard/dashboard.vue";
+import Dashboard from "./pages/dashboard.vue";
 import Project from "./pages/project.vue";
-import Settings from "./pages/settings/settings.vue";
+import Settings from "./pages/settings.vue";
 
 const routes = [
   { path: "/", component: Dashboard },
