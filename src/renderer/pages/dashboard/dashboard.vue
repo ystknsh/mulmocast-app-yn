@@ -33,6 +33,17 @@
                 <Grid class="w-5 h-5" />
               </Button>
             </div>
+            <Select :model-value="`${sortBy}-${sortOrder}`" @update:model-value="updateSort">
+              <SelectTrigger class="w-[180px]">
+                <SelectValue :placeholder="t('dashboard.sortBy')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="updatedAt-desc">{{ t("dashboard.sort.updatedAtDesc") }}</SelectItem>
+                <SelectItem value="updatedAt-asc">{{ t("dashboard.sort.updatedAtAsc") }}</SelectItem>
+                <SelectItem value="title-asc">{{ t("dashboard.sort.titleAsc") }}</SelectItem>
+                <SelectItem value="title-desc">{{ t("dashboard.sort.titleDesc") }}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div class="text-sm text-gray-500">{{ t("dashboard.project", { count: projects.length }) }}</div>
         </div>
@@ -82,7 +93,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
-import { Plus, List, Grid } from "lucide-vue-next";
+import { Plus, List, Grid, ChevronDown } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
 import ListView from "./components/list_view.vue";
@@ -91,11 +102,14 @@ import NewProjectDialog from "./components/new_project_dialog.vue";
 import { projectApi, type Project } from "@/lib/project_api";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const { t } = useI18n();
 const viewMode = ref<"list" | "grid">("list");
+const sortBy = ref<"updatedAt" | "title">("updatedAt");
+const sortOrder = ref<"desc" | "asc">("desc");
 const projects = ref<Project[]>([]);
 const loading = ref(true);
 const showNewProjectDialog = ref(false);
@@ -131,7 +145,16 @@ const loadProjectThumbnails = async () => {
 
 const sortedProjects = computed(() => {
   return projects.value.toSorted((a, b) => {
-    return dayjs(b.metadata.updatedAt).valueOf() - dayjs(a.metadata.updatedAt).valueOf();
+    if (sortBy.value === "updatedAt") {
+      const aTime = dayjs(a.metadata.updatedAt).valueOf();
+      const bTime = dayjs(b.metadata.updatedAt).valueOf();
+      return sortOrder.value === "desc" ? bTime - aTime : aTime - bTime;
+    } else {
+      const aTitle = a.metadata.title.toLowerCase();
+      const bTitle = b.metadata.title.toLowerCase();
+      const comparison = aTitle.localeCompare(bTitle);
+      return sortOrder.value === "desc" ? -comparison : comparison;
+    }
   });
 });
 
@@ -173,21 +196,38 @@ const handleDeleteProject = async (project: Project) => {
   }
 };
 
-const saveViewMode = async () => {
+const updateSort = (value: string) => {
+  const [newSortBy, newSortOrder] = value.split("-") as ["updatedAt" | "title", "desc" | "asc"];
+  sortBy.value = newSortBy;
+  sortOrder.value = newSortOrder;
+};
+
+const saveSettings = async () => {
   try {
     const settings = await window.electronAPI.settings.get();
-    await window.electronAPI.settings.set({ ...settings, VIEW_MODE: viewMode.value });
+    await window.electronAPI.settings.set({
+      ...settings,
+      SORT_BY: sortBy.value,
+      SORT_ORDER: sortOrder.value,
+      VIEW_MODE: viewMode.value,
+    });
   } catch (error) {
-    console.error("Failed to save view mode setting:", error);
+    console.error("Failed to save sort settings:", error);
   }
 };
 
-watch(viewMode, () => {
-  saveViewMode();
+watch([sortBy, sortOrder, viewMode], () => {
+  saveSettings();
 });
 
-const loadViewMode = async () => {
+const loadSettings = async () => {
   const settings = await window.electronAPI.settings.get();
+  if (settings.SORT_BY && (settings.SORT_BY === "updatedAt" || settings.SORT_BY === "title")) {
+    sortBy.value = settings.SORT_BY;
+  }
+  if (settings.SORT_ORDER && (settings.SORT_ORDER === "desc" || settings.SORT_ORDER === "asc")) {
+    sortOrder.value = settings.SORT_ORDER;
+  }
   if (settings.VIEW_MODE && (settings.VIEW_MODE === "list" || settings.VIEW_MODE === "grid")) {
     viewMode.value = settings.VIEW_MODE;
   }
@@ -196,7 +236,7 @@ const loadViewMode = async () => {
 onMounted(async () => {
   try {
     loading.value = true;
-    await Promise.all([loadViewMode(), loadProjects()]);
+    await Promise.all([loadSettings(), loadProjects()]);
     loadProjectThumbnails();
   } catch (error) {
     console.error("Failed to load projects:", error);

@@ -27,7 +27,7 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
-export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE";
+export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
 
 export const VOICE_LISTS = {
   openai: [
