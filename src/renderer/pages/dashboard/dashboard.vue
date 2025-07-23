@@ -17,18 +17,24 @@
             </Button>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
               <Button
-                @click="viewMode = 'list'"
-                :variant="viewMode === 'list' ? 'default' : 'ghost'"
+                @click="viewMode = VIEW_MODE.list"
+                :variant="viewMode === VIEW_MODE.list ? 'default' : 'ghost'"
                 size="icon"
-                :class="['transition-colors', viewMode === 'list' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
+                :class="[
+                  'transition-colors',
+                  viewMode === VIEW_MODE.list ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
+                ]"
               >
                 <List class="w-5 h-5" />
               </Button>
               <Button
-                @click="viewMode = 'grid'"
-                :variant="viewMode === 'grid' ? 'default' : 'ghost'"
+                @click="viewMode = VIEW_MODE.grid"
+                :variant="viewMode === VIEW_MODE.grid ? 'default' : 'ghost'"
                 size="icon"
-                :class="['transition-colors', viewMode === 'grid' ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '']"
+                :class="[
+                  'transition-colors',
+                  viewMode === VIEW_MODE.grid ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
+                ]"
               >
                 <Grid class="w-5 h-5" />
               </Button>
@@ -38,10 +44,18 @@
                 <SelectValue :placeholder="t('dashboard.sortBy')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="updatedAt-desc">{{ t("dashboard.sort.updatedAtDesc") }}</SelectItem>
-                <SelectItem value="updatedAt-asc">{{ t("dashboard.sort.updatedAtAsc") }}</SelectItem>
-                <SelectItem value="title-asc">{{ t("dashboard.sort.titleAsc") }}</SelectItem>
-                <SelectItem value="title-desc">{{ t("dashboard.sort.titleDesc") }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.updatedAt}-${SORT_ORDER.desc}`">{{
+                  t("dashboard.sort.updatedAtDesc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.updatedAt}-${SORT_ORDER.asc}`">{{
+                  t("dashboard.sort.updatedAtAsc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.title}-${SORT_ORDER.asc}`">{{
+                  t("dashboard.sort.titleAsc")
+                }}</SelectItem>
+                <SelectItem :value="`${SORT_BY.title}-${SORT_ORDER.desc}`">{{
+                  t("dashboard.sort.titleDesc")
+                }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -59,7 +73,7 @@
         </div>
 
         <!-- Project List -->
-        <div v-else-if="viewMode === 'list'">
+        <div v-else-if="viewMode === VIEW_MODE.list">
           <ListView
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
@@ -69,7 +83,7 @@
         </div>
 
         <!-- Project Grid -->
-        <div v-else>
+        <div v-else-if="viewMode === VIEW_MODE.grid">
           <GridView
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
@@ -104,12 +118,13 @@ import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
+import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
-const viewMode = ref<"list" | "grid">("list");
-const sortBy = ref<"updatedAt" | "title">("updatedAt");
-const sortOrder = ref<"desc" | "asc">("desc");
+const viewMode = ref<typeof VIEW_MODE.list | typeof VIEW_MODE.grid>(VIEW_MODE.list);
+const sortBy = ref<typeof SORT_BY.updatedAt | typeof SORT_BY.title>(SORT_BY.updatedAt);
+const sortOrder = ref<typeof SORT_ORDER.desc | typeof SORT_ORDER.asc>(SORT_ORDER.desc);
 const projects = ref<Project[]>([]);
 const loading = ref(true);
 const showNewProjectDialog = ref(false);
@@ -222,13 +237,13 @@ watch([sortBy, sortOrder, viewMode], () => {
 
 const loadSettings = async () => {
   const settings = await window.electronAPI.settings.get();
-  if (settings.SORT_BY && (settings.SORT_BY === "updatedAt" || settings.SORT_BY === "title")) {
+  if (settings.SORT_BY && (settings.SORT_BY === SORT_BY.updatedAt || settings.SORT_BY === SORT_BY.title)) {
     sortBy.value = settings.SORT_BY;
   }
-  if (settings.SORT_ORDER && (settings.SORT_ORDER === "desc" || settings.SORT_ORDER === "asc")) {
+  if (settings.SORT_ORDER && (settings.SORT_ORDER === SORT_ORDER.desc || settings.SORT_ORDER === SORT_ORDER.asc)) {
     sortOrder.value = settings.SORT_ORDER;
   }
-  if (settings.VIEW_MODE && (settings.VIEW_MODE === "list" || settings.VIEW_MODE === "grid")) {
+  if (settings.VIEW_MODE && (settings.VIEW_MODE === VIEW_MODE.list || settings.VIEW_MODE === VIEW_MODE.grid)) {
     viewMode.value = settings.VIEW_MODE;
   }
 };

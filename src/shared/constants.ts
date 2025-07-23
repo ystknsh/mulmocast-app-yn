@@ -227,3 +227,18 @@ export const I18N_SUPPORTED_LANGUAGES = [
   { id: "en", name: "English" },
   { id: "ja", name: "日本語" },
 ] as const;
+
+export const SORT_BY = {
+  updatedAt: "updatedAt",
+  title: "title",
+} as const;
+
+export const SORT_ORDER = {
+  desc: "desc",
+  asc: "asc",
+} as const;
+
+export const VIEW_MODE = {
+  list: "list",
+  grid: "grid",
+} as const;
