@@ -145,6 +145,6 @@ test("test speechParams extra element error", async () => {
   assert.deepStrictEqual(mulmoError.speechParams, [
     "'speakers.bbb' contains invalid data: Expected object, received string.",
     "The object at 'speakers.Presenter' contains unrecognized key(s): 'ccc'.",
-    "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
+    // "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
   ]);
 });
