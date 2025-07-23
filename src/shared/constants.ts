@@ -27,7 +27,7 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
-export type AppSettingKey = "APP_LANGUAGE";
+export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
 
 export const VOICE_LISTS = {
   openai: [
@@ -196,6 +196,7 @@ export const SCRIPT_EDITOR_TABS = {
   JSON: "json",
   MEDIA: "media",
   STYLE: "style",
+  REFERENCE: "reference",
 } as const;
 
 export type ScriptEditorTab = (typeof SCRIPT_EDITOR_TABS)[keyof typeof SCRIPT_EDITOR_TABS];
@@ -227,3 +228,18 @@ export const I18N_SUPPORTED_LANGUAGES = [
   { id: "en", name: "English" },
   { id: "ja", name: "日本語" },
 ] as const;
+
+export const SORT_BY = {
+  updatedAt: "updatedAt",
+  title: "title",
+} as const;
+
+export const SORT_ORDER = {
+  desc: "desc",
+  asc: "asc",
+} as const;
+
+export const VIEW_MODE = {
+  list: "list",
+  grid: "grid",
+} as const;

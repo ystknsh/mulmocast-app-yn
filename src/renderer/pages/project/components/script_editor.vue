@@ -1,11 +1,12 @@
 <template>
   <Tabs class="w-full" v-model="currentTab">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-6">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT">Text</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML">YAML</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON">JSON</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA">Media</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE">Style</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE">Ref</TabsTrigger>
     </TabsList>
 
     <div
@@ -204,6 +205,11 @@
         />
       </div>
     </TabsContent>
+    <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
+        <Reference :projectId="projectId" />
+      </div>
+    </TabsContent>
   </Tabs>
 </template>
 
@@ -215,10 +221,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import CodeEditor from "@/components/code_editor.vue";
+
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
-import CodeEditor from "@/components/code_editor.vue";
+import Reference from "./script_editor/reference.vue";
 
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 

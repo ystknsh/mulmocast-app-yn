@@ -47,6 +47,23 @@ const lang = {
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
+    sortBy: "並び替え",
+    sort: {
+      updatedAtDesc: "更新日時（新しい順）",
+      updatedAtAsc: "更新日時（古い順）",
+      titleAsc: "タイトル（昇順）",
+      titleDesc: "タイトル（降順）",
+    },
+  },
+  panels: {
+    openAiChat: "AI アシスタントチャットパネルを開く",
+    openOutputProduct: "出力設定 & 生成 / 成果物パネルを開く",
+    aiAssistantChat: "AI アシスタントチャット",
+    outputProduct: "出力設定 & 生成 / 成果物",
+    outputSettingsGeneration: "出力設定 & 生成",
+    aiPoweredGuide: "AI搭載MulmoScript生成ガイド",
+    beginnerDescription: "AI アシスタントとの会話を通じてスクリプトを作成しましょう",
+    advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
   },
   project: {
     generate: {
