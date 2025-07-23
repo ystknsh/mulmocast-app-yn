@@ -233,13 +233,13 @@ import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import YAML from "yaml";
 import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useMulmoEventStore } from "../../../store";
+import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
 
-import { MulmoError } from "../../../../types";
+import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
-import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
+import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { getBadge } from "@/lib/beat_util.js";
 import { setRandomBeatId } from "@/lib/beat_util";

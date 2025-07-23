@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useMulmoEventStore } from "../../../store";
+import { useMulmoEventStore } from "../../store";
 import { BeatSessionType, SessionType } from "mulmocast/browser";
 
 interface Props {
