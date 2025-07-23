@@ -8,20 +8,20 @@ args:
     default: "all"
 ---
 
-# MulmoCast App i18n Improvement
+# MulmoCast App i18n Refactor
 
 Comprehensive refactoring and improvement of the existing i18n structure to fix translation gaps and improve organization.
 
 ## Usage
 ```
-/i18n-improve [scope]
+/i18n-refactor [scope]
 ```
 
 ## Examples
 ```
-/i18n-improve structure    # Only reorganize structure
-/i18n-improve translations # Only fix missing translations  
-/i18n-improve all         # Both structure and translations (default)
+/i18n-refactor structure    # Only reorganize structure
+/i18n-refactor translations # Only fix missing translations  
+/i18n-refactor all         # Both structure and translations (default)
 ```
 
 ## Task Instructions

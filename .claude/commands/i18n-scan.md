@@ -7,18 +7,18 @@ args:
     description: "Path to Vue component file (e.g., src/renderer/pages/project/components/script_editor.vue)"
 ---
 
-# i18n Text Pickup
+# i18n Text Scan
 
 Extract hardcoded English text from Vue components and categorize for internationalization.
 
 ## Usage
 ```
-/i18n-pickup-en <component_path>
+/i18n-scan <component_path>
 ```
 
 ## Example
 ```
-/i18n-pickup-en src/renderer/pages/project/components/script_editor.vue
+/i18n-scan src/renderer/pages/project/components/script_editor.vue
 ```
 
 ## Task Instructions

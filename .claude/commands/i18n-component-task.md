@@ -8,7 +8,7 @@ args:
   - name: "extracted_texts"
     required: false
     type: "string"
-    description: "Previously extracted texts from i18n-pickup-en (optional, will be analyzed if not provided)"
+    description: "Previously extracted texts from i18n-scan (optional, will be analyzed if not provided)"
 ---
 
 # Vue Component i18n Implementation
