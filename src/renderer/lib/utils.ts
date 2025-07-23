@@ -39,3 +39,9 @@ export const mediaUri = (file: ArrayBuffer | string | null): string => {
   }
   return URL.createObjectURL(new Blob([file]));
 };
+
+export const bufferToUrl = (buffer: Buffer, mimeType: string) => {
+  const blob = new Blob([buffer], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  return url;
+};
