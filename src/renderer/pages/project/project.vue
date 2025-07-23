@@ -67,15 +67,15 @@
                       <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
                       <span>
                         {{
-                          selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide"
+                          selectedTheme === "beginner" ? $t('panels.aiAssistantChat') : $t('panels.aiPoweredGuide')
                         }}
                       </span>
                     </CardTitle>
                     <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
                       {{
                         selectedTheme === "beginner"
-                          ? "Let's Create Scripts Through Conversation with AI Assistants"
-                          : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                          ? $t('panels.beginnerDescription')
+                          : $t('panels.advancedDescription')
                       }}
                     </p>
                   </div>
@@ -110,7 +110,7 @@
             >
               <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Bot :size="20" class="mb-2 text-blue-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">AI Assistant Chat</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ $t('panels.aiAssistantChat') }}</span>
             </button>
           </div>
 
@@ -293,7 +293,7 @@
             >
               <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Settings :size="20" class="mb-2 text-gray-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">Output & Product</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ $t('panels.outputProduct') }}</span>
             </button>
           </div>
         </div>

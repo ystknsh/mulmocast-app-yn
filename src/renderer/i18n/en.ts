@@ -58,6 +58,11 @@ const lang = {
   panels: {
     openAiChat: "Open AI Assistant Chat panel",
     openOutputProduct: "Open Output & Product panel",
+    aiAssistantChat: "AI Assistant Chat",
+    outputProduct: "Output Settings & Generation / Production",
+    aiPoweredGuide: "AI-Powered MulmoScript Generation Guide",
+    beginnerDescription: "Let's Create Scripts Through Conversation with AI Assistants",
+    advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
   },
   project: {
     generate: {
