@@ -66,14 +66,12 @@
                     >
                       <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
                       <span>
-                        {{ selectedTheme === "beginner" ? $t("panels.aiAssistantChat") : $t("panels.aiPoweredGuide") }}
+                        {{ t(selectedTheme === "beginner" ? "panels.aiAssistantChat" : "panels.aiPoweredGuide") }}
                       </span>
                     </CardTitle>
                     <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
                       {{
-                        selectedTheme === "beginner"
-                          ? $t("panels.beginnerDescription")
-                          : $t("panels.advancedDescription")
+                        t(selectedTheme === "beginner" ? "panels.beginnerDescription" : "panels.advancedDescription")
                       }}
                     </p>
                   </div>
@@ -103,12 +101,12 @@
             <button
               @click="isLeftColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
-              :aria-label="$t('panels.openAiChat')"
-              :title="$t('panels.openAiChat')"
+              :aria-label="t('panels.openAiChat')"
+              :title="t('panels.openAiChat')"
             >
               <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Bot :size="20" class="mb-2 text-blue-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">{{ $t("panels.aiAssistantChat") }}</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.aiAssistantChat") }}</span>
             </button>
           </div>
 
@@ -286,12 +284,12 @@
             <button
               @click="isRightColumnOpen = true"
               class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
-              :aria-label="$t('panels.openOutputProduct')"
-              :title="$t('panels.openOutputProduct')"
+              :aria-label="t('panels.openOutputProduct')"
+              :title="t('panels.openOutputProduct')"
             >
               <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
               <Settings :size="20" class="mb-2 text-gray-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">{{ $t("panels.outputProduct") }}</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.outputProduct") }}</span>
             </button>
           </div>
         </div>
@@ -304,6 +302,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import {
   ArrowLeft,
@@ -374,6 +373,7 @@ import { zodError2MulmoError } from "../../lib/error";
 // State
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
