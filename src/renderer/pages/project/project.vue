@@ -49,28 +49,36 @@
         </div>
 
         <!-- 3 Split Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-auto lg:h-[calc(100vh-180px)]">
+        <div class="grid grid-cols-1 gap-4 h-auto lg:h-[calc(100vh-180px)] relative" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
-          <div class="h-full overflow-y-auto pr-2">
+          <div
+            class="h-full overflow-y-auto pr-2"
+            :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
+          >
             <Card
               :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
             >
               <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
-                <CardTitle
-                  :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-                >
-                  <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
-                  <span>
-                    {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
-                  </span>
-                </CardTitle>
-                <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-                  {{
-                    selectedTheme === "beginner"
-                      ? "Let's Create Scripts Through Conversation with AI Assistants"
-                      : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
-                  }}
-                </p>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <CardTitle
+                      :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                    >
+                      <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                      <span>
+                        {{ t(selectedTheme === "beginner" ? "panels.aiAssistantChat" : "panels.aiPoweredGuide") }}
+                      </span>
+                    </CardTitle>
+                    <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                      {{
+                        t(selectedTheme === "beginner" ? "panels.beginnerDescription" : "panels.advancedDescription")
+                      }}
+                    </p>
+                  </div>
+                  <Button variant="ghost" size="sm" @click="isLeftColumnOpen = false" class="hidden lg:inline-flex">
+                    <PanelLeftClose :size="16" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent
                 :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
@@ -86,6 +94,20 @@
                 />
               </CardContent>
             </Card>
+          </div>
+
+          <!-- Left Column - Collapsed State -->
+          <div v-if="!isLeftColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
+            <button
+              @click="isLeftColumnOpen = true"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              :aria-label="t('panels.openAiChat')"
+              :title="t('panels.openAiChat')"
+            >
+              <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
+              <Bot :size="20" class="mb-2 text-blue-700" />
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.aiAssistantChat") }}</span>
+            </button>
           </div>
 
           <!-- Middle Column - Script Editor -->
@@ -173,14 +195,22 @@
           </div>
 
           <!-- Right Column - Output & Product -->
-          <div class="space-y-4 overflow-y-auto pl-2">
+          <div
+            class="space-y-4 overflow-y-auto pl-2"
+            :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
+          >
             <!-- Output Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
-                <CardTitle class="flex items-center space-x-2">
-                  <Settings :size="20" />
-                  <span>Output Settings & Generation</span>
-                </CardTitle>
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Settings :size="20" />
+                    <span>{{ t("panels.outputSettingsGeneration") }}</span>
+                  </CardTitle>
+                  <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
+                    <PanelRightClose :size="16" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent class="p-4">
                 <Generate :projectId="projectId" />
@@ -247,6 +277,20 @@
               </CardContent>
             </Card>
           </div>
+
+          <!-- Right Column - Collapsed State -->
+          <div v-if="!isRightColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
+            <button
+              @click="isRightColumnOpen = true"
+              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              :aria-label="t('panels.openOutputProduct')"
+              :title="t('panels.openOutputProduct')"
+            >
+              <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
+              <Settings :size="20" class="mb-2 text-gray-700" />
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.outputProduct") }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </TooltipProvider>
@@ -257,6 +301,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import {
   ArrowLeft,
@@ -272,6 +317,10 @@ import {
   Lightbulb,
   Bot,
   FolderOpen,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
@@ -324,6 +373,7 @@ import { zodError2MulmoError } from "../../lib/error";
 // State
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
@@ -335,6 +385,22 @@ const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
+
+// Column open/close states
+const isLeftColumnOpen = ref(true); // Default: open
+const isRightColumnOpen = ref(true); // Default: open
+
+// Computed grid layout class based on column states
+const gridLayoutClass = computed(() => {
+  if (isLeftColumnOpen.value && isRightColumnOpen.value) {
+    return "lg:grid-cols-[30%_40%_1fr]";
+  } else if (isLeftColumnOpen.value) {
+    return "lg:grid-cols-[30%_1fr_48px]";
+  } else if (isRightColumnOpen.value) {
+    return "lg:grid-cols-[48px_1fr_30%]";
+  }
+  return "lg:grid-cols-[48px_1fr_48px]";
+});
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
@@ -568,3 +634,10 @@ watch(
   { deep: true },
 );
 </script>
+
+<style scoped>
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+}
+</style>

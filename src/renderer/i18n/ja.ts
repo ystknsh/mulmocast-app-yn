@@ -55,6 +55,16 @@ const lang = {
       titleDesc: "タイトル（降順）",
     },
   },
+  panels: {
+    openAiChat: "AI アシスタントチャットパネルを開く",
+    openOutputProduct: "出力設定 & 生成 / 成果物パネルを開く",
+    aiAssistantChat: "AI アシスタントチャット",
+    outputProduct: "出力設定 & 生成 / 成果物",
+    outputSettingsGeneration: "出力設定 & 生成",
+    aiPoweredGuide: "AI搭載MulmoScript生成ガイド",
+    beginnerDescription: "AI アシスタントとの会話を通じてスクリプトを作成しましょう",
+    advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
+  },
   project: {
     generate: {
       generateContents: "Generate Contents",
