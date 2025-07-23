@@ -142,6 +142,7 @@ export default [
       ...baseLanguageOptions,
       globals: {
         ...globals.browser,
+        Buffer: 'readonly',
       },
     },
     plugins: {
