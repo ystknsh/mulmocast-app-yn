@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
-import { Plus, List, Grid, ChevronDown } from "lucide-vue-next";
+import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import Layout from "@/components/layout.vue";
 import ListView from "./components/list_view.vue";
