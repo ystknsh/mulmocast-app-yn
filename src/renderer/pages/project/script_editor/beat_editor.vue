@@ -219,7 +219,7 @@ import BeatPreview from "./beat_preview.vue";
 import BeatSelector from "./beat_selector.vue";
 
 // lib
-import { useMulmoEventStore } from "../../../../store";
+import { useMulmoEventStore } from "../../../store";
 import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 

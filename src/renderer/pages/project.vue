@@ -337,14 +337,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)
 import Layout from "@/components/layout.vue";
-import Chat from "./components/chat.vue";
-import PromptGuide from "./components/prompt_guide.vue";
-import ScriptEditor from "./components/script_editor.vue";
-import BeatsViewer from "./components/beats_viewer.vue";
-import Generate from "./components/generate.vue";
-import ProductTabs from "./components/product_tabs.vue";
+import Chat from "./project/chat.vue";
+import PromptGuide from "./project/prompt_guide.vue";
+import ScriptEditor from "./project/script_editor.vue";
+import BeatsViewer from "./project/beats_viewer.vue";
+import Generate from "./project/generate.vue";
+import ProductTabs from "./project/product_tabs.vue";
 
-import { getConcurrentTaskStatusMessageComponent } from "./components/concurrent_task_status_message";
+import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
 
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
@@ -352,7 +352,7 @@ import { notifySuccess, notifyProgress } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 import { bufferToUrl } from "@/lib/utils";
 
-import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../../store";
+import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../store";
 
 import {
   selectedTheme,
@@ -364,11 +364,11 @@ import {
   getHeaderSize,
   getContainerSpacing,
   getTimelineFocusClass,
-} from "./composable/style";
+} from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
-import { type ScriptEditorTab } from "../../../shared/constants";
+import { type ScriptEditorTab } from "../../shared/constants";
 
-import { zodError2MulmoError } from "../../lib/error";
+import { zodError2MulmoError } from "../lib/error";
 
 // State
 const route = useRoute();

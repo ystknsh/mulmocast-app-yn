@@ -18,7 +18,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
-import { beatTemplate } from "../../../../../shared/beat_data";
+import { beatTemplate } from "../../../../shared/beat_data";
 import { useI18n } from "vue-i18n";
 
 interface Props {

@@ -25,7 +25,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useMulmoEventStore } from "../../../store";
+import { useMulmoEventStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { FileText, Monitor, Globe } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
