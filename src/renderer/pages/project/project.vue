@@ -246,7 +246,6 @@
                 </div>
               </CardContent>
             </Card>
-            <Button @click="reference">Reference</Button>
           </div>
         </div>
       </div>
@@ -302,6 +301,7 @@ import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { notifySuccess, notifyProgress } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
+import { bufferToUrl } from "@/lib/utils";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../../store";
 
@@ -440,12 +440,6 @@ const generateAudio = async (index: number) => {
   });
 };
 
-const bufferToUrl = (buffer: Buffer, mimeType: string) => {
-  const blob = new Blob([buffer], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  return url;
-};
-
 const audioFiles = ref<(string | null)[]>([]);
 const imageFiles = ref<(string | null)[]>([]);
 const movieFiles = ref<(string | null)[]>([]);
@@ -525,6 +519,11 @@ watch(
       await downloadImageFiles();
     }
 
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
+      // await downloadImageFiles();
+      // console.log(
+    }
+
     // beats
     if (
       mulmoEvent &&
@@ -568,8 +567,4 @@ watch(
   },
   { deep: true },
 );
-
-const reference = async () => {
-  window.electronAPI.mulmoHandler("mulmoReferenceImages", projectId.value);
-};
 </script>

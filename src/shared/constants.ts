@@ -196,6 +196,7 @@ export const SCRIPT_EDITOR_TABS = {
   JSON: "json",
   MEDIA: "media",
   STYLE: "style",
+  REFERENCE: "reference",
 } as const;
 
 export type ScriptEditorTab = (typeof SCRIPT_EDITOR_TABS)[keyof typeof SCRIPT_EDITOR_TABS];
