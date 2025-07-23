@@ -205,7 +205,7 @@
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
                     <Settings :size="20" />
-                    <span>Output Settings & Generation</span>
+                    <span>{{ t("panels.outputSettingsGeneration") }}</span>
                   </CardTitle>
                   <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
                     <PanelRightClose :size="16" />
