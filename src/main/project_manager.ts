@@ -60,8 +60,8 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
   const mulmo = await readJsonFile(getProjectScriptPath(projectId));
   try {
     return MulmoScriptMethods.validate(mulmo);
-  } catch(e) {
-    mulmo;
+  } catch (__error) {
+    return mulmo;
   }
 };
 
