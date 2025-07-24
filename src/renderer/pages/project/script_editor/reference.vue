@@ -20,7 +20,7 @@
 
           <div
             @dragover.prevent
-            @drop.prevent="(e) => handleDrop(e)"
+            @drop.prevent="(e) => handleDrop(e, imageKey)"
             draggable="true"
             class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
           >
@@ -29,7 +29,7 @@
           or
           <div class="flex">
             <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
-              @click="submitUrlImage"
+              @click="() => submitUrlImage(imageKey)"
               :disabled="!fetchEnable"
               >Fetch</Button
             >
@@ -46,9 +46,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 import { useI18n } from "vue-i18n";
+import { z } from "zod";
 
 import { Button, Label, Textarea, Input } from "@/components/ui";
 
@@ -80,4 +81,73 @@ const reference = async () => {
 };
 
 const update = () => {};
+
+const mediaUrl = ref("");
+// image fetch
+const imageFetching = ref(false);
+const validateURL = computed(() => {
+  const urlSchema = z.string().url();
+  return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
+});
+const fetchEnable = computed(() => {
+  return mediaUrl.value !== "" && validateURL.value && !imageFetching.value;
+});
+const submitUrlImage = async (imageKey: string) => {
+  try {
+    imageFetching.value = true;
+    const res = (await window.electronAPI.mulmoHandler(
+      "mulmoReferenceImageFetchURL",
+      props.projectId,
+      imageKey,
+      mediaUrl.value,
+    )) as { result: boolean; imageType: string; path: string };
+    if (res.result) {
+      mediaUrl.value = "";
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  imageFetching.value = false;
+};
+
+const handleDrop = (event: DragEvent, imageKey: string) => {
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    const file = files[0];
+    // console.log("File dropped:", file.name);
+    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
+    const mimeType = file.type.split("/")[1] ?? "";
+    const fileType = mimeType || fileExtension;
+
+    const imageType = (() => {
+      if (["jpg", "jpeg", "png"].includes(fileType)) {
+        return "image";
+      }
+      return;
+    })();
+    if (!imageType) {
+      console.warn(`Unsupported file type: ${fileType}`);
+      // TODO: Consider showing a toast notification or alert
+      return;
+    }
+    update("image.type", imageType);
+    const extention = fileType === "jpeg" ? "jpg" : fileType;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
+      const path = await window.electronAPI.mulmoHandler(
+        "mulmoReferenceImageUpload",
+        props.projectId,
+        imageKey,
+        [...uint8Array],
+        extention,
+      );
+      console.log(path);
+      // update("image.source.path", "./" + path);
+      // generateImageOnlyImage();
+    };
+    reader.readAsArrayBuffer(file);
+  }
+};
 </script>
