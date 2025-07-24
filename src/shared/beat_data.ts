@@ -2,7 +2,7 @@ import { type MulmoBeat } from "mulmocast";
 
 export const initMulmoScript = {
   $mulmocast: {
-    version: "1.0",
+    version: "1.1",
     credit: "closing",
   },
   beats: [
