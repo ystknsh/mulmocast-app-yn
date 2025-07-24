@@ -2,7 +2,7 @@ import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
-import { mulmoScriptSchema, type MulmoScript } from "mulmocast";
+import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 
 import { Project, ProjectMetadata } from "../types";
 import { SCRIPT_EDITOR_TABS } from "../shared/constants";
@@ -57,7 +57,12 @@ export const getProjectMetadata = async (projectId: string): Promise<ProjectMeta
   return readJsonFile(getProjectMetaPath(projectId));
 };
 export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScript | null> => {
-  return readJsonFile(getProjectScriptPath(projectId));
+  const mulmo = await readJsonFile(getProjectScriptPath(projectId));
+  try {
+    return MulmoScriptMethods.validate(mulmo);
+  } catch(e) {
+    mulmo;
+  }
 };
 
 export const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<boolean> => {
