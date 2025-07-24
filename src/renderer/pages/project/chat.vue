@@ -7,11 +7,11 @@
       v-show="messages.length > 0"
     >
       <div v-for="(message, key) in messages" :key="key">
-        <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
-        <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
+        <BotMessage :message="message.content" :time="message.time" v-if="message.role === 'assistant'" />
+        <UserMessage :message="message.content" :time="message.time" v-if="message.role === 'user'" />
       </div>
-      <UserMessage :message="userInput" time="14:30" v-if="userInput !== ''" />
-      <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" time="14:30" />
+      <UserMessage :message="userInput" v-if="userInput !== ''" />
+      <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" />
     </div>
 
     <!-- Chat input area - Slack-style design -->

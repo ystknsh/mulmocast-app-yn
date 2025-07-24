@@ -8,7 +8,7 @@
         class="bg-gray-100 text-gray-800 p-3 rounded-lg block max-w-md text-sm break-words whitespace-pre-wrap chat-markdown"
         v-html="safeHtml"
       />
-      <p class="text-xs text-gray-500 mt-1">{{ time }}</p>
+      <p class="text-xs text-gray-500 mt-1">{{ formatedTime }}</p>
     </div>
   </div>
 </template>
@@ -18,11 +18,16 @@ import { Bot } from "lucide-vue-next";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { computed } from "vue";
+import dayjs from "dayjs";
 
 const props = defineProps<{
   message: string;
-  time: string;
+  time?: number;
 }>();
+
+const formatedTime = computed(() => {
+  return dayjs(props.time ?? Date.now()).format("MM/DD hh:mm"); // TODO: format i18n
+});
 
 function markdownCodeBlocks(input: string): string {
   return input.replace(/```markdown\s*\n([\s\S]*?)\n```/g, (_, code) => {
