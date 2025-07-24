@@ -207,7 +207,7 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
-        <Reference :projectId="projectId" />
+        <Reference :projectId="projectId" :images="props.mulmoValue?.imageParams?.images ?? {}" />
       </div>
     </TabsContent>
   </Tabs>
