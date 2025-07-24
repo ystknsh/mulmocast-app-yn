@@ -108,7 +108,6 @@ const submitUrlImage = async (imageKey: string) => {
       emit("updateImagePath", imageKey, "./" + res.path);
       mediaUrl.value = "";
       loadReference();
-
     }
   } catch (error) {
     console.log(error);

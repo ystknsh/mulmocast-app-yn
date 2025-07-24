@@ -467,7 +467,6 @@ const updateImage = (imageKey: string, prompt: string) => {
 };
 
 const updateImagePath = (imageKey: string, path: string) => {
-
   const currentImages = props.mulmoValue?.imageParams?.images ?? {};
   const updatedImages = {
     ...currentImages,
