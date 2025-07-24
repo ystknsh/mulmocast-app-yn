@@ -10,6 +10,7 @@
         <BotMessage :message="message.content" time="14:30" v-if="message.role === 'assistant'" />
         <UserMessage :message="message.content" time="14:30" v-if="message.role === 'user'" />
       </div>
+      <UserMessage :message="userInput" time="14:30" v-if="userInput !== ''" />
       <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" time="14:30" />
     </div>
 
@@ -23,12 +24,12 @@
         >
           <Textarea
             v-model="userInput"
-            :disabled="events.length == 0"
+            :disabled="userInput.length == 100"
             placeholder="ex) Thank you very much! Please proceed with the creation."
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0"
             @keydown="handleKeydown"
           />
-          <Button size="sm" @click="submitText(events[0])" :disabled="isCreatingScript">
+          <Button size="sm" @click="run()" :disabled="isCreatingScript">
             <Send :size="16" />
           </Button>
         </div>
@@ -93,8 +94,10 @@ import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { notifyError } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
-const { initialMessages = [] } = defineProps<{
-  initialMessages: ChatMessage[];
+import { graphChat } from "./chat/graph";
+
+const { messages = [] } = defineProps<{
+  messages: ChatMessage[];
 }>();
 
 const emit = defineEmits<{
@@ -104,53 +107,11 @@ const emit = defineEmits<{
 
 const selectedTemplateFileName = ref("");
 
-const graphChat: GraphData = {
-  version: 0.5,
-  loop: {
-    while: ":continue",
-  },
-  nodes: {
-    continue: {
-      value: true,
-    },
-    messages: {
-      value: [],
-      update: ":reducer.array",
-    },
-    userInput: {
-      agent: "eventAgent",
-      params: {
-        message: "You:",
-        isResult: true,
-      },
-    },
-    llm: {
-      agent: "openAIAgent",
-      isResult: true,
-      params: {
-        forWeb: true,
-        stream: true,
-        isResult: true,
-      },
-      inputs: { messages: ":messages", prompt: ":userInput.text" },
-    },
-    reducer: {
-      agent: "pushAgent",
-      inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
-    },
-  },
-};
-
 const streamNodes = ["llm"];
-const outputNodes = ["llm", "userInput"];
+const outputNodes = ["llm"];
 
-const { eventAgent, userInput, events, submitText } = textInputEvent();
-const { messages, chatMessagePlugin } = useChatPlugin(initialMessages, (messages) => {
-  if (messages.at(-1)?.role === "assistant") {
-    emit("update:updateChatMessages", messages);
-  }
-});
-const chatHistoryRef = useAutoScroll(messages);
+const userInput = ref("");
+
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -158,36 +119,54 @@ const agentFilters = [
     agent: streamAgentFilter,
   },
 ];
+const chatHistoryRef = useAutoScroll([streamData, userInput, messages]);
 
 const clearChat = () => {
-  messages.value = [];
   emit("update:updateChatMessages", []);
 };
-const run = async (initialMessages: ChatMessage[]) => {
-  const env = await window.electronAPI.getEnv();
-  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
 
-  const graphai = new GraphAI(
-    graphChat,
-    {
-      ...agents,
-      openAIAgent,
-      eventAgent,
-    },
-    {
-      agentFilters,
-      config: {
-        openAIAgent: {
-          apiKey: env.OPENAI_API_KEY,
+const isRunning = ref(false);
+const run = async () => {
+  isRunning.value = true;
+  try {
+    const env = await window.electronAPI.getEnv();
+    const graphai = new GraphAI(
+      graphChat,
+      {
+        ...agents,
+        openAIAgent,
+      },
+      {
+        agentFilters,
+        config: {
+          openAIAgent: {
+            apiKey: env.OPENAI_API_KEY,
+          },
         },
       },
-    },
-  );
-  // graphai.injectValue("messages", [{ content: prompt, role: "system" }]);
-  graphai.registerCallback(streamPlugin(streamNodes));
-  graphai.registerCallback(chatMessagePlugin(outputNodes));
-  graphai.injectValue("messages", initialMessages);
-  await graphai.run();
+    );
+    const filterMessage = (message, setTime = false) => {
+      if (setTime) {
+        return { role: message.role, content: message.content, time: message.time ?? Date.now() };
+      }
+      return { role: message.role, content: message.content };
+    };
+    graphai.registerCallback(streamPlugin(streamNodes));
+    graphai.injectValue("messages", messages.map(filterMessage));
+    graphai.injectValue("prompt", userInput.value);
+    const res = await graphai.run();
+    const newMessages = [
+      ...messages.map(filterMessage, true),
+      { content: userInput.value, role: "user", time: Date.now() },
+      filterMessage(res.llm.message, true),
+    ];
+    console.log(newMessages);
+    userInput.value = "";
+    emit("update:updateChatMessages", newMessages);
+  } catch (error) {
+    console.log(error);
+  }
+  isRunning.value = false;
 };
 
 const isCreatingScript = ref(false);
@@ -196,7 +175,7 @@ const createScript = async () => {
     isCreatingScript.value = true;
     const script = (await window.electronAPI.mulmoHandler(
       "createMulmoScript",
-      messages.value.map((m) => ({ role: m.role, content: m.content })),
+      messages.map((m) => ({ role: m.role, content: m.content })),
       selectedTemplateFileName.value,
     )) as MulmoScript;
     script.beats.map(setRandomBeatId);
@@ -211,19 +190,18 @@ const createScript = async () => {
 
 const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
-  run(initialMessages);
   templates.value = (await window.electronAPI.mulmoHandler("getAvailableTemplates")) as MulmoScriptTemplateFile[];
   selectedTemplateFileName.value = templates.value[0].filename;
 });
 
-const canCreateScript = computed(() => messages.value.length > 0 && !isCreatingScript.value);
+const canCreateScript = computed(() => messages.length > 0 && !isCreatingScript.value);
 
 const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter
   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
     e.preventDefault();
-    if (events.value.length > 0) {
-      submitText(events.value[0]);
+    if (userInput.value.length > 0) {
+      run();
     }
   }
 };
