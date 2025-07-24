@@ -11,7 +11,7 @@
           <Textarea
             :placeholder="t('beat.form.imagePrompt.contents')"
             :model-value="images[imageKey].prompt"
-            @update:model-value="(value) => update('imagePrompt', String(value))"
+            @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
             class="mb-2 h-20 overflow-y-auto"
           />
         </template>
@@ -64,6 +64,7 @@ interface Props {
 const { t } = useI18n();
 
 const props = defineProps<Props>();
+const emit = defineEmits(["updateImage", "updateImagePath"]);
 
 const imageRefs = ref<Record<string, string>>({});
 
@@ -80,7 +81,9 @@ const reference = async () => {
   await loadReference();
 };
 
-const update = () => {};
+const update = (target: string, imageKey: string, prompt: string) => {
+  emit("updateImage", imageKey, prompt);
+};
 
 const mediaUrl = ref("");
 // image fetch
@@ -102,6 +105,7 @@ const submitUrlImage = async (imageKey: string) => {
       mediaUrl.value,
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
+      emit("updateImagePath", imageKey, "./" + res.path);
       mediaUrl.value = "";
     }
   } catch (error) {
@@ -144,8 +148,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
         extention,
       );
       console.log(path);
-      // update("image.source.path", "./" + path);
-      // generateImageOnlyImage();
+      emit("updateImagePath", imageKey, "./" + path);
     };
     reader.readAsArrayBuffer(file);
   }

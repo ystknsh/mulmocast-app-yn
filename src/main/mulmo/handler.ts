@@ -228,7 +228,6 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
-    console.log(enables);
     const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
     const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
 
@@ -294,7 +293,15 @@ export const mulmoReadTemplatePrompt = (templateName: string) => {
   return readTemplatePrompt(templateName);
 };
 
-// TODO dirPath
+export const mulmoReferenceImageUpload = async (
+  projectId: string,
+  dirKey: string,
+  bufferArray: Uint8Array,
+  extention: string,
+) => {
+  const dirPath = "upload_reference_image";
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+};
 export const mulmoImageUpload = async (
   projectId: string,
   index: number,
@@ -302,19 +309,51 @@ export const mulmoImageUpload = async (
   extention: string,
 ) => {
   const dirPath = "upload_image";
+  const dirKey = String(index);
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+};
+
+const __mulmoImageUpload = async (
+  projectId: string,
+  dirPath: string,
+  dirKey: string,
+  bufferArray: Uint8Array,
+  extention: string,
+) => {
   const projectPath = getProjectPath(projectId);
-  const dir = path.resolve(projectPath, dirPath, String(index));
+  const dir = path.resolve(projectPath, dirPath, dirKey);
   fs.mkdirSync(dir, { recursive: true });
   const filename = `${Date.now()}.${extention}`;
   fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
 
-  return path.join(dirPath, String(index), filename);
+  return path.join(dirPath, dirKey, filename);
 };
 export const mulmoImageFetchURL = async (projectId: string, index: number, url: string, webContents: WebContents) => {
+  const dirPath = "fetch_image";
+  const dirKey = String(index);
+  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
+};
+
+export const mulmoReferenceImageFetchURL = async (
+  projectId: string,
+  dirKey: string,
+  url: string,
+  webContents: WebContents,
+) => {
+  const dirPath = "fetch_ref_image";
+  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
+};
+
+const __mulmoImageFetchURL = async (
+  projectId: string,
+  dirPath: string,
+  dirKey: string,
+  url: string,
+  webContents: WebContents,
+) => {
   try {
-    const dirPath = "fetch_image";
     const projectPath = getProjectPath(projectId);
-    const dir = path.resolve(projectPath, dirPath, String(index));
+    const dir = path.resolve(projectPath, dirPath, dirKey);
 
     const res = await fetchAndSave(url, dir);
 
@@ -322,7 +361,7 @@ export const mulmoImageFetchURL = async (projectId: string, index: number, url: 
       return {
         result: true,
         imageType: res.imageType,
-        path: path.join(dirPath, String(index), res.filename),
+        path: path.join(dirPath, dirKey, res.filename),
       };
     }
     if (res.error) {
@@ -375,8 +414,12 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":
         return await mulmoImageUpload(args[0], args[1], args[2], args[3]);
+      case "mulmoReferenceImageUpload":
+        return await mulmoReferenceImageUpload(args[0], args[1], args[2], args[3]);
       case "mulmoImageFetchURL":
         return await mulmoImageFetchURL(args[0], args[1], args[2], webContents);
+      case "mulmoReferenceImageFetchURL":
+        return await mulmoReferenceImageFetchURL(args[0], args[1], args[2], webContents);
       case "mulmoReferenceImage":
         return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
       case "mulmoReferenceImages":
