@@ -207,7 +207,12 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
-        <Reference :projectId="projectId" />
+        <Reference
+          :projectId="projectId"
+          :images="props.mulmoValue?.imageParams?.images ?? {}"
+          @updateImage="updateImage"
+          @updateImagePath="updateImagePath"
+        />
       </div>
     </TabsContent>
   </Tabs>
@@ -265,6 +270,7 @@ const emit = defineEmits([
   "deleteBeat",
   "positionUp",
   "update:scriptEditorActiveTab",
+  "saveMulmo",
 ]);
 
 const route = useRoute();
@@ -436,5 +442,51 @@ const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
     ...props.mulmoValue,
     ...removeEmptyValues(style),
   });
+};
+
+const updateImage = (imageKey: string, prompt: string) => {
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+
+  const updatedImages = {
+    ...currentImages,
+    [imageKey]: {
+      ...(currentImages[imageKey] ?? {}),
+      prompt,
+    },
+  };
+
+  const updatedImageParams = {
+    ...props.mulmoValue?.imageParams,
+    images: updatedImages,
+  };
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    imageParams: updatedImageParams,
+  });
+};
+
+const updateImagePath = (imageKey: string, path: string) => {
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const updatedImages = {
+    ...currentImages,
+    [imageKey]: {
+      ...(currentImages[imageKey] ?? {}),
+      source: {
+        ...(currentImages[imageKey]?.source ?? {}),
+        path,
+      },
+    },
+  };
+  const updatedImageParams = {
+    ...props.mulmoValue?.imageParams,
+    images: updatedImages,
+  };
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    imageParams: updatedImageParams,
+  });
+  emit("saveMulmo");
 };
 </script>
