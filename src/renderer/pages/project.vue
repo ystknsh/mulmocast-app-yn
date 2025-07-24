@@ -187,6 +187,7 @@
                       @deleteBeat="deleteBeat"
                       @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                       :mulmoError="mulmoError"
+                      @saveMulmo="saveMulmo"
                     />
                   </CardContent>
                 </CollapsibleContent>
@@ -446,8 +447,8 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   saveProjectMetadata(project.value);
 };
 
-const saveMulmo = async (data: MulmoScript) => {
-  console.log("saved", data);
+const saveMulmo = async () => {
+  console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   project.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, project.value);
@@ -490,7 +491,7 @@ const openProjectFolder = async () => {
 };
 
 const generateImage = async (index: number, target: string) => {
-  await saveMulmo(mulmoScriptHistoryStore.currentMulmoScript);
+  await saveMulmo();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: "Image generated successfully",

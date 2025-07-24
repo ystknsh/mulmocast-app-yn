@@ -107,6 +107,8 @@ const submitUrlImage = async (imageKey: string) => {
     if (res.result) {
       emit("updateImagePath", imageKey, "./" + res.path);
       mediaUrl.value = "";
+      loadReference();
+
     }
   } catch (error) {
     console.log(error);
@@ -134,7 +136,6 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       // TODO: Consider showing a toast notification or alert
       return;
     }
-    update("image.type", imageType);
     const extention = fileType === "jpeg" ? "jpg" : fileType;
 
     const reader = new FileReader();
@@ -147,8 +148,11 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
         [...uint8Array],
         extention,
       );
-      console.log(path);
       emit("updateImagePath", imageKey, "./" + path);
+      setTimeout(() => {
+        // TODO: fix
+        loadReference();
+      }, 10);
     };
     reader.readAsArrayBuffer(file);
   }

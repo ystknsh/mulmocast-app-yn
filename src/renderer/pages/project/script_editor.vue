@@ -270,6 +270,7 @@ const emit = defineEmits([
   "deleteBeat",
   "positionUp",
   "update:scriptEditorActiveTab",
+  "saveMulmo",
 ]);
 
 const route = useRoute();
@@ -466,8 +467,8 @@ const updateImage = (imageKey: string, prompt: string) => {
 };
 
 const updateImagePath = (imageKey: string, path: string) => {
-  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
 
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
   const updatedImages = {
     ...currentImages,
     [imageKey]: {
@@ -478,7 +479,6 @@ const updateImagePath = (imageKey: string, path: string) => {
       },
     },
   };
-
   const updatedImageParams = {
     ...props.mulmoValue?.imageParams,
     images: updatedImages,
@@ -488,5 +488,6 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
+  emit("saveMulmo");
 };
 </script>
