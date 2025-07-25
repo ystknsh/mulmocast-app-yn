@@ -1,10 +1,28 @@
-import { GraphAI, GraphData } from "graphai";
-import * as agents from "@graphai/vanilla";
-import { MulmoScript, mulmoScriptSchema, readTemplatePrompt, validateSchemaAgent } from "mulmocast";
-import { openAIAgent } from "@graphai/openai_agent";
-import { ChatMessage } from "../../types";
+import { type GraphData } from "graphai";
 
-const graphData: GraphData = {
+// just chat
+export const graphChat: GraphData = {
+  version: 0.5,
+  nodes: {
+    messages: {
+      value: [],
+    },
+    prompt: {},
+    llm: {
+      agent: "openAIAgent",
+      isResult: true,
+      params: {
+        forWeb: true,
+        stream: true,
+        isResult: true,
+      },
+      inputs: { messages: ":messages", prompt: ":prompt" },
+    },
+  },
+};
+
+/*
+export const graphAAAData: GraphData = {
   version: 0.5,
   nodes: {
     systemPrompt: {
@@ -70,18 +88,4 @@ const graphData: GraphData = {
     },
   },
 };
-
-export const createMulmoScript = async (messages: ChatMessage[], templateName: string) => {
-  // TODO option.config
-  const graph = new GraphAI(graphData, {
-    ...agents,
-    openAIAgent,
-    validateSchemaAgent,
-  });
-  graph.injectValue("chatMessages", messages);
-  graph.injectValue("prompt", readTemplatePrompt(templateName));
-  // graph.injectValue("systemPrompt", "あなたはツンデレ口調でプレゼン用の日本語スクリプトを生成するAIです。テーマに対して、セリフ口調で、ツッコミや驚き、感情を交えたテンポのよい文体で書いてください。セリフは感情豊かに表現し、リズムや間も工夫してください。ユーモアや親しみやすさを忘れずに！");
-  console.log(messages, readTemplatePrompt(templateName));
-  const result = await graph.run<{ data: MulmoScript }>();
-  return result.mulmoScript.data;
-};
+*/

@@ -87,7 +87,7 @@
                 <component
                   :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
                   :selectedTheme="selectedTheme"
-                  :initialMessages="project?.chatMessages"
+                  :messages="project?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
                   class="h-full flex flex-col"

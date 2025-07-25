@@ -7,11 +7,21 @@
       <div class="bg-blue-500 text-white p-3 rounded-lg inline-block max-w-md">
         <p class="text-sm">{{ message }}</p>
       </div>
-      <p class="text-xs text-gray-500 mt-1">{{ time }}</p>
+      <p class="text-xs text-gray-500 mt-1">{{ formatedTime }}</p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
+import dayjs from "dayjs";
 import { User } from "lucide-vue-next";
-defineProps(["message", "time"]);
+
+const props = defineProps<{
+  message: string;
+  time?: number;
+}>();
+
+const formatedTime = computed(() => {
+  return dayjs(props.time ?? Date.now()).format("MM/DD hh:mm"); // TODO: format i18n
+});
 </script>
