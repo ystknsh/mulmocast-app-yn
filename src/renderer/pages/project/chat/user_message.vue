@@ -24,5 +24,4 @@ const props = defineProps<{
 const formatedTime = computed(() => {
   return dayjs(props.time ?? Date.now()).format("MM/DD hh:mm"); // TODO: format i18n
 });
-
 </script>

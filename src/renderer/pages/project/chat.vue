@@ -24,12 +24,12 @@
         >
           <Textarea
             v-model="userInput"
-            :disabled="userInput.length == 100"
+            :disabled="isRunning"
             placeholder="ex) Thank you very much! Please proceed with the creation."
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0"
             @keydown="handleKeydown"
           />
-          <Button size="sm" @click="run()" :disabled="isCreatingScript">
+          <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning">
             <Send :size="16" />
           </Button>
         </div>
@@ -108,7 +108,6 @@ const emit = defineEmits<{
 const selectedTemplateFileName = ref("");
 
 const streamNodes = ["llm"];
-const outputNodes = ["llm"];
 
 const userInput = ref("");
 
@@ -127,6 +126,9 @@ const clearChat = () => {
 
 const isRunning = ref(false);
 const run = async () => {
+  if (isRunning.value) {
+    return;
+  }
   isRunning.value = true;
   try {
     const env = await window.electronAPI.getEnv();
@@ -200,7 +202,7 @@ const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter
   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
     e.preventDefault();
-    if (userInput.value.length > 0) {
+    if (userInput.value.length > 0 && !isRunning.value) {
       run();
     }
   }
