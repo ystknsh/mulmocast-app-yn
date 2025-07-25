@@ -48,12 +48,12 @@
 
           <!-- Template dropdown and create button -->
           <div class="template-dropdown-container flex items-center gap-4">
-            <Select v-model="selectedTemplateFileName" :disabled="isCreatingScript">
+            <Select v-model="selectedTemplateIndex" :disabled="isCreatingScript">
               <SelectTrigger class="w-auto">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem v-for="(template, k) in templates" :key="k" :value="template.filename">
+                <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
                   {{ template.title }}
                 </SelectItem>
               </SelectContent>
@@ -78,7 +78,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { GraphAI } from "graphai";
+import { GraphAI, agentInfoWrapper } from "graphai";
 import { useStreamData } from "@/lib/stream";
 
 import BotMessage from "./chat/bot_message.vue";
@@ -86,14 +86,16 @@ import UserMessage from "./chat/user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
+import { validateSchemaAgent } from "mulmocast/browser";
+// import validateSchemaAgent from "@/lib/validate_schema_agent"; // TODO
 import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 
-import { notifyError } from "@/lib/notification";
+// import { notifyError } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
-import { graphChat } from "./chat/graph";
+import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
@@ -104,7 +106,7 @@ const emit = defineEmits<{
   "update:updateChatMessages": [value: ChatMessage[]];
 }>();
 
-const selectedTemplateFileName = ref("");
+const selectedTemplateIndex = ref(0);
 
 const streamNodes = ["llm"];
 
@@ -123,41 +125,42 @@ const clearChat = () => {
   emit("update:updateChatMessages", []);
 };
 
+const graphAIAgents = {
+  ...agents,
+  openAIAgent,
+  validateSchemaAgent: agentInfoWrapper(validateSchemaAgent),
+};
+const filterMessage = (message, setTime = false) => {
+  if (setTime) {
+    return { role: message.role, content: message.content, time: message.time ?? Date.now() };
+  }
+  return { role: message.role, content: message.content };
+};
+
 const isRunning = ref(false);
 const run = async () => {
   if (isRunning.value) {
     return;
   }
   isRunning.value = true;
+
   try {
     const env = await window.electronAPI.getEnv();
-    const graphai = new GraphAI(
-      graphChat,
-      {
-        ...agents,
-        openAIAgent,
-      },
-      {
-        agentFilters,
-        config: {
-          openAIAgent: {
-            apiKey: env.OPENAI_API_KEY,
-          },
+    const graphai = new GraphAI(graphChat, graphAIAgents, {
+      agentFilters,
+      config: {
+        openAIAgent: {
+          apiKey: env.OPENAI_API_KEY,
         },
       },
-    );
-    const filterMessage = (message, setTime = false) => {
-      if (setTime) {
-        return { role: message.role, content: message.content, time: message.time ?? Date.now() };
-      }
-      return { role: message.role, content: message.content };
-    };
+    });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
     graphai.injectValue("prompt", userInput.value);
     const res = await graphai.run();
+
     const newMessages = [
-      ...messages.map(filterMessage, true),
+      ...messages.map((message) => filterMessage(message, true)),
       { content: userInput.value, role: "user", time: Date.now() },
       filterMessage(res.llm.message, true),
     ];
@@ -171,28 +174,54 @@ const run = async () => {
 };
 
 const isCreatingScript = ref(false);
+
 const createScript = async () => {
+  if (isRunning.value) {
+    return;
+  }
+  isRunning.value = true;
+  userInput.value = templates.value[selectedTemplateIndex.value].systemPrompt;
+  const scriptTemplatePrompt = await window.electronAPI.mulmoHandler(
+    "readTemplatePrompt",
+    templates.value[selectedTemplateIndex.value].filename,
+  );
+
   try {
-    isCreatingScript.value = true;
-    const script = (await window.electronAPI.mulmoHandler(
-      "createMulmoScript",
-      messages.map((m) => ({ role: m.role, content: m.content })),
-      selectedTemplateFileName.value,
-    )) as MulmoScript;
+    const env = await window.electronAPI.getEnv();
+    const graphai = new GraphAI(graphGenerateMulmoScript, graphAIAgents, {
+      agentFilters,
+      config: {
+        openAIAgent: {
+          apiKey: env.OPENAI_API_KEY,
+        },
+      },
+    });
+    graphai.registerCallback(streamPlugin(streamNodes));
+    graphai.injectValue("messages", messages.map(filterMessage));
+    graphai.injectValue("prompt", userInput.value);
+    graphai.injectValue("systemPrompt", scriptTemplatePrompt);
+    const res = await graphai.run();
+
+    const script = res.mulmoScript.data;
     script.beats.map(setRandomBeatId);
     emit("update:updateMulmoScript", script);
+
+    const newMessages = [
+      ...messages.map((message) => filterMessage(message, true)),
+      { content: userInput.value, role: "user", time: Date.now() },
+      { content: JSON.stringify(script ?? {}, null, 2), role: "assistant", time: Date.now() },
+    ];
+    userInput.value = "";
+    emit("update:updateChatMessages", newMessages);
   } catch (error) {
-    console.error("Failed to create script:", error);
-    notifyError("Failed to create script", "Please try again");
-  } finally {
-    isCreatingScript.value = false;
+    console.log(error);
   }
+  isRunning.value = false;
 };
 
 const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
   templates.value = (await window.electronAPI.mulmoHandler("getAvailableTemplates")) as MulmoScriptTemplateFile[];
-  selectedTemplateFileName.value = templates.value[0].filename;
 });
 
 const canCreateScript = computed(() => messages.length > 0 && !isCreatingScript.value);

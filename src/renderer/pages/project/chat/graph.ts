@@ -1,4 +1,5 @@
 import { type GraphData } from "graphai";
+import { mulmoScriptSchema } from "mulmocast/browser";
 
 // just chat
 export const graphChat: GraphData = {
@@ -21,26 +22,21 @@ export const graphChat: GraphData = {
   },
 };
 
-/*
-export const graphAAAData: GraphData = {
+export const graphGenerateMulmoScript: GraphData = {
   version: 0.5,
   nodes: {
-    systemPrompt: {
-      value: "",
+    messages: {
+      value: [],
     },
-    chatMessages: {
-      value: "",
-    },
-    prompt: {
-      value: "",
-    },
+    prompt: {},
+    systemPrompt: {},
     // generate the mulmo script
     mulmoScript: {
       agent: "nestedAgent",
       inputs: {
-        chatMessages: ":chatMessages",
-        systemPrompt: ":systemPrompt",
+        messages: ":messages",
         prompt: ":prompt",
+        systemPrompt: ":systemPrompt",
       },
       graph: {
         loop: {
@@ -53,16 +49,21 @@ export const graphAAAData: GraphData = {
           },
           llm: {
             agent: "openAIAgent",
+            isResult: true,
+            params: {
+              forWeb: true,
+              stream: true,
+              isResult: true,
+              model: "gpt-4o",
+            },
+            console: { after: true },
             inputs: {
+              system: ":systemPrompt",
               prompt: ":prompt",
-              messages: ":chatMessages",
-              params: {
-                system: ":systemPrompt",
-                model: "gpt-4o",
-              },
+              messages: ":messages",
             },
           },
-          validateSchemaAgent: {
+          validateSchema: {
             agent: "validateSchemaAgent",
             inputs: {
               text: ":llm.text.codeBlock()",
@@ -75,7 +76,7 @@ export const graphAAAData: GraphData = {
               return !isValid && counter < 3;
             },
             inputs: {
-              isValid: ":validateSchemaAgent.isValid",
+              isValid: ":validateSchema.isValid",
               counter: ":counter",
             },
           },
@@ -83,9 +84,8 @@ export const graphAAAData: GraphData = {
       },
       isResult: true,
       output: {
-        data: ".validateSchemaAgent.data",
+        data: ".validateSchema.data",
       },
     },
   },
 };
-*/
