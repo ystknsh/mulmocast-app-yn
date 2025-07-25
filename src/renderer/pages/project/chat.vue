@@ -78,8 +78,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { GraphAI } from "graphai";
+import { GraphAI, GraphData } from "graphai";
 import { useStreamData } from "@/lib/stream";
+import { textInputEvent, useChatPlugin } from "@/lib/graphai";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";

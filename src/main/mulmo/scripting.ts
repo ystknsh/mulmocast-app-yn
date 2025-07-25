@@ -13,16 +13,12 @@ const graphData: GraphData = {
     chatMessages: {
       value: "",
     },
-    prompt: {
-      value: "",
-    },
     // generate the mulmo script
     mulmoScript: {
       agent: "nestedAgent",
       inputs: {
         chatMessages: ":chatMessages",
         systemPrompt: ":systemPrompt",
-        prompt: ":prompt",
       },
       graph: {
         loop: {
@@ -36,11 +32,10 @@ const graphData: GraphData = {
           llm: {
             agent: "openAIAgent",
             inputs: {
-              prompt: ":prompt",
-              messages: ":chatMessages",
+              prompt: ":chatMessages",
               params: {
                 system: ":systemPrompt",
-                model: "gpt-4o",
+                model: "gpt-4o-mini",
               },
             },
           },
@@ -78,10 +73,8 @@ export const createMulmoScript = async (messages: ChatMessage[], templateName: s
     openAIAgent,
     validateSchemaAgent,
   });
-  graph.injectValue("chatMessages", messages);
-  graph.injectValue("prompt", readTemplatePrompt(templateName));
-  // graph.injectValue("systemPrompt", "あなたはツンデレ口調でプレゼン用の日本語スクリプトを生成するAIです。テーマに対して、セリフ口調で、ツッコミや驚き、感情を交えたテンポのよい文体で書いてください。セリフは感情豊かに表現し、リズムや間も工夫してください。ユーモアや親しみやすさを忘れずに！");
-  console.log(messages, readTemplatePrompt(templateName));
+  graph.injectValue("chatMessages", messages.map((message) => `${message.role}: ${message.content}`).join("\n"));
+  graph.injectValue("systemPrompt", readTemplatePrompt(templateName));
   const result = await graph.run<{ data: MulmoScript }>();
   return result.mulmoScript.data;
 };
