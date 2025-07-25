@@ -145,8 +145,10 @@ MulmoCastアプリケーションの国際化プロジェクトの進捗を追�
 ### 技術的制約
 - [ ] Vue 3 Composition API使用必須
 - [ ] 既存の`vue-i18n`設定との互換性維持  
-- [ ] 翻訳キー命名規則: `project.{component}.{category}.{specific}`
+- [ ] 翻訳キー命名規則: 最終版構造（`ui.common.{noun}`, `ui.actions.{verb}`, `beat.{type}.{field}`, `parameters.{type}.{field}`）
 - [ ] common.tsは技術用語・固有名詞のみ
+- [ ] プレースホルダー方式の活用（文字列連結禁止）
+- [ ] 役割別キー分離（add/addThingをペアで管理）
 
 ### リスク管理
 - [ ] 作業前のGitバックアップ

@@ -37,32 +37,37 @@ You will improve the MulmoCast app's i18n implementation based on the specified 
   - `project.generate.*`: All items still in English in ja.ts
 
 ### 2. Structure Improvements
-The current structure should better reflect the actual component hierarchy:
+The current structure should follow the new final structure with shared UI elements and role-based key separation:
 
 ```typescript
-// Current (too flat)
-project: {
-  generate: { ... }
-}
+// Current (distributed)
+form: { cancel: "Cancel" }
+project: { generate: { ... } }
+beat: { badge: { ... }, form: { ... } }
 
-// Suggested (component-based)
-project: {
-  editor: {
-    // script_editor.vue related
+// New Structure (shared UI + role-based keys)
+ui: {
+  common: {
+    title: "Title", image: "Image", // shared nouns
   },
-  generate: {
-    // generate.vue related
+  actions: {
+    add: "Add",              // placeholder-free
+    addThing: "Add {thing}", // with placeholder
+    cancel: "Cancel",
+    generate: "Generate",
+    generateThing: "Generate {thing}",
   },
-  beats: {
-    // beats_viewer.vue related
-  },
-  chat: {
-    // chat.vue related
-  },
-  products: {
-    // product_tabs.vue related
+  status: {
+    loading: "Loading...", generating: "Generating...",
   }
-}
+},
+beat: {
+  textSlide: { titleField: ui.common.title }, // reference ui.common
+  actions: { changeBeatTypeFirst: "Change beat type first" }
+},
+parameters: { movieParams: { title: "Movie Parameters" } },
+chat: { title: "AI Assistant Chat" },
+generate: { settingsTitle: "Output Settings & Generation" }
 ```
 
 ## Recommended i18n Task Workflow
@@ -120,15 +125,24 @@ project: {
 
 ### 4. Common Patterns in MulmoCast
 
-#### Action Labels
+#### Action Labels (Role-based Key Separation)
 ```typescript
-actions: {
-  generate: "Generate",
-  regenerate: "Regenerate", 
-  forceRegenerate: "Force Regenerate",
-  cancel: "Cancel",
-  save: "Save",
-  delete: "Delete"
+ui: {
+  actions: {
+    // Placeholder-free actions (standalone verbs)
+    generate: "Generate",
+    cancel: "Cancel", 
+    save: "Save",
+    delete: "Delete",
+    
+    // Placeholder actions (with target object)
+    generateThing: "Generate {thing}",
+    deleteThing: "Delete {thing}",
+    
+    // Usage examples:
+    // t('ui.actions.generate') → "Generate"
+    // t('ui.actions.generateThing', { thing: 'Image' }) → "Generate Image"
+  }
 }
 ```
 
@@ -192,11 +206,12 @@ When implementing i18n for a component:
 
 2. **Don't concatenate translated strings**:
    ```typescript
-   // Bad
-   t('project.generate') + ' ' + t('common.contents')
+   // Bad - String concatenation breaks i18n
+   t('ui.actions.add') + ' ' + t('ui.common.beat')
    
-   // Good
-   t('project.generateContents')
+   // Good - Use placeholder pattern
+   t('ui.actions.addThing', { thing: t('ui.common.beat') })
+   // Results: EN "Add Beat" / JA "ビートを追加"
    ```
 
 3. **Don't forget pluralization**:
@@ -230,7 +245,7 @@ Before:
 </template>
 ```
 
-After:
+After (New Final Structure):
 ```vue
 <script setup>
 import { useI18n } from 'vue-i18n'
@@ -238,29 +253,39 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <h2>{{ t('project.editor.title') }}</h2>
-  <button @click="save">{{ t('project.editor.save') }}</button>
-  <span v-if="error">{{ t('project.editor.saveError') }}</span>
+  <h2>{{ t('ui.common.title') }}</h2>
+  <button @click="save">{{ t('ui.actions.saveThing', { thing: 'Script' }) }}</button>
+  <span v-if="error">{{ t('ui.status.error') }}</span>
 </template>
 ```
 
 Language file additions:
 ```typescript
 // en.ts
-project: {
-  editor: {
-    title: "Script Editor",
-    save: "Save Script",
-    saveError: "Failed to save"
+ui: {
+  common: {
+    title: "Title", // reusable across components
+  },
+  actions: {
+    save: "Save",
+    saveThing: "Save {thing}", // placeholder pattern
+  },
+  status: {
+    error: "Error occurred",
   }
 }
 
-// ja.ts
-project: {
-  editor: {
-    title: "スクリプトエディタ",
-    save: "スクリプトを保存",
-    saveError: "保存に失敗しました"
+// ja.ts  
+ui: {
+  common: {
+    title: "タイトル",
+  },
+  actions: {
+    save: "保存",
+    saveThing: "{thing}を保存", // natural Japanese word order
+  },
+  status: {
+    error: "エラーが発生しました",
   }
 }
 ```
