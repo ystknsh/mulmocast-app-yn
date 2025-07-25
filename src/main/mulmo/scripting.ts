@@ -1,4 +1,4 @@
-import { GraphAI, GraphData } from "graphai";
+import { GraphAI, type GraphData } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { MulmoScript, mulmoScriptSchema, readTemplatePrompt, validateSchemaAgent } from "mulmocast";
 import { openAIAgent } from "@graphai/openai_agent";
