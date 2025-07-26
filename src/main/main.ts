@@ -27,6 +27,7 @@ const createSplashWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
     },
+    icon: path.join(__dirname, "../../images/macoro.png"),
   });
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
