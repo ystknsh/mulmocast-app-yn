@@ -8,7 +8,12 @@
     >
       <div v-for="(message, key) in messages" :key="key">
         <BotMessage :message="message.content" :time="message.time" v-if="message.role === 'assistant'" />
-        <UserMessage :message="message.content" :time="message.time" v-if="message.role === 'user'" />
+        <UserMessage
+          :message="message.content"
+          :time="message.time"
+          v-if="message.role === 'user'"
+          @editUser="() => editUser(key)"
+        />
       </div>
       <UserMessage :message="userInput" v-if="userInput !== ''" />
       <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" />
@@ -240,5 +245,13 @@ const handleKeydown = (e: KeyboardEvent) => {
       run();
     }
   }
+};
+
+const editUser = (index: number) => {
+  userInput.value = messages[index].content;
+
+  const newMessages = [...messages];
+  newMessages.length = index;
+  emit("update:updateChatMessages", newMessages);
 };
 </script>
