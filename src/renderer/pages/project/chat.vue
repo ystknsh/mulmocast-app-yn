@@ -19,7 +19,7 @@
       <!-- Message input field -->
       <div class="chat-input-wrapper">
         <Label class="mb-2">{{ t("project.chat.enterMessage") }} </Label>
-        <div class="chat-input-container transition-colors duration-200 flex justify-between">
+        <div class="chat-input-container transition-colors duration-200 flex justify-between items-center">
           <Textarea
             v-model="userInput"
             :disabled="isRunning"
@@ -27,7 +27,7 @@
             class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0 max-h-48 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2"
             @keydown="handleKeydown"
           />
-          <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning">
+          <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning || noChatText" class="ml-2">
             <Send :size="16" />
           </Button>
         </div>
@@ -46,7 +46,7 @@
 
           <!-- Template dropdown and create button -->
           <div class="template-dropdown-container flex items-center gap-4">
-            <Select v-model="selectedTemplateIndex" :disabled="isCreatingScript">
+            <Select v-model="selectedTemplateIndex" :disabled="isRunning">
               <SelectTrigger class="w-auto">
                 <SelectValue />
               </SelectTrigger>
@@ -56,12 +56,10 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Button size="sm" @click="copyScript" :disabled="!canCreateScript">
-              <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
+            <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning">
               {{ t("project.chat.copyScript") }}
             </Button>
-            <Button size="sm" @click="createScript" :disabled="!canCreateScript">
-              <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
+            <Button size="sm" @click="createScript" :disabled="noChatMessages || noChatText || isRunning">
               {{ t(isCreatingScript ? "project.chat.creating" : "project.chat.createScript") }}
             </Button>
           </div>
@@ -72,7 +70,6 @@
 </template>
 
 <script setup lang="ts">
-import { Loader2 } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -232,7 +229,8 @@ const createScript = async () => {
   isRunning.value = false;
 };
 
-const canCreateScript = computed(() => messages.length > 0 && !isCreatingScript.value);
+const noChatMessages = computed(() => messages.length === 0);
+const noChatText = computed(() => userInput.value.length === 0);
 
 const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter
