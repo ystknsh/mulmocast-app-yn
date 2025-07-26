@@ -53,11 +53,15 @@
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
+                <SelectItem v-for="(template, k) in promptTemplates" :key="k" :value="k">
                   {{ template.title }}
                 </SelectItem>
               </SelectContent>
             </Select>
+            <Button size="sm" @click="copyScript" :disabled="!canCreateScript">
+              <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
+              copy script
+            </Button>
             <Button size="sm" @click="createScript" :disabled="!canCreateScript">
               <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
               {{ isCreatingScript ? "Creating..." : "Create Script" }}
@@ -71,14 +75,14 @@
 
 <script setup lang="ts">
 import { Loader2 } from "lucide-vue-next";
-import { ref, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { GraphAI, agentInfoWrapper } from "graphai";
+import { GraphAI } from "graphai";
 import { useStreamData } from "@/lib/stream";
 
 import BotMessage from "./chat/bot_message.vue";
@@ -87,8 +91,9 @@ import UserMessage from "./chat/user_message.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import { validateSchemaAgent } from "mulmocast/browser";
-// import validateSchemaAgent from "@/lib/validate_schema_agent"; // TODO
-import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
+import type { MulmoScript } from "mulmocast/browser";
+import { promptTemplates, scriptTemplates } from "mulmocast/data";
+
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 
@@ -128,7 +133,7 @@ const clearChat = () => {
 const graphAIAgents = {
   ...agents,
   openAIAgent,
-  validateSchemaAgent: agentInfoWrapper(validateSchemaAgent),
+  validateSchemaAgent,
 };
 const filterMessage = (message, setTime = false) => {
   if (setTime) {
@@ -164,7 +169,7 @@ const run = async () => {
       { content: userInput.value, role: "user", time: Date.now() },
       filterMessage(res.llm.message, true),
     ];
-    console.log(newMessages);
+    //console.log(newMessages);
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
   } catch (error) {
@@ -175,16 +180,22 @@ const run = async () => {
 
 const isCreatingScript = ref(false);
 
+// system prompt and user prompt
+const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
+const copyScript = async () => {
+  const { scriptName, systemPrompt } = promptTemplates[selectedTemplateIndex.value];
+  const scriptTemplate = scriptTemplates.find((template) => {
+    return template.filename === scriptName.split(".")[0];
+  });
+  userInput.value = [specificOutputPrompt, systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
+};
+// end of system prompt
+
 const createScript = async () => {
   if (isRunning.value) {
     return;
   }
   isRunning.value = true;
-  userInput.value = templates.value[selectedTemplateIndex.value].systemPrompt;
-  const scriptTemplatePrompt = await window.electronAPI.mulmoHandler(
-    "readTemplatePrompt",
-    templates.value[selectedTemplateIndex.value].filename,
-  );
 
   try {
     const env = await window.electronAPI.getEnv();
@@ -199,7 +210,8 @@ const createScript = async () => {
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
     graphai.injectValue("prompt", userInput.value);
-    graphai.injectValue("systemPrompt", scriptTemplatePrompt);
+    // graphai.injectValue("systemPrompt", scriptTemplatePrompt);
+    graphai.injectValue("systemPrompt", specificOutputPrompt);
     const res = await graphai.run();
 
     const script = res.mulmoScript.data;
@@ -218,11 +230,6 @@ const createScript = async () => {
   }
   isRunning.value = false;
 };
-
-const templates = ref<MulmoScriptTemplateFile[]>([]);
-onMounted(async () => {
-  templates.value = (await window.electronAPI.mulmoHandler("getAvailableTemplates")) as MulmoScriptTemplateFile[];
-});
 
 const canCreateScript = computed(() => messages.length > 0 && !isCreatingScript.value);
 

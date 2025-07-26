@@ -1,5 +1,12 @@
 import { type GraphData } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
+// import { zodToJsonSchema } from "zod-to-json-schema";
+
+/*
+const defaultSchema = zodToJsonSchema(mulmoScriptSchema, {
+  strictUnions: true,
+});
+*/
 
 // just chat
 export const graphChat: GraphData = {
@@ -47,6 +54,20 @@ export const graphGenerateMulmoScript: GraphData = {
             value: 0,
             update: ":counter.add(1)",
           },
+          messages: {
+            update: ":newMessages.array",
+          },
+          newMessages: {
+            agent: "pushAgent",
+            inputs: {
+              array: ":messages",
+              items: [{ role: "user", content: ":prompt" }, ":llm.message"],
+            },
+            console: { after: true },
+          },
+          prompt: {
+            update: ":validateSchema.error",
+          },
           llm: {
             agent: "openAIAgent",
             isResult: true,
@@ -56,16 +77,30 @@ export const graphGenerateMulmoScript: GraphData = {
               isResult: true,
               model: "gpt-4o",
             },
-            console: { after: true },
+            console: { before: true },
             inputs: {
               system: ":systemPrompt",
-              prompt: ":prompt",
+              prompt: ["If there were errors in the previous generation, fix them!! Perfect.", ":prompt"],
               messages: ":messages",
+              /*
+              response_format: {
+                type: "json_schema" as const,
+                json_schema: {
+                  name: "mulmoScript",
+                  schema: {
+                    type: "object",
+                    properties: defaultSchema.properties
+                  }
+                }
+                }
+              */
             },
           },
           validateSchema: {
             agent: "validateSchemaAgent",
+            console: { after: true },
             inputs: {
+              // text: ":llm.text",
               text: ":llm.text.codeBlock()",
               schema: mulmoScriptSchema,
             },

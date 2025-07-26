@@ -5,8 +5,6 @@ import {
   pdf,
   captions,
   updateNpmRoot,
-  readTemplatePrompt,
-  getAvailablePromptTemplates,
   audioFilePath,
   movieFilePath,
   addSessionProgressCallback,
@@ -38,13 +36,6 @@ import {
   mulmoReferenceImagesFiles,
 } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
-
-// from ffprobePath
-// import os from "os";
-// const platform = os.platform();
-// const arch = os.arch();
-// const command = platform === "win32" ? "ffprobe.exe" : "ffprobe";
-// end of ffprobePath
 
 const isDev = !app.isPackaged;
 
@@ -289,10 +280,6 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
   return buffer.buffer;
 };
 
-export const mulmoReadTemplatePrompt = (templateName: string) => {
-  return readTemplatePrompt(templateName);
-};
-
 export const mulmoReferenceImageUpload = async (
   projectId: string,
   dirKey: string,
@@ -386,10 +373,6 @@ const __mulmoImageFetchURL = async (
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
   try {
     switch (method) {
-      case "readTemplatePrompt":
-        return mulmoReadTemplatePrompt(args[0]);
-      case "getAvailableTemplates":
-        return getAvailablePromptTemplates();
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
       case "mulmoImageGenerate":
