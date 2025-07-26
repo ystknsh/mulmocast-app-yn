@@ -36,14 +36,14 @@ export const graphGenerateMulmoScript: GraphData = {
       value: [],
     },
     prompt: {},
-    systemPrompt: {},
+    // systemPrompt: {},
     // generate the mulmo script
     mulmoScript: {
       agent: "nestedAgent",
       inputs: {
         messages: ":messages",
         prompt: ":prompt",
-        systemPrompt: ":systemPrompt",
+        // systemPrompt: ":systemPrompt",
       },
       graph: {
         loop: {
@@ -66,7 +66,7 @@ export const graphGenerateMulmoScript: GraphData = {
             console: { after: true },
           },
           prompt: {
-            update: ":validateSchema.error",
+            update: ":nextPrompt.text",
           },
           llm: {
             agent: "openAIAgent",
@@ -79,8 +79,8 @@ export const graphGenerateMulmoScript: GraphData = {
             },
             console: { before: true },
             inputs: {
-              system: ":systemPrompt",
-              prompt: ["If there were errors in the previous generation, fix them!! Perfect.", ":prompt"],
+              // system: ":systemPrompt",
+              prompt: ":prompt",
               messages: ":messages",
               /*
               response_format: {
@@ -105,6 +105,12 @@ export const graphGenerateMulmoScript: GraphData = {
               schema: mulmoScriptSchema,
             },
             isResult: true,
+          },
+          nextPrompt: {
+            agent: "copyAgent",
+            inputs: {
+              text: "Those are zod errors in the previous generation, fix them!! Perfect.\n\n${:validateSchema.error}",
+            },
           },
           continue: {
             agent: ({ isValid, counter }) => {

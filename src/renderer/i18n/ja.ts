@@ -138,6 +138,15 @@ const lang = {
         details: "8 slides - 1920x1080 resolution",
       },
     },
+    chat: {
+      enterMessage: "メッセージを入力してください:",
+      clearChat: "チャットリセット",
+      createButtonDescription:
+        "スクリプトを作成するには、テンプレートを選択して「チャットへコピー」「スクリプト作成」ボタンを押してください。",
+      copyScript: "チャットへコピー",
+      creating: "作成中...",
+      createScript: "スクリプト作成",
+    },
   },
   beat: {
     videoPreview: "動画プレビュー",

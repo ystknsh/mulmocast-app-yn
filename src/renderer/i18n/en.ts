@@ -138,6 +138,15 @@ const lang = {
         details: "8 slides - 1920x1080 resolution",
       },
     },
+    chat: {
+      enterMessage: "Enter your message:",
+      clearChat: "Clear chat",
+      createButtonDescription:
+        "To create a script with the content so far, please select a template and press the Create button.",
+      copyScript: "Copy script",
+      creating: "Creating...",
+      createScript: "Create Script",
+    },
   },
   beat: {
     videoPreview: "Video Preview",
