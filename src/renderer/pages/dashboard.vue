@@ -165,8 +165,8 @@ const sortedProjects = computed(() => {
       const bTime = dayjs(b.metadata.updatedAt).valueOf();
       return sortOrder.value === "desc" ? bTime - aTime : aTime - bTime;
     } else {
-      const aTitle = a.script.title?.toLowerCase() || "";
-      const bTitle = b.script.title.toLowerCase();
+      const aTitle = a.script?.title?.toLowerCase() || "";
+      const bTitle = b.script?.title?.toLowerCase();
       const comparison = aTitle.localeCompare(bTitle);
       return sortOrder.value === "desc" ? -comparison : comparison;
     }
@@ -200,7 +200,7 @@ const handleCancelDialog = () => {
 };
 
 const handleDeleteProject = async (project: Project) => {
-  if (confirm(`Are you sure you want to delete "${project.script.title}"`)) {
+  if (confirm(`Are you sure you want to delete "${project?.script?.title}"`)) {
     try {
       await projectApi.delete(project.metadata.id);
       await loadProjects();
