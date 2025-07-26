@@ -66,7 +66,7 @@ export const graphGenerateMulmoScript: GraphData = {
             console: { after: true },
           },
           prompt: {
-            update: ":validateSchema.error",
+             update: ":nextPrompt.array",
           },
           llm: {
             agent: "openAIAgent",
@@ -105,6 +105,16 @@ export const graphGenerateMulmoScript: GraphData = {
               schema: mulmoScriptSchema,
             },
             isResult: true,
+          },
+          nextPrompt: {
+            agent: "copyAgent",
+            inputs: {
+              array: [
+                "Those are zod errors in the previous generation, fix them!! Perfect.",
+                "",
+                ":validateSchema.error",
+              ],
+            },
           },
           continue: {
             agent: ({ isValid, counter }) => {
