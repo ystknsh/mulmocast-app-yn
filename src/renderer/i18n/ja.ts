@@ -140,7 +140,7 @@ const lang = {
     },
     chat: {
       enterMessage: "メッセージを入力してください:",
-      clearChat: "Clear chat",
+      clearChat: "チャットリセット",
       createButtonDescription:
         "スクリプトを作成するには、テンプレートを選択して「チャットへコピー」「スクリプト作成」ボタンを押してください。",
       copyScript: "チャットへコピー",
