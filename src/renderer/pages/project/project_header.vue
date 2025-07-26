@@ -4,7 +4,7 @@
       <RouterLink to="/">
         <Button variant="ghost" size="sm">
           <ArrowLeft :size="16" class="mr-2" />
-          Back
+          {{ t("project.header.back") }}
         </Button>
       </RouterLink>
       <div>
@@ -58,7 +58,7 @@
     <div v-if="isDevelopment">
       <Button variant="outline" size="sm" @click="$emit('openProjectFolder')">
         <FolderOpen :size="16" class="mr-1" />
-        Open Project Folder
+        {{ t("project.header.openProjectFolder") }}
       </Button>
     </div>
   </div>
@@ -73,6 +73,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "../../../shared/constants";
 import type { MulmoScript } from "mulmocast/browser";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   mulmoScript?: MulmoScript | null;
