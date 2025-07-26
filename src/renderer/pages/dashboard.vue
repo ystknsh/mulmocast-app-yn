@@ -79,6 +79,7 @@
             :project-thumbnails="projectThumbnails"
             :thumbnails-loading="thumbnailsLoading"
             @delete="handleDeleteProject"
+            @view="handleViewProject"
           />
         </div>
 
@@ -89,6 +90,7 @@
             :project-thumbnails="projectThumbnails"
             :thumbnails-loading="thumbnailsLoading"
             @delete="handleDeleteProject"
+            @view="handleViewProject"
           />
         </div>
       </div>
@@ -102,6 +104,16 @@
       @create="handleCreateProject"
       @cancel="handleCancelDialog"
     />
+
+    <!-- Viewer Dialog -->
+    <Dialog v-model:open="isViewerOpen">
+      <DialogContent class="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>{{ selectedProject?.script?.title || INITIAL_TITLE }}</DialogTitle>
+        </DialogHeader>
+        <MulmoViewer v-if="selectedProject" :project="selectedProject" />
+      </DialogContent>
+    </Dialog>
   </Layout>
 </template>
 
@@ -119,6 +131,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
 import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import MulmoViewer from "@/components/mulmo_viewer.vue";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -132,6 +146,8 @@ const creating = ref(false);
 const newProjectName = ref("");
 const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
+const isViewerOpen = ref(false);
+const selectedProject = ref<Project | null>(null);
 
 const loadProjects = async () => {
   projects.value = await projectApi.list();
@@ -209,6 +225,11 @@ const handleDeleteProject = async (project: Project) => {
       alert("Failed to delete project. Please try again.");
     }
   }
+};
+
+const handleViewProject = async (project: Project) => {
+  selectedProject.value = project;
+  isViewerOpen.value = true;
 };
 
 const updateSort = (value: string) => {
