@@ -26,6 +26,8 @@
         <Label class="mb-2">{{ t("project.chat.enterMessage") }} </Label>
         <div class="chat-input-container transition-colors duration-200 flex justify-between items-center">
           <Textarea
+            ref="textareaRef"
+            autofocus
             v-model="userInput"
             :disabled="isRunning"
             placeholder="ex) Thank you very much! Please proceed with the creation."
@@ -75,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, useTemplateRef } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -119,6 +121,7 @@ const selectedTemplateIndex = ref(0);
 const streamNodes = ["llm"];
 
 const userInput = ref("");
+const textareaRef = useTemplateRef("textareaRef")
 
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
@@ -248,6 +251,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 };
 
 const editUser = (index: number) => {
+  textareaRef.value.focus();
   userInput.value = messages[index].content;
 
   const newMessages = [...messages];

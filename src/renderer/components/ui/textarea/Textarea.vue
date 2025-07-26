@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue";
+import { type HTMLAttributes, useTemplateRef } from "vue";
 import { useVModel } from "@vueuse/core";
 import { cn } from "@/lib/utils";
 
@@ -17,10 +17,16 @@ const modelValue = useVModel(props, "modelValue", emits, {
   passive: true,
   defaultValue: props.defaultValue,
 });
+const textareaRef = useTemplateRef("textareaRef")
+
+defineExpose({
+  focus: () => textareaRef.value?.focus(),
+});
 </script>
 
 <template>
   <textarea
+    ref="textareaRef"
     v-model="modelValue"
     data-slot="textarea"
     :class="
