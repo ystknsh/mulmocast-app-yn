@@ -105,6 +105,7 @@ import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
+import { defaultSchema } from "./chat/utils";
 
 const { t } = useI18n();
 const { messages = [] } = defineProps<{
@@ -190,9 +191,11 @@ const isCreatingScript = ref(false);
 // const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
   const { scriptName, systemPrompt } = promptTemplates[selectedTemplateIndex.value];
-  const scriptTemplate = scriptTemplates.find((template) => {
-    return template.filename === scriptName.split(".")[0];
-  });
+  const scriptTemplate = scriptName
+    ? scriptTemplates.find((template) => {
+        return template.filename === scriptName.split(".")[0];
+      })
+    : defaultSchema.properties;
   userInput.value = [systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
 };
 // end of system prompt
