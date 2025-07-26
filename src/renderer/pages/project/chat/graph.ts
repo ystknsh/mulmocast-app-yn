@@ -66,7 +66,7 @@ export const graphGenerateMulmoScript: GraphData = {
             console: { after: true },
           },
           prompt: {
-             update: ":nextPrompt.array",
+            update: ":nextPrompt.array",
           },
           llm: {
             agent: "openAIAgent",
