@@ -53,7 +53,7 @@
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
+                <SelectItem v-for="(template, k) in promptTemplates" :key="k" :value="k">
                   {{ template.title }}
                 </SelectItem>
               </SelectContent>
@@ -82,7 +82,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { GraphAI, agentInfoWrapper } from "graphai";
+import { GraphAI } from "graphai";
 import { useStreamData } from "@/lib/stream";
 
 import BotMessage from "./chat/bot_message.vue";
@@ -91,8 +91,9 @@ import UserMessage from "./chat/user_message.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import { validateSchemaAgent } from "mulmocast/browser";
-// import validateSchemaAgent from "@/lib/validate_schema_agent"; // TODO
 import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
+import { promptTemplates, scriptTemplates } from "mulmocast/data";
+
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 
@@ -132,7 +133,7 @@ const clearChat = () => {
 const graphAIAgents = {
   ...agents,
   openAIAgent,
-  validateSchemaAgent: agentInfoWrapper(validateSchemaAgent),
+  validateSchemaAgent,
 };
 const filterMessage = (message, setTime = false) => {
   if (setTime) {
@@ -228,10 +229,10 @@ const specificOutputPrompt = `The output should follow the JSON schema specified
 const copyScript = async () => {
   const scriptTemplatePrompt = await window.electronAPI.mulmoHandler(
     "readTemplatePrompt",
-    templates.value[selectedTemplateIndex.value].filename,
+    promptTemplates[selectedTemplateIndex.value].filename,
   );
 
-  // userInput.value = templates.value[selectedTemplateIndex.value].systemPrompt;
+  // userInput.value = promptTemplates[selectedTemplateIndex.value].systemPrompt;
   userInput.value = scriptTemplatePrompt;
 };
 const createScript = async () => {
@@ -239,7 +240,7 @@ const createScript = async () => {
     return;
   }
   isRunning.value = true;
-  userInput.value = templates.value[selectedTemplateIndex.value].systemPrompt;
+  userInput.value = promptTemplates[selectedTemplateIndex.value].systemPrompt;
 
   try {
     const env = await window.electronAPI.getEnv();
@@ -274,11 +275,6 @@ const createScript = async () => {
   }
   isRunning.value = false;
 };
-
-const templates = ref<MulmoScriptTemplateFile[]>([]);
-onMounted(async () => {
-  templates.value = (await window.electronAPI.mulmoHandler("getAvailableTemplates")) as MulmoScriptTemplateFile[];
-});
 
 const canCreateScript = computed(() => messages.length > 0 && !isCreatingScript.value);
 
