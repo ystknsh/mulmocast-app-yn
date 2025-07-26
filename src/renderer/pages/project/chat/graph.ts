@@ -54,6 +54,20 @@ export const graphGenerateMulmoScript: GraphData = {
             value: 0,
             update: ":counter.add(1)",
           },
+          messages: {
+            update: ":newMessages.array",
+          },
+          newMessages: {
+            agent: "pushAgent",
+            inputs: {
+              array: ":messages",
+              items: [{ role: "user", content: ":prompt"}, ":llm.message"],
+            },
+            console: { after: true },
+          },
+          prompt: {
+            update: ":validateSchema.error"
+          },
           llm: {
             agent: "openAIAgent",
             isResult: true,
@@ -63,10 +77,13 @@ export const graphGenerateMulmoScript: GraphData = {
               isResult: true,
               model: "gpt-4o",
             },
-            console: { after: true },
+            console: { before: true },
             inputs: {
               system: ":systemPrompt",
-              prompt: ":prompt",
+              prompt: [
+                "If there were errors in the previous generation, fix them!! Perfect.",
+                ":prompt"
+              ],
               messages: ":messages",
               /*
               response_format: {
@@ -84,7 +101,7 @@ export const graphGenerateMulmoScript: GraphData = {
           },
           validateSchema: {
             agent: "validateSchemaAgent",
-            console: { before: true },
+            console: { after: true },
             inputs: {
               // text: ":llm.text",
               text: ":llm.text.codeBlock()",
