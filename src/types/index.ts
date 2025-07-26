@@ -8,7 +8,6 @@ export type ChatMessage = {
 
 export type ProjectMetadata = {
   id: string;
-  title: string;
   description?: string;
   createdAt: string;
   updatedAt: string;
@@ -22,7 +21,7 @@ export type ProjectMetadata = {
 };
 export type Project = {
   metadata: ProjectMetadata;
-  script: MulmoScript | null;
+  script: Partial<MulmoScript> | null;
 };
 
 export type MulmoProgressLog<T = unknown> = {
