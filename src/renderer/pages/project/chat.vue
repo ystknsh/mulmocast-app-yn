@@ -121,7 +121,7 @@ const selectedTemplateIndex = ref(0);
 const streamNodes = ["llm"];
 
 const userInput = ref("");
-const textareaRef = useTemplateRef("textareaRef")
+const textareaRef = useTemplateRef("textareaRef");
 
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [

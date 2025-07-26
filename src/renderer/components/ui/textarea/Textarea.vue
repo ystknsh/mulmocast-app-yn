@@ -17,7 +17,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
   passive: true,
   defaultValue: props.defaultValue,
 });
-const textareaRef = useTemplateRef("textareaRef")
+const textareaRef = useTemplateRef("textareaRef");
 
 defineExpose({
   focus: () => textareaRef.value?.focus(),
