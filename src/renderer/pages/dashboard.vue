@@ -132,7 +132,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
 import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import MulmoViewer from "@/components/mulmo_viewer.vue";
 
 const router = useRouter();
