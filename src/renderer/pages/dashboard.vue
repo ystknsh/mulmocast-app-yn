@@ -118,7 +118,7 @@ import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
-import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
+import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -165,8 +165,8 @@ const sortedProjects = computed(() => {
       const bTime = dayjs(b.metadata.updatedAt).valueOf();
       return sortOrder.value === "desc" ? bTime - aTime : aTime - bTime;
     } else {
-      const aTitle = a.metadata.title.toLowerCase();
-      const bTitle = b.metadata.title.toLowerCase();
+      const aTitle = a.script.title?.toLowerCase() || "";
+      const bTitle = b.script.title.toLowerCase();
       const comparison = aTitle.localeCompare(bTitle);
       return sortOrder.value === "desc" ? -comparison : comparison;
     }
@@ -174,7 +174,7 @@ const sortedProjects = computed(() => {
 });
 
 const handleCreateProject = async () => {
-  const title = newProjectName.value.trim() || "[untitled]";
+  const title = newProjectName.value.trim() || INITIAL_TITLE;
 
   try {
     creating.value = true;
@@ -200,7 +200,7 @@ const handleCancelDialog = () => {
 };
 
 const handleDeleteProject = async (project: Project) => {
-  if (confirm(`Are you sure you want to delete "${project.metadata.title}"?`)) {
+  if (confirm(`Are you sure you want to delete "${project.script.title}"`)) {
     try {
       await projectApi.delete(project.metadata.id);
       await loadProjects();

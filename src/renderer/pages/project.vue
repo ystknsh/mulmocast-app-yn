@@ -25,28 +25,15 @@
         </div>
 
         <!-- Header Section -->
-        <div v-if="hasProjectData" class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <RouterLink to="/">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft :size="16" class="mr-2" />
-                Back
-              </Button>
-            </RouterLink>
-            <div>
-              <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project?.title }}
-              </h1>
-              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
-            </div>
-          </div>
-          <div v-if="isDevelopment">
-            <Button variant="outline" size="sm" @click="openProjectFolder">
-              <FolderOpen :size="16" class="mr-1" />
-              Open Project Folder
-            </Button>
-          </div>
-        </div>
+        <ProjectHeader
+          v-if="hasProjectData"
+          :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
+          :selectedTheme="selectedTheme"
+          :getHeaderSize="getHeaderSize"
+          :isDevelopment="isDevelopment"
+          @openProjectFolder="openProjectFolder"
+          @updateMulmoScript="handleUpdateScriptFromHeader"
+        />
 
         <!-- 3 Split Layout -->
         <div class="grid grid-cols-1 gap-4 h-auto lg:h-[calc(100vh-180px)] relative" :class="gridLayoutClass">
@@ -305,7 +292,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
 import {
-  ArrowLeft,
   Code2,
   Settings,
   Play,
@@ -317,7 +303,6 @@ import {
   ChevronUp,
   Lightbulb,
   Bot,
-  FolderOpen,
   PanelLeftClose,
   PanelLeftOpen,
   PanelRightClose,
@@ -344,6 +329,7 @@ import ScriptEditor from "./project/script_editor.vue";
 import BeatsViewer from "./project/beats_viewer.vue";
 import Generate from "./project/generate.vue";
 import ProductTabs from "./project/product_tabs.vue";
+import ProjectHeader from "./project/project_header.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
 
@@ -415,6 +401,10 @@ const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
   notifySuccess("Script created successfully 🎉");
+};
+
+const handleUpdateScriptFromHeader = (script: MulmoScript) => {
+  mulmoScriptHistoryStore.updateMulmoScript(script);
 };
 
 const saveProjectMetadata = useDebounceFn(async (project: ProjectMetadata) => {

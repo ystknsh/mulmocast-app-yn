@@ -39,6 +39,7 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
           html: {},
           imageReference: {},
           soundEffect: {},
+          lipSync: {},
         },
         beatGenerate: {
           audio: {},
@@ -49,6 +50,7 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
           html: {},
           imageReference: {},
           soundEffect: {},
+          lipSync: {},
         },
       };
     }

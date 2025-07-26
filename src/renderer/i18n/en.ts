@@ -66,6 +66,10 @@ const lang = {
     advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
   },
   project: {
+    header: {
+      back: "Back",
+      openProjectFolder: "Open Project Folder",
+    },
     generate: {
       generateContents: "Generate Contents",
       movie: "Movie",

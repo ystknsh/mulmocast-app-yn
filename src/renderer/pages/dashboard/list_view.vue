@@ -14,7 +14,7 @@
                 <img
                   :src="mediaUri(projectThumbnails[project.metadata.id])"
                   class="w-full h-full object-contain"
-                  :alt="project.metadata.title"
+                  :alt="project.script.title || INITIAL_TITLE"
                 />
               </template>
               <template v-else>
@@ -23,7 +23,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-2">
-                <h3 class="font-semibold text-gray-900">{{ project.metadata.title }}</h3>
+                <h3 class="font-semibold text-gray-900">{{ project.script.title || INITIAL_TITLE }}</h3>
               </div>
               <div class="flex items-center space-x-1 text-sm text-gray-500 mt-1">
                 <Calendar class="w-4 h-4" />
@@ -67,6 +67,7 @@ import { formatDate, mediaUri } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMulmoEventStore } from "@/store/mulmo_event";
 import { Skeleton } from "@/components/ui/skeleton";
+import { INITIAL_TITLE } from "../../../shared/constants";
 
 const emit = defineEmits<{
   delete: [project: Project];
