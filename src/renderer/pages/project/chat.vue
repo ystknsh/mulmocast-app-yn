@@ -182,13 +182,13 @@ const run = async () => {
 const isCreatingScript = ref(false);
 
 // system prompt and user prompt
-const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
+// const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
   const { scriptName, systemPrompt } = promptTemplates[selectedTemplateIndex.value];
   const scriptTemplate = scriptTemplates.find((template) => {
     return template.filename === scriptName.split(".")[0];
   });
-  userInput.value = [specificOutputPrompt, systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
+  userInput.value = [systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
 };
 // end of system prompt
 
@@ -212,7 +212,7 @@ const createScript = async () => {
     graphai.injectValue("messages", messages.map(filterMessage));
     graphai.injectValue("prompt", userInput.value);
     // graphai.injectValue("systemPrompt", scriptTemplatePrompt);
-    graphai.injectValue("systemPrompt", specificOutputPrompt);
+    // graphai.injectValue("systemPrompt", specificOutputPrompt);
     const res = await graphai.run();
 
     const script = res.mulmoScript.data;
