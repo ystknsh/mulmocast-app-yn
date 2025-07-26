@@ -6,7 +6,7 @@ import {
   captions,
   updateNpmRoot,
   readTemplatePrompt,
-  getAvailableTemplates,
+  getAvailablePromptTemplates,
   audioFilePath,
   movieFilePath,
   addSessionProgressCallback,
@@ -389,7 +389,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "readTemplatePrompt":
         return mulmoReadTemplatePrompt(args[0]);
       case "getAvailableTemplates":
-        return getAvailableTemplates();
+        return getAvailablePromptTemplates();
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
       case "mulmoImageGenerate":
