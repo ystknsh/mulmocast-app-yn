@@ -18,7 +18,7 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
-        <Label class="mb-2"> Enter your message: </Label>
+        <Label class="mb-2">{{ t("project.chat.enterMessage") }} </Label>
         <div
           class="chat-input-container border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2 transition-colors duration-200 flex justify-between"
         >
@@ -36,14 +36,14 @@
       </div>
 
       <div>
-        <Button @click="clearChat" variant="outline" size="xs"> clear chat </Button>
+        <Button @click="clearChat" variant="outline" size="xs"> {{ t("project.chat.clearChat") }} </Button>
       </div>
 
       <!-- Template selection section -->
       <div class="template-section">
         <div class="rounded-lg p-1">
           <Label class="mb-3 block">
-            To create a script with the content so far, please select a template and press the Create button.
+            {{ t("project.chat.createButtonDescription") }}
           </Label>
 
           <!-- Template dropdown and create button -->
@@ -60,11 +60,11 @@
             </Select>
             <Button size="sm" @click="copyScript" :disabled="!canCreateScript">
               <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
-              copy script
+              {{ t("project.chat.copyScript") }}
             </Button>
             <Button size="sm" @click="createScript" :disabled="!canCreateScript">
               <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
-              {{ isCreatingScript ? "Creating..." : "Create Script" }}
+              {{ t(isCreatingScript ? "project.chat.creating" : "project.chat.createScript") }}
             </Button>
           </div>
         </div>
@@ -85,6 +85,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { GraphAI } from "graphai";
 import { useStreamData } from "@/lib/stream";
 
+import { useI18n } from "vue-i18n";
+
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 
@@ -102,6 +104,7 @@ import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
 
+const { t } = useI18n();
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
 }>();
