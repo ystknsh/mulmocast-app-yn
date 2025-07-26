@@ -246,7 +246,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
+                <MulmoViewer :videoUrl="videoUrl" @playVideo="playVideo" />
               </CardContent>
             </Card>
 
@@ -328,7 +328,7 @@ import PromptGuide from "./project/prompt_guide.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import BeatsViewer from "./project/beats_viewer.vue";
 import Generate from "./project/generate.vue";
-import ProductTabs from "./project/product_tabs.vue";
+import MulmoViewer from "../components/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
