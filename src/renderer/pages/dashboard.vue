@@ -110,7 +110,7 @@
       <DialogContent class="max-w-4xl">
         <div class="sr-only">
           <DialogTitle>Mulmo Viewer</DialogTitle>
-          <DialogDescription>Click outside to close</DialogDescription>
+          <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>
         </div>
         <MulmoViewer v-if="selectedProject" :project="selectedProject" />
       </DialogContent>
