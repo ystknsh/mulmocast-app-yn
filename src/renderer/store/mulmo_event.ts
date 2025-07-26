@@ -50,6 +50,7 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
           html: {},
           imageReference: {},
           soundEffect: {},
+          lipSync: {},
         },
       };
     }
