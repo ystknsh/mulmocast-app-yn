@@ -151,13 +151,8 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
 watch(
   () => props.project,
   async (newProject, oldProject) => {
-    console.log("watch🍺");
-    console.log(newProject, oldProject);
     if (newProject && newProject.metadata?.id && newProject.metadata.id !== oldProject?.metadata?.id) {
-      console.log("download🍺");
       const buffer = (await window.electronAPI.mulmoHandler("downloadFile", newProject.metadata.id, "movie")) as Buffer;
-      console.log("buffer🍺");
-      console.log(buffer);
       videoUrl.value = bufferToUrl(buffer, "video/mp4");
     }
   },
