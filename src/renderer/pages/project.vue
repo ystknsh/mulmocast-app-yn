@@ -290,10 +290,8 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "../../shared/constants";
 
 import {
-  ArrowLeft,
   Code2,
   Settings,
   Play,
@@ -305,7 +303,6 @@ import {
   ChevronUp,
   Lightbulb,
   Bot,
-  FolderOpen,
   PanelLeftClose,
   PanelLeftOpen,
   PanelRightClose,
