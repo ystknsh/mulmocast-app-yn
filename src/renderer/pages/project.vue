@@ -246,7 +246,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MulmoViewer v-if="project" :project="project" />
+                <MulmoViewer v-if="project" :project="project" ref="mulmoViewerRef" />
               </CardContent>
             </Card>
 
@@ -286,7 +286,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, useTemplateRef } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -387,6 +387,8 @@ const validationMessage = ref("");
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
+
+const mulmoViewerRef = useTemplateRef<typeof MulmoViewer>("mulmoViewerRef");
 
 // Load project data on mount
 onMounted(async () => {
@@ -548,6 +550,10 @@ const logContainer = ref<HTMLElement | null>(null);
 watch(
   () => mulmoEventStore.mulmoEvent[projectId.value],
   async (mulmoEvent) => {
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+      await mulmoViewerRef.value?.updateResources();
+    }
+
     // generate image
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
       await downloadImageFiles();

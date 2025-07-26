@@ -148,14 +148,23 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
 
   URL.revokeObjectURL(url);
 };
+
+const updateResources = async () => {
+  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+  videoUrl.value = bufferToUrl(buffer, "video/mp4");
+};
+
 watch(
   () => props.project,
   async (newProject, oldProject) => {
     if (newProject && newProject.metadata?.id && newProject.metadata.id !== oldProject?.metadata?.id) {
-      const buffer = (await window.electronAPI.mulmoHandler("downloadFile", newProject.metadata.id, "movie")) as Buffer;
-      videoUrl.value = bufferToUrl(buffer, "video/mp4");
+      await updateResources();
     }
   },
   { immediate: true },
 );
+
+defineExpose({
+  updateResources,
+});
 </script>
