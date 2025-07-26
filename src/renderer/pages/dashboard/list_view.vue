@@ -51,7 +51,7 @@
               <Eye class="w-5 h-5" />
             </Button>
             <Button
-              @click.stop="deleteProject(project)"
+              @click.stop.prevent="deleteProject($event, project)"
               variant="ghost"
               size="icon"
               class="text-gray-400 hover:text-red-600"
@@ -87,7 +87,9 @@ defineProps<{
 
 const mulmoEventStore = useMulmoEventStore();
 
-const deleteProject = (project: Project) => {
+const deleteProject = (event: MouseEvent, project: Project) => {
+  event.preventDefault();
+  event.stopPropagation();
   emit("delete", project);
 };
 
