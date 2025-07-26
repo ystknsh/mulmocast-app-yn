@@ -61,12 +61,12 @@ export const graphGenerateMulmoScript: GraphData = {
             agent: "pushAgent",
             inputs: {
               array: ":messages",
-              items: [{ role: "user", content: ":prompt"}, ":llm.message"],
+              items: [{ role: "user", content: ":prompt" }, ":llm.message"],
             },
             console: { after: true },
           },
           prompt: {
-            update: ":validateSchema.error"
+            update: ":validateSchema.error",
           },
           llm: {
             agent: "openAIAgent",
@@ -80,10 +80,7 @@ export const graphGenerateMulmoScript: GraphData = {
             console: { before: true },
             inputs: {
               system: ":systemPrompt",
-              prompt: [
-                "If there were errors in the previous generation, fix them!! Perfect.",
-                ":prompt"
-              ],
+              prompt: ["If there were errors in the previous generation, fix them!! Perfect.", ":prompt"],
               messages: ":messages",
               /*
               response_format: {
