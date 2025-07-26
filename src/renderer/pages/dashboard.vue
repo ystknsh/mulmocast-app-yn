@@ -108,9 +108,10 @@
     <!-- Viewer Dialog -->
     <Dialog v-model:open="isViewerOpen">
       <DialogContent class="max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{{ selectedProject?.script?.title || INITIAL_TITLE }}</DialogTitle>
-        </DialogHeader>
+        <div class="sr-only">
+          <DialogTitle>Mulmo Viewer</DialogTitle>
+          <DialogDescription>Click outside to close</DialogDescription>
+        </div>
         <MulmoViewer v-if="selectedProject" :project="selectedProject" />
       </DialogContent>
     </Dialog>
