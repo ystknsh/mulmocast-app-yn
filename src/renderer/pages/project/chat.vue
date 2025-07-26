@@ -4,7 +4,7 @@
     <div
       ref="chatHistoryRef"
       class="bg-white border rounded-lg p-4 h-80 lg:flex-1 overflow-y-auto space-y-4"
-      v-show="messages.length > 0"
+      v-show="messages.length > 0 || isRunning"
     >
       <div v-for="(message, key) in messages" :key="key">
         <BotMessage :message="message.content" :time="message.time" v-if="message.role === 'assistant'" />
