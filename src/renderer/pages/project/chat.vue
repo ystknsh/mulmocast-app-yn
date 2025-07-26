@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { Loader2 } from "lucide-vue-next";
-import { ref, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -91,7 +91,7 @@ import UserMessage from "./chat/user_message.vue";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import { validateSchemaAgent } from "mulmocast/browser";
-import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast/browser";
+import type { MulmoScript } from "mulmocast/browser";
 import { promptTemplates, scriptTemplates } from "mulmocast/data";
 
 import { ChatMessage } from "@/types";
