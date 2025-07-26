@@ -1,6 +1,9 @@
 import { type MulmoBeat } from "mulmocast";
+import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "./constants";
 
-export const initMulmoScript = {
+export const initMulmoScript = (title: string) => ({
+  title: title || INITIAL_TITLE,
+  description: INITIAL_DESCRIPTION,
   $mulmocast: {
     version: "1.1",
     credit: "closing",
@@ -12,7 +15,7 @@ export const initMulmoScript = {
       imagePrompt: "",
     },
   ],
-};
+});
 
 // key is i18n key
 export const beatTemplate: { key: string; beat: MulmoBeat }[] = [

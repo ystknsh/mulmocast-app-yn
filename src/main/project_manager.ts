@@ -68,7 +68,7 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
 export const saveProjectMetadata = async (projectId: string, data: ProjectMetadata): Promise<boolean> => {
   return await writeJsonFile(getProjectMetaPath(projectId), data);
 };
-export const saveProjectScript = async (projectId: string, data: ProjectMetadata): Promise<boolean> => {
+export const saveProjectScript = async (projectId: string, data: Partial<MulmoScript>): Promise<boolean> => {
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
@@ -112,8 +112,6 @@ export const createProject = async (title: string): Promise<Project> => {
 
     const initialData: ProjectMetadata = {
       id,
-      title,
-      description: "mulmocast",
       createdAt: dayjs().toISOString(),
       updatedAt: dayjs().toISOString(),
       version: PROJECT_VERSION,
@@ -124,7 +122,7 @@ export const createProject = async (title: string): Promise<Project> => {
       scriptEditorActiveTab: SCRIPT_EDITOR_TABS.TEXT,
     };
 
-    const newScript = mulmoScriptSchema.strip().safeParse(initMulmoScript);
+    const newScript = mulmoScriptSchema.strip().safeParse(initMulmoScript(title));
     console.log(newScript);
     const mulmoScript = newScript.data;
 

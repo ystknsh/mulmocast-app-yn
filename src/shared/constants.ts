@@ -243,3 +243,6 @@ export const VIEW_MODE = {
   list: "list",
   grid: "grid",
 } as const;
+
+export const INITIAL_TITLE = "[untitled]";
+export const INITIAL_DESCRIPTION = "mulmocast";

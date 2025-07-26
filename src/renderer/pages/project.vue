@@ -35,9 +35,11 @@
             </RouterLink>
             <div>
               <h1 :class="`font-bold ${getHeaderSize}`">
-                {{ project?.title }}
+                {{ mulmoScriptHistoryStore.currentMulmoScript?.title || INITIAL_TITLE }}
               </h1>
-              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
+              <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">
+                {{ mulmoScriptHistoryStore.currentMulmoScript?.description || INITIAL_DESCRIPTION }}
+              </p>
             </div>
           </div>
           <div v-if="isDevelopment">
@@ -303,6 +305,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "../../shared/constants";
 
 import {
   ArrowLeft,
