@@ -113,6 +113,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useI18n } from "vue-i18n";
 import type { Project } from "@/lib/project_api";
 import { bufferToUrl } from "@/lib/utils";
+import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
 
@@ -121,7 +122,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const projectId = computed(() => props.project.metadata.id);
+const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 
 const downloadMp4 = async () => {
@@ -164,7 +165,13 @@ watch(
   { immediate: true },
 );
 
-defineExpose({
-  updateResources,
-});
+const mulmoEventStore = useMulmoEventStore();
+watch(
+  () => mulmoEventStore.mulmoEvent[projectId.value],
+  async (mulmoEvent) => {
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+      await updateResources();
+    }
+  },
+);
 </script>
