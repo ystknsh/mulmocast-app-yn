@@ -17,6 +17,7 @@
               @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
               class="mb-2 h-20 overflow-y-auto"
             />
+            <Button @click="() => submitImage(imageKey, key)">Generate</Button>
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
             <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
@@ -178,6 +179,18 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       }, 10);
     };
     reader.readAsArrayBuffer(file);
+  }
+};
+
+const submitImage = async (imageKey: string, key: number) => {
+  try {
+    imageFetching.value = true;
+    await window.electronAPI.mulmoHandler("mulmoReferenceImage", props.projectId, key, imageKey, {
+      type: "imagePrompt",
+      prompt: props.images[imageKey].prompt,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>
