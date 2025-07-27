@@ -29,8 +29,10 @@ import { useI18n } from "vue-i18n";
 import { Button, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// interface Props {}
-// defineProps<Props>();
+interface Props {
+  referenceKeys: string[];
+}
+const props = defineProps<Props>();
 
 const { t } = useI18n();
 
@@ -58,7 +60,11 @@ const templates = [
 const referenceKey = ref("");
 
 const validateKey = computed(() => {
-  return referenceKey.value !== "" && /^[a-z0-9]+$/.test(referenceKey.value);
+  return (
+    referenceKey.value !== "" &&
+    /^[a-z0-9]+$/.test(referenceKey.value) &&
+    !props.referenceKeys.includes(referenceKey.value)
+  );
 });
 
 const emitReferenceImage = () => {
