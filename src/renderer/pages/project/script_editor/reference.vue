@@ -52,7 +52,7 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { type MulmoImageParamsImages } from "mulmocast";
+import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
 import { z } from "zod";
 
 import { Button, Label, Textarea, Input } from "@/components/ui";

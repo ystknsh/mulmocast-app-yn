@@ -29,8 +29,8 @@ import { useI18n } from "vue-i18n";
 import { Button, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface Props {}
-defineProps<Props>();
+// interface Props {}
+// defineProps<Props>();
 
 const { t } = useI18n();
 

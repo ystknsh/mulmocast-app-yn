@@ -237,7 +237,14 @@ import Reference from "./script_editor/reference.vue";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 
 import YAML from "yaml";
-import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
+import {
+  mulmoScriptSchema,
+  type MulmoScript,
+  type MulmoBeat,
+  type MulmoPresentationStyle,
+  type MulmoImagePromptMedia,
+  type MulmoImageMedia,
+} from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
