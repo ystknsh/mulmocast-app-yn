@@ -37,6 +37,7 @@ const lang = {
     template_selector: {
       insert: "Insert",
       change: "Change",
+      reference: "Set Reference",
     },
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "Generate image",
@@ -183,6 +184,9 @@ const lang = {
       },
       moviePrompt: {
         contents: "Blank won't work, space will.",
+      },
+      imageReference: {
+        key: "Image Reference Key (a-z0-9)",
       },
     },
   },

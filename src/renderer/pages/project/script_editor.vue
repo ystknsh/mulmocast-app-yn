@@ -212,6 +212,7 @@
           :images="props.mulmoValue?.imageParams?.images ?? {}"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
+          @addReferenceImage="addReferenceImage"
         />
       </div>
     </TabsContent>
@@ -477,6 +478,24 @@ const updateImagePath = (imageKey: string, path: string) => {
         path,
       },
     },
+  };
+  const updatedImageParams = {
+    ...props.mulmoValue?.imageParams,
+    images: updatedImages,
+  };
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    imageParams: updatedImageParams,
+  });
+  emit("saveMulmo");
+};
+
+const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const updatedImages = {
+    ...currentImages,
+    [imageKey]: data,
   };
   const updatedImageParams = {
     ...props.mulmoValue?.imageParams,

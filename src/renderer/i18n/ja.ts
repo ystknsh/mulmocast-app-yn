@@ -37,6 +37,7 @@ const lang = {
     template_selector: {
       insert: "追加",
       change: "変更",
+      reference: "画像をセット",
     },
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "画像生成",
@@ -184,6 +185,9 @@ const lang = {
       },
       moviePrompt: {
         contents: "空白では動作しません。スペースを入力してください。",
+      },
+      imageReference: {
+        key: "キー(英数字のみ)",
       },
     },
   },

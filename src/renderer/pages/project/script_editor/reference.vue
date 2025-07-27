@@ -1,5 +1,7 @@
 <template>
-  <Button @click="reference">Reference</Button>
+  <Button @click="reference">Generate Reference</Button>
+
+  <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`">
     <div class="grid grid-cols-2 gap-4">
@@ -47,14 +49,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-
 import { useI18n } from "vue-i18n";
+
+import { type MulmoImageParamsImages } from "mulmocast";
 import { z } from "zod";
 
 import { Button, Label, Textarea, Input } from "@/components/ui";
-
 import { bufferToUrl } from "@/lib/utils";
-import { type MulmoImageParamsImages } from "mulmocast";
+
+import ReferenceSelector from "./reference_selector.vue";
 
 interface Props {
   projectId: string;
@@ -64,7 +67,7 @@ interface Props {
 const { t } = useI18n();
 
 const props = defineProps<Props>();
-const emit = defineEmits(["updateImage", "updateImagePath"]);
+const emit = defineEmits(["updateImage", "updateImagePath", "addReferenceImage"]);
 
 const imageRefs = ref<Record<string, string>>({});
 
@@ -113,6 +116,10 @@ const submitUrlImage = async (imageKey: string) => {
     console.log(error);
   }
   imageFetching.value = false;
+};
+
+const addReferenceImage = (key: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
+  emit("addReferenceImage", key, data);
 };
 
 const handleDrop = (event: DragEvent, imageKey: string) => {
