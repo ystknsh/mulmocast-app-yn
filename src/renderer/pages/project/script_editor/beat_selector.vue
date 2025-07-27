@@ -5,7 +5,7 @@
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
+        <SelectItem v-for="(template, k) in beatTemplate" :key="k" :value="k">
           {{ t("beat.badge." + template.key) }}
         </SelectItem>
       </SelectContent>
@@ -30,10 +30,9 @@ const { t } = useI18n();
 
 const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
-const templates = ref(beatTemplate);
 
 const emitBeat = () => {
-  const beat = { ...templates.value[selectedBeat.value].beat };
+  const beat = { ...beatTemplate[selectedBeat.value].beat };
 
   emit("emitBeat", beat);
 };
