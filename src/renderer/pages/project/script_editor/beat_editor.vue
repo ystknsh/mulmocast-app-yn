@@ -6,7 +6,7 @@
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
-        {{ $t("beat.badge." + getBadge(beat)) }}</Badge
+        {{ t("beat.badge." + getBadge(beat)) }}</Badge
       >
       <div v-if="toggleTypeMode">
         <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change">
@@ -31,14 +31,16 @@
               draggable="true"
               class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
             >
-              Drop file here
+              {{ t("common.drophere") }}
             </div>
-            or
+            {{ t("common.or") }}
             <div class="flex">
               <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
-                :disabled="!fetchEnable"
-                >Fetch</Button
+                                                                                                            :disabled="!fetchEnable"
+                                                                                                            >
+                {{ t("common.fetch") }}
+              </Button
               >
             </div>
           </template>
