@@ -5,6 +5,11 @@ const lang = {
   message: {
     hello: "こんにちは、世界",
   },
+  common: {
+    drophere: "画像をここにドロップ",
+    or: "もしくは",
+    fetch: "取得",
+  },
   menu: {
     top: "Home",
     mypage: "マイページ",
@@ -89,6 +94,12 @@ const lang = {
         modelAuto: "Auto",
         transitionFade: "Fade",
         transitionSlideoutLeft: "Slide Out Left",
+      },
+      reference: {
+        generateReference: "参照イメージ生成",
+        imagePrompt: "イメージプロンプト",
+        key: "キー",
+        image: "画像",
       },
     },
     generateStatus: {

@@ -5,6 +5,11 @@ const lang = {
   message: {
     hello: "hello world",
   },
+  common: {
+    drophere: "Drop file here",
+    or: "or",
+    fetch: "Fetch",
+  },
   menu: {
     top: "Home",
     mypage: "MyPage",
@@ -89,6 +94,12 @@ const lang = {
         modelAuto: "Auto",
         transitionFade: "Fade",
         transitionSlideoutLeft: "Slide Out Left",
+      },
+      reference: {
+        generateReference: "Generate Reference",
+        imagePrompt: "Image Prompt",
+        key: "Key",
+        image: "Image",
       },
     },
     generateStatus: {

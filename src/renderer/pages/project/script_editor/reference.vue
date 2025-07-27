@@ -1,14 +1,14 @@
 <template>
-  <Button @click="reference">Generate Reference</Button>
+  <Button @click="reference">{{ t("project.scriptEditor.reference.generateReference") }}</Button>
 
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`">
     <div class="grid grid-cols-2 gap-4">
       <div>
-        Key: {{ imageKey }}
+        {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
         <template v-if="images[imageKey].type === 'imagePrompt'">
-          <Label class="block mb-1"> Image Prompt: </Label>
+          <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
 
           <Textarea
             :placeholder="t('beat.form.imagePrompt.contents')"
@@ -18,7 +18,7 @@
           />
         </template>
         <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-          <Label class="block mb-1"> Image</Label>
+          <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
 
           <div
             @dragover.prevent
@@ -26,15 +26,16 @@
             draggable="true"
             class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
           >
-            Drop file here
+            {{ t("common.drophere") }}
           </div>
-          or
+          {{ t("common.or") }}
           <div class="flex">
             <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
               @click="() => submitUrlImage(imageKey)"
               :disabled="!fetchEnable"
-              >Fetch</Button
             >
+              {{ t("common.fetch") }}
+            </Button>
           </div>
 
           {{ images[imageKey].source.kind }}
