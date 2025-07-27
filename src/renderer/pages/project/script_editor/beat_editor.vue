@@ -37,11 +37,10 @@
             <div class="flex">
               <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
-                                                                                                            :disabled="!fetchEnable"
-                                                                                                            >
-                {{ t("common.fetch") }}
-              </Button
+                :disabled="!fetchEnable"
               >
+                {{ t("common.fetch") }}
+              </Button>
             </div>
           </template>
 
