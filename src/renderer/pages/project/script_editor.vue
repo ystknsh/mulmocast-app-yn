@@ -213,6 +213,7 @@
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
           @addReferenceImage="addReferenceImage"
+          @deleteReferenceImage="deleteReferenceImage"
         />
       </div>
     </TabsContent>
@@ -495,7 +496,7 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmo");
+  emit("formatAndPushHistoryMulmoScript");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
@@ -513,6 +514,22 @@ const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImageP
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmo");
+  emit("formatAndPushHistoryMulmoScript");
+};
+
+const deleteReferenceImage = (imageKey: string) => {
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const { [imageKey]: _, ...updatedImages } = currentImages;
+
+  const updatedImageParams = {
+    ...props.mulmoValue?.imageParams,
+    images: updatedImages,
+  };
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    imageParams: updatedImageParams,
+  });
+  emit("formatAndPushHistoryMulmoScript");
 };
 </script>

@@ -1,60 +1,73 @@
 <template>
   <Button @click="reference">{{ t("project.scriptEditor.reference.generateReference") }}</Button>
 
-  <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" />
+  <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
-  <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`">
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
-        <template v-if="images[imageKey].type === 'imagePrompt'">
-          <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
+  <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
+    <Card class="p-4 space-y-1 gap-2 mt-8">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
+          <template v-if="images[imageKey].type === 'imagePrompt'">
+            <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
 
-          <Textarea
-            :placeholder="t('beat.form.imagePrompt.contents')"
-            :model-value="images[imageKey].prompt"
-            @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
-            class="mb-2 h-20 overflow-y-auto"
-          />
-        </template>
-        <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-          <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
+            <Textarea
+              :placeholder="t('beat.form.imagePrompt.contents')"
+              :model-value="images[imageKey].prompt"
+              @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
+              class="mb-2 h-20 overflow-y-auto"
+            />
+          </template>
+          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
+            <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
 
-          <div
-            @dragover.prevent
-            @drop.prevent="(e) => handleDrop(e, imageKey)"
-            draggable="true"
-            class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
-          >
-            {{ t("common.drophere") }}
-          </div>
-          {{ t("common.or") }}
-          <div class="flex">
-            <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
-              @click="() => submitUrlImage(imageKey)"
-              :disabled="!fetchEnable"
+            <div
+              @dragover.prevent
+              @drop.prevent="(e) => handleDrop(e, imageKey)"
+              draggable="true"
+              class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
             >
-              {{ t("common.fetch") }}
-            </Button>
-          </div>
+              {{ t("common.drophere") }}
+            </div>
+            {{ t("common.or") }}
+            <div class="flex">
+              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+                @click="() => submitUrlImage(imageKey)"
+                :disabled="!fetchEnable"
+                class="ml-2"
+              >
+                {{ t("common.fetch") }}
+              </Button>
+            </div>
 
-          {{ images[imageKey].source.kind }}
-        </template>
+            {{ images[imageKey].source.kind }}
+          </template>
+        </div>
+        <div>
+          <img :src="imageRefs[imageKey]" />
+        </div>
       </div>
-      <div>
-        <img :src="imageRefs[imageKey]" />
-      </div>
+    </Card>
+    <div
+      class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+    >
+      <Trash
+        class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+        @click="deleteReference(imageKey)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Trash } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
 import { z } from "zod";
 
+import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
 
@@ -68,7 +81,7 @@ interface Props {
 const { t } = useI18n();
 
 const props = defineProps<Props>();
-const emit = defineEmits(["updateImage", "updateImagePath", "addReferenceImage"]);
+const emit = defineEmits(["updateImage", "updateImagePath", "addReferenceImage", "deleteReferenceImage"]);
 
 const imageRefs = ref<Record<string, string>>({});
 
@@ -121,6 +134,9 @@ const submitUrlImage = async (imageKey: string) => {
 
 const addReferenceImage = (key: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
   emit("addReferenceImage", key, data);
+};
+const deleteReference = (key: string) => {
+  emit("deleteReferenceImage", key);
 };
 
 const handleDrop = (event: DragEvent, imageKey: string) => {
