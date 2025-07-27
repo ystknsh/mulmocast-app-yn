@@ -519,7 +519,7 @@ const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImageP
 
 const deleteReferenceImage = (imageKey: string) => {
   const currentImages = props.mulmoValue?.imageParams?.images ?? {};
-  const { [imageKey]: _, ...updatedImages } = currentImages;
+  const { [imageKey]: __, ...updatedImages } = currentImages;
 
   const updatedImageParams = {
     ...props.mulmoValue?.imageParams,
