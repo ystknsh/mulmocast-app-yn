@@ -212,6 +212,7 @@
           :images="props.mulmoValue?.imageParams?.images ?? {}"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
+          @addReferenceImage="addReferenceImage"
         />
       </div>
     </TabsContent>
@@ -236,7 +237,14 @@ import Reference from "./script_editor/reference.vue";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 
 import YAML from "yaml";
-import { mulmoScriptSchema, type MulmoScript, type MulmoBeat, type MulmoPresentationStyle } from "mulmocast/browser";
+import {
+  mulmoScriptSchema,
+  type MulmoScript,
+  type MulmoBeat,
+  type MulmoPresentationStyle,
+  type MulmoImagePromptMedia,
+  type MulmoImageMedia,
+} from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
@@ -477,6 +485,24 @@ const updateImagePath = (imageKey: string, path: string) => {
         path,
       },
     },
+  };
+  const updatedImageParams = {
+    ...props.mulmoValue?.imageParams,
+    images: updatedImages,
+  };
+
+  emit("update:mulmoValue", {
+    ...props.mulmoValue,
+    imageParams: updatedImageParams,
+  });
+  emit("saveMulmo");
+};
+
+const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
+  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const updatedImages = {
+    ...currentImages,
+    [imageKey]: data,
   };
   const updatedImageParams = {
     ...props.mulmoValue?.imageParams,

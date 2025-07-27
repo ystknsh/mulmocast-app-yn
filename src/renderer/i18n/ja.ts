@@ -5,6 +5,11 @@ const lang = {
   message: {
     hello: "こんにちは、世界",
   },
+  common: {
+    drophere: "画像をここにドロップ",
+    or: "もしくは",
+    fetch: "取得",
+  },
   menu: {
     top: "Home",
     mypage: "マイページ",
@@ -37,6 +42,7 @@ const lang = {
     template_selector: {
       insert: "追加",
       change: "変更",
+      reference: "画像をセット",
     },
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "画像生成",
@@ -88,6 +94,12 @@ const lang = {
         modelAuto: "Auto",
         transitionFade: "Fade",
         transitionSlideoutLeft: "Slide Out Left",
+      },
+      reference: {
+        generateReference: "参照イメージ生成",
+        imagePrompt: "イメージプロンプト",
+        key: "キー",
+        image: "画像",
       },
     },
     generateStatus: {
@@ -184,6 +196,9 @@ const lang = {
       },
       moviePrompt: {
         contents: "空白では動作しません。スペースを入力してください。",
+      },
+      imageReference: {
+        key: "キー(英数字のみ)",
       },
     },
   },

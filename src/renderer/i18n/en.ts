@@ -5,6 +5,11 @@ const lang = {
   message: {
     hello: "hello world",
   },
+  common: {
+    drophere: "Drop file here",
+    or: "or",
+    fetch: "Fetch",
+  },
   menu: {
     top: "Home",
     mypage: "MyPage",
@@ -37,6 +42,7 @@ const lang = {
     template_selector: {
       insert: "Insert",
       change: "Change",
+      reference: "Set Reference",
     },
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "Generate image",
@@ -88,6 +94,12 @@ const lang = {
         modelAuto: "Auto",
         transitionFade: "Fade",
         transitionSlideoutLeft: "Slide Out Left",
+      },
+      reference: {
+        generateReference: "Generate Reference",
+        imagePrompt: "Image Prompt",
+        key: "Key",
+        image: "Image",
       },
     },
     generateStatus: {
@@ -183,6 +195,9 @@ const lang = {
       },
       moviePrompt: {
         contents: "Blank won't work, space will.",
+      },
+      imageReference: {
+        key: "Image Reference Key (a-z0-9)",
       },
     },
   },
