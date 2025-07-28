@@ -51,6 +51,7 @@ const lang = {
   },
   generating: "生成中...",
   generate: "生成",
+  update: "更新",
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
