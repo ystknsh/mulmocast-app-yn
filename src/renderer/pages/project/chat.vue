@@ -63,10 +63,12 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning">
+          </div>
+          <div>
+            <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mt-2 mr-2">
               {{ t("project.chat.copyScript") }}
             </Button>
-            <Button size="sm" @click="createScript" :disabled="noChatMessages || noChatText || isRunning">
+            <Button size="sm" @click="createScript" :disabled="noChatMessages || noChatText || isRunning" class="mt-2">
               {{ t(isCreatingScript ? "project.chat.creating" : "project.chat.createScript") }}
             </Button>
           </div>
