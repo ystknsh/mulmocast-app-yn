@@ -94,9 +94,9 @@ import UserMessage from "./chat/user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import { validateSchemaAgent } from "mulmocast/browser";
+import { validateSchemaAgent, readTemplatePrompt } from "mulmocast/browser";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates, scriptTemplates } from "mulmocast/data";
+import { promptTemplates } from "mulmocast/data";
 
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
@@ -105,7 +105,6 @@ import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
-import { defaultSchema } from "./chat/utils";
 
 const { t } = useI18n();
 const { messages = [] } = defineProps<{
@@ -190,13 +189,7 @@ const isCreatingScript = ref(false);
 // system prompt and user prompt
 // const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
-  const { scriptName, systemPrompt } = promptTemplates[selectedTemplateIndex.value];
-  const scriptTemplate = scriptName
-    ? scriptTemplates.find((template) => {
-        return template.filename === scriptName.split(".")[0];
-      })
-    : defaultSchema.properties;
-  userInput.value = [systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
+  userInput.value = readTemplatePrompt(promptTemplates[selectedTemplateIndex.value].filename);
 };
 // end of system prompt
 
