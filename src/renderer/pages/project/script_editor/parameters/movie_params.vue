@@ -155,7 +155,10 @@ const handleModelChange = (value: MovieParams["model"]) => {
 
 const handleTransitionTypeChange = (value: MovieParams["transition"]["type"]) => {
   updateParams({
-    transition: { type: (value == "__undefined__" ? undefined : value) as "fade" | "slideout_left", duration: currentParams.value.transition.duration },
+    transition: {
+      type: (value == "__undefined__" ? undefined : value) as "fade" | "slideout_left",
+      duration: currentParams.value.transition.duration,
+    },
   });
 };
 
