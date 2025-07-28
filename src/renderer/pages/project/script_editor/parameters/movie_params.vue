@@ -12,7 +12,7 @@
             <SelectValue :placeholder="t('project.scriptEditor.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem :value="undefined">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
             <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
               {{ provider.name }}
             </SelectItem>
@@ -30,7 +30,7 @@
             <SelectValue :placeholder="t('project.scriptEditor.movieParams.modelAuto')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem :value="undefined">{{ t("project.scriptEditor.movieParams.modelAuto") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.modelAuto") }}</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === movieParams?.provider)?.models || []"
               :key="model"
@@ -52,7 +52,7 @@
             <SelectValue :placeholder="t('project.scriptEditor.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem :value="undefined">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
             <SelectItem value="fade">{{ t("project.scriptEditor.movieParams.transitionFade") }}</SelectItem>
             <SelectItem value="slideout_left">{{
               t("project.scriptEditor.movieParams.transitionSlideoutLeft")
@@ -146,16 +146,16 @@ const updateParams = (partial: Partial<MovieParams>) => {
 };
 
 const handleProviderChange = (value: MovieParams["provider"]) => {
-  updateParams({ provider: value, model: undefined });
+  updateParams({ provider: value == "__undefined__" ? undefined : value, model: undefined });
 };
 
 const handleModelChange = (value: MovieParams["model"]) => {
-  updateParams({ model: value });
+  updateParams({ model: value == "__undefined__" ? undefined : value });
 };
 
 const handleTransitionTypeChange = (value: MovieParams["transition"]["type"]) => {
   updateParams({
-    transition: { type: value as "fade" | "slideout_left", duration: currentParams.value.transition.duration },
+    transition: { type: (value == "__undefined__" ? undefined : value) as "fade" | "slideout_left", duration: currentParams.value.transition.duration },
   });
 };
 

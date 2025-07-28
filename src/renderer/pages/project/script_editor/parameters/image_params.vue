@@ -28,7 +28,7 @@
             <SelectValue placeholder="Auto" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem :value="undefined">Auto</SelectItem>
+            <SelectItem value="__undefined__">Auto</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
               :key="model"
@@ -104,7 +104,7 @@ const handleUpdate = (field: ImageParamField, value: string) => {
   emit("update", {
     ...DEFAULT_VALUES,
     ...currentParams,
-    [field]: value,
+    [field]: value == "__undefined__" ? undefined : value,
   });
 };
 </script>
