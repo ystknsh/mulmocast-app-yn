@@ -10,7 +10,7 @@
             <SelectValue placeholder="None" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem :value="undefined">None</SelectItem>
+            <SelectItem value="__undefined__">None</SelectItem>
             <SelectItem v-for="language in LANGUAGES" :key="language.id" :value="language.id">
               {{ language.name }}
             </SelectItem>
@@ -56,7 +56,7 @@ const emit = defineEmits<{
 const styles = ref("");
 
 const handleLangInput = (value: string) => {
-  if (value) {
+  if (value && value !== "__undefined__") {
     emit("update", {
       ...props.captionParams,
       lang: value,
