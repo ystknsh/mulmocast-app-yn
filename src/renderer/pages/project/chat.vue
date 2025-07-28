@@ -94,9 +94,9 @@ import UserMessage from "./chat/user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import { validateSchemaAgent, readTemplatePrompt } from "mulmocast/browser";
+import { validateSchemaAgent } from "mulmocast/browser";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates } from "mulmocast/data";
+import { promptTemplates, templateDataSet } from "mulmocast/data";
 
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
@@ -189,7 +189,8 @@ const isCreatingScript = ref(false);
 // system prompt and user prompt
 // const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
-  userInput.value = readTemplatePrompt(promptTemplates[selectedTemplateIndex.value].filename);
+  // userInput.value = readTemplatePrompt(promptTemplates[selectedTemplateIndex.value].filename);
+  userInput.value = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
 };
 // end of system prompt
 
