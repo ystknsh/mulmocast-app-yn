@@ -18,7 +18,7 @@
               class="mb-2 h-20 overflow-y-auto"
               :disabled="isGeneratings[imageKey]"
             />
-            <Button @click="() => submitImage(imageKey, key)" :disabled="isGeneratings[imageKey]">Generate</Button>
+            <Button @click="() => submitImage(imageKey, key)" :disabled="isGeneratings[imageKey]">{{ t("generate") }}</Button>
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
             <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
