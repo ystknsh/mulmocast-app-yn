@@ -77,6 +77,34 @@ const lang = {
       createNew: "Create New",
       openProjectFolder: "Open Project Folder",
     },
+    
+    // Status messages
+    status: {
+      // Processing states
+      loading: "Loading...",
+      loadingThing: "Loading {thing}...",
+      generating: "Generating...",
+      generatingThing: "Generating {thing}...",
+      creating: "Creating...",
+      saving: "Saving...",
+      processing: "Processing...",
+      
+      // Completion states
+      complete: "Complete",
+      success: "Success",
+      ready: "Ready",
+      
+      // Error states
+      error: "Error",
+      failed: "Failed",
+      cancelled: "Cancelled",
+      
+      // Specific loading states
+      loadingProjects: "Loading projects...",
+      generatingImage: "Generating Image...",
+      generatingAudio: "Generating audio...",
+      generatingMovie: "Generating movie...",
+    },
   },
   common: {
     drophere: "Drop file here",

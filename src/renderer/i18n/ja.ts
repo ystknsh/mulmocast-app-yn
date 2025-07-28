@@ -77,6 +77,34 @@ const lang = {
       createNew: "新規作成",
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
+    
+    // Status messages
+    status: {
+      // Processing states
+      loading: "読み込み中...",
+      loadingThing: "{thing}読み込み中...",
+      generating: "生成中...",
+      generatingThing: "{thing}生成中...",
+      creating: "作成中...",
+      saving: "保存中...",
+      processing: "処理中...",
+      
+      // Completion states
+      complete: "完了",
+      success: "成功",
+      ready: "準備完了",
+      
+      // Error states
+      error: "エラー",
+      failed: "失敗",
+      cancelled: "キャンセル",
+      
+      // Specific loading states
+      loadingProjects: "プロジェクト読み込み中...",
+      generatingImage: "画像生成中...",
+      generatingAudio: "音声生成中...",
+      generatingMovie: "動画生成中...",
+    },
   },
   common: {
     drophere: "画像をここにドロップ",
