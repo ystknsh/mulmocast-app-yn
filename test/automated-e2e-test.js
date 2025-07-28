@@ -1,6 +1,13 @@
 const { spawn } = require("child_process");
 const playwright = require("playwright-core");
 
+// 設定定数
+const CONFIG = {
+  PROCESS_KILL_TIMEOUT: 5000, // 5秒
+  APP_START_WAIT: 15000,      // 15秒
+  WINDOW_CLOSE_WAIT: 1000     // 1秒
+};
+
 // 日付と時刻をフォーマットする関数
 function getDateTimeString() {
   const now = new Date();
@@ -14,18 +21,70 @@ function getDateTimeString() {
   return `${year}${month}${day}_${hours}${minutes}${seconds}`;
 }
 
+// Electronプロセスを終了する関数
+async function terminateElectronProcess(electronProcess) {
+  if (!electronProcess || electronProcess.killed) {
+    return;
+  }
+
+  console.log("Terminating Electron app...");
+  
+  return new Promise((resolve) => {
+    let resolved = false;
+    
+    const cleanup = () => {
+      if (!resolved) {
+        resolved = true;
+        resolve();
+      }
+    };
+
+    // プロセス終了イベントのリスナー
+    electronProcess.once("exit", cleanup);
+    electronProcess.once("error", cleanup);
+
+    // タイムアウト設定
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        console.log("Force killing process...");
+        try {
+          electronProcess.kill("SIGKILL");
+        } catch (error) {
+          console.log("Process may have already exited");
+        }
+        cleanup();
+      }
+    }, CONFIG.PROCESS_KILL_TIMEOUT);
+
+    // 優雅な終了を試行
+    try {
+      if (process.platform === "win32") {
+        electronProcess.kill("SIGTERM");
+      } else {
+        process.kill(-electronProcess.pid, "SIGTERM");
+      }
+    } catch (error) {
+      console.log("Failed to send SIGTERM:", error.message);
+      cleanup();
+    }
+  });
+}
+
 async function runE2ETest() {
-  let electronProcess;
-  let browser;
+  // リソースの初期化
+  const resources = {
+    electronProcess: null,
+    browser: null
+  };
 
   try {
     console.log("=== MulmoCast E2E Test ===");
     console.log("1. Starting Electron app with yarn start...");
 
     // Electronアプリをspawnで起動（プロセスグループを作成）
-    electronProcess = spawn("yarn", ["start"], {
+    resources.electronProcess = spawn("yarn", ["start"], {
       shell: true,
-      detached: true, // プロセスグループを作成
+      detached: process.platform !== "win32", // Windowsではdetachedを使わない
       env: {
         ...process.env,
         NODE_ENV: "development",
@@ -33,48 +92,50 @@ async function runE2ETest() {
     });
 
     // アプリの起動ログを表示
-    electronProcess.stdout.on("data", (data) => {
+    resources.electronProcess.stdout.on("data", (data) => {
       console.log(`[Electron]: ${data.toString().trim()}`);
     });
 
-    electronProcess.stderr.on("data", (data) => {
+    resources.electronProcess.stderr.on("data", (data) => {
       console.error(`[Electron Error]: ${data.toString().trim()}`);
     });
 
     // アプリが完全に起動するまで待機
-    console.log("Waiting for app to start (15 seconds)...");
-    await new Promise((resolve) => setTimeout(resolve, 15000));
+    console.log(`Waiting for app to start (${CONFIG.APP_START_WAIT / 1000} seconds)...`);
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.APP_START_WAIT));
 
     console.log("\n2. Connecting to Electron via CDP...");
-    browser = await playwright.chromium.connectOverCDP("http://localhost:9222/");
+    resources.browser = await playwright.chromium.connectOverCDP("http://localhost:9222/");
     console.log("✓ Connected successfully");
 
     // コンテキストとページを取得
-    const contexts = browser.contexts();
+    const contexts = resources.browser.contexts();
     if (contexts.length === 0) {
       throw new Error("No browser contexts found");
     }
 
     // 正しいページを見つける（DevToolsではなくアプリのページ）
-    let page = null;
-    for (const context of contexts) {
-      const pages = context.pages();
-      for (const p of pages) {
-        const url = p.url();
-        console.log(`Found page: ${url}`);
-        if (url.includes("localhost:5173")) {
-          page = p;
-          break;
+    const findApplicationPage = () => {
+      for (const context of contexts) {
+        const pages = context.pages();
+        for (const p of pages) {
+          const url = p.url();
+          console.log(`Found page: ${url}`);
+          if (url.includes("localhost:5173")) {
+            return p;
+          }
         }
       }
-      if (page) break;
-    }
+      
+      // もし見つからなければ、最初のコンテキストの2番目のページを試す
+      if (contexts[0].pages().length > 1) {
+        return contexts[0].pages()[1];
+      }
+      
+      return null;
+    };
 
-    // もし見つからなければ、最初のコンテキストの2番目のページを試す
-    if (!page && contexts[0].pages().length > 1) {
-      page = contexts[0].pages()[1];
-    }
-
+    const page = findApplicationPage();
     if (!page) {
       throw new Error("Could not find application page");
     }
@@ -128,50 +189,30 @@ async function runE2ETest() {
 
     console.log("\n=== Test completed successfully! ===");
     console.log(`Project "${projectTitle}" was created and all Script tabs were tested.`);
+    
+    // テスト完了後、アプリケーションを正常に閉じる
+    console.log("\nClosing application window...");
+    try {
+      // Electronアプリのウィンドウを閉じる
+      await page.evaluate(() => {
+        window.close();
+      });
+      await page.waitForTimeout(CONFIG.WINDOW_CLOSE_WAIT); // ウィンドウが閉じるのを待つ
+    } catch (closeError) {
+      console.log("Failed to close window gracefully:", closeError.message);
+    }
   } catch (error) {
     console.error("\n✗ Test failed:", error.message);
     throw error;
   } finally {
     // ブラウザ接続を閉じる
-    if (browser) {
-      await browser.close();
+    if (resources.browser) {
+      await resources.browser.close();
       console.log("\nBrowser connection closed.");
     }
 
     // Electronプロセスを終了
-    if (electronProcess) {
-      console.log("Terminating Electron app...");
-
-      try {
-        // プロセスグループ全体を終了（負のPIDで指定）
-        process.kill(-electronProcess.pid, "SIGTERM");
-        console.log("Sent SIGTERM to process group");
-      } catch (error) {
-        console.log("Failed to kill process group, trying individual process...");
-        electronProcess.kill("SIGTERM");
-      }
-
-      // プロセスの終了を待機
-      await new Promise((resolve) => {
-        const timeout = setTimeout(() => {
-          console.log("Force killing process group...");
-          try {
-            process.kill(-electronProcess.pid, "SIGKILL");
-          } catch (error) {
-            console.log("Failed to force kill process group, trying individual process...");
-            electronProcess.kill("SIGKILL");
-          }
-          resolve();
-        }, 5000); // 5秒待ってもSIGTERMで終了しない場合はSIGKILL
-
-        electronProcess.on("exit", () => {
-          clearTimeout(timeout);
-          resolve();
-        });
-      });
-
-      console.log("Electron app terminated.");
-    }
+    await terminateElectronProcess(resources.electronProcess);
   }
 }
 
