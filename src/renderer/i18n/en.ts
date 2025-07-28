@@ -9,6 +9,8 @@ const lang = {
     drophere: "Drop file here",
     or: "or",
     fetch: "Fetch",
+    imagePrompt: "Image Prompt",
+    moviePrompt: "Movie Prompt",
   },
   menu: {
     top: "Home",
@@ -100,7 +102,6 @@ const lang = {
       },
       reference: {
         generateReference: "Generate Reference",
-        imagePrompt: "Image Prompt",
         key: "Key",
         image: "Image",
       },

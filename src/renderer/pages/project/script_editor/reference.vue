@@ -7,7 +7,7 @@
         <div>
           {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
-            <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
+            <Label class="block mb-1">{{ t("common.imagePrompt") }} : </Label>
 
             <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
@@ -42,7 +42,9 @@
               </Button>
             </div>
           </template>
-          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"> </template>
+          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'">
+            {{ images[imageKey].source.url }}
+          </template>
         </div>
         <div>
           <img :src="imageRefs[imageKey]" />
