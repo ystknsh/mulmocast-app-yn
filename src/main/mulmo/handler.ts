@@ -15,6 +15,7 @@ import {
   setFfprobePath,
   generateReferenceImage,
   getImageRefs,
+  MulmoStudioContextMethods,
   type MulmoImagePromptMedia,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
@@ -147,6 +148,8 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
+    fs.mkdirSync(imageProjectDirPath, { recursive: true });
     const images = await getImageRefs(context);
     removeSessionProgressCallback(mulmoCallback);
     return images;
@@ -173,6 +176,8 @@ export const mulmoReferenceImage = async (
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
+    fs.mkdirSync(imageProjectDirPath, { recursive: true });
     const returnImage = await generateReferenceImage({
       context,
       index,
@@ -180,7 +185,6 @@ export const mulmoReferenceImage = async (
       image,
       force: true,
     });
-    console.log(returnImage);
     removeSessionProgressCallback(mulmoCallback);
     return returnImage;
   } catch (error) {

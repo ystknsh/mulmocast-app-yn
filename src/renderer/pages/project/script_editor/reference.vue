@@ -7,7 +7,7 @@
         <div>
           {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
-            <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
+            <Label class="block mb-1">{{ t("common.imagePrompt") }} : </Label>
 
             <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
@@ -16,9 +16,6 @@
               class="mb-2 h-20 overflow-y-auto"
               :disabled="isGeneratings[imageKey]"
             />
-            <Button @click="() => submitImage(imageKey, key)" :disabled="isGeneratings[imageKey]">{{
-              t("generate")
-            }}</Button>
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
             <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
@@ -42,10 +39,35 @@
               </Button>
             </div>
           </template>
-          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"> </template>
+          <div
+            v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"
+            class="break-words whitespace-pre-wrap"
+          >
+            {{ images[imageKey].source.url }}
+          </div>
         </div>
         <div>
-          <img :src="imageRefs[imageKey]" />
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <Button
+              v-if="images[imageKey].type === 'imagePrompt'"
+              variant="ghost"
+              size="icon"
+              class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
+              @click="() => submitImage(imageKey, key)"
+              :disabled="isGeneratings[imageKey]"
+            >
+              <Sparkles :class="isGeneratings[imageKey] ? 'text-gray-400' : ''" class="w-4 h-4" />
+            </Button>
+            <div v-if="imageRefs[imageKey]" class="flex justify-center items-center">
+              <img :src="imageRefs[imageKey]" class="max-h-64" />
+            </div>
+            <template v-else>
+              <FileImage :size="32" class="mx-auto text-gray-400 mb-2" />
+              <p class="text-sm text-gray-500">
+                {{ t("beat.imagePreview") }}
+              </p>
+            </template>
+          </div>
         </div>
       </div>
     </Card>
@@ -61,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { Trash } from "lucide-vue-next";
+import { Trash, Sparkles, FileImage } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
