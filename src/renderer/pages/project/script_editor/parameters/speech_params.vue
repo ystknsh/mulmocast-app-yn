@@ -27,8 +27,7 @@
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
               <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
                 t("update")
-              }}</Button
-              >
+              }}</Button>
             </div>
             <h5 class="font-medium text-sm" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
