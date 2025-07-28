@@ -1,5 +1,4 @@
 <template>
-
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
@@ -42,10 +41,8 @@
                 {{ t("common.fetch") }}
               </Button>
             </div>
-
           </template>
-          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'">
-          </template>
+          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"> </template>
         </div>
         <div>
           <img :src="imageRefs[imageKey]" />
