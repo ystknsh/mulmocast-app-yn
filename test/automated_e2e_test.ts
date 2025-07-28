@@ -5,12 +5,11 @@ import dayjs from "dayjs";
 // 設定定数
 const CONFIG = {
   PROCESS_KILL_TIMEOUT: 5000, // 5秒
-  APP_START_WAIT: 15000,      // 15秒
-  WINDOW_CLOSE_WAIT: 1000,    // 1秒
-  CDP_MAX_ATTEMPTS: 30,       // CDP接続の最大試行回数
-  CDP_RETRY_DELAY: 1000       // CDP接続リトライの待機時間（1秒）
+  APP_START_WAIT: 15000, // 15秒
+  WINDOW_CLOSE_WAIT: 1000, // 1秒
+  CDP_MAX_ATTEMPTS: 30, // CDP接続の最大試行回数
+  CDP_RETRY_DELAY: 1000, // CDP接続リトライの待機時間（1秒）
 } as const;
-
 
 // Electronプロセスを終了する関数
 async function terminateElectronProcess(electronProcess: ChildProcess | null): Promise<void> {
@@ -19,10 +18,10 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
   }
 
   console.log("Terminating Electron app...");
-  
+
   return new Promise((resolve) => {
     let resolved = false;
-    
+
     const cleanup = () => {
       if (!resolved) {
         resolved = true;
@@ -70,7 +69,7 @@ async function runE2ETest(): Promise<void> {
   // リソースの初期化
   const resources: Resources = {
     electronProcess: null,
-    browser: null
+    browser: null,
   };
 
   try {
@@ -100,7 +99,7 @@ async function runE2ETest(): Promise<void> {
     console.log("\n2. Waiting for CDP to be available...");
     const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
     let attempts = 0;
-    
+
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
       try {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
@@ -127,7 +126,7 @@ async function runE2ETest(): Promise<void> {
     // 正しいページを見つける（DevToolsではなくアプリのページ）
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
-    
+
     const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
         const pages = context.pages();
@@ -139,7 +138,7 @@ async function runE2ETest(): Promise<void> {
           }
         }
       }
-      
+
       return null;
     };
 
@@ -180,14 +179,12 @@ async function runE2ETest(): Promise<void> {
       await page.click(`[role="tab"]:has-text("${tab}")`);
 
       // タブがアクティブになるまで少し待機
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // タブがアクティブになったことを確認
       const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
       if (tabElement) {
-        const isSelected = await tabElement.evaluate(
-          (el: Element) => el.getAttribute("aria-selected") === "true"
-        );
+        const isSelected = await tabElement.evaluate((el: Element) => el.getAttribute("aria-selected") === "true");
 
         if (isSelected) {
           console.log(`   ✓ "${tab}" tab is now active`);
@@ -201,7 +198,7 @@ async function runE2ETest(): Promise<void> {
 
     console.log("\n=== Test completed successfully! ===");
     console.log(`Project "${projectTitle}" was created and all Script tabs were tested.`);
-    
+
     // テスト完了後、アプリケーションを正常に閉じる
     console.log("\nClosing application window...");
     try {
@@ -209,7 +206,7 @@ async function runE2ETest(): Promise<void> {
       await page.evaluate(() => {
         window.close();
       });
-      await new Promise(resolve => setTimeout(resolve, CONFIG.WINDOW_CLOSE_WAIT)); // ウィンドウが閉じるのを待つ
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.WINDOW_CLOSE_WAIT)); // ウィンドウが閉じるのを待つ
     } catch (closeError: any) {
       console.log("Failed to close window gracefully:", closeError.message);
     }

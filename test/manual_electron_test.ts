@@ -3,12 +3,11 @@ import dayjs from "dayjs";
 
 // 設定定数
 const CONFIG = {
-  CDP_RETRY_DELAY: 1000,      // CDP接続リトライの待機時間（1秒）
-  CDP_MAX_ATTEMPTS: 30,       // CDP接続の最大試行回数
-  TAB_SWITCH_DELAY: 500,      // タブ切り替え待機時間
-  INITIAL_WAIT: 3000          // テスト開始前の待機時間（3秒）
+  CDP_RETRY_DELAY: 1000, // CDP接続リトライの待機時間（1秒）
+  CDP_MAX_ATTEMPTS: 30, // CDP接続の最大試行回数
+  TAB_SWITCH_DELAY: 500, // タブ切り替え待機時間
+  INITIAL_WAIT: 3000, // テスト開始前の待機時間（3秒）
 } as const;
-
 
 interface Resources {
   browser: Browser | null;
@@ -17,7 +16,7 @@ interface Resources {
 async function testCreateProject(): Promise<void> {
   // リソースの初期化
   const resources: Resources = {
-    browser: null
+    browser: null,
   };
 
   try {
@@ -27,7 +26,7 @@ async function testCreateProject(): Promise<void> {
     // CDP接続の可用性をポーリング
     const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
     let attempts = 0;
-    
+
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
       try {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
@@ -54,7 +53,7 @@ async function testCreateProject(): Promise<void> {
     // 正しいページを見つける（DevToolsではなくアプリのページ）
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
-    
+
     const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
         const pages = context.pages();
@@ -66,7 +65,7 @@ async function testCreateProject(): Promise<void> {
           }
         }
       }
-      
+
       return null;
     };
 
@@ -113,14 +112,12 @@ async function testCreateProject(): Promise<void> {
       await page.click(`[role="tab"]:has-text("${tab}")`);
 
       // タブがアクティブになるまで少し待機
-      await new Promise(resolve => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
       // タブがアクティブになったことを確認
       const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
       if (tabElement) {
-        const isSelected = await tabElement.evaluate(
-          (el: Element) => el.getAttribute("aria-selected") === "true"
-        );
+        const isSelected = await tabElement.evaluate((el: Element) => el.getAttribute("aria-selected") === "true");
 
         if (isSelected) {
           console.log(`   ✓ "${tab}" tab is now active`);
@@ -151,11 +148,11 @@ async function main(): Promise<void> {
   console.log("Starting test in 3 seconds...");
   console.log("Make sure the Electron app is running with: yarn start");
   console.log("Environment variables:");
-  console.log(`  CDP_URL: ${process.env.CDP_URL || 'http://localhost:9222/ (default)'}`);
-  console.log(`  APP_URL: ${process.env.APP_URL || 'localhost:5173 (default)'}\n`);
+  console.log(`  CDP_URL: ${process.env.CDP_URL || "http://localhost:9222/ (default)"}`);
+  console.log(`  APP_URL: ${process.env.APP_URL || "localhost:5173 (default)"}\n`);
 
   await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
-  
+
   try {
     await testCreateProject();
     process.exit(0);
