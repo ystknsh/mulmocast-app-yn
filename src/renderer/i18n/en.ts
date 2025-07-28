@@ -11,6 +11,7 @@ const lang = {
     fetch: "Fetch",
     imagePrompt: "Image Prompt",
     moviePrompt: "Movie Prompt",
+    htmlPrompt: "HTML Prompt",
   },
   menu: {
     top: "Home",
