@@ -19,7 +19,6 @@ npx ts-node test/automated-e2e-test.ts
 
 # または事前にコンパイルして実行
 npx tsc test/automated-e2e-test.ts
-node test/automated-e2e-test.js
 ```
 
 **特徴:**
@@ -34,7 +33,7 @@ node test/automated-e2e-test.js
 - `CDP_URL`: CDP接続URL（デフォルト: `http://localhost:9222/`）
 - `APP_URL`: アプリケーションURL（デフォルト: `localhost:5173`）
 
-### 2. `manual-electron-test.js`
+### 2. `manual-electron-test.ts`
 **手動起動済みアプリへの接続テスト**
 
 - 既に起動中のElectronアプリに接続
@@ -46,8 +45,11 @@ node test/automated-e2e-test.js
 # 1. まずElectronアプリを起動
 yarn start
 
-# 2. 別のターミナルでテストを実行
-node test/manual-electron-test.js
+# 2. 別のターミナルでテストを実行（TypeScript）
+npx ts-node test/manual-electron-test.ts
+
+# または事前にコンパイルして実行
+npx tsc test/manual-electron-test.ts
 ```
 
 **特徴:**
@@ -55,6 +57,12 @@ node test/manual-electron-test.js
 - ✅ アプリの起動・終了は手動
 - ✅ 開発時の反復テストに便利
 - ✅ CDP接続（ポート9222）
+- ✅ TypeScriptによる型安全性
+- ✅ CDP接続のポーリング機能（最大30回リトライ）
+
+**環境変数:**
+- `CDP_URL`: CDP接続URL（デフォルト: `http://localhost:9222/`）
+- `APP_URL`: アプリケーションURL（デフォルト: `localhost:5173`）
 
 ## 前提条件
 

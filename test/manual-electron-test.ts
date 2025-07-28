@@ -1,4 +1,4 @@
-const playwright = require("playwright-core");
+import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 
 // 設定定数
 const CONFIG = {
@@ -6,10 +6,10 @@ const CONFIG = {
   CDP_MAX_ATTEMPTS: 30,       // CDP接続の最大試行回数
   TAB_SWITCH_DELAY: 500,      // タブ切り替え待機時間
   INITIAL_WAIT: 3000          // テスト開始前の待機時間（3秒）
-};
+} as const;
 
 // 日付と時刻をフォーマットする関数
-function getDateTimeString() {
+function getDateTimeString(): string {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -21,9 +21,13 @@ function getDateTimeString() {
   return `${year}${month}${day}_${hours}${minutes}${seconds}`;
 }
 
-async function testCreateProject() {
+interface Resources {
+  browser: Browser | null;
+}
+
+async function testCreateProject(): Promise<void> {
   // リソースの初期化
-  const resources = {
+  const resources: Resources = {
     browser: null
   };
 
@@ -40,7 +44,7 @@ async function testCreateProject() {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
         console.log("✓ Connected successfully via CDP");
         break;
-      } catch (error) {
+      } catch (error: any) {
         attempts++;
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
           throw new Error(`Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error.message}`);
@@ -53,7 +57,7 @@ async function testCreateProject() {
     }
 
     // コンテキストとページを取得
-    const contexts = resources.browser.contexts();
+    const contexts: BrowserContext[] = resources.browser!.contexts();
     if (contexts.length === 0) {
       throw new Error("No browser contexts found");
     }
@@ -62,7 +66,7 @@ async function testCreateProject() {
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
     
-    const findApplicationPage = () => {
+    const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
         const pages = context.pages();
         for (const p of pages) {
@@ -113,7 +117,7 @@ async function testCreateProject() {
 
     // Scriptタブのテスト
     console.log("\n6. Testing Script tabs...");
-    const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"];
+    const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"] as const;
 
     for (const tab of tabs) {
       console.log(`   - Clicking "${tab}" tab...`);
@@ -125,7 +129,7 @@ async function testCreateProject() {
       // タブがアクティブになったことを確認
       const isSelected = await page.$eval(
         `[role="tab"]:has-text("${tab}")`,
-        (el) => el.getAttribute("aria-selected") === "true",
+        (el: Element) => el.getAttribute("aria-selected") === "true",
       );
 
       if (isSelected) {
@@ -137,7 +141,7 @@ async function testCreateProject() {
 
     console.log("\n=== Test completed successfully! ===");
     console.log(`Project "${projectTitle}" was created and all Script tabs were tested.`);
-  } catch (error) {
+  } catch (error: any) {
     console.error("\n✗ Test failed:", error.message);
     throw error;
   } finally {
@@ -150,7 +154,7 @@ async function testCreateProject() {
 }
 
 // メイン実行
-async function main() {
+async function main(): Promise<void> {
   console.log("Starting test in 3 seconds...");
   console.log("Make sure the Electron app is running with: yarn start");
   console.log("Environment variables:");
@@ -162,7 +166,7 @@ async function main() {
   try {
     await testCreateProject();
     process.exit(0);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Test execution failed:", error);
     process.exit(1);
   }
