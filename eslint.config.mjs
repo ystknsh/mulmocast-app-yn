@@ -69,7 +69,7 @@ export default [
   },
   // Node.js environment configuration (Main & Preload)
   {
-    files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}", "src/shared/**/*.{js,ts}", "test/**/*.{js,ts}"],
+    files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}", "src/shared/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
       globals: {
@@ -165,6 +165,29 @@ export default [
       ...baseLanguageOptions,
       globals: {
         ...globals.node,
+      },
+    },
+    plugins: {
+      ...basePlugins,
+    },
+    rules: {
+      ...typescript.configs.recommended.rules,
+      ...baseRules,
+    },
+    settings: {
+      "import/resolver": {
+        typescript: true,
+      },
+    },
+  },
+  // Test files configuration (Node.js + Browser globals for Playwright)
+  {
+    files: ["test/**/*.{js,ts}"],
+    languageOptions: {
+      ...baseLanguageOptions,
+      globals: {
+        ...globals.node,
+        ...globals.browser,
       },
     },
     plugins: {

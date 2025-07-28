@@ -32,10 +32,12 @@ async function testCreateProject(): Promise<void> {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
         console.log("✓ Connected successfully via CDP");
         break;
-      } catch (error: any) {
+      } catch (error: unknown) {
         attempts++;
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
-          throw new Error(`Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error.message}`);
+          throw new Error(
+            `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
+          );
         }
         if (attempts === 1) {
           console.log(`Attempting to connect to ${cdpUrl} (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
@@ -117,7 +119,7 @@ async function testCreateProject(): Promise<void> {
       // タブがアクティブになったことを確認
       const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
       if (tabElement) {
-        const isSelected = await tabElement.evaluate((el: Element) => el.getAttribute("aria-selected") === "true");
+        const isSelected = await tabElement.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
 
         if (isSelected) {
           console.log(`   ✓ "${tab}" tab is now active`);
@@ -131,8 +133,8 @@ async function testCreateProject(): Promise<void> {
 
     console.log("\n=== Test completed successfully! ===");
     console.log(`Project "${projectTitle}" was created and all Script tabs were tested.`);
-  } catch (error: any) {
-    console.error("\n✗ Test failed:", error.message);
+  } catch (error: unknown) {
+    console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
   } finally {
     // ブラウザ接続を閉じる
@@ -156,7 +158,7 @@ async function main(): Promise<void> {
   try {
     await testCreateProject();
     process.exit(0);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Test execution failed:", error);
     process.exit(1);
   }
