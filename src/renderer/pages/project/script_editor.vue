@@ -496,7 +496,9 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
+  emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
+  
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
