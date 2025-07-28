@@ -12,7 +12,6 @@
             <SelectValue :placeholder="t('project.scriptEditor.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
             <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
               {{ provider.name }}
             </SelectItem>
