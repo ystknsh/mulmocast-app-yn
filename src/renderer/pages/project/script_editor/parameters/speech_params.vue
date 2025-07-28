@@ -85,7 +85,11 @@
           </div>
         </div>
       </div>
-      <Button variant="outline" size="sm" @click="handleAddSpeaker">Add Speaker</Button>
+      <div class="template-dropdown-container flex items-center gap-4">
+        <Input v-model="speechKey" :invalid="!validateKey" class="w-64" />
+
+        <Button variant="outline" size="sm" @click="handleAddSpeaker">Add Speaker</Button>
+      </div>
       <div></div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
@@ -226,22 +230,24 @@ const handleDeleteSpeaker = (name: string) => {
   updateSpeakers(remainingSpeakers);
 };
 
+const speechKey = ref("");
+const validateKey = computed(() => {
+  return (
+    speechKey.value !== "" &&
+    /^[a-z0-9]+$/.test(speechKey.value) &&
+    !Object.keys(speakers.value).includes(speechKey.value)
+  );
+});
 const handleAddSpeaker = () => {
-  // Generate a unique speaker name
-  const existingSpeakers = speakers.value;
-  let speakerNumber = Object.keys(existingSpeakers).length + 1;
-  let newSpeakerName = `Speaker${speakerNumber}`;
-  while (existingSpeakers[newSpeakerName]) {
-    speakerNumber++;
-    newSpeakerName = `Speaker${speakerNumber}`;
+  if (!validateKey.value) {
+    return;
   }
-
   const voiceId = getDefaultVoiceId(currentProvider.value);
-
   updateSpeakers({
-    ...existingSpeakers,
-    [newSpeakerName]: createSpeaker(newSpeakerName, voiceId),
+    ...speakers.value,
+    [speechKey.value]: createSpeaker(speechKey.value, voiceId),
   });
+  speechKey.value = "";
 };
 
 const initializeSpeechParams = () => {
