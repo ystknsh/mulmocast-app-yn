@@ -5,6 +5,36 @@ const lang = {
   message: {
     hello: "hello world",
   },
+  // UI common vocabulary (reuse-focused)
+  ui: {
+    common: {
+      // Navigation
+      back: "Back",
+      
+      // File operations  
+      drophere: "Drop file here",
+      or: "or",
+      
+      // Media actions
+      play: "Play",
+      download: "Download", 
+      view: "View",
+      
+      // Common labels
+      title: "Title",
+      description: "Description", 
+      key: "Key",
+      image: "Image",
+      audio: "Audio",
+      video: "Video",
+      movie: "Movie",
+      file: "File",
+      url: "URL",
+      
+      // Modal
+      clickOutsideToClose: "Click outside to close",
+    },
+  },
   common: {
     drophere: "Drop file here",
     or: "or",

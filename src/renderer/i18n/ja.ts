@@ -5,6 +5,36 @@ const lang = {
   message: {
     hello: "こんにちは、世界",
   },
+  // UI common vocabulary (reuse-focused)
+  ui: {
+    common: {
+      // Navigation
+      back: "戻る",
+      
+      // File operations  
+      drophere: "画像をここにドロップ",
+      or: "もしくは",
+      
+      // Media actions
+      play: "再生",
+      download: "ダウンロード", 
+      view: "表示",
+      
+      // Common labels
+      title: "タイトル",
+      description: "説明", 
+      key: "キー",
+      image: "画像",
+      audio: "音声",
+      video: "動画",
+      movie: "動画",
+      file: "ファイル",
+      url: "URL",
+      
+      // Modal
+      clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+    },
+  },
   common: {
     drophere: "画像をここにドロップ",
     or: "もしくは",
