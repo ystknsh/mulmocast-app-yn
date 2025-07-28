@@ -1,5 +1,5 @@
-const { spawn } = require("child_process");
-const playwright = require("playwright-core");
+import { spawn, ChildProcess } from "child_process";
+import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 
 // 設定定数
 const CONFIG = {
@@ -8,10 +8,10 @@ const CONFIG = {
   WINDOW_CLOSE_WAIT: 1000,    // 1秒
   CDP_MAX_ATTEMPTS: 30,       // CDP接続の最大試行回数
   CDP_RETRY_DELAY: 1000       // CDP接続リトライの待機時間（1秒）
-};
+} as const;
 
 // 日付と時刻をフォーマットする関数
-function getDateTimeString() {
+function getDateTimeString(): string {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -24,7 +24,7 @@ function getDateTimeString() {
 }
 
 // Electronプロセスを終了する関数
-async function terminateElectronProcess(electronProcess) {
+async function terminateElectronProcess(electronProcess: ChildProcess | null): Promise<void> {
   if (!electronProcess || electronProcess.killed) {
     return;
   }
@@ -63,18 +63,23 @@ async function terminateElectronProcess(electronProcess) {
       if (process.platform === "win32") {
         electronProcess.kill("SIGTERM");
       } else {
-        process.kill(-electronProcess.pid, "SIGTERM");
+        process.kill(-electronProcess.pid!, "SIGTERM");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Failed to send SIGTERM:", error.message);
       cleanup();
     }
   });
 }
 
-async function runE2ETest() {
+interface Resources {
+  electronProcess: ChildProcess | null;
+  browser: Browser | null;
+}
+
+async function runE2ETest(): Promise<void> {
   // リソースの初期化
-  const resources = {
+  const resources: Resources = {
     electronProcess: null,
     browser: null
   };
@@ -94,11 +99,11 @@ async function runE2ETest() {
     });
 
     // アプリの起動ログを表示
-    resources.electronProcess.stdout.on("data", (data) => {
+    resources.electronProcess.stdout?.on("data", (data: Buffer) => {
       console.log(`[Electron]: ${data.toString().trim()}`);
     });
 
-    resources.electronProcess.stderr.on("data", (data) => {
+    resources.electronProcess.stderr?.on("data", (data: Buffer) => {
       console.error(`[Electron Error]: ${data.toString().trim()}`);
     });
 
@@ -112,7 +117,7 @@ async function runE2ETest() {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
         console.log("✓ Connected successfully via CDP");
         break;
-      } catch (error) {
+      } catch (error: any) {
         attempts++;
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
           throw new Error(`Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error.message}`);
@@ -125,7 +130,7 @@ async function runE2ETest() {
     }
 
     // コンテキストとページを取得
-    const contexts = resources.browser.contexts();
+    const contexts: BrowserContext[] = resources.browser!.contexts();
     if (contexts.length === 0) {
       throw new Error("No browser contexts found");
     }
@@ -134,7 +139,7 @@ async function runE2ETest() {
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
     
-    const findApplicationPage = () => {
+    const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
         const pages = context.pages();
         for (const p of pages) {
@@ -179,7 +184,7 @@ async function runE2ETest() {
 
     // Scriptタブのテスト
     console.log("\n6. Testing Script tabs...");
-    const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"];
+    const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"] as const;
 
     for (const tab of tabs) {
       console.log(`   - Clicking "${tab}" tab...`);
@@ -191,7 +196,7 @@ async function runE2ETest() {
       // タブがアクティブになったことを確認
       const isSelected = await page.$eval(
         `[role="tab"]:has-text("${tab}")`,
-        (el) => el.getAttribute("aria-selected") === "true",
+        (el: Element) => el.getAttribute("aria-selected") === "true",
       );
 
       if (isSelected) {
@@ -212,10 +217,10 @@ async function runE2ETest() {
         window.close();
       });
       await page.waitForTimeout(CONFIG.WINDOW_CLOSE_WAIT); // ウィンドウが閉じるのを待つ
-    } catch (closeError) {
+    } catch (closeError: any) {
       console.log("Failed to close window gracefully:", closeError.message);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("\n✗ Test failed:", error.message);
     throw error;
   } finally {
@@ -231,7 +236,7 @@ async function runE2ETest() {
 }
 
 // メイン実行
-async function main() {
+async function main(): Promise<void> {
   console.log("Starting E2E test...");
   console.log("This test will automatically start and stop the Electron app.\n");
 
@@ -239,7 +244,7 @@ async function main() {
     await runE2ETest();
     console.log("\n✅ All tests passed!");
     process.exit(0);
-  } catch (error) {
+  } catch (error: any) {
     console.error("\n❌ Test failed:", error);
     process.exit(1);
   }

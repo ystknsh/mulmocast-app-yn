@@ -4,7 +4,7 @@
 
 ## テストファイル
 
-### 1. `automated-e2e-test.js` 
+### 1. `automated-e2e-test.ts` 
 **完全自動E2Eテスト（CI/CD対応）**
 
 - Electronアプリを自動で起動・終了
@@ -14,6 +14,11 @@
 
 **使用方法:**
 ```bash
+# TypeScriptファイルを直接実行
+npx ts-node test/automated-e2e-test.ts
+
+# または事前にコンパイルして実行
+npx tsc test/automated-e2e-test.ts
 node test/automated-e2e-test.js
 ```
 
@@ -22,6 +27,12 @@ node test/automated-e2e-test.js
 - ✅ テスト完了後に自動でアプリを終了
 - ✅ CI/CD環境での使用が可能
 - ✅ プロセスグループ終了によるクリーンアップ
+- ✅ TypeScriptによる型安全性
+- ✅ CDP接続のポーリング機能（固定待機時間なし）
+
+**環境変数:**
+- `CDP_URL`: CDP接続URL（デフォルト: `http://localhost:9222/`）
+- `APP_URL`: アプリケーションURL（デフォルト: `localhost:5173`）
 
 ### 2. `manual-electron-test.js`
 **手動起動済みアプリへの接続テスト**
@@ -80,12 +91,12 @@ if (isDev) {
 
 ## GitHub Actions での使用 → 未確認
 
-`.github/workflows/playwright-test.yml` で `automated-e2e-test.js` が使用されます:
+`.github/workflows/playwright-test.yml` で `automated-e2e-test.ts` が使用されます:
 
 ```yaml
 - name: Run Playwright tests (with xvfb)
   run: |
-    xvfb-run -a node test/automated-e2e-test.js
+    xvfb-run -a npx ts-node test/automated-e2e-test.ts
   env:
     CI: true
     NODE_ENV: test
