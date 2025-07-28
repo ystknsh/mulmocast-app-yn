@@ -26,4 +26,5 @@ export const notifyProgress = <T>(
     success: successMessage,
     error: errorMessage,
   });
+  return promise;
 };
