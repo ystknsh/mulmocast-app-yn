@@ -1,5 +1,4 @@
 <template>
-  <Button @click="reference">{{ t("project.scriptEditor.reference.generateReference") }}</Button>
 
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
@@ -100,10 +99,12 @@ const loadReference = async () => {
 };
 loadReference();
 
+/*
 const reference = async () => {
   await window.electronAPI.mulmoHandler("mulmoReferenceImages", props.projectId);
   await loadReference();
 };
+*/
 
 const update = (target: string, imageKey: string, prompt: string) => {
   emit("updateImage", imageKey, prompt);

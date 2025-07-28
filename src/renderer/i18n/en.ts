@@ -48,6 +48,7 @@ const lang = {
     generateImage: "Generate image",
     generateMovie: "Generate movie",
     generating: "Generating...",
+    add: "Add",
   },
   generating: "Generating...",
   generate: "Generate",
