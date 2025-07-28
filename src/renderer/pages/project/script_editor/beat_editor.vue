@@ -172,18 +172,24 @@
 
       <!-- right: preview -->
       <div>
-        <BeatPreview
+        <BeatPreviewImage
           :beat="beat"
           :index="index"
           :isImageGenerating="isImageGenerating"
           :isHtmlGenerating="isHtmlGenerating"
-          :isMovieGenerating="isMovieGenerating"
-          :enableMovieGenerate="enableMovieGenerate"
           :imageFile="imageFile"
-          :movieFile="movieFile"
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
+        />
+        <BeatPreviewMovie
+          :beat="beat"
+          :index="index"
+          :isMovieGenerating="isMovieGenerating"
+          :enableMovieGenerate="enableMovieGenerate"
+          :movieFile="movieFile"
+          :toggleTypeMode="toggleTypeMode"
+          @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
         />
       </div>
@@ -216,7 +222,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import BeatPreview from "./beat_preview.vue";
+import BeatPreviewImage from "./beat_preview_image.vue";
+import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
 
 // lib
