@@ -23,7 +23,14 @@
         class="border p-3 rounded"
       >
         <div class="flex items-center justify-between mb-2">
-          <h5 class="font-medium text-sm">{{ name }}</h5>
+          <div>
+            <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
+              <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
+                t("update")
+              }}</Button>
+            </div>
+            <h5 class="font-medium text-sm" @click="changeKey(name)" v-else>{{ name }}</h5>
+          </div>
           <Button
             v-if="Object.keys(speechParams.speakers).length > 1"
             variant="ghost"
@@ -110,6 +117,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import { VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
+import { useI18n } from "vue-i18n";
 
 type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
@@ -130,6 +138,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   update: [speechParams: SpeechParams];
 }>();
+
+const { t } = useI18n();
 
 const LANGUAGES = [
   { code: "en", name: "English" },
@@ -230,13 +240,46 @@ const handleDeleteSpeaker = (name: string) => {
   updateSpeakers(remainingSpeakers);
 };
 
+// add or update key
+const validateKeyFunc = (key: string) => {
+  return key !== "" && /^[a-zA-Z0-9]+$/.test(key) && !Object.keys(speakers.value).includes(key);
+};
+
+const isUpdate = ref(false);
+const updateSpeakerId = ref("");
+const validUpdateKey = computed(() => {
+  return validateKeyFunc(updateSpeakerId.value);
+});
+
+const updateKey = ref("");
+const changeKey = (key: string) => {
+  if (isUpdate.value) {
+    return;
+  }
+  isUpdate.value = true;
+  updateSpeakerId.value = key;
+  updateKey.value = key;
+};
+const handleUpdateSpeakerId = () => {
+  if (!isUpdate.value || !validUpdateKey.value) {
+    return;
+  }
+  const { [updateKey.value]: __, ...newSpeakers } = speakers.value;
+  newSpeakers[updateSpeakerId.value] = speakers.value[updateKey.value];
+  updateSpeakers({
+    ...newSpeakers,
+    [updateSpeakerId.value]: speakers.value[updateKey.value],
+  });
+
+  isUpdate.value = false;
+  updateSpeakerId.value = "";
+  updateKey.value = "";
+};
+
 const speechKey = ref("");
+
 const validateKey = computed(() => {
-  return (
-    speechKey.value !== "" &&
-    /^[a-z0-9]+$/.test(speechKey.value) &&
-    !Object.keys(speakers.value).includes(speechKey.value)
-  );
+  return validateKeyFunc(speechKey.value);
 });
 const handleAddSpeaker = () => {
   if (!validateKey.value) {
