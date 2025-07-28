@@ -6089,10 +6089,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.1.1.tgz#dd8d3a15445cd5f0cb8d958f9dfd58b78f33108f"
-  integrity sha512-4Auvl1TNbu8MLm5RAqruiFJk+Mz6s4ZoSdf1iV72Lu00L/4noexmkf3O5UsQKmOGTM3eKnmw2539Kgyt48eEpA==
+mulmocast@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.1.2.tgz#25729bd52c5e39794993fd27c864bf2b880092c5"
+  integrity sha512-YjmnTWBB8+amQJT300uVXVK/RYucfssKGqZaJtLF465nQol0HpSVObJqAcwhf1w8cjiqmQMpuadUdDwPj3YCrA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@graphai/anthropic_agent" "^2.0.5"
