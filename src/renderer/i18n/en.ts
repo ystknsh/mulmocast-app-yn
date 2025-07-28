@@ -15,11 +15,6 @@ const lang = {
       drophere: "Drop file here",
       or: "or",
       
-      // Media actions
-      play: "Play",
-      download: "Download", 
-      view: "View",
-      
       // Common labels
       title: "Title",
       description: "Description", 
@@ -33,6 +28,54 @@ const lang = {
       
       // Modal
       clickOutsideToClose: "Click outside to close",
+    },
+    
+    // Common actions (placeholder pairs)
+    actions: {
+      // Basic actions (no placeholder)
+      create: "Create",
+      update: "Update", 
+      generate: "Generate",
+      generateThing: "Generate {thing}",
+      fetch: "Fetch",
+      cancel: "Cancel",
+      
+      // Media actions (placeholder pairs)
+      play: "Play",
+      playThing: "Play {thing}",
+      download: "Download",
+      downloadThing: "Download {thing}",
+      view: "View",
+      viewThing: "View {thing}",
+      
+      // Content generation
+      generateImage: "Generate image",
+      generateMovie: "Generate movie",
+      generateReference: "Generate Reference",
+      
+      // CRUD operations (placeholder pairs)
+      add: "Add",
+      addThing: "Add {thing}",
+      delete: "Delete",
+      deleteThing: "Delete {thing}",
+      edit: "Edit",
+      editThing: "Edit {thing}",
+      open: "Open",
+      openThing: "Open {thing}",
+      
+      // Chat actions
+      clearChat: "Clear chat",
+      copyScript: "Copy script",
+      createScript: "Create Script",
+      
+      // Template actions
+      insert: "Insert",
+      change: "Change",
+      reference: "Set Reference",
+      
+      // Project actions
+      createNew: "Create New",
+      openProjectFolder: "Open Project Folder",
     },
   },
   common: {

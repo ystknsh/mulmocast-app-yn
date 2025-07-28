@@ -13,12 +13,7 @@ const lang = {
       
       // File operations  
       drophere: "画像をここにドロップ",
-      or: "もしくは",
-      
-      // Media actions
-      play: "再生",
-      download: "ダウンロード", 
-      view: "表示",
+      or: "または",
       
       // Common labels
       title: "タイトル",
@@ -33,6 +28,54 @@ const lang = {
       
       // Modal
       clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+    },
+    
+    // Common actions (placeholder pairs)
+    actions: {
+      // Basic actions (no placeholder)
+      create: "作成",
+      update: "更新", 
+      generate: "生成",
+      generateThing: "{thing}を生成",
+      fetch: "取得",
+      cancel: "キャンセル",
+      
+      // Media actions (placeholder pairs)
+      play: "再生",
+      playThing: "{thing}を再生",
+      download: "ダウンロード",
+      downloadThing: "{thing}をダウンロード",
+      view: "表示",
+      viewThing: "{thing}を表示",
+      
+      // Content generation
+      generateImage: "画像生成",
+      generateMovie: "動画生成",
+      generateReference: "参照イメージ生成",
+      
+      // CRUD operations (placeholder pairs)
+      add: "追加",
+      addThing: "{thing}を追加",
+      delete: "削除",
+      deleteThing: "{thing}を削除",
+      edit: "編集",
+      editThing: "{thing}を編集",
+      open: "開く",
+      openThing: "{thing}を開く",
+      
+      // Chat actions
+      clearChat: "チャットリセット",
+      copyScript: "チャットへコピー",
+      createScript: "スクリプト作成",
+      
+      // Template actions
+      insert: "追加",
+      change: "変更",
+      reference: "画像をセット",
+      
+      // Project actions
+      createNew: "新規作成",
+      openProjectFolder: "プロジェクトのフォルダを開く",
     },
   },
   common: {
