@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { Trash } from "lucide-vue-next";
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
@@ -190,7 +190,7 @@ const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageCompo
 const submitImage = async (imageKey: string, key: number) => {
   try {
     imageFetching.value = true;
-    notifyProgress(
+    await notifyProgress(
       window.electronAPI.mulmoHandler("mulmoReferenceImage", props.projectId, key, imageKey, {
         type: "imagePrompt",
         prompt: props.images[imageKey].prompt,
@@ -201,6 +201,9 @@ const submitImage = async (imageKey: string, key: number) => {
         errorMessage: "Failed to generate audio",
       },
     );
+
+    const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+    imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
   } catch (error) {
     console.log(error);
   }

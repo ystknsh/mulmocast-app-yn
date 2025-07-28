@@ -34,6 +34,7 @@ import {
   mulmoImageFile,
   mulmoImageFiles,
   mulmoReferenceImagesFiles,
+  mulmoReferenceImagesFile,
 } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -140,6 +141,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   }
 };
 
+// generate all reference
 export const mulmoReferenceImages = async (projectId: string, webContents: WebContents) => {
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
@@ -158,6 +160,8 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
     return null;
   }
 };
+
+// generate iamge by prompt
 export const mulmoReferenceImage = async (
   projectId: string,
   index: number,
@@ -393,6 +397,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageFile(args[0], args[1]);
       case "mulmoReferenceImagesFiles":
         return await mulmoReferenceImagesFiles(args[0]);
+      case "mulmoReferenceImagesFile":
+        return await mulmoReferenceImagesFile(args[0], args[1]);
       case "createMulmoScript":
         return await createMulmoScript(args[0], args[1]);
       case "mulmoImageUpload":
