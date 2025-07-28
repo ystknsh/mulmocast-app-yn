@@ -1,12 +1,12 @@
 import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 import dayjs from "dayjs";
 
-// 設定定数
+// Configuration constants
 const CONFIG = {
-  CDP_RETRY_DELAY: 1000, // CDP接続リトライの待機時間（1秒）
-  CDP_MAX_ATTEMPTS: 30, // CDP接続の最大試行回数
-  TAB_SWITCH_DELAY: 500, // タブ切り替え待機時間
-  INITIAL_WAIT: 3000, // テスト開始前の待機時間（3秒）
+  CDP_RETRY_DELAY: 1000, // CDP connection retry delay (1 second)
+  CDP_MAX_ATTEMPTS: 30, // Maximum CDP connection attempts
+  TAB_SWITCH_DELAY: 500, // Tab switching delay
+  INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
 } as const;
 
 interface Resources {
@@ -14,7 +14,7 @@ interface Resources {
 }
 
 async function testCreateProject(): Promise<void> {
-  // リソースの初期化
+  // Initialize resources
   const resources: Resources = {
     browser: null,
   };
@@ -23,7 +23,7 @@ async function testCreateProject(): Promise<void> {
     console.log("=== MulmoCast Playwright Test ===");
     console.log("1. Waiting for CDP to be available...");
 
-    // CDP接続の可用性をポーリング
+    // Poll for CDP connection availability
     const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
     let attempts = 0;
 
@@ -46,13 +46,13 @@ async function testCreateProject(): Promise<void> {
       }
     }
 
-    // コンテキストとページを取得
+    // Get contexts and page
     const contexts: BrowserContext[] = resources.browser!.contexts();
     if (contexts.length === 0) {
       throw new Error("No browser contexts found");
     }
 
-    // 正しいページを見つける（DevToolsではなくアプリのページ）
+    // Find the correct page (app page, not DevTools)
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
 
@@ -79,33 +79,33 @@ async function testCreateProject(): Promise<void> {
     console.log("✓ Got page from Electron app");
     console.log(`Current URL: ${page.url()}`);
 
-    // ダッシュボードに移動（念のため）
+    // Navigate to dashboard (just to be sure)
     console.log("\n2. Navigating to dashboard...");
     await page.goto(`http://${appUrl}/#/`);
     await page.waitForLoadState("networkidle");
     console.log("✓ Dashboard loaded");
 
-    // 新規作成ボタンをクリック
-    console.log('\n3. Clicking "新規作成" button...');
+    // Click the create new button
+    console.log('\n3. Clicking "Create New" button...');
     await page.click('button:has-text("新規作成")');
     await page.waitForSelector('input[placeholder="Enter project title"]');
     console.log("✓ New project dialog opened");
 
-    // プロジェクトタイトルを入力（日付＋時刻）
+    // Enter project title (date + time)
     const projectTitle = dayjs().format("YYYYMMDD_HHmmss");
     console.log(`\n4. Entering project title: ${projectTitle}`);
     await page.fill('input[placeholder="Enter project title"]', projectTitle);
     console.log("✓ Project title entered");
 
-    // Createボタンをクリック
+    // Click the Create button
     console.log('\n5. Clicking "Create" button...');
     await page.click('button:has-text("Create")');
 
-    // プロジェクトページが読み込まれるまで待機
+    // Wait for project page to load
     await page.waitForSelector(`h1:has-text("${projectTitle}")`);
     console.log("✓ Project created and page loaded");
 
-    // Scriptタブのテスト
+    // Test Script tabs
     console.log("\n6. Testing Script tabs...");
     const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"] as const;
 
@@ -113,10 +113,10 @@ async function testCreateProject(): Promise<void> {
       console.log(`   - Clicking "${tab}" tab...`);
       await page.click(`[role="tab"]:has-text("${tab}")`);
 
-      // タブがアクティブになるまで少し待機
+      // Wait a bit for tab to become active
       await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
-      // タブがアクティブになったことを確認
+      // Verify tab is active
       const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
       if (tabElement) {
         const isSelected = await tabElement.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
@@ -137,7 +137,7 @@ async function testCreateProject(): Promise<void> {
     console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
   } finally {
-    // ブラウザ接続を閉じる
+    // Close browser connection
     if (resources.browser) {
       await resources.browser.close();
       console.log("\nBrowser connection closed.");
@@ -145,7 +145,7 @@ async function testCreateProject(): Promise<void> {
   }
 }
 
-// メイン実行
+// Main execution
 async function main(): Promise<void> {
   console.log("Starting test in 3 seconds...");
   console.log("Make sure the Electron app is running with: yarn start");
@@ -164,5 +164,5 @@ async function main(): Promise<void> {
   }
 }
 
-// 実行
+// Execute
 main();
