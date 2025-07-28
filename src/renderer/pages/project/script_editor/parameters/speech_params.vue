@@ -26,9 +26,9 @@
           <div>
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
               <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
-                $t("update")
+                t("update")
               }}</Button
-              >{{ validUpdateKey }}
+              >
             </div>
             <h5 class="font-medium text-sm" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
@@ -118,6 +118,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import { VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
+import { useI18n } from "vue-i18n";
 
 type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
@@ -138,6 +139,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   update: [speechParams: SpeechParams];
 }>();
+
+const { t } = useI18n();
 
 const LANGUAGES = [
   { code: "en", name: "English" },

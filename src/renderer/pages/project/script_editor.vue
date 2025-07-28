@@ -42,7 +42,7 @@
               <Card class="p-4 space-y-1 gap-2">
                 <div class="font-bold text-gray-700 flex justify-between items-center">
                   <span>Beat {{ index + 1 }}</span>
-                  <Badge variant="outline">{{ $t("beat.badge." + getBadge(beat)) }}</Badge>
+                  <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
                 </div>
                 <div>
                   <Label>Speaker</Label>
@@ -249,6 +249,7 @@ import {
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
@@ -267,6 +268,8 @@ interface Props {
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
+
+const { t } = useI18n();
 
 const props = defineProps<Props>();
 const emit = defineEmits([
