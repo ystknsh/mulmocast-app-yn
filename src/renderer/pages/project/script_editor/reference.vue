@@ -16,8 +16,11 @@
               :model-value="images[imageKey].prompt"
               @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
               class="mb-2 h-20 overflow-y-auto"
+              :disabled="isGeneratings[imageKey]"
             />
-            <Button @click="() => submitImage(imageKey, key)">Generate</Button>
+            <Button @click="() => submitImage(imageKey, key)" :disabled="isGeneratings[imageKey]">{{
+              t("generate")
+            }}</Button>
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
             <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
@@ -187,7 +190,14 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
 
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId ?? "");
 
+const isGeneratings = ref({});
+
 const submitImage = async (imageKey: string, key: number) => {
+  if (isGeneratings.value[imageKey]) {
+    return;
+  }
+
+  isGeneratings.value[imageKey] = true;
   try {
     imageFetching.value = true;
     await notifyProgress(
@@ -207,5 +217,6 @@ const submitImage = async (imageKey: string, key: number) => {
   } catch (error) {
     console.log(error);
   }
+  isGeneratings.value[imageKey] = false;
 };
 </script>
