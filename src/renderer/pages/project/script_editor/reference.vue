@@ -43,7 +43,8 @@
               </Button>
             </div>
 
-            {{ images[imageKey].source.kind }}
+          </template>
+          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'">
           </template>
         </div>
         <div>

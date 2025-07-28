@@ -110,9 +110,9 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
     return {};
   }
   const imageRefs: Record<string, ArrayBuffer> = {};
-  Object.keys(images)
+  await Promise.all(Object.keys(images)
     .sort()
-    .map((key) => {
+    .map(async (key) => {
       const image = images[key];
       try {
         const path = (() => {
@@ -126,10 +126,17 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
           const buffer = fs.readFileSync(path);
           imageRefs[key] = buffer.buffer;
         }
+        if (image.type === "image" && image.source.kind === "url") {
+          const response = await fetch(image.source.url);
+          if (response.ok) {
+            const buffer = Buffer.from(await response.arrayBuffer());
+            imageRefs[key] = buffer.buffer;
+          }
+        }
       } catch (error) {
         console.log(error);
       }
-    });
+    }));
   return imageRefs;
 };
 
