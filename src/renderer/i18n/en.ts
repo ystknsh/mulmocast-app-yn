@@ -50,7 +50,7 @@ const lang = {
     generating: "Generating...",
   },
   generating: "Generating...",
-  generate: "Generate", 
+  generate: "Generate",
   update: "Update",
   dashboard: {
     createNew: "Create New",
