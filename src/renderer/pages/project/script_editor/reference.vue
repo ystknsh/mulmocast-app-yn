@@ -74,6 +74,9 @@ import { bufferToUrl } from "@/lib/utils";
 
 import ReferenceSelector from "./reference_selector.vue";
 
+import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
+import { notifyProgress } from "@/lib/notification";
+
 interface Props {
   projectId: string;
   images: MulmoImageParamsImages;
@@ -182,13 +185,22 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
   }
 };
 
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId ?? "");
+
 const submitImage = async (imageKey: string, key: number) => {
   try {
     imageFetching.value = true;
-    await window.electronAPI.mulmoHandler("mulmoReferenceImage", props.projectId, key, imageKey, {
-      type: "imagePrompt",
-      prompt: props.images[imageKey].prompt,
-    });
+    notifyProgress(
+      window.electronAPI.mulmoHandler("mulmoReferenceImage", props.projectId, key, imageKey, {
+        type: "imagePrompt",
+        prompt: props.images[imageKey].prompt,
+      }),
+      {
+        loadingMessage: ConcurrentTaskStatusMessageComponent,
+        successMessage: "Audio generated successfully",
+        errorMessage: "Failed to generate audio",
+      },
+    );
   } catch (error) {
     console.log(error);
   }
