@@ -127,6 +127,8 @@ const submitUrlImage = async (imageKey: string) => {
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
       emit("updateImagePath", imageKey, "./" + res.path);
+      emit("saveMulmo");
+      emit("formatAndPushHistoryMulmoScript");
       mediaUrl.value = "";
       loadReference();
     }
@@ -176,10 +178,8 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
         extention,
       );
       emit("updateImagePath", imageKey, "./" + path);
-      setTimeout(() => {
-        // TODO: fix
-        loadReference();
-      }, 10);
+      const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+      imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
     };
     reader.readAsArrayBuffer(file);
   }
