@@ -48,6 +48,7 @@ const lang = {
     generateImage: "画像生成",
     generateMovie: "動画生成",
     generating: "生成中...",
+    add: "追加",
   },
   generating: "生成中...",
   generate: "生成",

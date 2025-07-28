@@ -1,6 +1,4 @@
 <template>
-  <Button @click="reference">{{ t("project.scriptEditor.reference.generateReference") }}</Button>
-
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
@@ -43,9 +41,8 @@
                 {{ t("common.fetch") }}
               </Button>
             </div>
-
-            {{ images[imageKey].source.kind }}
           </template>
+          <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"> </template>
         </div>
         <div>
           <img :src="imageRefs[imageKey]" />
@@ -100,10 +97,12 @@ const loadReference = async () => {
 };
 loadReference();
 
+/*
 const reference = async () => {
   await window.electronAPI.mulmoHandler("mulmoReferenceImages", props.projectId);
   await loadReference();
 };
+*/
 
 const update = (target: string, imageKey: string, prompt: string) => {
   emit("updateImage", imageKey, prompt);
