@@ -5,7 +5,9 @@ const playwright = require("playwright-core");
 const CONFIG = {
   PROCESS_KILL_TIMEOUT: 5000, // 5秒
   APP_START_WAIT: 15000,      // 15秒
-  WINDOW_CLOSE_WAIT: 1000     // 1秒
+  WINDOW_CLOSE_WAIT: 1000,    // 1秒
+  CDP_MAX_ATTEMPTS: 30,       // CDP接続の最大試行回数
+  CDP_RETRY_DELAY: 1000       // CDP接続リトライの待機時間（1秒）
 };
 
 // 日付と時刻をフォーマットする関数
@@ -100,13 +102,27 @@ async function runE2ETest() {
       console.error(`[Electron Error]: ${data.toString().trim()}`);
     });
 
-    // アプリが完全に起動するまで待機
-    console.log(`Waiting for app to start (${CONFIG.APP_START_WAIT / 1000} seconds)...`);
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.APP_START_WAIT));
-
-    console.log("\n2. Connecting to Electron via CDP...");
-    resources.browser = await playwright.chromium.connectOverCDP("http://localhost:9222/");
-    console.log("✓ Connected successfully");
+    // CDP接続の可用性をポーリング
+    console.log("\n2. Waiting for CDP to be available...");
+    const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
+    let attempts = 0;
+    
+    while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
+      try {
+        resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
+        console.log("✓ Connected successfully via CDP");
+        break;
+      } catch (error) {
+        attempts++;
+        if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
+          throw new Error(`Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error.message}`);
+        }
+        if (attempts === 1) {
+          console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
+        }
+        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY));
+      }
+    }
 
     // コンテキストとページを取得
     const contexts = resources.browser.contexts();
