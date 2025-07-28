@@ -12,7 +12,7 @@
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .js,.ts,.vue src",
+    "lint": "eslint --ext .js,.ts,.vue src test",
     "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
     "lint:vue": "vue-tsc --noEmit --project tsconfig.vue.json",
     "test": "NODE_ENV=test npx tsx --test ./test/test_*.ts",

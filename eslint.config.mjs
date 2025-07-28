@@ -180,5 +180,28 @@ export default [
       },
     },
   },
+  // Test files configuration (Node.js + Browser globals for Playwright)
+  {
+    files: ["test/**/*.{js,ts}"],
+    languageOptions: {
+      ...baseLanguageOptions,
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+    plugins: {
+      ...basePlugins,
+    },
+    rules: {
+      ...typescript.configs.recommended.rules,
+      ...baseRules,
+    },
+    settings: {
+      "import/resolver": {
+        typescript: true,
+      },
+    },
+  },
   prettierConfig,
 ];
