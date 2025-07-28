@@ -131,21 +131,19 @@ async function runE2ETest() {
     }
 
     // 正しいページを見つける（DevToolsではなくアプリのページ）
+    const appUrl = process.env.APP_URL || "localhost:5173";
+    console.log(`Looking for application page with URL containing: ${appUrl}`);
+    
     const findApplicationPage = () => {
       for (const context of contexts) {
         const pages = context.pages();
         for (const p of pages) {
           const url = p.url();
           console.log(`Found page: ${url}`);
-          if (url.includes("localhost:5173")) {
+          if (url.includes(appUrl)) {
             return p;
           }
         }
-      }
-      
-      // もし見つからなければ、最初のコンテキストの2番目のページを試す
-      if (contexts[0].pages().length > 1) {
-        return contexts[0].pages()[1];
       }
       
       return null;
