@@ -96,7 +96,7 @@ import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
 import { validateSchemaAgent, readTemplatePrompt } from "mulmocast/browser";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates, scriptTemplates } from "mulmocast/data";
+import { promptTemplates } from "mulmocast/data";
 
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
@@ -105,7 +105,6 @@ import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
-import { defaultSchema } from "./chat/utils";
 
 const { t } = useI18n();
 const { messages = [] } = defineProps<{
