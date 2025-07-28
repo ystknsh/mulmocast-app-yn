@@ -1,4 +1,5 @@
 import playwright, { Browser, BrowserContext, Page } from "playwright-core";
+import dayjs from "dayjs";
 
 // 設定定数
 const CONFIG = {
@@ -8,18 +9,6 @@ const CONFIG = {
   INITIAL_WAIT: 3000          // テスト開始前の待機時間（3秒）
 } as const;
 
-// 日付と時刻をフォーマットする関数
-function getDateTimeString(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-
-  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
-}
 
 interface Resources {
   browser: Browser | null;
@@ -102,7 +91,7 @@ async function testCreateProject(): Promise<void> {
     console.log("✓ New project dialog opened");
 
     // プロジェクトタイトルを入力（日付＋時刻）
-    const projectTitle = getDateTimeString();
+    const projectTitle = dayjs().format("YYYYMMDD_HHmmss");
     console.log(`\n4. Entering project title: ${projectTitle}`);
     await page.fill('input[placeholder="Enter project title"]', projectTitle);
     console.log("✓ Project title entered");

@@ -1,5 +1,6 @@
 import { spawn, ChildProcess } from "child_process";
 import playwright, { Browser, BrowserContext, Page } from "playwright-core";
+import dayjs from "dayjs";
 
 // 設定定数
 const CONFIG = {
@@ -10,18 +11,6 @@ const CONFIG = {
   CDP_RETRY_DELAY: 1000       // CDP接続リトライの待機時間（1秒）
 } as const;
 
-// 日付と時刻をフォーマットする関数
-function getDateTimeString(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-
-  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
-}
 
 // Electronプロセスを終了する関数
 async function terminateElectronProcess(electronProcess: ChildProcess | null): Promise<void> {
@@ -169,7 +158,7 @@ async function runE2ETest(): Promise<void> {
     console.log("✓ New project dialog opened");
 
     // プロジェクトタイトルを入力
-    const projectTitle = getDateTimeString();
+    const projectTitle = dayjs().format("YYYYMMDD_HHmmss");
     console.log(`\n4. Entering project title: ${projectTitle}`);
     await page.fill('input[placeholder="Enter project title"]', projectTitle);
     console.log("✓ Project title entered");
