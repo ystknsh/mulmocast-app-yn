@@ -180,18 +180,22 @@ async function runE2ETest(): Promise<void> {
       await page.click(`[role="tab"]:has-text("${tab}")`);
 
       // タブがアクティブになるまで少し待機
-      await page.waitForTimeout(500);
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // タブがアクティブになったことを確認
-      const isSelected = await page.$eval(
-        `[role="tab"]:has-text("${tab}")`,
-        (el: Element) => el.getAttribute("aria-selected") === "true",
-      );
+      const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
+      if (tabElement) {
+        const isSelected = await tabElement.evaluate(
+          (el: Element) => el.getAttribute("aria-selected") === "true"
+        );
 
-      if (isSelected) {
-        console.log(`   ✓ "${tab}" tab is now active`);
+        if (isSelected) {
+          console.log(`   ✓ "${tab}" tab is now active`);
+        } else {
+          console.log(`   ✗ Failed to activate "${tab}" tab`);
+        }
       } else {
-        console.log(`   ✗ Failed to activate "${tab}" tab`);
+        console.log(`   ✗ Tab element "${tab}" not found`);
       }
     }
 
@@ -205,7 +209,7 @@ async function runE2ETest(): Promise<void> {
       await page.evaluate(() => {
         window.close();
       });
-      await page.waitForTimeout(CONFIG.WINDOW_CLOSE_WAIT); // ウィンドウが閉じるのを待つ
+      await new Promise(resolve => setTimeout(resolve, CONFIG.WINDOW_CLOSE_WAIT)); // ウィンドウが閉じるのを待つ
     } catch (closeError: any) {
       console.log("Failed to close window gracefully:", closeError.message);
     }
