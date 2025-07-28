@@ -17,13 +17,14 @@
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
             :title="t('form.' + imageGenerateButtonTitle)"
           >
-            <Sparkles :class="isImageGenerating || isHtmlGenerating ? 'text-gray-400' : ''" class="w-4 h-4" />
+            <Loader2 v-if="isImageGenerating || isHtmlGenerating" class="w-4 h-4 animate-spin" />
+            <Sparkles v-else class="w-4 h-4" />
           </Button>
         </template>
         <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
         <template v-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
-          <Loader2 class="w-4 h-4 mr-1 animate-spin" />{{ t("generating") }}
+          {{ t("generating") }}
         </template>
         <!-- image pewview -->
         <template v-else-if="imageFile">
@@ -68,7 +69,8 @@
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
             :title="t('form.' + movieGenerateButtonTitle)"
           >
-            <Sparkles :class="isMovieGenerating ? 'text-gray-400' : ''" class="w-4 h-4" />
+            <Loader2 v-if="isMovieGenerating" class="w-4 h-4 animate-spin" />
+            <Sparkles v-else class="w-4 h-4" />
           </Button>
         </template>
         <template v-if="isMovieGenerating">
