@@ -133,4 +133,27 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
   return imageRefs;
 };
 
-export const mulmoImageRefecenceImage = () => {};
+export const mulmoReferenceImagesFile = async (projectId: string, key: string) => {
+  const context = await getContext(projectId);
+  const images = context.presentationStyle.imageParams?.images;
+  if (!images) {
+    return {};
+  }
+  const image = images[key];
+  try {
+    const path = (() => {
+      if (image.type === "imagePrompt") {
+        return getReferenceImagePath(context, key, "png");
+      } else if (image.type === "image" && image.source.kind === "path") {
+        return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+      }
+    })();
+    if (path && fs.existsSync(path)) {
+      const buffer = fs.readFileSync(path);
+      return buffer.buffer;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
+};
