@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { Trash } from "lucide-vue-next";
-import { ref, computed, nextTick } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
