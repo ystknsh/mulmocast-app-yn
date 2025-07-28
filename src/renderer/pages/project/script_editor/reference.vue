@@ -75,7 +75,7 @@ import { bufferToUrl } from "@/lib/utils";
 import ReferenceSelector from "./reference_selector.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
-import { notifySuccess, notifyProgress } from "@/lib/notification";
+import { notifyProgress } from "@/lib/notification";
 
 interface Props {
   projectId: string;
