@@ -2,16 +2,16 @@ import { spawn, ChildProcess } from "child_process";
 import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 import dayjs from "dayjs";
 
-// 設定定数
+// Configuration constants
 const CONFIG = {
-  PROCESS_KILL_TIMEOUT: 5000, // 5秒
-  APP_START_WAIT: 15000, // 15秒
-  WINDOW_CLOSE_WAIT: 1000, // 1秒
-  CDP_MAX_ATTEMPTS: 30, // CDP接続の最大試行回数
-  CDP_RETRY_DELAY: 1000, // CDP接続リトライの待機時間（1秒）
+  PROCESS_KILL_TIMEOUT: 5000, // 5 seconds
+  APP_START_WAIT: 15000, // 15 seconds
+  WINDOW_CLOSE_WAIT: 1000, // 1 second
+  CDP_MAX_ATTEMPTS: 30, // Maximum CDP connection attempts
+  CDP_RETRY_DELAY: 1000, // CDP connection retry delay (1 second)
 } as const;
 
-// Electronプロセスを終了する関数
+// Function to terminate Electron process
 async function terminateElectronProcess(electronProcess: ChildProcess | null): Promise<void> {
   if (!electronProcess || electronProcess.killed) {
     return;
@@ -29,11 +29,11 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
       }
     };
 
-    // プロセス終了イベントのリスナー
+    // Process exit event listeners
     electronProcess.once("exit", cleanup);
     electronProcess.once("error", cleanup);
 
-    // タイムアウト設定
+    // Timeout setting
     const __timeout = setTimeout(() => {
       if (!resolved) {
         console.log("Force killing process...");
@@ -46,7 +46,7 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
       }
     }, CONFIG.PROCESS_KILL_TIMEOUT);
 
-    // 優雅な終了を試行
+    // Attempt graceful termination
     try {
       if (process.platform === "win32") {
         electronProcess.kill("SIGTERM");
@@ -66,7 +66,7 @@ interface Resources {
 }
 
 async function runE2ETest(): Promise<void> {
-  // リソースの初期化
+  // Initialize resources
   const resources: Resources = {
     electronProcess: null,
     browser: null,
@@ -76,17 +76,17 @@ async function runE2ETest(): Promise<void> {
     console.log("=== MulmoCast E2E Test ===");
     console.log("1. Starting Electron app with yarn start...");
 
-    // Electronアプリをspawnで起動（プロセスグループを作成）
+    // Start Electron app with spawn (create process group)
     resources.electronProcess = spawn("yarn", ["start"], {
       shell: true,
-      detached: process.platform !== "win32", // Windowsではdetachedを使わない
+      detached: process.platform !== "win32", // Don't use detached on Windows
       env: {
         ...process.env,
         NODE_ENV: "development",
       },
     });
 
-    // アプリの起動ログを表示
+    // Display app startup logs
     resources.electronProcess.stdout?.on("data", (data: Buffer) => {
       console.log(`[Electron]: ${data.toString().trim()}`);
     });
@@ -95,7 +95,7 @@ async function runE2ETest(): Promise<void> {
       console.error(`[Electron Error]: ${data.toString().trim()}`);
     });
 
-    // CDP接続の可用性をポーリング
+    // Poll for CDP connection availability
     console.log("\n2. Waiting for CDP to be available...");
     const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
     let attempts = 0;
@@ -119,13 +119,13 @@ async function runE2ETest(): Promise<void> {
       }
     }
 
-    // コンテキストとページを取得
+    // Get contexts and page
     const contexts: BrowserContext[] = resources.browser!.contexts();
     if (contexts.length === 0) {
       throw new Error("No browser contexts found");
     }
 
-    // 正しいページを見つける（DevToolsではなくアプリのページ）
+    // Find the correct page (app page, not DevTools)
     const appUrl = process.env.APP_URL || "localhost:5173";
     console.log(`Looking for application page with URL containing: ${appUrl}`);
 
@@ -152,27 +152,27 @@ async function runE2ETest(): Promise<void> {
     console.log("✓ Got page from Electron app");
     console.log(`Current URL: ${page.url()}`);
 
-    // 新規作成ボタンをクリック
+    // Click the create new button
     console.log("\n3. Creating new project...");
-    await page.click('button:has-text("新規作成")');
+    await page.click('button:has-text("新規作成")'); // "Create New" button in Japanese
     await page.waitForSelector('input[placeholder="Enter project title"]');
     console.log("✓ New project dialog opened");
 
-    // プロジェクトタイトルを入力
+    // Enter project title
     const projectTitle = dayjs().format("YYYYMMDD_HHmmss");
     console.log(`\n4. Entering project title: ${projectTitle}`);
     await page.fill('input[placeholder="Enter project title"]', projectTitle);
     console.log("✓ Project title entered");
 
-    // Createボタンをクリック
+    // Click the Create button
     console.log('\n5. Clicking "Create" button...');
     await page.click('button:has-text("Create")');
 
-    // プロジェクトページが読み込まれるまで待機
+    // Wait for project page to load
     await page.waitForSelector(`h1:has-text("${projectTitle}")`);
     console.log("✓ Project created and page loaded");
 
-    // Scriptタブのテスト
+    // Test Script tabs
     console.log("\n6. Testing Script tabs...");
     const tabs = ["Text", "YAML", "JSON", "Media", "Style", "Ref"] as const;
 
@@ -180,10 +180,10 @@ async function runE2ETest(): Promise<void> {
       console.log(`   - Clicking "${tab}" tab...`);
       await page.click(`[role="tab"]:has-text("${tab}")`);
 
-      // タブがアクティブになるまで少し待機
+      // Wait a bit for tab to become active
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // タブがアクティブになったことを確認
+      // Verify tab is active
       const tabElement = await page.$(`[role="tab"]:has-text("${tab}")`);
       if (tabElement) {
         const isSelected = await tabElement.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
@@ -201,14 +201,14 @@ async function runE2ETest(): Promise<void> {
     console.log("\n=== Test completed successfully! ===");
     console.log(`Project "${projectTitle}" was created and all Script tabs were tested.`);
 
-    // テスト完了後、アプリケーションを正常に閉じる
+    // Close application normally after test completion
     console.log("\nClosing application window...");
     try {
-      // Electronアプリのウィンドウを閉じる
+      // Close Electron app window
       await page.evaluate(() => {
         (window as Window & { close: () => void }).close();
       });
-      await new Promise((resolve) => setTimeout(resolve, CONFIG.WINDOW_CLOSE_WAIT)); // ウィンドウが閉じるのを待つ
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.WINDOW_CLOSE_WAIT)); // Wait for window to close
     } catch (closeError: unknown) {
       console.log(
         "Failed to close window gracefully:",
@@ -219,18 +219,18 @@ async function runE2ETest(): Promise<void> {
     console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
   } finally {
-    // ブラウザ接続を閉じる
+    // Close browser connection
     if (resources.browser) {
       await resources.browser.close();
       console.log("\nBrowser connection closed.");
     }
 
-    // Electronプロセスを終了
+    // Terminate Electron process
     await terminateElectronProcess(resources.electronProcess);
   }
 }
 
-// メイン実行
+// Main execution
 async function main(): Promise<void> {
   console.log("Starting E2E test...");
   console.log("This test will automatically start and stop the Electron app.\n");
@@ -245,5 +245,5 @@ async function main(): Promise<void> {
   }
 }
 
-// 実行
+// Execute
 main();
