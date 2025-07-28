@@ -115,6 +115,56 @@ API keys and settings are managed through:
   - `GOOGLE_PROJECT_ID`: Google Cloud services
   - `REPLICATE_API_TOKEN`: AI model hosting service
 
+#### Secure API Key Storage
+
+**IMPORTANT**: Never store API keys in plaintext JSON files in production. Instead, implement secure storage:
+
+**Recommended Approach - OS Keychain Services:**
+- Use libraries like [Keytar](https://github.com/atom/node-keytar) to leverage OS-level secure storage:
+  - macOS: Keychain Access
+  - Windows: Credential Manager
+  - Linux: Secret Service API/libsecret
+
+**Security Requirements:**
+1. **Encryption**: Always encrypt API keys before storage, even with keychain services
+2. **Log Redaction**: Ensure keys are never logged in console output, error messages, or crash reports
+3. **Environment-Based Storage**:
+   - Development: `.env` files (ensure in `.gitignore`)
+   - Production: OS keychain or encrypted credential store
+4. **Key Rotation**: Support updating keys without app restart
+5. **Access Auditing**: Log key access events (not the keys themselves)
+
+**Implementation Example:**
+```typescript
+// src/main/security/keystore.ts
+import keytar from 'keytar';
+import crypto from 'crypto';
+
+export class SecureKeyStore {
+  private readonly serviceName = 'mulmocast-app';
+  
+  async storeKey(keyName: string, value: string): Promise<void> {
+    const encrypted = this.encrypt(value);
+    await keytar.setPassword(this.serviceName, keyName, encrypted);
+  }
+  
+  async getKey(keyName: string): Promise<string | null> {
+    const encrypted = await keytar.getPassword(this.serviceName, keyName);
+    return encrypted ? this.decrypt(encrypted) : null;
+  }
+  
+  private encrypt(text: string): string {
+    // Implement encryption logic
+    // Never log the actual key value
+  }
+  
+  private decrypt(encrypted: string): string {
+    // Implement decryption logic
+    // Ensure errors don't expose key data
+  }
+}
+```
+
 ### 8. Build & Development
 
 - Framework: Electron Forge with Vite
