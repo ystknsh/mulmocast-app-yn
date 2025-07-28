@@ -56,7 +56,8 @@
               @click="() => submitImage(imageKey, key)"
               :disabled="isGeneratings[imageKey]"
             >
-              <Sparkles :class="isGeneratings[imageKey] ? 'text-gray-400' : ''" class="w-4 h-4" />
+              <Loader2 v-if="isGeneratings[imageKey]" class="w-4 h-4 animate-spin" />
+              <Sparkles v-else class="w-4 h-4" />
             </Button>
             <div v-if="imageRefs[imageKey]" class="flex justify-center items-center">
               <img :src="imageRefs[imageKey]" class="max-h-64" />
@@ -83,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { Trash, Sparkles, FileImage } from "lucide-vue-next";
+import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
