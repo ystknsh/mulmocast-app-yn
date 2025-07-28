@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { FileImage, Video, Play, Loader2, Sparkles } from "lucide-vue-next";
+import { Video, Play, Loader2, Sparkles } from "lucide-vue-next";
 import { computed } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
@@ -56,17 +56,14 @@ import { isLocalSourceMediaBeat } from "@/lib/beat_util";
 interface Props {
   beat: MulmoBeat;
   index: number;
-  imageFile: ArrayBuffer | string | null;
   movieFile: ArrayBuffer | string | null;
-  isImageGenerating: boolean;
-  isHtmlGenerating: boolean;
   isMovieGenerating: boolean;
   enableMovieGenerate: boolean;
   toggleTypeMode?: boolean;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["openModal", "generateImage", "generateMovie"]);
+const emit = defineEmits(["openModal", "generateMovie"]);
 
 const { t } = useI18n();
 
@@ -90,21 +87,9 @@ const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer
   emit("openModal", type, src);
 };
 
-const generateImage = () => {
-  emit("generateImage");
-};
-
 const generateMovie = () => {
   emit("generateMovie");
 };
-
-const imageGenerateButtonTitle = computed(() => {
-  return props.toggleTypeMode
-    ? "changeBeatTypeFirst"
-    : props.isImageGenerating || props.isHtmlGenerating
-      ? "generating"
-      : "generateImage";
-});
 
 const movieGenerateButtonTitle = computed(() => {
   return props.toggleTypeMode ? "changeBeatTypeFirst" : props.isMovieGenerating ? "generating" : "generateMovie";
