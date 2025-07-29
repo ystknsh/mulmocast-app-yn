@@ -71,10 +71,9 @@
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
         <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button>
-            <Play :size="16" class="mr-2" />
-            {{ t("project.productTabs.podcast.play") }}
-          </Button>
+          <div>
+            <audio :src="audioUrl" v-if="!!audioUrl" controls />
+          </div>
           <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
             {{ t("project.productTabs.podcast.download") }}
@@ -124,6 +123,7 @@ interface Props {
 const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
+const audioUrl = ref("");
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
@@ -151,8 +151,10 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
 };
 
 const updateResources = async () => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(buffer, "video/mp4");
+  const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+  videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
+  const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
+  audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
 };
 
 watch(
