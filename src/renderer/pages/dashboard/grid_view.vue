@@ -29,7 +29,7 @@
         <div class="p-4">
           <div class="mb-2 flex items-center justify-between">
             <h3 class="truncate text-sm font-semibold text-gray-900">
-              {{ project?.script?.title ||  t('common.defaultTitle') }}
+              {{ project?.script?.title || t("common.defaultTitle") }}
             </h3>
           </div>
           <div class="flex items-center justify-between text-xs text-gray-500">

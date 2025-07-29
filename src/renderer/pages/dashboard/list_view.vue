@@ -23,7 +23,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-2">
-                <h3 class="font-semibold text-gray-900">{{ project?.script?.title || t('common.defaultTitle') }}</h3>
+                <h3 class="font-semibold text-gray-900">{{ project?.script?.title || t("common.defaultTitle") }}</h3>
               </div>
               <div class="mt-1 flex items-center space-x-1 text-sm text-gray-500">
                 <Calendar class="h-4 w-4" />
