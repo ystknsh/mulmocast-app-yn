@@ -5,15 +5,38 @@
         ^
       </Button>
     </CollapsibleTrigger>
-
-    <CollapsibleContent> TODO: edit style </CollapsibleContent>
+    <CollapsibleContent>
+      <ImageParams
+        :image-params="beat.imageParams"
+        @update="(value) => updateParam(value)"
+        :enableCheckbox="true"
+        :mulmoError="[]"
+      />
+    </CollapsibleContent>
   </Collapsible>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
+import { type MulmoBeat } from "mulmocast";
+
+interface Props {
+  beat: MulmoBeat;
+}
+
+defineProps<Props>();
+
+const emit = defineEmits<{
+  update: [key: string, imageParams: ImageParams | undefined];
+}>();
+
+import ImageParams from "./parameters/image_params.vue";
+
+const updateParam = (value: ImageParams | undefined) => {
+  emit("update", "imageParams", value);
+};
 
 const open = ref(false);
 </script>

@@ -202,7 +202,7 @@
       </div>
     </div>
 
-    <BeatStyle />
+    <BeatStyle :beat="beat" @update="update" />
 
     <div
       v-if="mulmoError && mulmoError.length > 0"

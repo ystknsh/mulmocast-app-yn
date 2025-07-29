@@ -1,6 +1,14 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Image Parameters</h4>
+    <h4 class="mb-3 font-medium">
+      <Checkbox
+        v-if="enableCheckbox"
+        class="m-2"
+        :model-value="!!imageParams"
+        @update:modelValue="(val) => enabled(val)"
+      />Image Parameters
+    </h4>
+
     <div class="space-y-3">
       <div>
         <Label>Provider</Label>
@@ -64,6 +72,7 @@
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import { provider2ImageAgent, type MulmoPresentationStyle } from "mulmocast/browser";
@@ -80,6 +89,7 @@ const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) =>
 const props = defineProps<{
   imageParams?: ImageParams;
   mulmoError: string[];
+  enableCheckbox?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -91,6 +101,14 @@ const DEFAULT_VALUES: ImageParams = {
   model: undefined,
   style: undefined,
   moderation: undefined,
+};
+
+const enabled = (val: boolean) => {
+  if (val) {
+    emit("update", DEFAULT_VALUES);
+  } else {
+    emit("update", undefined);
+  }
 };
 
 const handleProviderChange = (value: ImageParams["provider"]) => {
