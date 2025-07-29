@@ -122,18 +122,21 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import dayjs from "dayjs";
+
 import Layout from "@/components/layout.vue";
+import MulmoViewer from "@/components/mulmo_viewer.vue";
 import ListView from "./dashboard/list_view.vue";
 import GridView from "./dashboard/grid_view.vue";
 import NewProjectDialog from "./dashboard/new_project_dialog.vue";
-import { projectApi, type Project } from "@/lib/project_api";
-import dayjs from "dayjs";
+
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useI18n } from "vue-i18n";
-import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import MulmoViewer from "@/components/mulmo_viewer.vue";
+
+import { projectApi, type Project } from "@/lib/project_api";
+import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();

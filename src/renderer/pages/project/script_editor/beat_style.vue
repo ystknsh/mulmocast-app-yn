@@ -80,5 +80,4 @@ const openEvent = (event) => {
   }
 };
 
-const open = ref(false);
 </script>

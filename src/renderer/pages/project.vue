@@ -311,14 +311,11 @@ import {
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { Button } from "@/components/ui/button";
+import { Button, Badge, Label, Switch } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)

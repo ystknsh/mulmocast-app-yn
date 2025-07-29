@@ -36,9 +36,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, Label, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { LANGUAGES } from "../../../../../shared/constants";
