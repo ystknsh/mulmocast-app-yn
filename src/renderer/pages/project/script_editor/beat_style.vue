@@ -20,12 +20,13 @@
 import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui";
+import { type MulmoBeat } from "mulmocast";
 
 interface Props {
   beat: MulmoBeat;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
@@ -33,7 +34,7 @@ const emit = defineEmits<{
 
 import ImageParams from "./parameters/image_params.vue";
 
-const updateParam = (value: any) => {
+const updateParam = (value: ImageParams | undefined) => {
   emit("update", "imageParams", value);
 };
 
