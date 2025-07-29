@@ -10,60 +10,64 @@
     </h4>
 
     <div class="space-y-3">
-      <div>
-        <Label>Provider</Label>
-        <Select
-          :model-value="imageParams?.provider || DEFAULT_VALUES.provider"
-          @update:model-value="handleProviderChange"
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
-              {{ provider.name }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
+      <div v-if="enableCheckbox && !imageParams">TODO: default image style</div>
+
+      <div v-else>
+        <div>
+          <Label>Provider</Label>
+          <Select
+            :model-value="imageParams?.provider || DEFAULT_VALUES.provider"
+            @update:model-value="handleProviderChange"
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
+                {{ provider.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Model</Label>
+          <Select
+            :model-value="imageParams?.model || DEFAULT_VALUES.model"
+            @update:model-value="(value) => handleUpdate('model', String(value))"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Auto" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__undefined__">Auto</SelectItem>
+              <SelectItem
+                v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
+                :key="model"
+                :value="model"
+              >
+                {{ model }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Style</Label>
+          <Input
+            :model-value="imageParams?.style || DEFAULT_VALUES.style"
+            @update:model-value="(value) => handleUpdate('style', String(value))"
+            placeholder="e.g. vivid, natural"
+          />
+        </div>
+        <div>
+          <Label>Moderation</Label>
+          <Input
+            :model-value="imageParams?.moderation || DEFAULT_VALUES.moderation"
+            @update:model-value="(value) => handleUpdate('moderation', String(value))"
+            placeholder="e.g. low, auto"
+          />
+        </div>
+        <MulmoError :mulmoError="mulmoError" />
       </div>
-      <div>
-        <Label>Model</Label>
-        <Select
-          :model-value="imageParams?.model || DEFAULT_VALUES.model"
-          @update:model-value="(value) => handleUpdate('model', String(value))"
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Auto" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__undefined__">Auto</SelectItem>
-            <SelectItem
-              v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
-              :key="model"
-              :value="model"
-            >
-              {{ model }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label>Style</Label>
-        <Input
-          :model-value="imageParams?.style || DEFAULT_VALUES.style"
-          @update:model-value="(value) => handleUpdate('style', String(value))"
-          placeholder="e.g. vivid, natural"
-        />
-      </div>
-      <div>
-        <Label>Moderation</Label>
-        <Input
-          :model-value="imageParams?.moderation || DEFAULT_VALUES.moderation"
-          @update:model-value="(value) => handleUpdate('moderation', String(value))"
-          placeholder="e.g. low, auto"
-        />
-      </div>
-      <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
