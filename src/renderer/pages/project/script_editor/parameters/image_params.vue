@@ -89,7 +89,7 @@
           <Label>Images</Label>
           <div v-for="(imageKey, key) in Object.keys(mulmoImageParams.images)" :key="imageKey">
             <Checkbox
-              :model-value="(beat?.imageNames ?? Object.keys(mulmoImageParams.images)).includes(imageKey)"
+              :model-value="(beat?.imageNames ?? Object.keys(mulmoImageParams?.images ?? {})).includes(imageKey)"
               @update:modelValue="(val) => updateImageNames(imageKey, val)"
               class="m-2"
             />{{ imageKey }}
