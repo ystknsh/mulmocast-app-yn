@@ -1,13 +1,13 @@
 <template>
-  <div class="flex items-start space-x-3 flex-row-reverse space-x-reverse">
-    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+  <div class="flex flex-row-reverse items-start space-x-3 space-x-reverse">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-500">
       <User :size="16" class="text-white" @click="editUser" />
     </div>
     <div class="flex-1 text-right">
-      <div class="bg-blue-500 text-white p-3 rounded-lg inline-block max-w-md">
+      <div class="inline-block max-w-md rounded-lg bg-blue-500 p-3 text-white">
         <p class="text-sm">{{ message }}</p>
       </div>
-      <p class="text-xs text-gray-500 mt-1">{{ formatedTime }}</p>
+      <p class="mt-1 text-xs text-gray-500">{{ formatedTime }}</p>
     </div>
   </div>
 </template>

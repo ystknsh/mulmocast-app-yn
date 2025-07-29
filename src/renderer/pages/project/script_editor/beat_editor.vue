@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-2">
-      <div class="font-medium flex items-center gap-3">
+    <div class="mb-2 flex items-center justify-between">
+      <div class="flex items-center gap-3 font-medium">
         <span class="text-base">Beat: {{ index + 1 }}</span>
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <p class="text-sm text-gray-600 mb-2">{{ beat.text }}</p>
+    <p class="mb-2 text-sm text-gray-600">{{ beat.text }}</p>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -23,13 +23,13 @@
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
-            <Label class="block mb-1"> Image or Movie </Label>
+            <Label class="mb-1 block"> Image or Movie </Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e)"
               draggable="true"
-              class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
+              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
               {{ t("common.drophere") }}
             </div>
@@ -46,7 +46,7 @@
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
-            <Label class="block mb-1"> Remote Media: </Label>
+            <Label class="mb-1 block"> Remote Media: </Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
@@ -54,7 +54,7 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
-            <Label class="block mb-1"> SlideContent </Label>
+            <Label class="mb-1 block"> SlideContent </Label>
             <Input
               :placeholder="t('beat.form.textSlide.title')"
               :model-value="beat.image?.slide?.title"
@@ -71,7 +71,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Label class="block mb-1"> Markdown Text </Label>
+            <Label class="mb-1 block"> Markdown Text </Label>
             <Textarea
               :placeholder="t('beat.form.markdown.contents')"
               :model-value="
@@ -85,7 +85,7 @@
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <Label class="block mb-1"> Chart JSON </Label>
+            <Label class="mb-1 block"> Chart JSON </Label>
             <Textarea
               :placeholder="t('beat.form.chart.contents')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
@@ -103,7 +103,7 @@
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <Label class="block mb-1"> Mermaid Diagram </Label>
+            <Label class="mb-1 block"> Mermaid Diagram </Label>
             <Textarea
               :placeholder="t('beat.form.mermaid.contents')"
               :model-value="beat?.image?.code?.text"
@@ -115,7 +115,7 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <Label class="block mb-1"> HTML(Tailwind) </Label>
+            <Label class="mb-1 block"> HTML(Tailwind) </Label>
             <Textarea
               :placeholder="t('beat.form.htmlTailwind.contents')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
@@ -126,7 +126,7 @@
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
-            <Label class="block mb-1"> Reference </Label>
+            <Label class="mb-1 block"> Reference </Label>
             <Input
               :placeholder="t('beat.form.reference.id')"
               :model-value="beat.image.id"
@@ -141,17 +141,17 @@
         </div>
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="block mb-1">{{ t("common.htmlPrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
             <Textarea
               :placeholder="t('beat.form.htmlPrompt.contents')"
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
-              class="font-mono mt-2"
+              class="mt-2 font-mono"
               rows="6"
             />
           </template>
           <template v-else>
-            <Label class="block mb-1">{{ t("common.imagePrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("common.imagePrompt") }}: </Label>
             <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
               :model-value="beat.imagePrompt"
@@ -179,7 +179,7 @@
 
       <!-- movie edit left -->
       <div v-if="!beat.image && !beat.htmlPrompt">
-        <Label class="block mb-1">{{ t("common.moviePrompt") }}: </Label>
+        <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
         <Textarea
           :placeholder="t('beat.form.moviePrompt.contents')"
           :model-value="beat.moviePrompt"
@@ -204,7 +204,7 @@
 
     <div
       v-if="mulmoError && mulmoError.length > 0"
-      class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
+      class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
     >
       <div v-for="(error, key) in mulmoError" :key="key">
         {{ error }}

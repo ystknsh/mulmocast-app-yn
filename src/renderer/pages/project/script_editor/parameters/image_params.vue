@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Image Parameters</h4>
+    <h4 class="mb-3 font-medium">Image Parameters</h4>
     <div class="space-y-3">
       <div>
         <Label>Provider</Label>

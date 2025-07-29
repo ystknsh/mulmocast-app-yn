@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- View Mode Toggle -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="mb-4 flex items-center justify-between">
       <div class="flex items-center space-x-2">
         <span class="text-sm font-medium">View:</span>
-        <div class="flex border rounded-lg">
+        <div class="flex rounded-lg border">
           <Button
             :variant="viewMode === 'list' ? 'default' : 'ghost'"
             size="sm"
@@ -31,28 +31,28 @@
     </div>
 
     <!-- Scrollable Content -->
-    <ScrollArea class="max-h-[600px] w-full rounded-md border p-4 overflow-auto">
+    <ScrollArea class="max-h-[600px] w-full overflow-auto rounded-md border p-4">
       <!-- List View -->
       <div v-if="viewMode === 'list'" class="space-y-4">
         <div v-for="(beat, index) in beatsData" :key="beat.id" class="border-b border-gray-200 p-3 last:border-b-0">
-          <div class="grid gap-4 items-start" style="grid-template-columns: 80px 80px 1fr">
+          <div class="grid items-start gap-4" style="grid-template-columns: 80px 80px 1fr">
             <!-- Image Status -->
             <div class="text-center">
-              <div class="flex items-center justify-center gap-1 mb-1">
+              <div class="mb-1 flex items-center justify-center gap-1">
                 <FileImage
                   :size="16"
                   :class="`${beat?.image?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
                 />
                 <Loader2 v-if="beat?.image?.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
               </div>
-              <p :class="`text-xs mb-2 ${beat?.image?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
+              <p :class="`mb-2 text-xs ${beat?.image?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
                 {{ beat?.image?.status === "ready" ? "Image ready" : "Generating..." }}
                 <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
               </p>
               <div v-if="beat?.image?.status === 'ready'" class="flex justify-center space-x-1">
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button size="sm" variant="ghost" class="w-6 h-6 p-0">
+                    <Button size="sm" variant="ghost" class="h-6 w-6 p-0">
                       <Eye :size="12" />
                     </Button>
                   </TooltipTrigger>
@@ -62,7 +62,7 @@
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button size="sm" variant="ghost" class="w-6 h-6 p-0">
+                    <Button size="sm" variant="ghost" class="h-6 w-6 p-0">
                       <RefreshCw :size="12" />
                     </Button>
                   </TooltipTrigger>
@@ -75,20 +75,20 @@
 
             <!-- Audio Status -->
             <div class="text-center">
-              <div class="flex items-center justify-center gap-1 mb-1">
+              <div class="mb-1 flex items-center justify-center gap-1">
                 <Volume2
                   :size="16"
                   :class="`${beat?.audio?.status === 'ready' ? 'text-green-500' : 'text-gray-400'}`"
                 />
                 <Loader2 v-if="beat?.audio?.status === 'generating'" :size="12" class="animate-spin text-blue-500" />
               </div>
-              <p :class="`text-xs mb-2 ${beat?.audio?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
+              <p :class="`mb-2 text-xs ${beat?.audio?.status === 'ready' ? 'text-green-600' : 'text-gray-500'}`">
                 {{ beat?.audio?.status === "ready" ? "Audio ready" : "Generating..." }}
               </p>
               <div v-if="beat?.audio?.status === 'ready'" class="flex justify-center space-x-1">
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button size="sm" variant="ghost" class="w-6 h-6 p-0">
+                    <Button size="sm" variant="ghost" class="h-6 w-6 p-0">
                       <Play :size="12" />
                     </Button>
                   </TooltipTrigger>
@@ -98,7 +98,7 @@
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger as-child>
-                    <Button size="sm" variant="ghost" class="w-6 h-6 p-0">
+                    <Button size="sm" variant="ghost" class="h-6 w-6 p-0">
                       <RefreshCw :size="12" />
                     </Button>
                   </TooltipTrigger>
@@ -111,7 +111,7 @@
 
             <!-- Beat Content -->
             <div>
-              <div class="flex items-center gap-2 mb-2">
+              <div class="mb-2 flex items-center gap-2">
                 <Badge variant="outline" class="text-xs"> Beat {{ index + 1 }} </Badge>
                 <span class="text-xs text-gray-500">
                   {{ beat.timestamp }}
@@ -131,21 +131,21 @@
       <!-- Timeline View -->
       <div v-else class="space-y-6">
         <!-- Preview Area - Only shown when timeline is clicked -->
-        <div v-if="isPreviewAreaVisible" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div v-if="isPreviewAreaVisible" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <!-- Image/Media Preview -->
           <div class="space-y-4">
             <div
-              class="aspect-video bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center"
+              class="flex aspect-video items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-100"
             >
               <div v-if="beatsData[currentBeatIndex]?.image.status === 'ready'" class="text-center">
-                <FileImage :size="64" class="text-gray-400 mx-auto mb-2" />
+                <FileImage :size="64" class="mx-auto mb-2 text-gray-400" />
                 <p class="text-sm text-gray-600">Image Preview</p>
                 <p class="text-xs text-gray-500">
                   {{ beatsData[currentBeatIndex]?.image.prompt }}
                 </p>
               </div>
               <div v-else class="text-center">
-                <Loader2 :size="64" class="text-blue-500 animate-spin mx-auto mb-2" />
+                <Loader2 :size="64" class="mx-auto mb-2 animate-spin text-blue-500" />
                 <p class="text-sm text-gray-600">Generating Image...</p>
               </div>
             </div>
@@ -172,12 +172,12 @@
             <Card class="p-6">
               <div class="space-y-4">
                 <!-- Beat Info -->
-                <div class="flex items-center gap-2 pb-3 border-b">
+                <div class="flex items-center gap-2 border-b pb-3">
                   <Badge variant="outline"> Beat {{ currentBeatIndex }} </Badge>
                   <span class="text-sm font-medium text-blue-600">
                     {{ beatsData[currentBeatIndex]?.speaker }}
                   </span>
-                  <span class="text-xs text-gray-500 font-mono ml-auto">
+                  <span class="ml-auto font-mono text-xs text-gray-500">
                     {{ formatTime(getBeatDuration(currentBeatIndex)) }}s
                   </span>
                 </div>
@@ -190,7 +190,7 @@
                 </div>
 
                 <!-- Status Indicators -->
-                <div class="flex items-center gap-4 pt-3 border-t">
+                <div class="flex items-center gap-4 border-t pt-3">
                   <div class="flex items-center gap-2">
                     <FileImage
                       :size="16"
@@ -233,7 +233,7 @@
         <div class="relative">
           <!-- Timeline Track -->
           <div
-            class="relative h-16 bg-gray-100 rounded-lg cursor-pointer select-none"
+            class="relative h-16 cursor-pointer rounded-lg bg-gray-100 select-none"
             @click="handleTimelineClick"
             @mousemove="handleTimelineDrag"
             @mouseup="handleMouseUp"
@@ -243,7 +243,7 @@
             <div
               v-for="(beat, index) in beatsData"
               :key="beat.id"
-              :class="`absolute top-0 h-full border-r border-gray-300 flex flex-col justify-center items-center transition-colors ${
+              :class="`absolute top-0 flex h-full flex-col items-center justify-center border-r border-gray-300 transition-colors ${
                 index === currentBeatIndex ? 'bg-blue-200' : 'bg-gray-50 hover:bg-gray-100'
               }`"
               :style="{
@@ -257,28 +257,28 @@
                 {{ index + 1 }}
               </div>
               <!-- Duration -->
-              <div class="text-xs text-gray-500 font-mono">{{ formatTime(getBeatDuration(index)) }}s</div>
+              <div class="font-mono text-xs text-gray-500">{{ formatTime(getBeatDuration(index)) }}s</div>
             </div>
 
             <!-- Timeline Cursor -->
             <div
-              class="absolute top-0 h-full w-1 bg-blue-500 cursor-grab active:cursor-grabbing z-10"
+              class="absolute top-0 z-10 h-full w-1 cursor-grab bg-blue-500 active:cursor-grabbing"
               :style="{ left: `${timelinePosition}%` }"
               @mousedown="handleMouseDown"
             >
               <!-- Triangle pointing down -->
               <div
-                class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-blue-500 shadow-md"
+                class="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-t-[8px] border-r-[6px] border-l-[6px] border-t-blue-500 border-r-transparent border-l-transparent shadow-md"
               ></div>
               <!-- Triangle pointing up -->
               <div
-                class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-b-[8px] border-l-transparent border-r-transparent border-b-blue-500 shadow-md"
+                class="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-r-[6px] border-b-[8px] border-l-[6px] border-r-transparent border-b-blue-500 border-l-transparent shadow-md"
               ></div>
             </div>
           </div>
 
           <!-- Navigation Controls -->
-          <div class="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-2 -mr-20">
+          <div class="absolute top-1/2 right-0 -mr-20 flex -translate-y-1/2 transform gap-2">
             <Button size="sm" variant="outline" @click="navigateToBeat('prev')" :disabled="currentBeatIndex === 0">
               <ChevronLeft :size="16" />
             </Button>
@@ -308,7 +308,7 @@
             }"
           >
             <div
-              class="text-lg font-mono text-blue-600 font-semibold bg-white px-2 py-1 rounded shadow-sm border whitespace-nowrap"
+              class="rounded border bg-white px-2 py-1 font-mono text-lg font-semibold whitespace-nowrap text-blue-600 shadow-sm"
             >
               {{ getCurrentTimeFromPosition(timelinePosition) }}
             </div>

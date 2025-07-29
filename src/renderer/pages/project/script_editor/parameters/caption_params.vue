@@ -1,10 +1,10 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Caption Parameters</h4>
+    <h4 class="mb-3 font-medium">Caption Parameters</h4>
     <div class="space-y-3">
       <div>
         <Label>Language</Label>
-        <div class="text-xs text-gray-500 mb-2">Caption language</div>
+        <div class="mb-2 text-xs text-gray-500">Caption language</div>
         <Select :model-value="props.captionParams?.lang || ''" @update:model-value="handleLangInput">
           <SelectTrigger>
             <SelectValue placeholder="None" />
@@ -19,11 +19,11 @@
       </div>
       <div>
         <Label>Styles</Label>
-        <div class="text-xs text-gray-500 mb-2">Enter CSS styles (one per line)</div>
+        <div class="mb-2 text-xs text-gray-500">Enter CSS styles (one per line)</div>
         <Textarea
           v-model="styles"
           placeholder="e.g. color: #FF6B6B;&#10;font-family: 'Arial Black', sans-serif;&#10;text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"
-          :class="['font-mono', { 'bg-gray-100 text-gray-400 cursor-not-allowed': !props.captionParams?.lang }]"
+          :class="['font-mono', { 'cursor-not-allowed bg-gray-100 text-gray-400': !props.captionParams?.lang }]"
           rows="6"
           :disabled="!props.captionParams?.lang"
           @change="handleStylesInput"

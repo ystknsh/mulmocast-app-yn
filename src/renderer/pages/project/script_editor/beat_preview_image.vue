@@ -4,7 +4,7 @@
     <div class="mb-4">
       <!-- Image preview -->
       <div
-        class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center"
+        class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center"
         :key="`beat_editor_${beat.id ?? index}`"
       >
         <!-- Generate image button -->
@@ -12,13 +12,13 @@
           <Button
             variant="ghost"
             size="icon"
-            class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
+            class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
             @click="generateImage"
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
             :title="t('form.' + imageGenerateButtonTitle)"
           >
-            <Loader2 v-if="isImageGenerating || isHtmlGenerating" class="w-4 h-4 animate-spin" />
-            <Sparkles v-else class="w-4 h-4" />
+            <Loader2 v-if="isImageGenerating || isHtmlGenerating" class="h-4 w-4 animate-spin" />
+            <Sparkles v-else class="h-4 w-4" />
           </Button>
         </template>
         <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
@@ -31,7 +31,7 @@
           <template v-if="beat?.image?.type === 'movie'">
             <video
               :size="64"
-              class="mx-auto text-gray-400 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+              class="mx-auto mb-4 cursor-pointer text-gray-400 transition-opacity hover:opacity-80"
               controls
               :src="mediaUri(imageFile)"
               @click="openModal('video', imageFile)"
@@ -40,14 +40,14 @@
           <template v-else>
             <img
               :src="mediaUri(imageFile)"
-              class="cursor-pointer hover:opacity-80 transition-opacity"
+              class="cursor-pointer transition-opacity hover:opacity-80"
               @click="openModal('image', imageFile)"
             />
           </template>
         </template>
         <template v-else>
-          <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto text-gray-400 mb-2" />
-          <FileImage v-else :size="32" class="mx-auto text-gray-400 mb-2" />
+          <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto mb-2 text-gray-400" />
+          <FileImage v-else :size="32" class="mx-auto mb-2 text-gray-400" />
           <p class="text-sm text-gray-500">
             {{ t("beat." + (beat?.image?.type === "movie" ? "videoPreview" : "imagePreview")) }}
           </p>

@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Output Buttons -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <div class="flex flex-col space-y-2 pl-2">
         <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
           <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
@@ -10,7 +10,7 @@
       </div>
       <Button
         @click="generateContents"
-        class="flex flex-col items-center space-y-2 h-auto py-4 whitespace-normal"
+        class="flex h-auto flex-col items-center space-y-2 py-4 whitespace-normal"
         :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
       >
         <div class="flex">

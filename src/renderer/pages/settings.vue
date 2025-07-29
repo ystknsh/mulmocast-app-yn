@@ -1,7 +1,7 @@
 <template>
   <Layout>
-    <div class="container mx-auto p-6 max-w-2xl">
-      <h1 class="text-3xl font-bold mb-8">{{ t("settings.title") }}</h1>
+    <div class="container mx-auto max-w-2xl p-6">
+      <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
 
       <div class="space-y-6">
         <!-- App Settings Section -->
@@ -23,7 +23,7 @@
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <p class="text-sm text-muted-foreground">{{ t("settings.appSettings.language.description") }}</p>
+              <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
             </div>
           </CardContent>
         </Card>

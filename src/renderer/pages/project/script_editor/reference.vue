@@ -2,12 +2,12 @@
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
-    <Card class="p-4 space-y-1 gap-2 mt-8">
+    <Card class="mt-8 gap-2 space-y-1 p-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
           {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
-            <Label class="block mb-1">{{ t("common.imagePrompt") }} : </Label>
+            <Label class="mb-1 block">{{ t("common.imagePrompt") }} : </Label>
 
             <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
@@ -18,13 +18,13 @@
             />
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-            <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
+            <Label class="mb-1 block">{{ t("project.scriptEditor.reference.image") }}</Label>
 
             <div
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, imageKey)"
               draggable="true"
-              class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
+              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
               {{ t("common.drophere") }}
             </div>
@@ -47,23 +47,23 @@
           </div>
         </div>
         <div>
-          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+          <div class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center">
             <Button
               v-if="images[imageKey].type === 'imagePrompt'"
               variant="ghost"
               size="icon"
-              class="absolute -left-3 -top-3 z-10 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 transition-colors w-8 h-8 flex items-center justify-center"
+              class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
               @click="() => submitImage(imageKey, key)"
               :disabled="isGeneratings[imageKey]"
             >
-              <Loader2 v-if="isGeneratings[imageKey]" class="w-4 h-4 animate-spin" />
-              <Sparkles v-else class="w-4 h-4" />
+              <Loader2 v-if="isGeneratings[imageKey]" class="h-4 w-4 animate-spin" />
+              <Sparkles v-else class="h-4 w-4" />
             </Button>
-            <div v-if="imageRefs[imageKey]" class="flex justify-center items-center">
+            <div v-if="imageRefs[imageKey]" class="flex items-center justify-center">
               <img :src="imageRefs[imageKey]" class="max-h-64" @click="openImage(imageKey)" />
             </div>
             <template v-else>
-              <FileImage :size="32" class="mx-auto text-gray-400 mb-2" />
+              <FileImage :size="32" class="mx-auto mb-2 text-gray-400" />
               <p class="text-sm text-gray-500">
                 {{ t("beat.imagePreview") }}
               </p>
@@ -73,10 +73,10 @@
       </div>
     </Card>
     <div
-      class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+      class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
     >
       <Trash
-        class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+        class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
         @click="deleteReference(imageKey)"
       />
     </div>

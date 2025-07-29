@@ -1,7 +1,7 @@
 <template>
-  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="handleBackdropClick">
-    <div class="bg-white rounded-lg p-6 w-96 max-w-full" @click.stop>
-      <h2 class="text-xl font-semibold mb-4">Create New Project</h2>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click="handleBackdropClick">
+    <div class="w-96 max-w-full rounded-lg bg-white p-6" @click.stop>
+      <h2 class="mb-4 text-xl font-semibold">Create New Project</h2>
       <Input
         :model-value="props.modelValue"
         @update:model-value="(value) => emit('update:modelValue', String(value))"
@@ -9,7 +9,7 @@
         placeholder="Enter project title"
         auto-focus
       />
-      <div class="flex justify-end space-x-3 mt-4">
+      <div class="mt-4 flex justify-end space-x-3">
         <Button @click="handleCancel" variant="ghost" :disabled="props.creating"> Cancel </Button>
         <Button @click="handleCreate" :disabled="props.creating">
           {{ props.creating ? "Creating..." : "Create" }}

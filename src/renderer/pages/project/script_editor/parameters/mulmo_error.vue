@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="mulmoError && mulmoError.length > 0"
-    class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
+    class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
   >
     <div v-for="(message, key) in mulmoError" :key="key">
       {{ message }}
