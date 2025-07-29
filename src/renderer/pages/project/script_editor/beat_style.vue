@@ -1,14 +1,7 @@
 <template>
   <Collapsible :open="!!beat?.imageParams" @update:open="openEvent">
     <CollapsibleTrigger as-child>
-      <Button
-        variant="ghost"
-        size="icon"
-        class="transition-transform duration-200"
-        :class="{ 'rotate-180': !!beat?.imageParams }"
-      >
-        ^
-      </Button>
+      <Checkbox variant="ghost" size="icon" />
     </CollapsibleTrigger>
     <CollapsibleContent>
       <ImageParams
@@ -23,21 +16,22 @@
     </CollapsibleContent>
   </Collapsible>
 
-  <div class="space-y-2 text-sm text-gray-500" v-if="!beat?.imageParams && imageParams">
+  <div class="space-y-2 text-sm text-gray-300" v-if="!beat?.imageParams && imageParams">
+    <h4 class="mb-3 font-medium text-gray-500">Image Parameters</h4>
     <div>
-      <Label class="block font-medium text-gray-700">Provider</Label>
+      <Label class="block font-medium text-gray-500">Provider</Label>
       <p>{{ imageParams.provider }}</p>
     </div>
     <div>
-      <Label class="block font-medium text-gray-700">Model</Label>
+      <Label class="block font-medium text-gray-500" v-if="imageParams.model">Model</Label>
       <p>{{ imageParams.model }}</p>
     </div>
     <div>
-      <Label class="block font-medium text-gray-700">Style</Label>
+      <Label class="block font-medium text-gray-500" v-if="imageParams.style">Style</Label>
       <p>{{ imageParams.style }}</p>
     </div>
     <div>
-      <Label class="block font-medium text-gray-700">Moderation</Label>
+      <Label class="block font-medium text-gray-500" v-if="imageParams.moderation">Moderation</Label>
       <p>{{ imageParams.moderation }}</p>
     </div>
   </div>
@@ -45,7 +39,7 @@
 
 <script setup lang="ts">
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button, Label } from "@/components/ui";
+import { Label, Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 
