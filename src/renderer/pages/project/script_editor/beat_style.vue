@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button, Label, Checkbox } from "@/components/ui";
+import { Label, Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 
