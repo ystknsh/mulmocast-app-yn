@@ -159,6 +159,7 @@
               <Card class="p-4">
                 <BeatEditor
                   :beat="beat"
+                  :mulmoScript="mulmoValue"
                   :index="index"
                   :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
                   :imageFile="imageFiles[index]"

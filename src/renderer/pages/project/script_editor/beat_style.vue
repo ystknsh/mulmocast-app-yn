@@ -8,8 +8,9 @@
     <CollapsibleContent>
       <ImageParams
         :image-params="beat.imageParams"
+        :mulmo-image-params="imageParams"
         @update="(value) => updateParam(value)"
-        :enableCheckbox="true"
+        :enable-checkbox="true"
         :mulmoError="[]"
       />
     </CollapsibleContent>
@@ -20,10 +21,11 @@
 import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui";
-import { type MulmoBeat } from "mulmocast";
+import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 
 interface Props {
   beat: MulmoBeat;
+  imageParams: MulmoImageParams;
 }
 
 defineProps<Props>();
