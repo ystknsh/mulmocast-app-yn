@@ -79,9 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card, Label, Input } from "@/components/ui";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import MulmoError from "./mulmo_error.vue";
 
