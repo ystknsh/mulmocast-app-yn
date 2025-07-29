@@ -10,7 +10,26 @@
     </h4>
 
     <div class="space-y-3">
-      <div v-if="enableCheckbox && !imageParams">TODO: default image style</div>
+      <div v-if="enableCheckbox && !imageParams">
+        <div class="space-y-2 text-sm text-gray-500">
+          <div>
+            <Label class="block font-medium text-gray-700">Provider</Label>
+            <p>{{ mulmoImageParams.provider }}</p>
+          </div>
+          <div>
+            <Label class="block font-medium text-gray-700">Model</Label>
+            <p>{{ mulmoImageParams.model }}</p>
+          </div>
+          <div>
+            <Label class="block font-medium text-gray-700">Style</Label>
+            <p>{{ mulmoImageParams.style }}</p>
+          </div>
+          <div>
+            <Label class="block font-medium text-gray-700">Moderation</Label>
+            <p>{{ mulmoImageParams.moderation }}</p>
+          </div>
+        </div>
+      </div>
 
       <div v-else>
         <div>
@@ -79,7 +98,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { provider2ImageAgent, type MulmoPresentationStyle } from "mulmocast/browser";
+import { provider2ImageAgent, type MulmoPresentationStyle, type MulmoImageParams } from "mulmocast/browser";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
 type ImageParamField = keyof ImageParams;
@@ -92,6 +111,7 @@ const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) =>
 
 const props = defineProps<{
   imageParams?: ImageParams;
+  mulmoImageParams?: MulmoImageParams;
   mulmoError: string[];
   enableCheckbox?: boolean;
 }>();

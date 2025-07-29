@@ -202,7 +202,7 @@
       </div>
     </div>
 
-    <BeatStyle :beat="beat" @update="update" />
+    <BeatStyle :beat="beat" @update="update" :imageParams="mulmoScript.imageParams" />
 
     <div
       v-if="mulmoError && mulmoError.length > 0"
@@ -220,7 +220,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import type { MulmoBeat } from "mulmocast/browser";
+import type { MulmoBeat, MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";
 
@@ -243,6 +243,7 @@ import { mediaUri } from "@/lib/utils";
 
 interface Props {
   beat: MulmoBeat;
+  mulmoScript: MulmoScript;
   index: number;
   imageFile: ArrayBuffer | string | null;
   movieFile: ArrayBuffer | string | null;
