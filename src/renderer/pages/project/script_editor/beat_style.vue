@@ -1,7 +1,12 @@
 <template>
-  <Collapsible v-model:open="open">
+  <Collapsible :open="!!beat?.imageParams" @update:open="openEvent">
     <CollapsibleTrigger as-child>
-      <Button variant="ghost" size="icon" class="transition-transform duration-200" :class="{ 'rotate-180': open }">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="transition-transform duration-200"
+        :class="{ 'rotate-180': !!beat?.imageParams }"
+      >
         ^
       </Button>
     </CollapsibleTrigger>
@@ -24,13 +29,14 @@ import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
+import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 
 interface Props {
   beat: MulmoBeat;
   imageParams: MulmoImageParams;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
@@ -45,6 +51,14 @@ const updateParam = (value: ImageParams | undefined) => {
 
 const updateImageNames = (imageKey: string, value: string[]) => {
   emit("updateImageNames", imageKey, value);
+};
+
+const openEvent = (event) => {
+  if (event) {
+    emit("update", "imageParams", props.imageParams ?? IMAGE_PARAMS_DEFAULT_VALUES);
+  } else {
+    emit("update", "imageParams", undefined);
+  }
 };
 
 const open = ref(false);
