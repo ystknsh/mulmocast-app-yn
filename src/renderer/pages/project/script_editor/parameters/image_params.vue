@@ -129,7 +129,7 @@ const props = defineProps<{
   mulmoImageParams?: MulmoImageParams;
   mulmoError: string[];
   enableCheckbox?: boolean;
-  beat: MulmoBeat;
+  beat?: MulmoBeat;
 }>();
 
 const emit = defineEmits<{
