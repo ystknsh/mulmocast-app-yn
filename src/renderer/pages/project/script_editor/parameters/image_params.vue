@@ -77,13 +77,23 @@
             placeholder="e.g. vivid, natural"
           />
         </div>
-        <div>
+        <div class="my-2">
           <Label>Moderation</Label>
           <Input
             :model-value="imageParams?.moderation || DEFAULT_VALUES.moderation"
             @update:model-value="(value) => handleUpdate('moderation', String(value))"
             placeholder="e.g. low, auto"
           />
+        </div>
+        <div v-if="enableCheckbox && mulmoImageParams.images" class="my-2">
+          <Label>Images</Label>
+          <div v-for="(imageKey, key) in Object.keys(mulmoImageParams.images)" :key="imageKey">
+            <Checkbox
+              :model-value="(beat?.imageNames ?? []).includes(imageKey)"
+              @update:modelValue="(val) => updateImageNames(imageKey, val)"
+              class="m-2"
+            />{{ imageKey }}
+          </div>
         </div>
         <MulmoError :mulmoError="mulmoError" />
       </div>
@@ -98,7 +108,12 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { provider2ImageAgent, type MulmoPresentationStyle, type MulmoImageParams } from "mulmocast/browser";
+import {
+  provider2ImageAgent,
+  type MulmoPresentationStyle,
+  type MulmoImageParams,
+  type MulmoBeat,
+} from "mulmocast/browser";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
 type ImageParamField = keyof ImageParams;
@@ -114,10 +129,12 @@ const props = defineProps<{
   mulmoImageParams?: MulmoImageParams;
   mulmoError: string[];
   enableCheckbox?: boolean;
+  beat: MulmoBeat;
 }>();
 
 const emit = defineEmits<{
   update: [imageParams: ImageParams];
+  updateImageNames: [imageKey: string, val: string[]];
 }>();
 
 const DEFAULT_VALUES: ImageParams = {
@@ -133,6 +150,17 @@ const enabled = (val: boolean) => {
   } else {
     emit("update", undefined);
   }
+};
+const updateImageNames = (imageKey: string, val: string[]) => {
+  const current = props.beat?.imageNames ?? [];
+
+  const newArray = val
+    ? current.includes(imageKey)
+      ? current
+      : [...current, imageKey]
+    : current.filter((key) => key !== imageKey);
+
+  emit("updateImageNames", imageKey, newArray);
 };
 
 const handleProviderChange = (value: ImageParams["provider"]) => {

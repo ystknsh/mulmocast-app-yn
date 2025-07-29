@@ -202,7 +202,12 @@
       </div>
     </div>
 
-    <BeatStyle :beat="beat" @update="update" :imageParams="mulmoScript.imageParams" />
+    <BeatStyle
+      :beat="beat"
+      @update="update"
+      :imageParams="mulmoScript.imageParams"
+      @updateImageNames="updateImageNames"
+    />
 
     <div
       v-if="mulmoError && mulmoError.length > 0"
@@ -252,7 +257,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "changeBeat"]);
+const emit = defineEmits(["update", "generateImage", "changeBeat", "updateImageNames"]);
 
 const route = useRoute();
 const { t } = useI18n();
@@ -368,6 +373,10 @@ const generateImageOnlyMovie = () => {
 
 const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
+};
+
+const updateImageNames = (imageKey: string, value: string[]) => {
+  emit("update", props.index, "imageNames", value);
 };
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
