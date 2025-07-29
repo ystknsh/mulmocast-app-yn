@@ -70,7 +70,7 @@ import { useDebounceFn } from "@vueuse/core";
 import { RouterLink } from "vue-router";
 import { ArrowLeft, FolderOpen, Pencil } from "lucide-vue-next";
 import { Button, Input } from "@/components/ui";
-import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "../../../shared/constants";
+import { INITIAL_DESCRIPTION } from "../../../shared/constants";
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -91,7 +91,7 @@ const emit = defineEmits<{
 const isEditingTitle = ref(false);
 const isEditingDescription = ref(false);
 
-const displayTitle = ref(props.mulmoScript?.title || INITIAL_TITLE);
+const displayTitle = ref(props.mulmoScript?.title || t("common.defaultTitle"));
 const displayDescription = ref(props.mulmoScript?.description || INITIAL_DESCRIPTION);
 
 watch(

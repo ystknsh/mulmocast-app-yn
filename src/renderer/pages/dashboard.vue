@@ -136,7 +136,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 import { projectApi, type Project } from "@/lib/project_api";
-import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
+import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -194,7 +194,7 @@ const sortedProjects = computed(() => {
 });
 
 const handleCreateProject = async () => {
-  const title = newProjectName.value.trim() || INITIAL_TITLE;
+  const title = newProjectName.value.trim() || t("common.defaultTitle");
 
   try {
     creating.value = true;
