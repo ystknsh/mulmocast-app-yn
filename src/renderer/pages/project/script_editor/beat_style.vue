@@ -44,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button, Label } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
@@ -79,5 +78,4 @@ const openEvent = (event) => {
     emit("update", "imageParams", undefined);
   }
 };
-
 </script>
