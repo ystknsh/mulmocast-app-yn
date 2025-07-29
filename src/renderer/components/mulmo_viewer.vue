@@ -1,5 +1,5 @@
 <template>
-  <Tabs default-value="movie" class="w-full">
+  <Tabs default-value="movie" class="max-h-[90vh] w-full">
     <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger value="movie">{{ t("project.productTabs.tabs.movie") }}</TabsTrigger>
       <TabsTrigger value="pdf">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger>
@@ -8,7 +8,7 @@
       <TabsTrigger value="slide">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
 
-    <TabsContent value="movie" class="mt-4">
+    <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <video :size="64" class="mx-auto mb-4 max-h-[90vh] text-gray-400" controls :src="videoUrl" ref="videoRef" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
@@ -27,7 +27,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="pdf" class="mt-4">
+    <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
@@ -46,7 +46,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="html" class="mt-4">
+    <TabsContent value="html" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
@@ -65,7 +65,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="podcast" class="mt-4">
+    <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
@@ -83,7 +83,7 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="slide" class="mt-4">
+    <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <FileImage :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
