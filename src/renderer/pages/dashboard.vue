@@ -107,7 +107,7 @@
 
     <!-- Viewer Dialog -->
     <Dialog v-model:open="isViewerOpen">
-      <DialogContent class="max-w-3xl">
+      <DialogContent class="max-w-3xl max-h-[90vh]">
         <div class="sr-only">
           <DialogTitle>Mulmo Viewer</DialogTitle>
           <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>

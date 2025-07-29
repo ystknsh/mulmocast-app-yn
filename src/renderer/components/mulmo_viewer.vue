@@ -10,7 +10,7 @@
 
     <TabsContent value="movie" class="mt-4">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <video :size="64" class="mx-auto mb-4 text-gray-400" controls :src="videoUrl" ref="videoRef" />
+        <video :size="64" class="mx-auto mb-4 text-gray-400 max-h-[90vh]" controls :src="videoUrl" ref="videoRef" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
         <div class="flex flex-wrap items-center justify-center gap-2">
