@@ -22,12 +22,31 @@
       />
     </CollapsibleContent>
   </Collapsible>
+
+  <div class="space-y-2 text-sm text-gray-500" v-if="!beat?.imageParams && imageParams">
+    <div>
+      <Label class="block font-medium text-gray-700">Provider</Label>
+      <p>{{ imageParams.provider }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Model</Label>
+      <p>{{ imageParams.model }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Style</Label>
+      <p>{{ imageParams.style }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Moderation</Label>
+      <p>{{ imageParams.moderation }}</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui";
+import { Button, Label } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 
