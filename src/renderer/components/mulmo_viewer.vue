@@ -13,7 +13,7 @@
         <video :size="64" class="mx-auto mb-4 text-gray-400" controls :src="videoUrl" ref="videoRef" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
-        <div class="flex justify-center space-x-4">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button @click="playVideo">
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.movie.play") }}
@@ -32,7 +32,7 @@
         <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
-        <div class="flex justify-center space-x-4">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.view") }}
@@ -51,7 +51,7 @@
         <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.html.description") }}</p>
-        <div class="flex justify-center space-x-4">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <Eye :size="16" class="mr-2" />
             {{ t("project.productTabs.html.view") }}
@@ -70,7 +70,7 @@
         <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
-        <div class="flex justify-center space-x-4">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.podcast.play") }}
@@ -89,7 +89,7 @@
         <FileImage :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.slide.description") }}</p>
-        <div class="flex justify-center space-x-4">
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.slide.start") }}
