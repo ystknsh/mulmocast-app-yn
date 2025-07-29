@@ -66,22 +66,17 @@
             <Label class="text-xs">Speed</Label>
             <Input
               :model-value="speaker.speed || ''"
-              @update:model-value="
-                  (value) => handleDataChange(name, 'speed', value)
-                "
-                class="h-8"
-              />
+              @update:model-value="(value) => handleDataChange(name, 'speed', value)"
+              class="h-8"
+            />
           </div>
           <div v-if="speechParams.provider === 'openai'">
             <Label class="text-xs">instruction</Label>
             <Input
               :model-value="speaker.instruction || ''"
-              @update:model-value="
-                  (value) => handleDataChange(name, 'instruction', value)
-                "
-                class="h-8"
-              />
-            
+              @update:model-value="(value) => handleDataChange(name, 'instruction', value)"
+              class="h-8"
+            />
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
@@ -239,7 +234,7 @@ const handleLanguageChange = (name: string, language: string) => {
 };
 
 const handleDataChange = (name: string, key: string, value: string) => {
-  updateSpeaker(name, {speechOptions: { [key]: key === "speed" ? Number(value) : value }})
+  updateSpeaker(name, { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
 };
 
 const handleSpeakerVoiceChange = (name: string, voiceId: string) => {
