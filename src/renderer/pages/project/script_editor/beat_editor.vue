@@ -202,6 +202,8 @@
       </div>
     </div>
 
+    <BeatStyle />
+
     <div
       v-if="mulmoError && mulmoError.length > 0"
       class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
@@ -232,6 +234,7 @@ import { Textarea } from "@/components/ui/textarea";
 import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
+import BeatStyle from "./beat_style.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../store";
