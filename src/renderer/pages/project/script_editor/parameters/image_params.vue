@@ -108,7 +108,12 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { provider2ImageAgent, type MulmoPresentationStyle, type MulmoImageParams } from "mulmocast/browser";
+import {
+  provider2ImageAgent,
+  type MulmoPresentationStyle,
+  type MulmoImageParams,
+  type MulmoBeat,
+} from "mulmocast/browser";
 
 type ImageParams = MulmoPresentationStyle["imageParams"];
 type ImageParamField = keyof ImageParams;
