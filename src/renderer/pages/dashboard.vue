@@ -72,23 +72,13 @@
           <p class="mb-4 text-gray-500">No projects yet. Create your first project to get started!</p>
         </div>
 
-        <!-- Project List -->
-        <div v-else-if="viewMode === VIEW_MODE.list">
-          <ListView
+        <!-- Project Items -->
+        <div v-else>
+          <ProjectItems
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
             :thumbnails-loading="thumbnailsLoading"
-            @delete="handleDeleteProject"
-            @view="handleViewProject"
-          />
-        </div>
-
-        <!-- Project Grid -->
-        <div v-else-if="viewMode === VIEW_MODE.grid">
-          <GridView
-            :projects="sortedProjects"
-            :project-thumbnails="projectThumbnails"
-            :thumbnails-loading="thumbnailsLoading"
+            :view-mode="viewMode"
             @delete="handleDeleteProject"
             @view="handleViewProject"
           />
@@ -127,8 +117,7 @@ import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
 import MulmoViewer from "@/components/mulmo_viewer.vue";
-import ListView from "./dashboard/list_view.vue";
-import GridView from "./dashboard/grid_view.vue";
+import ProjectItems from "./dashboard/project_items.vue";
 import NewProjectDialog from "./dashboard/new_project_dialog.vue";
 
 import { Button } from "@/components/ui/button";
