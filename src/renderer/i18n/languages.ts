@@ -1,6 +1,6 @@
-const lang = {
+const languages = {
   ja: "日本語",
   en: "English",
 };
 
-export default lang;
+export default languages;

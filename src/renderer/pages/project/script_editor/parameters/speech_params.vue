@@ -95,7 +95,7 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
-                    {{ lang.name }}
+                    {{ t("languages." + lang.code) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -162,10 +162,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const LANGUAGES = [
-  { code: "en", name: "English" },
-  { code: "ja", name: "日本語" },
-] as const;
+const LANGUAGES = [{ code: "en" }, { code: "ja" }] as const;
 
 const DEFAULT_LANGUAGE = "en";
 
@@ -215,8 +212,8 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-const handleProviderChange = (name: string, value: string) => {
-  updateSpeaker(name, { provider: value });
+const handleProviderChange = (name: string, provider: string) => {
+  updateSpeaker(name, { provider });
 };
 
 const handleLanguageChange = (name: string, language: string) => {
