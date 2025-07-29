@@ -60,7 +60,7 @@
               <Sparkles v-else class="w-4 h-4" />
             </Button>
             <div v-if="imageRefs[imageKey]" class="flex justify-center items-center">
-              <img :src="imageRefs[imageKey]" class="max-h-64" />
+              <img :src="imageRefs[imageKey]" class="max-h-64" @click="openImage(imageKey)" />
             </div>
             <template v-else>
               <FileImage :size="32" class="mx-auto text-gray-400 mb-2" />
@@ -80,6 +80,7 @@
         @click="deleteReference(imageKey)"
       />
     </div>
+    <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
   </div>
 </template>
 
@@ -91,6 +92,7 @@ import { useI18n } from "vue-i18n";
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
 import { z } from "zod";
 
+import MediaModal from "@/components/media_modal.vue";
 import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
@@ -119,6 +121,14 @@ const loadReference = async () => {
   });
 };
 loadReference();
+
+// modal
+const modalOpen = ref(false);
+const modalSrc = ref("");
+const openImage = (imageKey: string) => {
+  modalOpen.value = true;
+  modalSrc.value = imageRefs.value[imageKey];
+};
 
 /*
 const reference = async () => {

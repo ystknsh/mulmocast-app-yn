@@ -11,6 +11,7 @@ const lang = {
     fetch: "取得",
     imagePrompt: "イメージプロンプト",
     moviePrompt: "動画プロンプト",
+    htmlPrompt: "HTMLプロンプト",
   },
   menu: {
     top: "Home",

@@ -141,12 +141,12 @@
         </div>
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="block mb-1"> HTML Prompt: </Label>
+            <Label class="block mb-1">{{ t("common.htmlPrompt") }}: </Label>
             <Textarea
               :placeholder="t('beat.form.htmlPrompt.contents')"
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
-              class="font-mono"
+              class="font-mono mt-2"
               rows="6"
             />
           </template>
@@ -156,21 +156,14 @@
               :placeholder="t('beat.form.imagePrompt.contents')"
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
-              class="mb-2 h-20 overflow-y-auto"
-            />
-            <Label class="block mb-1">{{ t("common.moviePrompt") }}: </Label>
-            <Textarea
-              :placeholder="t('beat.form.moviePrompt.contents')"
-              :model-value="beat.moviePrompt"
-              @update:model-value="(value) => update('moviePrompt', String(value))"
-              class="mb-2 h-20 overflow-y-auto"
+              class="my-2 h-20 overflow-y-auto"
             />
           </template>
         </div>
-        <!-- end of beat.image -->
+        <!-- end of image edit -->
       </div>
 
-      <!-- right: preview -->
+      <!-- right: image preview -->
       <div>
         <BeatPreviewImage
           :beat="beat"
@@ -182,6 +175,20 @@
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
         />
+      </div>
+
+      <!-- movie edit left -->
+      <div v-if="!beat.image && !beat.htmlPrompt">
+        <Label class="block mb-1">{{ t("common.moviePrompt") }}: </Label>
+        <Textarea
+          :placeholder="t('beat.form.moviePrompt.contents')"
+          :model-value="beat.moviePrompt"
+          @update:model-value="(value) => update('moviePrompt', String(value))"
+          class="mb-2 h-20 overflow-y-auto"
+        />
+      </div>
+      <!-- movie preview right -->
+      <div v-if="!beat.image && !beat.htmlPrompt">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
