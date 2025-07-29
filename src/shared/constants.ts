@@ -246,7 +246,6 @@ export const VIEW_MODE = {
   grid: "grid",
 } as const;
 
-export const INITIAL_TITLE = "[untitled]";
 export const INITIAL_DESCRIPTION = "mulmocast";
 
 export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
