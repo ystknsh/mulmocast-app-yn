@@ -14,7 +14,7 @@
                 <img
                   :src="mediaUri(projectThumbnails[project.metadata.id])"
                   class="h-full w-full object-contain"
-                  :alt="project?.script?.title || INITIAL_TITLE"
+                  :alt="project?.script?.title || t('common.defaultTitle')"
                 />
               </template>
               <template v-else>
@@ -23,7 +23,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-2">
-                <h3 class="font-semibold text-gray-900">{{ project?.script?.title || INITIAL_TITLE }}</h3>
+                <h3 class="font-semibold text-gray-900">{{ project?.script?.title || t('common.defaultTitle') }}</h3>
               </div>
               <div class="mt-1 flex items-center space-x-1 text-sm text-gray-500">
                 <Calendar class="h-4 w-4" />
@@ -71,7 +71,9 @@ import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button, Skeleton } from "@/components/ui";
 import { useMulmoEventStore } from "@/store/mulmo_event";
-import { INITIAL_TITLE } from "../../../shared/constants";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
   delete: [project: Project];

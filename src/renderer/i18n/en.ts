@@ -12,6 +12,7 @@ const lang = {
     imagePrompt: "Image Prompt",
     moviePrompt: "Movie Prompt",
     htmlPrompt: "HTML Prompt",
+    defaultTitle: "[untitled]",
   },
   menu: {
     top: "Home",
