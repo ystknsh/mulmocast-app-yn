@@ -1,25 +1,29 @@
 <template>
   <div class="space-y-6">
     <!-- Output Buttons -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <div class="flex flex-col space-y-2 pl-2">
+    <div class="space-y-4">
+      <div class="grid grid-cols-2 gap-1">
         <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
           <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
           <span>{{ t("project.generate." + option.key) }}</span>
         </label>
       </div>
-      <Button
-        @click="generateContents"
-        class="flex h-auto flex-col items-center space-y-2 py-4 whitespace-normal"
-        :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
-      >
-        <div class="flex">
-          <Monitor :size="24" v-if="options.movie" />
-          <Globe :size="24" v-if="options.audio" />
-          <FileText :size="24" v-if="options.pdfSlide || options.pdfHandout" />
-        </div>
-        <span>{{ t("project.generate.generateContents") }}</span>
-      </Button>
+      <div class="flex justify-center">
+        <Button
+          @click="generateContents"
+          class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
+          :disabled="
+            mulmoEventStore.isArtifactGenerating[projectId] || !checkboxOptions.some((option) => options[option.key])
+          "
+        >
+          <div class="mb-0 flex items-center justify-center gap-2">
+            <Monitor :size="24" v-if="options.movie" />
+            <Globe :size="24" v-if="options.audio" />
+            <FileText :size="24" v-if="options.pdfSlide || options.pdfHandout" />
+          </div>
+          <span>{{ t("project.generate.generateContents") }}</span>
+        </Button>
+      </div>
     </div>
   </div>
 </template>
