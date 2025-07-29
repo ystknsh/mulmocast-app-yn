@@ -20,9 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, Label, Textarea } from "@/components/ui";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 

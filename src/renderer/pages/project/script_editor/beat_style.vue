@@ -1,7 +1,12 @@
 <template>
-  <Collapsible v-model:open="open">
+  <Collapsible :open="!!beat?.imageParams" @update:open="openEvent">
     <CollapsibleTrigger as-child>
-      <Button variant="ghost" size="icon" class="transition-transform duration-200" :class="{ 'rotate-180': open }">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="transition-transform duration-200"
+        :class="{ 'rotate-180': !!beat?.imageParams }"
+      >
         ^
       </Button>
     </CollapsibleTrigger>
@@ -17,20 +22,39 @@
       />
     </CollapsibleContent>
   </Collapsible>
+
+  <div class="space-y-2 text-sm text-gray-500" v-if="!beat?.imageParams && imageParams">
+    <div>
+      <Label class="block font-medium text-gray-700">Provider</Label>
+      <p>{{ imageParams.provider }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Model</Label>
+      <p>{{ imageParams.model }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Style</Label>
+      <p>{{ imageParams.style }}</p>
+    </div>
+    <div>
+      <Label class="block font-medium text-gray-700">Moderation</Label>
+      <p>{{ imageParams.moderation }}</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui";
+import { Button, Label } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
+import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 
 interface Props {
   beat: MulmoBeat;
   imageParams: MulmoImageParams;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
@@ -47,5 +71,11 @@ const updateImageNames = (imageKey: string, value: string[]) => {
   emit("updateImageNames", imageKey, value);
 };
 
-const open = ref(false);
+const openEvent = (event) => {
+  if (event) {
+    emit("update", "imageParams", props.imageParams ?? IMAGE_PARAMS_DEFAULT_VALUES);
+  } else {
+    emit("update", "imageParams", undefined);
+  }
+};
 </script>

@@ -61,16 +61,16 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, watch, nextTick } from "vue";
 import { useDebounceFn } from "@vueuse/core";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useI18n } from "vue-i18n";
+import { Eye, EyeOff } from "lucide-vue-next";
+
+import { Button, Input, Label } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff } from "lucide-vue-next";
-import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
+
+import { notifySuccess, notifyError } from "@/lib/notification";
 import { ENV_KEYS } from "../../shared/constants";
-import { useI18n } from "vue-i18n";
 import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
 
 const { locale, t } = useI18n();

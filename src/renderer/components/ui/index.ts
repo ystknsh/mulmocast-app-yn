@@ -1,5 +1,10 @@
 export { Button } from "@/components/ui/button";
+export { Badge } from "@/components/ui/badge";
+export { Card } from "@/components/ui/card";
 export { Checkbox } from "@/components/ui/checkbox";
-export { Label } from "@/components/ui/label";
-export { Textarea } from "@/components/ui/textarea";
 export { Input } from "@/components/ui/input";
+export { Label } from "@/components/ui/label";
+export { Switch } from "@/components/ui/switch";
+export { Textarea } from "@/components/ui/textarea";
+export { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+export { Skeleton } from "@/components/ui/skeleton";

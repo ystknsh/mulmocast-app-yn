@@ -69,9 +69,8 @@
 import { Trash2, Eye, Calendar, Loader2, FileText } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, Skeleton } from "@/components/ui";
 import { useMulmoEventStore } from "@/store/mulmo_event";
-import { Skeleton } from "@/components/ui/skeleton";
 import { INITIAL_TITLE } from "../../../shared/constants";
 
 const emit = defineEmits<{

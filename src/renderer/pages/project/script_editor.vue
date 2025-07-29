@@ -224,11 +224,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card, Button, Label, Input, Badge } from "@/components/ui";
 import CodeEditor from "@/components/code_editor.vue";
 
 import BeatEditor from "./script_editor/beat_editor.vue";
