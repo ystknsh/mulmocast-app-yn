@@ -1,7 +1,7 @@
 <template>
   <Dialog v-model:open="isOpen">
     <DialogOverlay class="bg-black/10" @click="isOpen = false" />
-    <DialogContent class="max-h-[90vh] max-w-[90vw] border-0 bg-transparent p-0 shadow-none">
+    <DialogContent class="max-w-3xl border-0 bg-transparent p-0 shadow-none">
       <div class="sr-only">
         <DialogTitle>Media Preview</DialogTitle>
         <DialogDescription>Click outside to close</DialogDescription>
