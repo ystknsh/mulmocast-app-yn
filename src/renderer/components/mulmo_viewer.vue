@@ -9,10 +9,10 @@
     </TabsList>
 
     <TabsContent value="movie" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="videoUrl" ref="videoRef" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.movie.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.movie.description") }}</p>
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <video :size="64" class="mx-auto mb-4 text-gray-400" controls :src="videoUrl" ref="videoRef" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
         <div class="flex justify-center space-x-4">
           <Button @click="playVideo">
             <Play :size="16" class="mr-2" />
@@ -28,10 +28,10 @@
     </TabsContent>
 
     <TabsContent value="pdf" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <FileText :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.pdf.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.pdf.description") }}</p>
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <FileText :size="16" class="mr-2" />
@@ -47,10 +47,10 @@
     </TabsContent>
 
     <TabsContent value="html" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <Globe :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.html.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.html.description") }}</p>
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.html.description") }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Eye :size="16" class="mr-2" />
@@ -66,10 +66,10 @@
     </TabsContent>
 
     <TabsContent value="podcast" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <Volume2 :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.podcast.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.podcast.description") }}</p>
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Play :size="16" class="mr-2" />
@@ -85,10 +85,10 @@
     </TabsContent>
 
     <TabsContent value="slide" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <FileImage :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.slide.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.slide.description") }}</p>
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <FileImage :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.slide.description") }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Play :size="16" class="mr-2" />

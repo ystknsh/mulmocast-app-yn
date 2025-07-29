@@ -16,7 +16,7 @@
           <Input
             v-else
             v-model="displayTitle"
-            :class="`font-bold w-128 ${getHeaderSize}`"
+            :class="`w-128 font-bold ${getHeaderSize}`"
             @blur="saveTitle"
             @keydown.enter="handleTitleEnter"
             autoFocus
@@ -24,7 +24,7 @@
           <Pencil
             v-if="!isEditingTitle"
             :size="16"
-            class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 cursor-pointer"
+            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
             @click="startEditingTitle"
           />
         </div>
@@ -41,7 +41,7 @@
           <Input
             v-else
             v-model="displayDescription"
-            :class="`text-gray-600 w-128 ${selectedTheme === 'compact' ? 'text-sm' : ''}`"
+            :class="`w-128 text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`"
             @blur="saveDescription"
             @keydown.enter="handleDescriptionEnter"
             autoFocus
@@ -49,7 +49,7 @@
           <Pencil
             v-if="!isEditingDescription"
             :size="14"
-            class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 cursor-pointer"
+            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
             @click="startEditingDescription"
           />
         </div>

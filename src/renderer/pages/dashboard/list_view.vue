@@ -2,41 +2,41 @@
   <div class="flex flex-col gap-4">
     <router-link :to="`/project/${project.metadata.id}`" v-for="project in projects" :key="project.metadata.id">
       <div
-        class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
+        class="cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md"
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <div class="w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+            <div class="flex h-12 w-16 items-center justify-center overflow-hidden rounded-lg bg-gray-100">
               <template v-if="thumbnailsLoading[project.metadata.id]">
-                <Skeleton class="w-full h-full" />
+                <Skeleton class="h-full w-full" />
               </template>
               <template v-else-if="projectThumbnails[project.metadata.id]">
                 <img
                   :src="mediaUri(projectThumbnails[project.metadata.id])"
-                  class="w-full h-full object-contain"
+                  class="h-full w-full object-contain"
                   :alt="project?.script?.title || INITIAL_TITLE"
                 />
               </template>
               <template v-else>
-                <FileText class="w-6 h-6 text-green-500" />
+                <FileText class="h-6 w-6 text-green-500" />
               </template>
             </div>
             <div>
               <div class="flex items-center space-x-2">
                 <h3 class="font-semibold text-gray-900">{{ project?.script?.title || INITIAL_TITLE }}</h3>
               </div>
-              <div class="flex items-center space-x-1 text-sm text-gray-500 mt-1">
-                <Calendar class="w-4 h-4" />
+              <div class="mt-1 flex items-center space-x-1 text-sm text-gray-500">
+                <Calendar class="h-4 w-4" />
                 <span>{{ formatDate(project.metadata.updatedAt || project.metadata.createdAt) }}</span>
-                <span class="px-2 py-1 bg-gray-100 rounded text-xs">
+                <span class="rounded bg-gray-100 px-2 py-1 text-xs">
                   {{ project.metadata.version }}
                 </span>
                 <div
                   v-if="mulmoEventStore.isGenerating(project.metadata.id)"
-                  class="inline-flex items-center space-x-1 px-2 py-1 bg-blue-100 rounded"
+                  class="inline-flex items-center space-x-1 rounded bg-blue-100 px-2 py-1"
                 >
-                  <Loader2 class="w-3 h-3 text-blue-500 animate-spin" />
-                  <span class="text-xs text-blue-600 font-medium">Generating</span>
+                  <Loader2 class="h-3 w-3 animate-spin text-blue-500" />
+                  <span class="text-xs font-medium text-blue-600">Generating</span>
                 </div>
               </div>
             </div>
@@ -48,7 +48,7 @@
               size="icon"
               class="text-gray-400 hover:text-blue-600"
             >
-              <Eye class="w-5 h-5" />
+              <Eye class="h-5 w-5" />
             </Button>
             <Button
               @click.stop.prevent="deleteProject($event, project)"
@@ -56,7 +56,7 @@
               size="icon"
               class="text-gray-400 hover:text-red-600"
             >
-              <Trash2 class="w-5 h-5" />
+              <Trash2 class="h-5 w-5" />
             </Button>
           </div>
         </div>

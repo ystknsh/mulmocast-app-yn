@@ -1,14 +1,14 @@
 <template>
   <div class="flex items-start space-x-3">
-    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
       <Bot :size="16" class="text-blue-600" />
     </div>
     <div class="flex-1">
       <div
-        class="bg-gray-100 text-gray-800 p-3 rounded-lg block max-w-md text-sm break-words whitespace-pre-wrap chat-markdown"
+        class="chat-markdown block max-w-md rounded-lg bg-gray-100 p-3 text-sm break-words whitespace-pre-wrap text-gray-800"
         v-html="safeHtml"
       />
-      <p class="text-xs text-gray-500 mt-1">{{ formatedTime }}</p>
+      <p class="mt-1 text-xs text-gray-500">{{ formatedTime }}</p>
     </div>
   </div>
 </template>

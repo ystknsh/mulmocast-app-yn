@@ -11,7 +11,7 @@
 
     <div
       v-if="mulmoError?.script && hasScriptError"
-      class="w-full p-2 border border-red-500 bg-red-100 text-red-800 rounded text-sm mt-2"
+      class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
     >
       <div v-for="(message, key) in Object.values(mulmoError?.script ?? {}).flat()" :key="key">
         {{ message }}
@@ -20,10 +20,10 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.TEXT" class="mt-2">
       <div
-        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
+        class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
       >
-        <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-        <div class="space-y-2 mx-auto">
+        <p class="mb-2 text-sm text-gray-500">Text Mode - Speaker and dialogue editing only</p>
+        <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
             <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
           </div>
@@ -39,8 +39,8 @@
             move-class="transition-all duration-300 ease-in-out"
           >
             <div v-for="(beat, index) in safeBeats ?? []" :key="beat?.id ?? index" class="relative">
-              <Card class="p-4 space-y-1 gap-2">
-                <div class="font-bold text-gray-700 flex justify-between items-center">
+              <Card class="gap-2 space-y-1 p-4">
+                <div class="flex items-center justify-between font-bold text-gray-700">
                   <span>Beat {{ index + 1 }}</span>
                   <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
                 </div>
@@ -67,21 +67,21 @@
                 <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
               </Card>
               <div
-                class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
               >
                 <ArrowUp
                   v-if="index !== 0"
                   @click="() => positionUp(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <ArrowDown
                   v-if="(mulmoValue?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <Trash
                   @click="deleteBeat(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
                 />
               </div>
               <div class="px-4 pt-2">
@@ -95,12 +95,12 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.YAML" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
-          { 'outline-red-400 outline-2 outline': !isValidScriptData },
+          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border bg-gray-50 p-4',
+          { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <div class="flex-1 min-h-0" style="height: 0">
+        <p class="mb-2 text-sm text-gray-500">YAML Mode - Complete MulmoScript editing</p>
+        <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="yamlText"
             language="yaml"
@@ -117,12 +117,12 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.JSON" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
-          { 'outline-red-400 outline-2 outline': !isValidScriptData },
+          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border bg-gray-50 p-4',
+          { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <div class="flex-1 min-h-0" style="height: 0">
+        <p class="mb-2 text-sm text-gray-500">JSON Mode - Complete MulmoScript editing</p>
+        <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="jsonText"
             language="json"
@@ -137,10 +137,10 @@
     </TabsContent>
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
-        <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
+        <p class="mb-2 text-sm text-gray-500">Media Mode - Beat-by-beat media editing and preview</p>
 
-        <div class="space-y-2 mx-auto">
+        <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
             <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
           </div>
@@ -170,21 +170,21 @@
                 />
               </Card>
               <div
-                class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
               >
                 <ArrowUp
                   v-if="index !== 0"
                   @click="() => positionUp(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <ArrowDown
                   v-if="(mulmoValue?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
-                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <Trash
                   @click="deleteBeat(index)"
-                  class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
                 />
               </div>
               <div class="px-4 pt-2">
@@ -196,8 +196,8 @@
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
-        <p class="text-sm text-gray-500 mb-2">Style - Presentation style editing</p>
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
+        <p class="mb-2 text-sm text-gray-500">Style - Presentation style editing</p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
@@ -206,7 +206,7 @@
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <Reference
           :projectId="projectId"
           :images="props.mulmoValue?.imageParams?.images ?? {}"

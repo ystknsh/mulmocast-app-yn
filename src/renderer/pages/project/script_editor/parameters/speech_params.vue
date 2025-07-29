@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Speech Parameters</h4>
+    <h4 class="mb-3 font-medium">Speech Parameters</h4>
     <div v-if="speechParams" class="space-y-4">
       <div>
         <Label>Provider</Label>
@@ -20,16 +20,16 @@
         v-if="speechParams.speakers"
         v-for="(speaker, name) in speechParams.speakers"
         :key="name"
-        class="border p-3 rounded"
+        class="rounded border p-3"
       >
-        <div class="flex items-center justify-between mb-2">
+        <div class="mb-2 flex items-center justify-between">
           <div>
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
               <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
                 t("update")
               }}</Button>
             </div>
-            <h5 class="font-medium text-sm" @click="changeKey(name)" v-else>{{ name }}</h5>
+            <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
           <Button
             v-if="Object.keys(speechParams.speakers).length > 1"
@@ -101,7 +101,7 @@
       <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
-      <p class="text-sm text-gray-500 mb-2">No speakers defined</p>
+      <p class="mb-2 text-sm text-gray-500">No speakers defined</p>
       <Button variant="outline" size="sm" @click="initializeSpeechParams">Initialize Speech Parameters</Button>
     </div>
   </Card>

@@ -1,17 +1,17 @@
 <template>
   <Dialog v-model:open="isOpen">
     <DialogOverlay class="bg-black/10" @click="isOpen = false" />
-    <DialogContent class="max-w-[90vw] max-h-[90vh] p-0 border-0 bg-transparent shadow-none">
+    <DialogContent class="max-h-[90vh] max-w-[90vw] border-0 bg-transparent p-0 shadow-none">
       <div class="sr-only">
         <DialogTitle>Media Preview</DialogTitle>
         <DialogDescription>Click outside to close</DialogDescription>
       </div>
-      <div class="flex justify-center items-center h-full" @click="isOpen = false">
+      <div class="flex h-full items-center justify-center" @click="isOpen = false">
         <img
           v-if="type === 'image'"
           :src="src"
           :alt="alt"
-          class="max-w-full max-h-[90vh] object-contain cursor-pointer"
+          class="max-h-[90vh] max-w-full cursor-pointer object-contain"
           @click.stop
         />
         <video
@@ -19,7 +19,7 @@
           :src="src"
           controls
           autoplay
-          class="max-w-full max-h-[90vh] cursor-pointer"
+          class="max-h-[90vh] max-w-full cursor-pointer"
           @click.stop
         />
       </div>

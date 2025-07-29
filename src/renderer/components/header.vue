@@ -1,12 +1,12 @@
 <template>
   <header
-    class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 transition-colors duration-200 relative"
+    class="relative border-b border-gray-200 bg-white px-6 py-4 transition-colors duration-200 dark:border-gray-800 dark:bg-gray-900"
   >
     <div class="mx-auto flex items-center justify-between">
       <!-- Logo/Brand -->
       <RouterLink to="/">
         <h1
-          class="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer"
+          class="cursor-pointer text-2xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
         >
           MulmoCast
         </h1>
@@ -31,7 +31,7 @@
           <Button
             :variant="isDashboardActive ? 'default' : 'ghost'"
             size="sm"
-            class="relative hover:scale-105 transition-transform duration-200"
+            class="relative transition-transform duration-200 hover:scale-105"
           >
             <component :is="dashboardItem.icon" :size="16" class="mr-2" />
             {{ dashboardItem.label }}
@@ -53,7 +53,7 @@
               as-child
               :class="route.path === item.path ? 'bg-blue-50 text-blue-600' : ''"
             >
-              <RouterLink :to="item.path" class="flex items-center space-x-2 w-full">
+              <RouterLink :to="item.path" class="flex w-full items-center space-x-2">
                 <component :is="item.icon" :size="16" />
                 <span>{{ item.label }}</span>
               </RouterLink>
