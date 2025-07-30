@@ -45,7 +45,7 @@
         <Input
           :model-value="imageParams?.style || IMAGE_PARAMS_DEFAULT_VALUES.style"
           @update:model-value="(value) => handleUpdate('style', String(value))"
-          placeholder="e.g. vivid, natural"
+          :placeholder="defaultStyle ?? 'e.g. vivid, natural'"
         />
       </div>
       <div class="my-2">
@@ -98,6 +98,7 @@ const props = withDefaults(
     mulmoError: string[];
     beat?: MulmoBeat;
     showTitle?: boolean;
+    defaultStyle?: string;
   }>(),
   { showTitle: true },
 );
