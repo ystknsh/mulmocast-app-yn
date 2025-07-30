@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Image Parameters</h4>
+    <h4 class="mb-3 font-medium" v-if="showTitle">Image Parameters</h4>
 
     <div class="space-y-3">
       <div>
@@ -56,11 +56,11 @@
           placeholder="e.g. low, auto"
         />
       </div>
-      <div v-if="enableCheckbox && mulmoImageParams.images" class="my-2">
+      <div v-if="images" class="my-2">
         <Label>Images</Label>
-        <div v-for="(imageKey, key) in Object.keys(mulmoImageParams.images)" :key="imageKey">
+        <div v-for="(imageKey, key) in Object.keys(images)" :key="imageKey">
           <Checkbox
-            :model-value="(beat?.imageNames ?? Object.keys(mulmoImageParams?.images ?? {})).includes(imageKey)"
+            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
             @update:modelValue="(val) => updateImageNames(imageKey, val)"
             class="m-2"
           />{{ imageKey }}
@@ -79,25 +79,26 @@ import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2I
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
-type ImageParamField = keyof MulmoImageParams;
-
 const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) => ({
   name: provider,
   value: provider,
   models: agent.models,
 }));
 
-const props = defineProps<{
-  imageParams?: MulmoImageParams;
-  mulmoImageParams?: MulmoImageParams;
-  mulmoError: string[];
-  enableCheckbox?: boolean;
-  beat?: MulmoBeat;
-}>();
+const props = withDefaults(
+  defineProps<{
+    imageParams?: MulmoImageParams;
+    images?: MulmoImageParamsImages;
+    mulmoError: string[];
+    beat?: MulmoBeat;
+    showTitle?: boolean;
+  }>(),
+  { showTitle: true },
+);
 
 const emit = defineEmits<{
   update: [imageParams: MulmoImageParams];
-  updateImageNames: [imageKey: string, val: string[]];
+  updateImageNames: [val: string[]];
 }>();
 
 const updateImageNames = (imageKey: string, val: string[]) => {
@@ -109,7 +110,7 @@ const updateImageNames = (imageKey: string, val: string[]) => {
       : [...current, imageKey]
     : current.filter((key) => key !== imageKey);
 
-  emit("updateImageNames", imageKey, newArray);
+  emit("updateImageNames", newArray);
 };
 
 const handleProviderChange = (value: Text2ImageProvider) => {
@@ -118,7 +119,7 @@ const handleProviderChange = (value: Text2ImageProvider) => {
   }
 };
 
-const handleUpdate = (field: ImageParamField, value: string) => {
+const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
   const currentParams = props.imageParams || {};
   emit("update", {
     ...IMAGE_PARAMS_DEFAULT_VALUES,

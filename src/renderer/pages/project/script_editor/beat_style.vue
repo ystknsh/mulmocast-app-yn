@@ -1,40 +1,23 @@
 <template>
-  <Collapsible :open="!!beat?.imageParams" @update:open="openEvent">
+  <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams">
     <CollapsibleTrigger as-child>
-      <Checkbox variant="ghost" size="icon" />
+      <div class="mb-3 flex items-center gap-2">
+        <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
+        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-gray-500' : ''">Image Parameters</h4>
+      </div>
     </CollapsibleTrigger>
     <CollapsibleContent>
       <ImageParams
         :image-params="beat.imageParams"
-        :mulmo-image-params="imageParams"
+        :images="imageParams.images"
         :beat="beat"
+        :showTitle="false"
         @update="(value) => updateParam(value)"
         @updateImageNames="updateImageNames"
-        :enable-checkbox="true"
         :mulmoError="[]"
       />
     </CollapsibleContent>
   </Collapsible>
-
-  <div class="space-y-2 text-sm text-gray-300" v-if="!beat?.imageParams && imageParams">
-    <h4 class="mb-3 font-medium text-gray-500">Image Parameters</h4>
-    <div>
-      <Label class="block font-medium text-gray-500">Provider</Label>
-      <p>{{ imageParams.provider }}</p>
-    </div>
-    <div>
-      <Label class="block font-medium text-gray-500" v-if="imageParams.model">Model</Label>
-      <p>{{ imageParams.model }}</p>
-    </div>
-    <div>
-      <Label class="block font-medium text-gray-500" v-if="imageParams.style">Style</Label>
-      <p>{{ imageParams.style }}</p>
-    </div>
-    <div>
-      <Label class="block font-medium text-gray-500" v-if="imageParams.moderation">Moderation</Label>
-      <p>{{ imageParams.moderation }}</p>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +25,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Label, Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
+import ImageParams from "./parameters/image_params.vue";
 
 interface Props {
   beat: MulmoBeat;
@@ -52,24 +36,26 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
-  updateImageNames: [imageKey: string, val: string[]];
+  updateImageNames: [val: string[]];
 }>();
-
-import ImageParams from "./parameters/image_params.vue";
 
 const updateParam = (value: ImageParams | undefined) => {
   emit("update", "imageParams", value);
 };
 
-const updateImageNames = (imageKey: string, value: string[]) => {
-  emit("updateImageNames", imageKey, value);
+const updateImageNames = (value: string[]) => {
+  emit("updateImageNames", value);
 };
 
-const openEvent = (event) => {
+const updateBeatImageParams = (event) => {
   if (event) {
-    emit("update", "imageParams", props.imageParams ?? IMAGE_PARAMS_DEFAULT_VALUES);
+    const { images, ...newImageParams } = props?.imageParams ?? {};
+    console.log(images, newImageParams);
+    emit("update", "imageParams", { ...(newImageParams ?? IMAGE_PARAMS_DEFAULT_VALUES) });
+    // emit("updateImageNames", Object.keys(images ?? {}));
   } else {
     emit("update", "imageParams", undefined);
+    // emit("updateImageNames", []);
   }
 };
 </script>
