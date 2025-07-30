@@ -276,7 +276,6 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
   if (actionName === "audio") {
-    console.log(getAudioArtifactFilePath(context))
     return getAudioArtifactFilePath(context);
     // return audioFilePath(context);
   }
