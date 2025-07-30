@@ -10,14 +10,14 @@ const lang = {
     common: {
       // Navigation
       back: "Back",
-      
-      // File operations  
+
+      // File operations
       drophere: "Drop file here",
       or: "or",
-      
+
       // Common labels
       title: "Title",
-      description: "Description", 
+      description: "Description",
       key: "Key",
       image: "Image",
       audio: "Audio",
@@ -25,21 +25,21 @@ const lang = {
       movie: "Movie",
       file: "File",
       url: "URL",
-      
+
       // Modal
       clickOutsideToClose: "Click outside to close",
     },
-    
+
     // Common actions (placeholder pairs)
     actions: {
       // Basic actions (no placeholder)
       create: "Create",
-      update: "Update", 
+      update: "Update",
       generate: "Generate",
       generateThing: "Generate {thing}",
       fetch: "Fetch",
       cancel: "Cancel",
-      
+
       // Media actions (placeholder pairs)
       play: "Play",
       playThing: "Play {thing}",
@@ -47,12 +47,12 @@ const lang = {
       downloadThing: "Download {thing}",
       view: "View",
       viewThing: "View {thing}",
-      
+
       // Content generation
       generateImage: "Generate image",
       generateMovie: "Generate movie",
       generateReference: "Generate Reference",
-      
+
       // CRUD operations (placeholder pairs)
       add: "Add",
       addThing: "Add {thing}",
@@ -62,22 +62,22 @@ const lang = {
       editThing: "Edit {thing}",
       open: "Open",
       openThing: "Open {thing}",
-      
+
       // Chat actions
       clearChat: "Clear chat",
       copyScript: "Copy script",
       createScript: "Create Script",
-      
+
       // Template actions
       insert: "Insert",
       change: "Change",
       reference: "Set Reference",
-      
+
       // Project actions
       createNew: "Create New",
       openProjectFolder: "Open Project Folder",
     },
-    
+
     // Status messages
     status: {
       // Processing states
@@ -88,17 +88,17 @@ const lang = {
       creating: "Creating...",
       saving: "Saving...",
       processing: "Processing...",
-      
+
       // Completion states
       complete: "Complete",
       success: "Success",
       ready: "Ready",
-      
+
       // Error states
       error: "Error",
       failed: "Failed",
       cancelled: "Cancelled",
-      
+
       // Specific loading states
       loadingProjects: "Loading projects...",
       generatingImage: "Generating Image...",

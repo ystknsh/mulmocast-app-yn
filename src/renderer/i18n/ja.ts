@@ -10,14 +10,14 @@ const lang = {
     common: {
       // Navigation
       back: "戻る",
-      
-      // File operations  
+
+      // File operations
       drophere: "画像をここにドロップ",
       or: "または",
-      
+
       // Common labels
       title: "タイトル",
-      description: "説明", 
+      description: "説明",
       key: "キー",
       image: "画像",
       audio: "音声",
@@ -25,21 +25,21 @@ const lang = {
       movie: "動画",
       file: "ファイル",
       url: "URL",
-      
+
       // Modal
       clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
     },
-    
+
     // Common actions (placeholder pairs)
     actions: {
       // Basic actions (no placeholder)
       create: "作成",
-      update: "更新", 
+      update: "更新",
       generate: "生成",
       generateThing: "{thing}を生成",
       fetch: "取得",
       cancel: "キャンセル",
-      
+
       // Media actions (placeholder pairs)
       play: "再生",
       playThing: "{thing}を再生",
@@ -47,12 +47,12 @@ const lang = {
       downloadThing: "{thing}をダウンロード",
       view: "表示",
       viewThing: "{thing}を表示",
-      
+
       // Content generation
       generateImage: "画像生成",
       generateMovie: "動画生成",
       generateReference: "参照イメージ生成",
-      
+
       // CRUD operations (placeholder pairs)
       add: "追加",
       addThing: "{thing}を追加",
@@ -62,22 +62,22 @@ const lang = {
       editThing: "{thing}を編集",
       open: "開く",
       openThing: "{thing}を開く",
-      
+
       // Chat actions
       clearChat: "チャットリセット",
       copyScript: "チャットへコピー",
       createScript: "スクリプト作成",
-      
+
       // Template actions
       insert: "追加",
       change: "変更",
       reference: "画像をセット",
-      
+
       // Project actions
       createNew: "新規作成",
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
-    
+
     // Status messages
     status: {
       // Processing states
@@ -88,17 +88,17 @@ const lang = {
       creating: "作成中...",
       saving: "保存中...",
       processing: "処理中...",
-      
+
       // Completion states
       complete: "完了",
       success: "成功",
       ready: "準備完了",
-      
+
       // Error states
       error: "エラー",
       failed: "失敗",
       cancelled: "キャンセル",
-      
+
       // Specific loading states
       loadingProjects: "プロジェクト読み込み中...",
       generatingImage: "画像生成中...",
