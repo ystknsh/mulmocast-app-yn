@@ -12,6 +12,7 @@
         :images="imageParams.images"
         :beat="beat"
         :showTitle="false"
+        :defaultStyle="imageParams.style"
         @update="(value) => updateParam(value)"
         @updateImageNames="updateImageNames"
         :mulmoError="[]"
