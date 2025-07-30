@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { nextTick } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Label, Checkbox } from "@/components/ui";
+import { Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./parameters/image_params.vue";

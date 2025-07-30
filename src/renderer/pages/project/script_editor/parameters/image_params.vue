@@ -75,7 +75,13 @@
 import { Label, Input, Checkbox, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2ImageProvider } from "mulmocast/browser";
+import {
+  provider2ImageAgent,
+  type MulmoImageParams,
+  type MulmoBeat,
+  type Text2ImageProvider,
+  type MulmoImageParamsImages,
+} from "mulmocast/browser";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
