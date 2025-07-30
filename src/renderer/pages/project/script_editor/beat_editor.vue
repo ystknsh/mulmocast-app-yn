@@ -371,7 +371,7 @@ const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
 };
 
-const updateImageNames = (imageKey: string, value: string[]) => {
+const updateImageNames = (value: string[]) => {
   emit("update", props.index, "imageNames", value);
 };
 
