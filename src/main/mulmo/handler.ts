@@ -5,7 +5,8 @@ import {
   pdf,
   captions,
   updateNpmRoot,
-  audioFilePath,
+  // audioFilePath,
+  getAudioArtifactFilePath,
   movieFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
@@ -275,7 +276,8 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
   if (actionName === "audio") {
-    return audioFilePath(context);
+    return getAudioArtifactFilePath(context);
+    // return audioFilePath(context);
   }
   if (actionName === "movie") {
     return movieFilePath(context);
