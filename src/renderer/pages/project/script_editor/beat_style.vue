@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick } from "vue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Label, Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
@@ -47,15 +48,16 @@ const updateImageNames = (value: string[]) => {
   emit("updateImageNames", value);
 };
 
-const updateBeatImageParams = (event) => {
+const updateBeatImageParams = async (event) => {
   if (event) {
     const { images, ...newImageParams } = props?.imageParams ?? {};
-    console.log(images, newImageParams);
     emit("update", "imageParams", { ...(newImageParams ?? IMAGE_PARAMS_DEFAULT_VALUES) });
-    // emit("updateImageNames", Object.keys(images ?? {}));
+    await nextTick();
+    emit("updateImageNames", Object.keys(images ?? {}));
   } else {
     emit("update", "imageParams", undefined);
-    // emit("updateImageNames", []);
+    await nextTick();
+    emit("updateImageNames", undefined);
   }
 };
 </script>
