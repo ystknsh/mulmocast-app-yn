@@ -1,7 +1,7 @@
 <template>
   <Layout>
-    <div class="container mx-auto p-6 max-w-2xl">
-      <h1 class="text-3xl font-bold mb-8">{{ t("settings.title") }}</h1>
+    <div class="container mx-auto max-w-2xl p-6">
+      <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
 
       <div class="space-y-6">
         <!-- App Settings Section -->
@@ -23,7 +23,7 @@
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <p class="text-sm text-muted-foreground">{{ t("settings.appSettings.language.description") }}</p>
+              <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
             </div>
           </CardContent>
         </Card>
@@ -61,16 +61,16 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, watch, nextTick } from "vue";
 import { useDebounceFn } from "@vueuse/core";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useI18n } from "vue-i18n";
+import { Eye, EyeOff } from "lucide-vue-next";
+
+import { Button, Input, Label } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff } from "lucide-vue-next";
-import { notifySuccess, notifyError } from "@/lib/notification";
 import Layout from "@/components/layout.vue";
+
+import { notifySuccess, notifyError } from "@/lib/notification";
 import { ENV_KEYS } from "../../shared/constants";
-import { useI18n } from "vue-i18n";
 import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
 
 const { locale, t } = useI18n();

@@ -16,7 +16,7 @@
           <Input
             v-else
             v-model="displayTitle"
-            :class="`font-bold w-128 ${getHeaderSize}`"
+            :class="`w-128 font-bold ${getHeaderSize}`"
             @blur="saveTitle"
             @keydown.enter="handleTitleEnter"
             autoFocus
@@ -24,7 +24,7 @@
           <Pencil
             v-if="!isEditingTitle"
             :size="16"
-            class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 cursor-pointer"
+            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
             @click="startEditingTitle"
           />
         </div>
@@ -41,7 +41,7 @@
           <Input
             v-else
             v-model="displayDescription"
-            :class="`text-gray-600 w-128 ${selectedTheme === 'compact' ? 'text-sm' : ''}`"
+            :class="`w-128 text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`"
             @blur="saveDescription"
             @keydown.enter="handleDescriptionEnter"
             autoFocus
@@ -49,7 +49,7 @@
           <Pencil
             v-if="!isEditingDescription"
             :size="14"
-            class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 cursor-pointer"
+            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
             @click="startEditingDescription"
           />
         </div>
@@ -69,9 +69,8 @@ import { ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { RouterLink } from "vue-router";
 import { ArrowLeft, FolderOpen, Pencil } from "lucide-vue-next";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { INITIAL_TITLE, INITIAL_DESCRIPTION } from "../../../shared/constants";
+import { Button, Input } from "@/components/ui";
+import { INITIAL_DESCRIPTION } from "../../../shared/constants";
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -92,7 +91,7 @@ const emit = defineEmits<{
 const isEditingTitle = ref(false);
 const isEditingDescription = ref(false);
 
-const displayTitle = ref(props.mulmoScript?.title || INITIAL_TITLE);
+const displayTitle = ref(props.mulmoScript?.title || t("common.defaultTitle"));
 const displayDescription = ref(props.mulmoScript?.description || INITIAL_DESCRIPTION);
 
 watch(

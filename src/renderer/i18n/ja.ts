@@ -110,6 +110,10 @@ const lang = {
     drophere: "画像をここにドロップ",
     or: "もしくは",
     fetch: "取得",
+    imagePrompt: "イメージプロンプト",
+    moviePrompt: "動画プロンプト",
+    htmlPrompt: "HTMLプロンプト",
+    defaultTitle: "[無題]",
   },
   menu: {
     top: "Home",
@@ -149,6 +153,7 @@ const lang = {
     generateImage: "画像生成",
     generateMovie: "動画生成",
     generating: "生成中...",
+    add: "追加",
   },
   generating: "生成中...",
   generate: "生成",
@@ -200,7 +205,6 @@ const lang = {
       },
       reference: {
         generateReference: "参照イメージ生成",
-        imagePrompt: "イメージプロンプト",
         key: "キー",
         image: "画像",
       },

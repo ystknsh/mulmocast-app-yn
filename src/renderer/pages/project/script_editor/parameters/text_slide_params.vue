@@ -1,10 +1,10 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Text Slide Parameters</h4>
+    <h4 class="mb-3 font-medium">Text Slide Parameters</h4>
     <div class="space-y-3">
       <div>
         <Label>CSS Styles</Label>
-        <div class="text-xs text-gray-500 mb-2">Enter CSS styles as a single string or multiple lines.</div>
+        <div class="mb-2 text-xs text-gray-500">Enter CSS styles as a single string or multiple lines.</div>
         <Textarea
           :model-value="cssStylesText"
           @update:model-value="handleCssStylesInput"
@@ -20,9 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, Label, Textarea } from "@/components/ui";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 

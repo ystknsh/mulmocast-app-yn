@@ -10,15 +10,15 @@
 
     <TabsContent value="beginner" :class="selectedTheme === 'compact' ? 'mt-2' : 'mt-4'">
       <div :class="selectedTheme === 'compact' ? 'space-y-2' : 'space-y-4'">
-        <div :class="`bg-white rounded-lg border border-blue-200 ${selectedTheme === 'compact' ? 'p-2' : 'p-4'}`">
+        <div :class="`rounded-lg border border-blue-200 bg-white ${selectedTheme === 'compact' ? 'p-2' : 'p-4'}`">
           <h4
-            :class="`font-semibold text-gray-800 flex items-center ${selectedTheme === 'compact' ? 'text-sm mb-1' : 'mb-2'}`"
+            :class="`flex items-center font-semibold text-gray-800 ${selectedTheme === 'compact' ? 'mb-1 text-sm' : 'mb-2'}`"
           >
             <MessageSquare :size="selectedTheme === 'compact' ? 12 : 16" class="mr-2 text-blue-500" />
             Simple ChatGPT Prompt Template
           </h4>
           <div
-            :class="`bg-gray-50 rounded border font-mono ${selectedTheme === 'compact' ? 'p-2 text-xs' : 'p-3 text-sm'}`"
+            :class="`rounded border bg-gray-50 font-mono ${selectedTheme === 'compact' ? 'p-2 text-xs' : 'p-3 text-sm'}`"
           >
             <pre>{{ basicPrompt }}</pre>
           </div>
@@ -26,7 +26,7 @@
             <Button
               :size="selectedTheme === 'compact' ? 'sm' : 'sm'"
               variant="outline"
-              :class="selectedTheme === 'compact' ? 'text-xs h-6' : 'text-xs'"
+              :class="selectedTheme === 'compact' ? 'h-6 text-xs' : 'text-xs'"
               @click="copyToClipboard(basicPrompt)"
             >
               <Copy :size="selectedTheme === 'compact' ? 8 : 12" class="mr-1" />
@@ -42,12 +42,12 @@
 
     <TabsContent value="advanced" class="mt-4">
       <div class="space-y-4">
-        <div class="bg-white rounded-lg p-4 border border-blue-200">
-          <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+        <div class="rounded-lg border border-blue-200 bg-white p-4">
+          <h4 class="mb-2 flex items-center font-semibold text-gray-800">
             <Settings :size="16" class="mr-2 text-blue-500" />
             Detailed ChatGPT Prompt Template
           </h4>
-          <div class="bg-gray-50 p-3 rounded border font-mono text-sm">
+          <div class="rounded border bg-gray-50 p-3 font-mono text-sm">
             <pre>{{ advancedPrompt }}</pre>
           </div>
           <div class="mt-3 flex items-center space-x-2">
@@ -64,42 +64,42 @@
     <TabsContent value="examples" class="mt-4">
       <div class="space-y-4">
         <div class="grid gap-4 md:grid-cols-2">
-          <div class="bg-white rounded-lg p-4 border border-blue-200">
-            <h4 class="font-semibold text-gray-800 mb-2 text-sm">Educational Content Example</h4>
-            <div class="bg-gray-50 p-2 rounded text-xs font-mono">
+          <div class="rounded-lg border border-blue-200 bg-white p-4">
+            <h4 class="mb-2 text-sm font-semibold text-gray-800">Educational Content Example</h4>
+            <div class="rounded bg-gray-50 p-2 font-mono text-xs">
               "Create a MulmoScript for a 7-minute educational video about renewable energy for high school students.
               Include visual prompts for solar panels, wind turbines, and energy statistics."
             </div>
           </div>
-          <div class="bg-white rounded-lg p-4 border border-blue-200">
-            <h4 class="font-semibold text-gray-800 mb-2 text-sm">Business Presentation Example</h4>
-            <div class="bg-gray-50 p-2 rounded text-xs font-mono">
+          <div class="rounded-lg border border-blue-200 bg-white p-4">
+            <h4 class="mb-2 text-sm font-semibold text-gray-800">Business Presentation Example</h4>
+            <div class="rounded bg-gray-50 p-2 font-mono text-xs">
               "Generate a MulmoScript for a 10-minute startup pitch presentation about AI-powered healthcare, including
               charts and product mockup visuals."
             </div>
           </div>
-          <div class="bg-white rounded-lg p-4 border border-blue-200">
-            <h4 class="font-semibold text-gray-800 mb-2 text-sm">Tutorial Content Example</h4>
-            <div class="bg-gray-50 p-2 rounded text-xs font-mono">
+          <div class="rounded-lg border border-blue-200 bg-white p-4">
+            <h4 class="mb-2 text-sm font-semibold text-gray-800">Tutorial Content Example</h4>
+            <div class="rounded bg-gray-50 p-2 font-mono text-xs">
               "Create a MulmoScript for a cooking tutorial showing how to make sushi, with step-by-step images and
               ingredient close-ups."
             </div>
           </div>
-          <div class="bg-white rounded-lg p-4 border border-blue-200">
-            <h4 class="font-semibold text-gray-800 mb-2 text-sm">Interview Style Example</h4>
-            <div class="bg-gray-50 p-2 rounded text-xs font-mono">
+          <div class="rounded-lg border border-blue-200 bg-white p-4">
+            <h4 class="mb-2 text-sm font-semibold text-gray-800">Interview Style Example</h4>
+            <div class="rounded bg-gray-50 p-2 font-mono text-xs">
               "Generate a MulmoScript for an interview-style podcast about digital marketing trends, with
               infographic-style visuals for statistics."
             </div>
           </div>
         </div>
 
-        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <h5 class="font-medium text-amber-800 mb-2 flex items-center">
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <h5 class="mb-2 flex items-center font-medium text-amber-800">
             <AlertTriangle :size="16" class="mr-2" />
             Pro Tips for Better Results
           </h5>
-          <ul class="text-sm text-amber-700 space-y-1">
+          <ul class="space-y-1 text-sm text-amber-700">
             <li>• Be specific about your target audience and tone</li>
             <li>• Include desired duration and number of segments</li>
             <li>• Specify visual style preferences for image prompts</li>

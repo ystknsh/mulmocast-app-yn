@@ -1,35 +1,21 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Speech Parameters</h4>
+    <h4 class="mb-3 font-medium">Speech Parameters</h4>
     <div v-if="speechParams" class="space-y-4">
-      <div>
-        <Label>Provider</Label>
-        <Select :model-value="speechParams.provider || 'openai'" @update:model-value="handleProviderChange">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="openai">OpenAI</SelectItem>
-            <SelectItem value="nijivoice">Nijivoice</SelectItem>
-            <SelectItem value="google">Google</SelectItem>
-            <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
       <div
         v-if="speechParams.speakers"
         v-for="(speaker, name) in speechParams.speakers"
         :key="name"
-        class="border p-3 rounded"
+        class="rounded border p-3"
       >
-        <div class="flex items-center justify-between mb-2">
+        <div class="mb-2 flex items-center justify-between">
           <div>
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
               <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
                 t("update")
               }}</Button>
             </div>
-            <h5 class="font-medium text-sm" @click="changeKey(name)" v-else>{{ name }}</h5>
+            <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
           <Button
             v-if="Object.keys(speechParams.speakers).length > 1"
@@ -43,6 +29,24 @@
         </div>
         <div class="space-y-2">
           <div>
+            <Label>Provider</Label>
+            <Select
+              :model-value="speaker.provider || 'openai'"
+              @update:model-value="(value) => handleProviderChange(name, value)"
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="openai">OpenAI</SelectItem>
+                <SelectItem value="nijivoice">Nijivoice</SelectItem>
+                <SelectItem value="google">Google</SelectItem>
+                <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
             <Label class="text-xs">Voice ID</Label>
             <Select
               :model-value="speaker.voiceId"
@@ -53,7 +57,7 @@
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
-                  v-for="voice in getVoiceList(speechParams.provider || 'openai')"
+                  v-for="voice in getVoiceList(speaker.provider || 'openai')"
                   :key="voice.id"
                   :value="voice.id"
                 >
@@ -61,6 +65,23 @@
                 </SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div v-if="speaker.provider === 'nijivoice'">
+            <Label class="text-xs">Speed</Label>
+            <Input
+              :model-value="speaker.speed || ''"
+              @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
+              class="h-8"
+              type="number"
+            />
+          </div>
+          <div v-if="speaker.provider === 'openai'">
+            <Label class="text-xs">instruction</Label>
+            <Input
+              :model-value="speaker.instruction || ''"
+              @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
+              class="h-8"
+            />
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
@@ -74,7 +95,7 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
-                    {{ lang.name }}
+                    {{ t("languages." + lang.code) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -101,7 +122,7 @@
       <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
-      <p class="text-sm text-gray-500 mb-2">No speakers defined</p>
+      <p class="mb-2 text-sm text-gray-500">No speakers defined</p>
       <Button variant="outline" size="sm" @click="initializeSpeechParams">Initialize Speech Parameters</Button>
     </div>
   </Card>
@@ -109,10 +130,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import { VOICE_LISTS } from "@/../shared/constants";
@@ -141,16 +159,12 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const LANGUAGES = [
-  { code: "en", name: "English" },
-  { code: "ja", name: "日本語" },
-] as const;
+const LANGUAGES = [{ code: "en" }, { code: "ja" }] as const;
 
 const DEFAULT_LANGUAGE = "en";
 
 const selectedLanguages = ref<Record<string, string>>({});
 
-const currentProvider = computed(() => props.speechParams?.provider || "openai");
 const speakers = computed(() => props.speechParams?.speakers || {});
 const speakerCount = computed(() => Object.keys(speakers.value).length);
 const canDeleteSpeaker = computed(() => speakerCount.value > 1);
@@ -195,26 +209,16 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-const handleProviderChange = (value: string) => {
-  const newProvider = value as Provider;
-  const defaultVoiceId = getDefaultVoiceId(newProvider);
-
-  const updatedSpeakers = Object.entries(speakers.value).reduce(
-    (acc, [name, speaker]) => ({
-      ...acc,
-      [name]: { ...speaker, voiceId: defaultVoiceId },
-    }),
-    {},
-  );
-
-  updateSpeechParams({
-    provider: newProvider,
-    speakers: updatedSpeakers,
-  });
+const handleProviderChange = (name: string, provider: string) => {
+  updateSpeaker(name, { provider });
 };
 
 const handleLanguageChange = (name: string, language: string) => {
   selectedLanguages.value[name] = language;
+};
+
+const handleSpeechOptionsChange = (name: string, key: string, value: string) => {
+  updateSpeaker(name, { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
 };
 
 const handleSpeakerVoiceChange = (name: string, voiceId: string) => {
@@ -285,7 +289,7 @@ const handleAddSpeaker = () => {
   if (!validateKey.value) {
     return;
   }
-  const voiceId = getDefaultVoiceId(currentProvider.value);
+  const voiceId = getDefaultVoiceId("openai");
   updateSpeakers({
     ...speakers.value,
     [speechKey.value]: createSpeaker(speechKey.value, voiceId),

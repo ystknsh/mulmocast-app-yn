@@ -1,9 +1,9 @@
 <template>
   <Layout>
-    <div class="max-w-7xl mx-auto p-6 space-y-6">
+    <div class="mx-auto max-w-7xl space-y-6 p-6">
       <!-- Main Content -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-6">
+      <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <Button
               @click="
@@ -12,10 +12,10 @@
               "
               class="flex items-center space-x-2"
             >
-              <Plus class="w-5 h-5" />
+              <Plus class="h-5 w-5" />
               <span>{{ t("dashboard.createNew") }}</span>
             </Button>
-            <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
+            <div class="flex items-center space-x-2 rounded-lg border border-gray-200 bg-white p-1">
               <Button
                 @click="viewMode = VIEW_MODE.list"
                 :variant="viewMode === VIEW_MODE.list ? 'default' : 'ghost'"
@@ -25,7 +25,7 @@
                   viewMode === VIEW_MODE.list ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
                 ]"
               >
-                <List class="w-5 h-5" />
+                <List class="h-5 w-5" />
               </Button>
               <Button
                 @click="viewMode = VIEW_MODE.grid"
@@ -36,7 +36,7 @@
                   viewMode === VIEW_MODE.grid ? 'bg-blue-100 text-blue-700 hover:bg-blue-100' : '',
                 ]"
               >
-                <Grid class="w-5 h-5" />
+                <Grid class="h-5 w-5" />
               </Button>
             </div>
             <Select :model-value="`${sortBy}-${sortOrder}`" @update:model-value="updateSort">
@@ -63,32 +63,22 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="loading" class="flex justify-center items-center py-16">
+        <div v-if="loading" class="flex items-center justify-center py-16">
           <div class="text-gray-500">Loading projects...</div>
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="projects.length === 0" class="text-center py-16">
-          <p class="text-gray-500 mb-4">No projects yet. Create your first project to get started!</p>
+        <div v-else-if="projects.length === 0" class="py-16 text-center">
+          <p class="mb-4 text-gray-500">No projects yet. Create your first project to get started!</p>
         </div>
 
-        <!-- Project List -->
-        <div v-else-if="viewMode === VIEW_MODE.list">
-          <ListView
+        <!-- Project Items -->
+        <div v-else>
+          <ProjectItems
             :projects="sortedProjects"
             :project-thumbnails="projectThumbnails"
             :thumbnails-loading="thumbnailsLoading"
-            @delete="handleDeleteProject"
-            @view="handleViewProject"
-          />
-        </div>
-
-        <!-- Project Grid -->
-        <div v-else-if="viewMode === VIEW_MODE.grid">
-          <GridView
-            :projects="sortedProjects"
-            :project-thumbnails="projectThumbnails"
-            :thumbnails-loading="thumbnailsLoading"
+            :view-mode="viewMode"
             @delete="handleDeleteProject"
             @view="handleViewProject"
           />
@@ -107,7 +97,7 @@
 
     <!-- Viewer Dialog -->
     <Dialog v-model:open="isViewerOpen">
-      <DialogContent class="max-w-4xl">
+      <DialogContent class="max-h-[90vh] max-w-3xl">
         <div class="sr-only">
           <DialogTitle>Mulmo Viewer</DialogTitle>
           <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>
@@ -122,18 +112,20 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
-import Layout from "@/components/layout.vue";
-import ListView from "./dashboard/list_view.vue";
-import GridView from "./dashboard/grid_view.vue";
-import NewProjectDialog from "./dashboard/new_project_dialog.vue";
-import { projectApi, type Project } from "@/lib/project_api";
+import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+
+import Layout from "@/components/layout.vue";
+import MulmoViewer from "@/components/mulmo_viewer.vue";
+import ProjectItems from "./dashboard/project_items.vue";
+import NewProjectDialog from "./dashboard/new_project_dialog.vue";
+
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useI18n } from "vue-i18n";
-import { INITIAL_TITLE, SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import MulmoViewer from "@/components/mulmo_viewer.vue";
+
+import { projectApi, type Project } from "@/lib/project_api";
+import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -191,7 +183,7 @@ const sortedProjects = computed(() => {
 });
 
 const handleCreateProject = async () => {
-  const title = newProjectName.value.trim() || INITIAL_TITLE;
+  const title = newProjectName.value.trim() || t("common.defaultTitle");
 
   try {
     creating.value = true;

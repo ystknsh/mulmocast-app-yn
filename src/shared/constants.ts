@@ -1,3 +1,5 @@
+import { type MulmoImageParams } from "mulmocast/browser";
+
 export const ENV_KEYS = {
   OPENAI_API_KEY: {
     title: "OpenAI API Key",
@@ -244,5 +246,11 @@ export const VIEW_MODE = {
   grid: "grid",
 } as const;
 
-export const INITIAL_TITLE = "[untitled]";
 export const INITIAL_DESCRIPTION = "mulmocast";
+
+export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
+  provider: "openai",
+  model: undefined,
+  style: undefined,
+  moderation: undefined,
+};

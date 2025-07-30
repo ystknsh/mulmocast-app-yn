@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Canvas Size</h4>
+    <h4 class="mb-3 font-medium">Canvas Size</h4>
     <div class="space-y-3">
       <div>
         <Label>Size Preset</Label>
@@ -41,9 +41,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast/browser";

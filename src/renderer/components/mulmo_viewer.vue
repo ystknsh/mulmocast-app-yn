@@ -1,5 +1,5 @@
 <template>
-  <Tabs default-value="movie" class="w-full">
+  <Tabs default-value="movie" class="max-h-[90vh] w-full">
     <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger value="movie">{{ t("project.productTabs.tabs.movie") }}</TabsTrigger>
       <TabsTrigger value="pdf">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger>
@@ -8,12 +8,12 @@
       <TabsTrigger value="slide">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
 
-    <TabsContent value="movie" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="videoUrl" ref="videoRef" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.movie.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.movie.description") }}</p>
-        <div class="flex justify-center space-x-4">
+    <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <video :size="64" class="mx-auto mb-4 max-h-[90vh] text-gray-400" controls :src="videoUrl" ref="videoRef" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button @click="playVideo">
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.movie.play") }}
@@ -27,12 +27,12 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="pdf" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <FileText :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.pdf.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.pdf.description") }}</p>
-        <div class="flex justify-center space-x-4">
+    <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.view") }}
@@ -46,12 +46,12 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="html" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <Globe :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.html.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.html.description") }}</p>
-        <div class="flex justify-center space-x-4">
+    <TabsContent value="html" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.html.description") }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <Eye :size="16" class="mr-2" />
             {{ t("project.productTabs.html.view") }}
@@ -65,16 +65,15 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="podcast" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <Volume2 :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.podcast.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.podcast.description") }}</p>
-        <div class="flex justify-center space-x-4">
-          <Button>
-            <Play :size="16" class="mr-2" />
-            {{ t("project.productTabs.podcast.play") }}
-          </Button>
+    <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <div>
+            <audio :src="audioUrl" v-if="!!audioUrl" controls />
+          </div>
           <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
             {{ t("project.productTabs.podcast.download") }}
@@ -84,12 +83,12 @@
       </div>
     </TabsContent>
 
-    <TabsContent value="slide" class="mt-4">
-      <div class="border rounded-lg p-8 text-center bg-gray-50">
-        <FileImage :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">{{ t("project.productTabs.slide.title") }}</p>
-        <p class="text-sm text-gray-600 mb-4">{{ t("project.productTabs.slide.description") }}</p>
-        <div class="flex justify-center space-x-4">
+    <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <div class="rounded-lg border bg-gray-50 p-8 text-center">
+        <FileImage :size="64" class="mx-auto mb-4 text-gray-400" />
+        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
+        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.slide.description") }}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
           <Button>
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.slide.start") }}
@@ -124,6 +123,7 @@ interface Props {
 const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
+const audioUrl = ref("");
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
@@ -151,8 +151,10 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
 };
 
 const updateResources = async () => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(buffer, "video/mp4");
+  const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+  videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
+  const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
+  audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
 };
 
 watch(

@@ -1,9 +1,9 @@
 <template>
-  <div class="h-full flex flex-col space-y-4">
+  <div class="flex h-full flex-col space-y-4">
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
-      class="bg-white border rounded-lg p-4 h-80 lg:flex-1 overflow-y-auto space-y-4"
+      class="h-80 space-y-4 overflow-y-auto rounded-lg border bg-white p-4 lg:flex-1"
       v-show="messages.length > 0 || isRunning"
     >
       <div v-for="(message, key) in messages" :key="key">
@@ -24,14 +24,14 @@
       <!-- Message input field -->
       <div class="chat-input-wrapper">
         <Label class="mb-2">{{ t("project.chat.enterMessage") }} </Label>
-        <div class="chat-input-container transition-colors duration-200 flex justify-between items-center">
+        <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
             ref="textareaRef"
             autofocus
             v-model="userInput"
             :disabled="isRunning"
             placeholder="ex) Thank you very much! Please proceed with the creation."
-            class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0 max-h-48 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2"
+            class="field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border-2 border-none border-gray-200 bg-transparent bg-white px-3 py-2 text-sm outline-none focus-within:border-2 focus-within:border-blue-500"
             @keydown="handleKeydown"
           />
           <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning || noChatText" class="ml-2">

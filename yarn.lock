@@ -5738,10 +5738,10 @@ lru-cache@^7.14.1, lru-cache@^7.7.1:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
 
-lucide-vue-next@^0.525.0:
-  version "0.525.0"
-  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.525.0.tgz#94bafb8dcb6b6344dbbd8a00d8230cf5478e444e"
-  integrity sha512-Xf8+x8B2DrnGDV/rxylS+KBp2FIe6ljwDn2JsGTZZvXIfhmm/q+nv8RuGO1OyoMjOVkkz7CqtUqJfwtFPRbB2w==
+lucide-vue-next@^0.532.0:
+  version "0.532.0"
+  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.532.0.tgz#0c6d0c97b40178d78dbb663074012fb621d725d7"
+  integrity sha512-6sUgS8D9Dcmk4gBv4Dpqf8s0Iiq1Zmkp206li/wB29Pw0NhatYlabzWaYLS1HPSxJmtjDz9u1nko2BH3/dQpug==
 
 magic-string@^0.30.17:
   version "0.30.17"
@@ -6784,6 +6784,11 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
+
+prettier-plugin-tailwindcss@^0.6.14:
+  version "0.6.14"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.6.14.tgz#06701a580f7104c034ae3b699dbd17a80d67f0cd"
+  integrity sha512-pi2e/+ZygeIqntN+vC573BcW5Cve8zUB0SSAGxqpB4f96boZF4M3phPVoOFCeypwkpRYdi7+jQ5YJJUwrkGUAg==
 
 prettier@^3.0.0, prettier@^3.5.3, prettier@^3.6.2:
   version "3.6.2"

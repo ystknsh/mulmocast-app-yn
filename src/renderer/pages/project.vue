@@ -1,9 +1,9 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div :class="`max-w-[95%] mx-auto ${getCardPadding} ${getContainerSpacing}`">
+      <div :class="`mx-auto max-w-[95%] ${getCardPadding} ${getContainerSpacing}`">
         <!-- Developer Mode Toggle - Always at the top -->
-        <div class="bg-gray-50 dark:bg-gray-900 border rounded-lg p-3" v-if="false">
+        <div class="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900" v-if="false">
           <div class="flex items-center justify-between space-x-2 text-sm">
             <div class="flex items-center space-x-2">
               <Settings :size="16" />
@@ -11,7 +11,7 @@
             </div>
             <Switch v-model="isDevMode" />
           </div>
-          <div v-if="isDevMode" class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div v-if="isDevMode" class="mt-2 border-t border-gray-200 pt-2 dark:border-gray-700">
             <div class="space-y-2">
               <span class="text-sm font-medium">Design Theme</span>
               <RadioGroup v-model="selectedTheme" class="grid grid-cols-2 gap-2 text-sm">
@@ -36,14 +36,14 @@
         />
 
         <!-- 3 Split Layout -->
-        <div class="grid grid-cols-1 gap-4 h-auto lg:h-[calc(100vh-180px)] relative" :class="gridLayoutClass">
+        <div class="relative grid h-auto grid-cols-1 gap-4 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
           <div
             class="h-full overflow-y-auto pr-2"
             :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
           >
             <Card
-              :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`"
+              :class="`flex h-full flex-col border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 ${getTimelineFocusClass}`"
             >
               <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
                 <div class="flex items-center justify-between">
@@ -68,7 +68,7 @@
                 </div>
               </CardHeader>
               <CardContent
-                :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
+                :class="`flex flex-1 flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
                 v-if="projectMetadata"
               >
                 <component
@@ -77,21 +77,21 @@
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
-                  class="h-full flex flex-col"
+                  class="flex h-full flex-col"
                 />
               </CardContent>
             </Card>
           </div>
 
           <!-- Left Column - Collapsed State -->
-          <div v-if="!isLeftColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-r border-gray-200">
+          <div v-if="!isLeftColumnOpen" class="hidden h-full w-[48px] border-r border-gray-200 bg-gray-100 lg:flex">
             <button
               @click="isLeftColumnOpen = true"
-              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-gray-200"
               :aria-label="t('panels.openAiChat')"
               :title="t('panels.openAiChat')"
             >
-              <PanelLeftOpen :size="16" class="mb-4 text-gray-600 mt-2" />
+              <PanelLeftOpen :size="16" class="mt-2 mb-4 text-gray-600" />
               <Bot :size="20" class="mb-2 text-blue-700" />
               <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.aiAssistantChat") }}</span>
             </button>
@@ -100,11 +100,11 @@
           <!-- Middle Column - Script Editor -->
           <div class="h-full">
             <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" class="h-full">
-              <Card class="h-full flex flex-col">
+              <Card class="flex h-full flex-col">
                 <CardHeader class="flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
-                      <CardTitle class="flex items-center space-x-2 cursor-pointer">
+                      <CardTitle class="flex cursor-pointer items-center space-x-2">
                         <Code2 :size="20" />
                         <span>Script</span>
                       </CardTitle>
@@ -113,9 +113,9 @@
                       <!-- Validation Status -->
                       <div class="flex items-center space-x-2">
                         <div v-if="isValidScriptData" class="group relative">
-                          <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
+                          <CheckCircle :size="16" class="cursor-pointer text-green-500 group-hover:text-green-600" />
                           <span
-                            class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
+                            class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                           >
                             Validation Status
                           </span>
@@ -152,7 +152,7 @@
                   </div>
                 </CardHeader>
                 <CollapsibleContent
-                  :class="`transition-all duration-300 overflow-hidden flex-1 ${
+                  :class="`flex-1 overflow-hidden transition-all duration-300 ${
                     isScriptViewerOpen ? 'h-full' : 'max-h-[180px]'
                   }`"
                 >
@@ -252,11 +252,11 @@
 
             <!-- Debug Log Section -->
             <Card>
-              <CardContent class="p-4 space-y-4">
+              <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
-                <div class="p-4 bg-gray-50 rounded-lg">
-                  <h3 class="text-sm font-medium mb-2">Debug Logs</h3>
-                  <div class="h-40 overflow-y-auto text-xs font-mono bg-white p-2 border rounded" ref="logContainer">
+                <div class="rounded-lg bg-gray-50 p-4">
+                  <h3 class="mb-2 text-sm font-medium">Debug Logs</h3>
+                  <div class="h-40 overflow-y-auto rounded border bg-white p-2 font-mono text-xs" ref="logContainer">
                     <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
                       {{ entry }}
                     </div>
@@ -267,14 +267,14 @@
           </div>
 
           <!-- Right Column - Collapsed State -->
-          <div v-if="!isRightColumnOpen" class="hidden lg:flex w-[48px] h-full bg-gray-100 border-l border-gray-200">
+          <div v-if="!isRightColumnOpen" class="hidden h-full w-[48px] border-l border-gray-200 bg-gray-100 lg:flex">
             <button
               @click="isRightColumnOpen = true"
-              class="h-full w-full flex flex-col items-center p-2 hover:bg-gray-200 transition-colors"
+              class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-gray-200"
               :aria-label="t('panels.openOutputProduct')"
               :title="t('panels.openOutputProduct')"
             >
-              <PanelRightOpen :size="16" class="mb-4 text-gray-600 mt-2" />
+              <PanelRightOpen :size="16" class="mt-2 mb-4 text-gray-600" />
               <Settings :size="20" class="mb-2 text-gray-700" />
               <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.outputProduct") }}</span>
             </button>
@@ -311,14 +311,11 @@ import {
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { Button } from "@/components/ui/button";
+import { Button, Badge, Label, Switch } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)

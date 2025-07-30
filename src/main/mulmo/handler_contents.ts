@@ -110,26 +110,35 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
     return {};
   }
   const imageRefs: Record<string, ArrayBuffer> = {};
-  Object.keys(images)
-    .sort()
-    .map((key) => {
-      const image = images[key];
-      try {
-        const path = (() => {
-          if (image.type === "imagePrompt") {
-            return getReferenceImagePath(context, key, "png");
-          } else if (image.type === "image" && image.source.kind === "path") {
-            return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+  await Promise.all(
+    Object.keys(images)
+      .sort()
+      .map(async (key) => {
+        const image = images[key];
+        try {
+          const path = (() => {
+            if (image.type === "imagePrompt") {
+              return getReferenceImagePath(context, key, "png");
+            } else if (image.type === "image" && image.source.kind === "path") {
+              return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+            }
+          })();
+          if (path && fs.existsSync(path)) {
+            const buffer = fs.readFileSync(path);
+            imageRefs[key] = buffer.buffer;
           }
-        })();
-        if (path && fs.existsSync(path)) {
-          const buffer = fs.readFileSync(path);
-          imageRefs[key] = buffer.buffer;
+          if (image.type === "image" && image.source.kind === "url") {
+            const response = await fetch(image.source.url);
+            if (response.ok) {
+              const buffer = Buffer.from(await response.arrayBuffer());
+              imageRefs[key] = buffer.buffer;
+            }
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    });
+      }),
+  );
   return imageRefs;
 };
 

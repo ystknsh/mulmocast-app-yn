@@ -1,11 +1,12 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Image Parameters</h4>
+    <h4 class="mb-3 font-medium" v-if="showTitle">Image Parameters</h4>
+
     <div class="space-y-3">
       <div>
         <Label>Provider</Label>
         <Select
-          :model-value="imageParams?.provider || DEFAULT_VALUES.provider"
+          :model-value="imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider"
           @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
@@ -21,7 +22,7 @@
       <div>
         <Label>Model</Label>
         <Select
-          :model-value="imageParams?.model || DEFAULT_VALUES.model"
+          :model-value="imageParams?.model || IMAGE_PARAMS_DEFAULT_VALUES.model"
           @update:model-value="(value) => handleUpdate('model', String(value))"
         >
           <SelectTrigger>
@@ -42,18 +43,28 @@
       <div>
         <Label>Style</Label>
         <Input
-          :model-value="imageParams?.style || DEFAULT_VALUES.style"
+          :model-value="imageParams?.style || IMAGE_PARAMS_DEFAULT_VALUES.style"
           @update:model-value="(value) => handleUpdate('style', String(value))"
-          placeholder="e.g. vivid, natural"
+          :placeholder="defaultStyle ?? 'e.g. vivid, natural'"
         />
       </div>
-      <div>
+      <div class="my-2">
         <Label>Moderation</Label>
         <Input
-          :model-value="imageParams?.moderation || DEFAULT_VALUES.moderation"
+          :model-value="imageParams?.moderation || IMAGE_PARAMS_DEFAULT_VALUES.moderation"
           @update:model-value="(value) => handleUpdate('moderation', String(value))"
           placeholder="e.g. low, auto"
         />
+      </div>
+      <div v-if="images" class="my-2">
+        <Label>Images</Label>
+        <div v-for="(imageKey, key) in Object.keys(images)" :key="imageKey">
+          <Checkbox
+            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
+            @update:modelValue="(val) => updateImageNames(imageKey, val)"
+            class="m-2"
+          />{{ imageKey }}
+        </div>
       </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
@@ -61,15 +72,18 @@
 </template>
 
 <script setup lang="ts">
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label, Input, Checkbox, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { provider2ImageAgent, type MulmoPresentationStyle } from "mulmocast/browser";
+import {
+  provider2ImageAgent,
+  type MulmoImageParams,
+  type MulmoBeat,
+  type Text2ImageProvider,
+  type MulmoImageParamsImages,
+} from "mulmocast/browser";
 
-type ImageParams = MulmoPresentationStyle["imageParams"];
-type ImageParamField = keyof ImageParams;
+import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
 const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) => ({
   name: provider,
@@ -77,32 +91,45 @@ const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) =>
   models: agent.models,
 }));
 
-const props = defineProps<{
-  imageParams?: ImageParams;
-  mulmoError: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    imageParams?: MulmoImageParams;
+    images?: MulmoImageParamsImages;
+    mulmoError: string[];
+    beat?: MulmoBeat;
+    showTitle?: boolean;
+    defaultStyle?: string;
+  }>(),
+  { showTitle: true },
+);
 
 const emit = defineEmits<{
-  update: [imageParams: ImageParams];
+  update: [imageParams: MulmoImageParams];
+  updateImageNames: [val: string[]];
 }>();
 
-const DEFAULT_VALUES: ImageParams = {
-  provider: "openai",
-  model: undefined,
-  style: undefined,
-  moderation: undefined,
+const updateImageNames = (imageKey: string, val: string[]) => {
+  const current = props.beat?.imageNames ?? [];
+
+  const newArray = val
+    ? current.includes(imageKey)
+      ? current
+      : [...current, imageKey]
+    : current.filter((key) => key !== imageKey);
+
+  emit("updateImageNames", newArray);
 };
 
-const handleProviderChange = (value: ImageParams["provider"]) => {
+const handleProviderChange = (value: Text2ImageProvider) => {
   if (value !== props.imageParams?.provider) {
     emit("update", { ...props.imageParams, provider: value, model: undefined });
   }
 };
 
-const handleUpdate = (field: ImageParamField, value: string) => {
+const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
   const currentParams = props.imageParams || {};
   emit("update", {
-    ...DEFAULT_VALUES,
+    ...IMAGE_PARAMS_DEFAULT_VALUES,
     ...currentParams,
     [field]: value == "__undefined__" ? undefined : value,
   });

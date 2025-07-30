@@ -17,7 +17,7 @@
       </SelectContent>
     </Select>
     <Button size="sm" @click="emitReferenceImage" :disabled="!validateKey">
-      {{ t("form.template_selector.reference") }}
+      {{ t("form.add") }}
     </Button>
     <slot />
   </div>

@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="font-medium mb-3">Audio Parameters</h4>
+    <h4 class="mb-3 font-medium">Audio Parameters</h4>
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-4">
         <div>
@@ -68,7 +68,7 @@
       </div>
       <div v-if="audioParams?.bgm">
         <Label>Background Music</Label>
-        <div class="p-2 border rounded text-sm">
+        <div class="rounded border p-2 text-sm">
           <span class="text-xs text-gray-500">{{ audioParams.bgm.kind }}:</span>
           {{ (audioParams.bgm as any)[audioParams.bgm.kind] }}
         </div>
@@ -79,9 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card, Label, Input } from "@/components/ui";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import MulmoError from "./mulmo_error.vue";
 

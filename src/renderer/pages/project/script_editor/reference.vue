@@ -1,15 +1,13 @@
 <template>
-  <Button @click="reference">{{ t("project.scriptEditor.reference.generateReference") }}</Button>
-
   <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
-    <Card class="p-4 space-y-1 gap-2 mt-8">
+    <Card class="mt-8 gap-2 space-y-1 p-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
           {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
-            <Label class="block mb-1">{{ t("project.scriptEditor.reference.imagePrompt") }} : </Label>
+            <Label class="mb-1 block">{{ t("common.imagePrompt") }} : </Label>
 
             <Textarea
               :placeholder="t('beat.form.imagePrompt.contents')"
@@ -18,18 +16,15 @@
               class="mb-2 h-20 overflow-y-auto"
               :disabled="isGeneratings[imageKey]"
             />
-            <Button @click="() => submitImage(imageKey, key)" :disabled="isGeneratings[imageKey]">{{
-              t("generate")
-            }}</Button>
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-            <Label class="block mb-1">{{ t("project.scriptEditor.reference.image") }}</Label>
+            <Label class="mb-1 block">{{ t("project.scriptEditor.reference.image") }}</Label>
 
             <div
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, imageKey)"
               draggable="true"
-              class="bg-white border-2 border-dashed border-gray-300 text-gray-600 p-6 rounded-md text-center shadow-sm cursor-pointer mt-4"
+              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
               {{ t("common.drophere") }}
             </div>
@@ -43,34 +38,61 @@
                 {{ t("common.fetch") }}
               </Button>
             </div>
-
-            {{ images[imageKey].source.kind }}
           </template>
+          <div
+            v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"
+            class="break-words whitespace-pre-wrap"
+          >
+            {{ images[imageKey].source.url }}
+          </div>
         </div>
         <div>
-          <img :src="imageRefs[imageKey]" />
+          <div class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center">
+            <Button
+              v-if="images[imageKey].type === 'imagePrompt'"
+              variant="ghost"
+              size="icon"
+              class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
+              @click="() => submitImage(imageKey, key)"
+              :disabled="isGeneratings[imageKey]"
+            >
+              <Loader2 v-if="isGeneratings[imageKey]" class="h-4 w-4 animate-spin" />
+              <Sparkles v-else class="h-4 w-4" />
+            </Button>
+            <div v-if="imageRefs[imageKey]" class="flex items-center justify-center">
+              <img :src="imageRefs[imageKey]" class="max-h-64" @click="openImage(imageKey)" />
+            </div>
+            <template v-else>
+              <FileImage :size="32" class="mx-auto mb-2 text-gray-400" />
+              <p class="text-sm text-gray-500">
+                {{ t("beat.imagePreview") }}
+              </p>
+            </template>
+          </div>
         </div>
       </div>
     </Card>
     <div
-      class="absolute -top-5 right-0 z-10 flex items-center gap-3 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm"
+      class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
     >
       <Trash
-        class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition"
+        class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
         @click="deleteReference(imageKey)"
       />
     </div>
+    <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Trash } from "lucide-vue-next";
+import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
 import { z } from "zod";
 
+import MediaModal from "@/components/media_modal.vue";
 import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
@@ -100,10 +122,20 @@ const loadReference = async () => {
 };
 loadReference();
 
+// modal
+const modalOpen = ref(false);
+const modalSrc = ref("");
+const openImage = (imageKey: string) => {
+  modalOpen.value = true;
+  modalSrc.value = imageRefs.value[imageKey];
+};
+
+/*
 const reference = async () => {
   await window.electronAPI.mulmoHandler("mulmoReferenceImages", props.projectId);
   await loadReference();
 };
+*/
 
 const update = (target: string, imageKey: string, prompt: string) => {
   emit("updateImage", imageKey, prompt);

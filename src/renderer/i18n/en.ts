@@ -110,6 +110,10 @@ const lang = {
     drophere: "Drop file here",
     or: "or",
     fetch: "Fetch",
+    imagePrompt: "Image Prompt",
+    moviePrompt: "Movie Prompt",
+    htmlPrompt: "HTML Prompt",
+    defaultTitle: "[untitled]",
   },
   menu: {
     top: "Home",
@@ -149,6 +153,7 @@ const lang = {
     generateImage: "Generate image",
     generateMovie: "Generate movie",
     generating: "Generating...",
+    add: "Add",
   },
   generating: "Generating...",
   generate: "Generate",
@@ -200,7 +205,6 @@ const lang = {
       },
       reference: {
         generateReference: "Generate Reference",
-        imagePrompt: "Image Prompt",
         key: "Key",
         image: "Image",
       },
