@@ -47,7 +47,6 @@ async function readLocalJSON(filename: string): Promise<string> {
   }
 }
 
-
 interface Resources {
   browser: Browser | null;
 }
@@ -137,10 +136,10 @@ async function testJSONAudioGeneration(): Promise<void> {
       if (testJson.title) {
         baseTitle = testJson.title;
       }
-    } catch (e) {
+    } catch {
       console.log("Could not read title from JSON, using default");
     }
-    
+
     // Enter project title (based on JSON title + timestamp)
     const projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
     console.log(`\n4. Entering project title: ${projectTitle}`);
@@ -485,7 +484,7 @@ async function main(): Promise<void> {
 
   for (const jsonFile of TEST_JSON_FILES) {
     console.log(`\n\n===== Testing with ${jsonFile} =====\n`);
-    currentTestFile = jsonFile;  // Set the current test file
+    currentTestFile = jsonFile; // Set the current test file
     try {
       await testJSONAudioGeneration();
       successCount++;
