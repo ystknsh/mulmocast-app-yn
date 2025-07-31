@@ -1,6 +1,8 @@
 import * as playwright from "playwright-core";
 import { Browser, BrowserContext, Page } from "playwright-core";
 import dayjs from "dayjs";
+import * as fs from "fs/promises";
+import * as path from "path";
 
 // Configuration constants
 const CONFIG = {
@@ -12,129 +14,39 @@ const CONFIG = {
   PLAY_BUTTON_TIMEOUT: 10000, // 10 seconds to wait for play button
 } as const;
 
-// Function to fetch JSON from GitHub
-async function fetchJSONFromGitHub(browser: Browser, url: string): Promise<string> {
-  console.log(`Fetching JSON from GitHub: ${url}`);
+// Test JSON files to process
+const TEST_JSON_FILES = [
+  // "test_order.json",
+  // "test_beats.json",
+  "test_no_audio.json",
+  // 他のテストファイルをここに追加
+];
 
-  // Create a new context for GitHub
-  const githubContext = await browser.newContext();
-  const githubPage = await githubContext.newPage();
+// Current test file being processed
+let currentTestFile = "";
+
+// Function to read JSON from local node_modules
+async function readLocalJSON(filename: string): Promise<string> {
+  console.log(`Reading JSON from local file: ${filename}`);
 
   try {
-    // Navigate to the raw GitHub URL
-    await githubPage.goto(url, { waitUntil: "networkidle" });
+    // Construct path to the JSON file in node_modules
+    const jsonPath = path.join(__dirname, "..", "node_modules", "mulmocast", "scripts", "test", filename);
+    console.log(`Full path: ${jsonPath}`);
 
-    // Get the JSON content
-    const jsonContent = await githubPage.evaluate(() => {
-      return document.body.textContent || "";
-    });
+    // Read the file content
+    const jsonContent = await fs.readFile(jsonPath, "utf-8");
 
-    console.log("✓ Successfully fetched JSON from GitHub");
+    console.log("✓ Successfully read JSON from local file");
     console.log(`JSON preview: ${jsonContent.substring(0, 100)}...`);
 
     return jsonContent;
   } catch (error) {
-    console.error("Failed to fetch JSON from GitHub:", error);
+    console.error("Failed to read JSON from local file:", error);
     throw error;
-  } finally {
-    // Clean up
-    await githubPage.close();
-    await githubContext.close();
   }
 }
 
-// Test audio JSON from mulmocast-cli
-const TEST_AUDIO_JSON = `{
-  "$mulmocast": {
-    "version": "1.1"
-  },
-  "title": "Media Test",
-  "audioParams": {
-    "introPadding": 0,
-    "padding": 1.0,
-    "closingPadding": 5.0,
-    "outroPadding": 0
-  },
-  "beats": [
-    {
-      "speaker": "Presenter",
-      "text": "This is an opening beat.",
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "Opening Beat"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "",
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "No Audio with Duration 1.0 seconds (default)"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "This is the third beat.",
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "Third Beat"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "This beat has a custom audio padding of 0.0 seconds.",
-      "audioParams": {
-        "padding": 0.0
-      },
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "Custom Audio Padding 0.0 seconds"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "This beat has a custom audio padding of 3.0 seconds.",
-      "audioParams": {
-        "padding": 3.0
-      },
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "Custom Audio Padding 3.0 seconds"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "",
-      "duration": 2.0,
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "No Audio with custom duration 2.0 seconds"
-        }
-      }
-    },
-    {
-      "speaker": "Presenter",
-      "text": "This is the closing slide.",
-      "image": {
-        "type": "textSlide",
-        "slide": {
-          "title": "Closing Slide"
-        }
-      }
-    }
-  ]
-}`;
 
 interface Resources {
   browser: Browser | null;
@@ -218,8 +130,19 @@ async function testJSONAudioGeneration(): Promise<void> {
     await page.waitForSelector('input[placeholder="Enter project title"]');
     console.log("✓ New project dialog opened");
 
-    // Enter project title (date + time)
-    const projectTitle = `AudioTest_${dayjs().format("YYYYMMDD_HHmmss")}`;
+    // Parse JSON to get title for project name
+    let baseTitle = "Test";
+    try {
+      const testJson = JSON.parse(await readLocalJSON(currentTestFile));
+      if (testJson.title) {
+        baseTitle = testJson.title;
+      }
+    } catch (e) {
+      console.log("Could not read title from JSON, using default");
+    }
+    
+    // Enter project title (based on JSON title + timestamp)
+    const projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
     console.log(`\n4. Entering project title: ${projectTitle}`);
     await page.fill('input[placeholder="Enter project title"]', projectTitle);
     console.log("✓ Project title entered");
@@ -253,17 +176,15 @@ async function testJSONAudioGeneration(): Promise<void> {
     await page.waitForSelector(".monaco-editor", { timeout: 10000 });
     console.log("✓ Monaco Editor loaded");
 
-    // Fetch JSON from GitHub
-    console.log("\n8. Fetching test JSON from GitHub...");
-    const githubUrl =
-      "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/scripts/test/test_audio.json";
+    // Read JSON from local node_modules
+    console.log("\n8. Reading test JSON from local node_modules...");
     let jsonContent: string;
 
     try {
-      jsonContent = await fetchJSONFromGitHub(resources.browser!, githubUrl);
-    } catch {
-      console.log("Failed to fetch from GitHub, using fallback local JSON");
-      jsonContent = TEST_AUDIO_JSON;
+      jsonContent = await readLocalJSON(currentTestFile);
+    } catch (error) {
+      console.error("Failed to read from local file:", error);
+      throw new Error(`Could not read ${currentTestFile} from node_modules`);
     }
 
     // Clear existing content and input test JSON
@@ -305,8 +226,8 @@ async function testJSONAudioGeneration(): Promise<void> {
 
     console.log("✓ Test JSON inputted directly into editor");
 
-    // Update the title with timestamp
-    console.log("\nUpdating JSON title with timestamp...");
+    // Add title field to JSON with timestamp
+    console.log("\nAdding title to JSON with timestamp...");
     const timestamp = dayjs().format("YYYYMMDD_HHmmss");
     await page.evaluate((ts) => {
       const windowWithMonaco = window as Window & {
@@ -322,13 +243,24 @@ async function testJSONAudioGeneration(): Promise<void> {
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
         const content = editor.getValue();
-        // Replace "title": "Media Test" with timestamp version
-        const updatedContent = content.replace(/"title":\s*"Media Test"/, `"title": "${ts} Media Test"`);
-        editor.setValue(updatedContent);
-        console.log(`Updated title to: ${ts} Media Test`);
+        try {
+          const json = JSON.parse(content);
+          // Add title field if it doesn't exist
+          if (!json.title) {
+            json.title = `${ts} Test`;
+          } else {
+            // If title exists, prepend timestamp
+            json.title = `${ts} ${json.title}`;
+          }
+          const updatedContent = JSON.stringify(json, null, 2);
+          editor.setValue(updatedContent);
+          console.log(`Updated title: ${json.title}`);
+        } catch (e) {
+          console.error("Failed to parse/update JSON:", e);
+        }
       }
     }, timestamp);
-    console.log(`✓ Title updated to: ${timestamp} Media Test`);
+    console.log(`✓ Title updated with timestamp`);
 
     // Wait for JSON validation and UI update
     console.log("\nWaiting for JSON validation and UI update...");
@@ -544,16 +476,32 @@ async function main(): Promise<void> {
   console.log("Environment variables:");
   console.log(`  CDP_URL: ${process.env.CDP_URL || "http://localhost:9222/ (default)"}`);
   console.log(`  APP_URL: ${process.env.APP_URL || "localhost:5173 (default)"}\n`);
+  console.log(`Testing with ${TEST_JSON_FILES.length} JSON files: ${TEST_JSON_FILES.join(", ")}`);
 
   await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
 
-  try {
-    await testJSONAudioGeneration();
-    process.exit(0);
-  } catch (error: unknown) {
-    console.error("Test execution failed:", error);
-    process.exit(1);
+  let successCount = 0;
+  let failCount = 0;
+
+  for (const jsonFile of TEST_JSON_FILES) {
+    console.log(`\n\n===== Testing with ${jsonFile} =====\n`);
+    currentTestFile = jsonFile;  // Set the current test file
+    try {
+      await testJSONAudioGeneration();
+      successCount++;
+      console.log(`✓ Test with ${jsonFile} completed successfully`);
+    } catch (error: unknown) {
+      failCount++;
+      console.error(`✗ Test with ${jsonFile} failed:`, error);
+    }
   }
+
+  console.log(`\n\n===== Test Summary =====`);
+  console.log(`Total tests: ${TEST_JSON_FILES.length}`);
+  console.log(`Successful: ${successCount}`);
+  console.log(`Failed: ${failCount}`);
+
+  process.exit(failCount > 0 ? 1 : 0);
 }
 
 // Execute
