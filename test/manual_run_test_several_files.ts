@@ -16,10 +16,19 @@ const CONFIG = {
 
 // Test JSON files to process
 const TEST_JSON_FILES = [
-  // "test_order.json",
-  // "test_beats.json",
-  "test_no_audio.json",
-  // 他のテストファイルをここに追加
+  "test_order.json",
+  "test_beats.json",
+  // "test_no_audio.json",
+  // "test_no_audio_with_credit.json",
+  // "test_transition_no_audio.json",
+  // "test_slideout_left_no_audio.json",
+
+  // test_order.json --pdf_mode slide --pdf_size a4
+  // test_order.json --pdf_mode talk --pdf_size a4
+  // test_order.json --pdf_mode handout --pdf_size a4
+  // test_order_portrait.json --pdf_mode slide --pdf_size a4
+  // test_order_portrait.json --pdf_mode talk --pdf_size a4
+  // test_order_portrait.json --pdf_mode handout --pdf_size a4
 ];
 
 // Current test file being processed
@@ -228,7 +237,7 @@ async function testJSONAudioGeneration(): Promise<void> {
     // Add title field to JSON with timestamp
     console.log("\nAdding title to JSON with timestamp...");
     const timestamp = dayjs().format("YYYYMMDD_HHmmss");
-    await page.evaluate((ts) => {
+    await page.evaluate(([ts, fileName]: [string, string]) => {
       const windowWithMonaco = window as Window & {
         monaco?: {
           editor?: {
@@ -245,11 +254,12 @@ async function testJSONAudioGeneration(): Promise<void> {
         try {
           const json = JSON.parse(content);
           // Add title field if it doesn't exist
+          const fileBaseName = fileName.replace('.json', '');
           if (!json.title) {
-            json.title = `${ts} Test`;
+            json.title = `${ts} Test (${fileBaseName})`;
           } else {
-            // If title exists, prepend timestamp
-            json.title = `${ts} ${json.title}`;
+            // If title exists, prepend timestamp and append filename
+            json.title = `${ts} ${json.title} (${fileBaseName})`;
           }
           const updatedContent = JSON.stringify(json, null, 2);
           editor.setValue(updatedContent);
@@ -258,7 +268,7 @@ async function testJSONAudioGeneration(): Promise<void> {
           console.error("Failed to parse/update JSON:", e);
         }
       }
-    }, timestamp);
+    }, [timestamp, currentTestFile]);
     console.log(`✓ Title updated with timestamp`);
 
     // Wait for JSON validation and UI update
