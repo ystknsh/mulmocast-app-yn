@@ -1,5 +1,5 @@
 import * as playwright from "playwright-core";
-import { Browser, BrowserContext, Page } from "playwright-core";
+import { Browser, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
@@ -54,10 +54,6 @@ async function readLocalJSON(filename: string): Promise<string> {
     console.error("Failed to read JSON from local file:", error);
     throw error;
   }
-}
-
-interface Resources {
-  browser: Browser | null;
 }
 
 interface ProjectInfo {
