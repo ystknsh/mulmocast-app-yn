@@ -68,24 +68,24 @@ interface ProjectInfo {
 
 async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   console.log("\n=== Waiting for all generations to complete ===");
-  
+
   // Navigate to dashboard
   const appUrl = process.env.APP_URL || "localhost:5173";
   await page.goto(`http://${appUrl}/#/`);
   await page.waitForLoadState("networkidle");
   console.log("✓ Navigated to dashboard");
-  
+
   // Poll for generating count to become 0
   const maxWaitTime = CONFIG.GENERATION_TIMEOUT * 10; // Allow more time for multiple projects
   const checkInterval = 5000; // Check every 5 seconds
   let elapsed = 0;
-  
+
   while (elapsed < maxWaitTime) {
     const generatingCount = await page.evaluate(() => {
       // Look for "generating" text with count in header
-      const elements = document.querySelectorAll('*');
+      const elements = document.querySelectorAll("*");
       for (const element of elements) {
-        const text = element.textContent || '';
+        const text = element.textContent || "";
         // Match patterns like "generating (2)" or "生成中 (2)"
         const match = text.match(/(?:generating|生成中)\s*\((\d+)\)/i);
         if (match) {
@@ -94,55 +94,58 @@ async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
       }
       return 0;
     });
-    
+
     if (generatingCount === 0) {
       console.log("✓ All generations completed!");
       break;
     }
-    
+
     console.log(`Still generating: ${generatingCount} project(s) in progress... (${elapsed / 1000}s elapsed)`);
     await new Promise((resolve) => setTimeout(resolve, checkInterval));
     elapsed += checkInterval;
   }
-  
+
   if (elapsed >= maxWaitTime) {
     console.log("⚠️ Timeout waiting for generations to complete");
   }
-  
+
   // Wait a bit more to ensure UI is updated
   await new Promise((resolve) => setTimeout(resolve, 3000));
 }
 
-async function visitProjectsAndPlay(page: Page, projects: ProjectInfo[]): Promise<{ played: number; failed: number; failedProjects: string[] }> {
+async function visitProjectsAndPlay(
+  page: Page,
+  projects: ProjectInfo[],
+): Promise<{ played: number; failed: number; failedProjects: string[] }> {
   console.log("\n=== Visiting each project to play ===");
-  
+
   const appUrl = process.env.APP_URL || "localhost:5173";
   let playedCount = 0;
   let failedCount = 0;
   const failedProjects: string[] = [];
-  
+
   for (let i = 0; i < projects.length; i++) {
     const project = projects[i];
     console.log(`\nVisiting project ${i + 1}/${projects.length}: ${project.projectTitle}`);
-    
+
     // First navigate to dashboard
     console.log("Navigating to dashboard first...");
     await page.goto(`http://${appUrl}/#/`);
     await page.waitForLoadState("networkidle");
     console.log("✓ On dashboard");
-    
+
     // Wait a bit for dashboard to load
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+
     // Navigate to project
     console.log(`Navigating to project: ${project.projectUrl}`);
     await page.goto(project.projectUrl!);
     await page.waitForLoadState("networkidle");
     console.log("✓ Navigated to project page");
-    
+
     // Wait for page to fully load
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    
+
     // Look for play button
     let playSuccessful = false;
     try {
@@ -150,17 +153,17 @@ async function visitProjectsAndPlay(page: Page, projects: ProjectInfo[]): Promis
         timeout: 5000,
       });
       const playButton = await page.$('button:has-text("Play"), button[aria-label="Play"], button[title*="Play"]');
-      
+
       if (playButton) {
         console.log("✓ Found play button, clicking...");
         await playButton.click();
-        
+
         // Wait a bit and check if video is actually playing
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        
+
         // Check for video element and its state
         const videoState = await page.evaluate(() => {
-          const video = document.querySelector('video');
+          const video = document.querySelector("video");
           if (!video) return { found: false };
           return {
             found: true,
@@ -168,16 +171,16 @@ async function visitProjectsAndPlay(page: Page, projects: ProjectInfo[]): Promis
             readyState: video.readyState,
             error: video.error?.message || null,
             paused: video.paused,
-            duration: video.duration
+            duration: video.duration,
           };
         });
-        
+
         if (videoState.found && videoState.hasSource && !videoState.error && videoState.readyState >= 2) {
           console.log("✓ Playback started successfully");
           console.log(`  Video state: duration=${videoState.duration}, paused=${videoState.paused}`);
           playSuccessful = true;
           playedCount++;
-          
+
           // Wait 3 seconds to let it play
           console.log("Playing for 3 seconds...");
           await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -200,34 +203,34 @@ async function visitProjectsAndPlay(page: Page, projects: ProjectInfo[]): Promis
     } catch {
       console.log("✗ Could not find play button for this project");
     }
-    
+
     if (!playSuccessful) {
       failedCount++;
       failedProjects.push(`${project.projectTitle} (${project.jsonFile})`);
       console.log(`✗ Failed to play: ${project.projectTitle}`);
     }
   }
-  
+
   console.log("\n=== Play Summary ===");
   console.log(`Successfully played: ${playedCount}/${projects.length}`);
   console.log(`Failed to play: ${failedCount}/${projects.length}`);
   if (failedProjects.length > 0) {
     console.log("Failed projects:");
-    failedProjects.forEach(p => console.log(`  - ${p}`));
+    failedProjects.forEach((p) => console.log(`  - ${p}`));
   }
-  
+
   return { played: playedCount, failed: failedCount, failedProjects };
 }
 
 async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], page: Page): Promise<void> {
   console.log(`[DEBUG] Starting createProjectAndStartGeneration for: ${currentTestFile}`);
   console.log(`[DEBUG] Projects created so far: ${projectsCreated.length}`);
-  
+
   let projectTitle = "";
-  
+
   try {
     const appUrl = process.env.APP_URL || "localhost:5173";
-    
+
     // Navigate to dashboard
     console.log("Navigating to dashboard...");
     await page.goto(`http://${appUrl}/#/`);
@@ -264,14 +267,14 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Wait for project page to load
     await page.waitForSelector(`h1:has-text("${projectTitle}")`);
     console.log("✓ Project created and page loaded");
-    
+
     // Store project info immediately after creation
     const projectUrl = page.url();
     console.log(`[DEBUG] Project URL: ${projectUrl}`);
     projectsCreated.push({
       jsonFile: currentTestFile,
       projectTitle: projectTitle,
-      projectUrl: projectUrl
+      projectUrl: projectUrl,
     });
     console.log(`[DEBUG] Project added to list. Total: ${projectsCreated.length}`);
 
@@ -349,38 +352,41 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Add title field to JSON with timestamp
     console.log("\nAdding title to JSON with timestamp...");
     const timestamp = dayjs().format("YYYYMMDD_HHmmss");
-    await page.evaluate(([ts, fileName]: [string, string]) => {
-      const windowWithMonaco = window as Window & {
-        monaco?: {
-          editor?: {
-            getModels?: () => Array<{
-              setValue: (value: string) => void;
-              getValue: () => string;
-            }>;
+    await page.evaluate(
+      ([ts, fileName]: [string, string]) => {
+        const windowWithMonaco = window as Window & {
+          monaco?: {
+            editor?: {
+              getModels?: () => Array<{
+                setValue: (value: string) => void;
+                getValue: () => string;
+              }>;
+            };
           };
         };
-      };
-      const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
-      if (editor) {
-        const content = editor.getValue();
-        try {
-          const json = JSON.parse(content);
-          // Add title field if it doesn't exist
-          const fileBaseName = fileName.replace('.json', '');
-          if (!json.title) {
-            json.title = `${ts} Test (${fileBaseName})`;
-          } else {
-            // If title exists, prepend timestamp and append filename
-            json.title = `${ts} ${json.title} (${fileBaseName})`;
+        const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
+        if (editor) {
+          const content = editor.getValue();
+          try {
+            const json = JSON.parse(content);
+            // Add title field if it doesn't exist
+            const fileBaseName = fileName.replace(".json", "");
+            if (!json.title) {
+              json.title = `${ts} Test (${fileBaseName})`;
+            } else {
+              // If title exists, prepend timestamp and append filename
+              json.title = `${ts} ${json.title} (${fileBaseName})`;
+            }
+            const updatedContent = JSON.stringify(json, null, 2);
+            editor.setValue(updatedContent);
+            console.log(`Updated title: ${json.title}`);
+          } catch (e) {
+            console.error("Failed to parse/update JSON:", e);
           }
-          const updatedContent = JSON.stringify(json, null, 2);
-          editor.setValue(updatedContent);
-          console.log(`Updated title: ${json.title}`);
-        } catch (e) {
-          console.error("Failed to parse/update JSON:", e);
         }
-      }
-    }, [timestamp, currentTestFile]);
+      },
+      [timestamp, currentTestFile],
+    );
     console.log(`✓ Title updated with timestamp`);
 
     // Wait for JSON validation and UI update
@@ -409,7 +415,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Start generation without waiting
     console.log("\n10. Generation started, moving to next file...");
-    
+
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -504,11 +510,11 @@ async function main(): Promise<void> {
     console.log(`Total projects created: ${projectsCreated.length}`);
     console.log(`Successfully played: ${playResult.played}`);
     console.log(`Failed to play: ${playResult.failed}`);
-    
+
     if (playResult.failed > 0) {
       console.log("\n✗ Test FAILED - Some projects could not be played");
       console.log("Failed projects:");
-      playResult.failedProjects.forEach(p => console.log(`  - ${p}`));
+      playResult.failedProjects.forEach((p) => console.log(`  - ${p}`));
       process.exit(1);
     } else {
       console.log("\n✓ Test PASSED - All generations completed and played successfully!");
