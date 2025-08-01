@@ -34,7 +34,7 @@
             class="relative transition-transform duration-200 hover:scale-105"
           >
             <component :is="dashboardItem.icon" :size="16" class="mr-2" />
-            {{ dashboardItem.label }}
+            {{ t("menu." + dashboardItem.key) }}
           </Button>
         </RouterLink>
 
@@ -55,7 +55,7 @@
             >
               <RouterLink :to="item.path" class="flex w-full items-center space-x-2">
                 <component :is="item.icon" :size="16" />
-                <span>{{ item.label }}</span>
+                <span>{{ t("menu." + item.key) }}</span>
               </RouterLink>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -69,6 +69,8 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { Home, Settings, Activity, Menu } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -79,12 +81,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useMulmoEventStore } from "../store";
 const route = useRoute();
+const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 
-const dashboardItem = { path: "/", icon: Home, label: "Dashboard" };
+const dashboardItem = { path: "/", icon: Home, key: "top" };
 const menuItems = [
-  { path: "/", icon: Home, label: "Home" },
-  { path: "/settings", icon: Settings, label: "Settings" },
+  { path: "/", icon: Home, key: "top" },
+  { path: "/settings", icon: Settings, key: "settings" },
 ];
 
 const isDashboardActive = computed(() => route.path === dashboardItem.path);

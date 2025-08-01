@@ -15,7 +15,7 @@ const lang = {
     defaultTitle: "[untitled]",
   },
   menu: {
-    top: "Home",
+    top: "Dashboard",
     mypage: "MyPage",
     signin: "SignIn",
     signout: "SignOut",

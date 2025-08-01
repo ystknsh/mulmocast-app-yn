@@ -15,7 +15,8 @@ const lang = {
     defaultTitle: "[無題]",
   },
   menu: {
-    top: "Home",
+    top: "ホーム",
+    settings: "設定",
     mypage: "マイページ",
     signin: "ログイン",
     signout: "ログアウト",
