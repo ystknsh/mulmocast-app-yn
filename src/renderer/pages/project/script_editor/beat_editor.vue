@@ -356,7 +356,8 @@ const submitUrlImage = async () => {
 };
 
 const changeBeat = (beat: MulmoBeat) => {
-  emit("changeBeat", beat, props.index);
+  const { id, speaker, text } = props.beat;
+  emit("changeBeat", { ...beat, id, speaker, text }, props.index);
   toggleTypeMode.value = !toggleTypeMode.value;
 };
 
