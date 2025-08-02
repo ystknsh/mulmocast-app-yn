@@ -94,8 +94,8 @@
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.code" :value="lang.code">
-                    {{ t("languages." + lang.code) }}
+                  <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.id" :value="lang.id">
+                    {{ t("languages." + lang.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>

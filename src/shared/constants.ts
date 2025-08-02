@@ -228,7 +228,7 @@ export const LANGUAGES = [
 
 export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 
-export const SPEECH_LANGUAGES = [{ code: "en" }, { code: "ja" }] as const;
+export const SPEECH_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 export const SPEECH_DEFAULT_LANGUAGE = "en";
 
 export const SORT_BY = {
