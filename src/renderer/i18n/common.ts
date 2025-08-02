@@ -3,7 +3,7 @@ export const commonLanguages = {
   en: "English",
 };
 
-export const beat_badge = {
+export const beatBadge = {
   mediaFile: "Media File",
   htmlPrompt: "HTML Prompt",
   imagePrompt: "Image Prompt",

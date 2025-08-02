@@ -1,4 +1,4 @@
-import { commonLanguages, beat_badge } from "./common";
+import { commonLanguages, beatBadge } from "./common";
 
 const lang = {
   message: {
@@ -174,7 +174,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
-    badge: beat_badge,
+    badge: beatBadge,
     form: {
       image: {
         url: "url",
@@ -215,7 +215,12 @@ const lang = {
   modal: {
     clickOutsideToClose: "Click outside to close",
   },
-  // languages,
+  languages: {
+    ja: "Japanese",
+    en: "English",
+    fr: "French",
+    es: "Spanish",
+  },
   commonLanguages,
 };
 

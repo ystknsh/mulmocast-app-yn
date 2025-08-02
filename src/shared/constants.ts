@@ -226,10 +226,7 @@ export const LANGUAGES = [
   { id: "el", name: "Greek" },
 ] as const;
 
-export const I18N_SUPPORTED_LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "ja", name: "日本語" },
-] as const;
+export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 
 export const SORT_BY = {
   updatedAt: "updatedAt",

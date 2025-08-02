@@ -1,4 +1,4 @@
-import { beat_badge, commonLanguages } from "./common";
+import { beatBadge, commonLanguages } from "./common";
 
 const lang = {
   message: {
@@ -175,7 +175,7 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
-    badge: beat_badge,
+    badge: beatBadge,
     form: {
       image: {
         url: "URL",
@@ -216,6 +216,28 @@ const lang = {
   },
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+  },
+  languages: {
+    ja: "日本語",
+    en: "英語",
+    fr: "フランス語",
+    es: "イスパニア語",
+    de: "ドイツ語",
+    ru: "ロシア語",
+    pt: "ポルトガル語",
+    tr: "トルコ語",
+    it: "イタリア語",
+    fa: "ペルシャ語",
+    nl: "オランダ語",
+    pl: "ポーランド語",
+    zh: "中国語",
+    vi: "ベトナム語",
+    id: "インドネシア語",
+    cs: "チェコ語",
+    ko: "韓国語",
+    ar: "アラビア語",
+    uk: "ウクライナ語",
+    el: "ギリシャ語",
   },
   commonLanguages,
 };

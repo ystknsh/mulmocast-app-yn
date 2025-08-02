@@ -19,7 +19,7 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="language in I18N_SUPPORTED_LANGUAGES" :key="language.id" :value="language.id">
-                    {{ language.name }}
+                    {{ t("commonLanguages." + language.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
