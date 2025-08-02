@@ -8,6 +8,7 @@ import {
   // audioFilePath,
   getAudioArtifactFilePath,
   movieFilePath,
+  pdfFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
   generateBeatImage,
@@ -281,6 +282,9 @@ const mediaFilePath = async (projectId: string, actionName: string) => {
   }
   if (actionName === "movie") {
     return movieFilePath(context);
+  }
+  if (actionName === "pdf") {
+    return pdfFilePath(context, "slide");
   }
   throw Error("no download file");
 };
