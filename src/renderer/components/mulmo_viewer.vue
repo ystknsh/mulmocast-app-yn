@@ -140,9 +140,11 @@ const downloadMp4 = async () => {
 const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
 };
+/*
 const downloadPdf = async () => {
   return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
+*/
 
 const videoRef = ref(null);
 const playVideo = () => {
