@@ -118,7 +118,6 @@ onMounted(async () => {
   // Load existing API keys and language settings
   try {
     const settings = await window.electronAPI.settings.get();
-    console.log(settings);
     Object.keys(ENV_KEYS).forEach((envKey) => {
       if (envKey in settings) {
         apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
@@ -145,7 +144,6 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
-    console.log({ USE_LANGUAGES: useLanguage });
     await window.electronAPI.settings.set({
       ...apiKeys,
       APP_LANGUAGE: selectedLanguage.value,
