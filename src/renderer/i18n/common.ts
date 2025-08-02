@@ -1,3 +1,8 @@
+export const commonLanguages = {
+  ja: "日本語",
+  en: "English",
+};
+
 export const beat_badge = {
   mediaFile: "Media File",
   htmlPrompt: "HTML Prompt",

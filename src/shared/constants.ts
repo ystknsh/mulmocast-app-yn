@@ -254,3 +254,6 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   style: undefined,
   moderation: undefined,
 };
+
+export const languages = ["en", "ja", "fr", "es"];
+export const pdf_modes = ["slide", "talk", "handout"];

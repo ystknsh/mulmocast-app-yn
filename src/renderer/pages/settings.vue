@@ -53,6 +53,26 @@
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>{{ t("settings.languages.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            {{ t("settings.languages.mainTitle") }}
+            <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
+              <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
+                <RadioGroupItem :value="language" :id="language" />
+                <Label :for="language">{{ t("languages." + language) }}</Label>
+              </div>
+            </RadioGroup>
+            {{ t("settings.languages.translatedTitle") }}
+            <div v-for="(language, key) in languages" :key="key">
+              {{ t("languages." + language) }}
+              <Checkbox v-model="useLanguage[language]" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   </Layout>
@@ -64,19 +84,24 @@ import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff } from "lucide-vue-next";
 
-import { Button, Input, Label } from "@/components/ui";
+import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Layout from "@/components/layout.vue";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { ENV_KEYS } from "../../shared/constants";
+import { ENV_KEYS, languages } from "../../shared/constants";
 import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
 
 const { locale, t } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
+
+const mainLanguage = ref("en");
+const useLanguage = reactive<Record<string, boolean>>({});
+
 const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
@@ -85,16 +110,26 @@ Object.keys(ENV_KEYS).forEach((envKey) => {
   apiKeys[envKey] = "";
   showKeys[envKey] = false;
 });
+Object.values(languages).forEach((langKey) => {
+  useLanguage[langKey] = false;
+});
 
 onMounted(async () => {
   // Load existing API keys and language settings
   try {
     const settings = await window.electronAPI.settings.get();
+    console.log(settings);
     Object.keys(ENV_KEYS).forEach((envKey) => {
       if (envKey in settings) {
         apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
+    if (settings.USE_LANGUAGES) {
+      Object.values(languages).forEach((langKey) => {
+        useLanguage[langKey] = settings.USE_LANGUAGES[langKey] ?? false;
+      });
+    }
+
     // Load language preference
     if (settings.APP_LANGUAGE) {
       selectedLanguage.value = settings.APP_LANGUAGE;
@@ -110,7 +145,12 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
-    await window.electronAPI.settings.set({ ...apiKeys, APP_LANGUAGE: selectedLanguage.value });
+    console.log({ USE_LANGUAGES: useLanguage });
+    await window.electronAPI.settings.set({
+      ...apiKeys,
+      APP_LANGUAGE: selectedLanguage.value,
+      USE_LANGUAGES: { ...useLanguage },
+    });
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
     console.error("Failed to save settings:", error);
@@ -127,6 +167,17 @@ watch(
     // Skip save during initial load
     if (!isInitialLoad.value) {
       debouncedSave();
+    }
+  },
+  { deep: true },
+);
+
+watch(
+  [mainLanguage, useLanguage],
+  () => {
+    // Skip save during initial load
+    if (!isInitialLoad.value) {
+      saveSettings();
     }
   },
   { deep: true },

@@ -1,5 +1,4 @@
-import languages from "./languages";
-import { beat_badge } from "./common";
+import { commonLanguages, beat_badge } from "./common";
 
 const lang = {
   message: {
@@ -39,6 +38,12 @@ const lang = {
     notifications: {
       success: "Settings saved",
       error: "Failed to save settings",
+    },
+    languages: {
+      title: "Language Settings",
+      description: "Script language and translation language settings",
+      mainTitle: "The main language of the script",
+      translatedTitle: "Language to be translated",
     },
   },
   form: {
@@ -210,7 +215,8 @@ const lang = {
   modal: {
     clickOutsideToClose: "Click outside to close",
   },
-  languages,
+  // languages,
+  commonLanguages,
 };
 
 export default lang;

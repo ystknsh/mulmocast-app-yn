@@ -1,5 +1,4 @@
-import languages from "./languages";
-import { beat_badge } from "./common";
+import { beat_badge, commonLanguages } from "./common";
 
 const lang = {
   message: {
@@ -40,6 +39,12 @@ const lang = {
     notifications: {
       success: "設定を保存しました",
       error: "設定の保存に失敗しました",
+    },
+    languages: {
+      title: "言語設定",
+      description: "スクリプトの言語および翻訳言語の設定",
+      mainTitle: "スクリプトの主言語",
+      translatedTitle: "翻訳先の言語",
     },
   },
   form: {
@@ -212,7 +217,7 @@ const lang = {
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
   },
-  languages,
+  commonLanguages,
 };
 
 export default lang;
