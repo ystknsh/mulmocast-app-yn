@@ -204,32 +204,32 @@ export const SCRIPT_EDITOR_TABS = {
 export type ScriptEditorTab = (typeof SCRIPT_EDITOR_TABS)[keyof typeof SCRIPT_EDITOR_TABS];
 
 export const LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "es", name: "Spanish" },
-  { id: "de", name: "German" },
-  { id: "ru", name: "Russian" },
-  { id: "fr", name: "French" },
-  { id: "ja", name: "Japanese" },
-  { id: "pt", name: "Portuguese" },
-  { id: "tr", name: "Turkish" },
-  { id: "it", name: "Italian" },
-  { id: "fa", name: "Persian" },
-  { id: "nl", name: "Dutch" },
-  { id: "pl", name: "Polish" },
-  { id: "zh", name: "Chinese" },
-  { id: "vi", name: "Vietnamese" },
-  { id: "id", name: "Indonesian" },
-  { id: "cs", name: "Czech" },
-  { id: "ko", name: "Korean" },
-  { id: "ar", name: "Arabic" },
-  { id: "uk", name: "Ukrainian" },
-  { id: "el", name: "Greek" },
+  { id: "en" },
+  { id: "es" },
+  { id: "de" },
+  { id: "ru" },
+  { id: "fr" },
+  { id: "ja" },
+  { id: "pt" },
+  { id: "tr" },
+  { id: "it" },
+  { id: "fa" },
+  { id: "nl" },
+  { id: "pl" },
+  { id: "zh" },
+  { id: "vi" },
+  { id: "id" },
+  { id: "cs" },
+  { id: "ko" },
+  { id: "ar" },
+  { id: "uk" },
+  { id: "el" },
 ] as const;
 
-export const I18N_SUPPORTED_LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "ja", name: "日本語" },
-] as const;
+export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
+
+export const SPEECH_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
+export const SPEECH_DEFAULT_LANGUAGE = "en";
 
 export const SORT_BY = {
   updatedAt: "updatedAt",
@@ -254,3 +254,6 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   style: undefined,
   moderation: undefined,
 };
+
+export const languages = ["en", "ja", "fr", "es"];
+export const pdf_modes = ["slide", "talk", "handout"];

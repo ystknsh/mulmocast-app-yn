@@ -12,7 +12,7 @@
           <SelectContent>
             <SelectItem value="__undefined__">None</SelectItem>
             <SelectItem v-for="language in LANGUAGES" :key="language.id" :value="language.id">
-              {{ language.name }}
+              {{ t("languages." + language.id) }}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -36,11 +36,15 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+
 import { Card, Label, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { LANGUAGES } from "../../../../../shared/constants";
 import MulmoError from "./mulmo_error.vue";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   captionParams?: MulmoPresentationStyle["captionParams"];

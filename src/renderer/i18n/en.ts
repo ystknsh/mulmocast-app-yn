@@ -1,5 +1,4 @@
-import languages from "./languages";
-import { beat_badge } from "./common";
+import { commonLanguages, beatBadge } from "./common";
 
 const lang = {
   message: {
@@ -39,6 +38,12 @@ const lang = {
     notifications: {
       success: "Settings saved",
       error: "Failed to save settings",
+    },
+    languages: {
+      title: "Language Settings",
+      description: "Script language and translation language settings",
+      mainTitle: "The main language of the script",
+      translatedTitle: "Language to be translated",
     },
   },
   form: {
@@ -169,7 +174,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
-    badge: beat_badge,
+    badge: beatBadge,
     form: {
       image: {
         url: "url",
@@ -210,7 +215,29 @@ const lang = {
   modal: {
     clickOutsideToClose: "Click outside to close",
   },
-  languages,
+  languages: {
+    ja: "Japanese",
+    en: "English",
+    fr: "French",
+    es: "Spanish",
+    de: "German",
+    ru: "Russian",
+    pt: "Portuguese",
+    tr: "Turkish",
+    it: "Italian",
+    fa: "Persian",
+    nl: "Dutch",
+    pl: "Polish",
+    zh: "Chinese",
+    vi: "Vietnamese",
+    id: "Indonesian",
+    cs: "Czech",
+    ko: "Korean",
+    ar: "Arabic",
+    uk: "Ukrainian",
+    el: "Greek",
+  },
+  commonLanguages,
 };
 
 export default lang;
