@@ -59,14 +59,14 @@
             <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
-            {{ t("settings.languages.mainTitle") }}
+            <div>{{ t("settings.languages.mainTitle") }}</div>
             <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
               <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
                 <RadioGroupItem :value="language" :id="language" />
                 <Label :for="language">{{ t("languages." + language) }}</Label>
               </div>
             </RadioGroup>
-            {{ t("settings.languages.translatedTitle") }}
+            <div>{{ t("settings.languages.translatedTitle") }}</div>
             <div v-for="(language, key) in languages" :key="key">
               {{ t("languages." + language) }}
               <Checkbox v-model="useLanguage[language]" />
