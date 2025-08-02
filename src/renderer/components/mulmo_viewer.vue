@@ -45,7 +45,14 @@
         <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
 
         <div>
-          <VuePDF :pdf="pdfData.value" v-if="pdfData" />
+          <VuePDF
+            :pdf="pdfData.value"
+            v-if="pdfData"
+            :scale="0.8"
+            :fit-parent="true"
+            class="mx-auto"
+            style="max-width: 100% !important; width: auto !important"
+          />
         </div>
       </div>
     </TabsContent>
@@ -143,7 +150,6 @@ const downloadMp3 = async () => {
 const downloadPdf = async () => {
   return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
-
 
 const videoRef = ref(null);
 const playVideo = () => {
