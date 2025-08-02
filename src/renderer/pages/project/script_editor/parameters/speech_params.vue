@@ -87,25 +87,26 @@
             <div class="mb-2">
               <Label class="text-xs">Language</Label>
               <Select
-                :model-value="selectedLanguages[name] || DEFAULT_LANGUAGE"
+                :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
                 @update:model-value="(value) => handleLanguageChange(name, String(value))"
               >
                 <SelectTrigger class="h-8">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
+                  <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.code" :value="lang.code">
                     {{ t("languages." + lang.code) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label class="text-xs"> Display Name ({{ selectedLanguages[name] || DEFAULT_LANGUAGE }}) </Label>
+              <Label class="text-xs"> Display Name ({{ selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE }}) </Label>
               <Input
-                :model-value="speaker.displayName[selectedLanguages[name] || DEFAULT_LANGUAGE] || ''"
+                :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
                 @update:model-value="
-                  (value) => handleDisplayNameChange(name, selectedLanguages[name] || DEFAULT_LANGUAGE, String(value))
+                  (value) =>
+                    handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
                 "
                 class="h-8"
               />
@@ -133,7 +134,7 @@ import { ref, computed } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { VOICE_LISTS } from "@/../shared/constants";
+import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -159,10 +160,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const LANGUAGES = [{ code: "en" }, { code: "ja" }] as const;
-
-const DEFAULT_LANGUAGE = "en";
-
 const selectedLanguages = ref<Record<string, string>>({});
 
 const speakers = computed(() => props.speechParams?.speakers || {});
@@ -180,7 +177,7 @@ const getDefaultVoiceId = (provider: string): string => {
 const createSpeaker = (name: string, voiceId: string): Speaker => ({
   voiceId,
   displayName: {
-    [DEFAULT_LANGUAGE]: name,
+    [SPEECH_DEFAULT_LANGUAGE]: name,
   },
 });
 
