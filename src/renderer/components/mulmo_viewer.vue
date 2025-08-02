@@ -37,7 +37,7 @@
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.view") }}
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" @click="downloadPdf">
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.download") }}
           </Button>
@@ -140,11 +140,10 @@ const downloadMp4 = async () => {
 const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
 };
-/*
 const downloadPdf = async () => {
   return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
-*/
+
 
 const videoRef = ref(null);
 const playVideo = () => {
