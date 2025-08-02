@@ -40,31 +40,14 @@
           >
             <div v-for="(beat, index) in safeBeats ?? []" :key="beat?.id ?? index" class="relative">
               <Card class="gap-2 space-y-1 p-4">
-                <div class="flex items-center justify-between font-bold text-gray-700">
-                  <span>Beat {{ index + 1 }}</span>
-                  <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
-                </div>
-                <div>
-                  <Label>Speaker</Label>
-                  <Input
-                    :model-value="beat?.speaker"
-                    @update:model-value="(value) => update(index, 'speaker', String(value))"
-                    placeholder="e.g. Alice"
-                    class="h-8"
-                  />
-                </div>
-                <div>
-                  <Label>Text</Label>
-                  <Input
-                    :model-value="beat.text"
-                    @update:model-value="(value) => update(index, 'text', String(value))"
-                    placeholder="e.g. What is AI?"
-                    class="h-8"
-                  />
-                </div>
-                <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-                <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-                <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+                <TextEditor
+                  :index="index"
+                  :beat="beat"
+                  :audioFile="audioFiles[index]"
+                  :projectId="projectId"
+                  @update="update"
+                  @generateAudio="generateAudio"
+                />
               </Card>
               <div
                 class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
@@ -224,13 +207,14 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, Button, Label, Input, Badge } from "@/components/ui";
+import { Card } from "@/components/ui";
 import CodeEditor from "@/components/code_editor.vue";
 
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
 import Reference from "./script_editor/reference.vue";
+import TextEditor from "./script_editor/text_editor.vue";
 
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 
@@ -244,16 +228,13 @@ import {
   type MulmoImageMedia,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
 
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
-import { getBadge } from "@/lib/beat_util.js";
 import { setRandomBeatId } from "@/lib/beat_util";
 
 interface Props {
@@ -265,8 +246,6 @@ interface Props {
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
-
-const { t } = useI18n();
 
 const props = defineProps<Props>();
 const emit = defineEmits([
@@ -283,7 +262,6 @@ const emit = defineEmits([
 ]);
 
 const route = useRoute();
-const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
@@ -402,11 +380,9 @@ const update = (index: number, path: string, value: unknown) => {
 
 const generateImage = (index: number, target: string) => {
   emit("generateImage", index, target);
-  console.log(index);
 };
 const generateAudio = (index: number) => {
   emit("generateAudio", index);
-  console.log(index);
 };
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoValue.beats.length) {
