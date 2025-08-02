@@ -37,12 +37,23 @@
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.view") }}
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" @click="downloadPdf">
             <FileText :size="16" class="mr-2" />
             {{ t("project.productTabs.pdf.download") }}
           </Button>
         </div>
         <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
+
+        <div>
+          <VuePDF
+            :pdf="pdfData.value"
+            v-if="pdfData"
+            :scale="0.8"
+            :fit-parent="true"
+            class="mx-auto"
+            style="max-width: 100% !important; width: auto !important"
+          />
+        </div>
       </div>
     </TabsContent>
 
@@ -106,12 +117,16 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
+import { VuePDF, usePDF } from "@tato30/vue-pdf";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useI18n } from "vue-i18n";
+
 import type { Project } from "@/lib/project_api";
 import { bufferToUrl } from "@/lib/utils";
+
 import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
@@ -124,12 +139,16 @@ const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
+const pdfData = ref();
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
 };
 const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
+};
+const downloadPdf = async () => {
+  return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
 
 const videoRef = ref(null);
@@ -155,6 +174,12 @@ const updateResources = async () => {
   videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
   audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
+
+  const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
+  if (bufferPdf) {
+    const pdf = usePDF(ref(new Uint8Array(bufferPdf)));
+    pdfData.value = pdf.pdf;
+  }
 };
 
 watch(
