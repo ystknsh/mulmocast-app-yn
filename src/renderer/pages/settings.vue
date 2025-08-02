@@ -2,7 +2,6 @@
   <Layout>
     <div class="container mx-auto max-w-2xl p-6">
       <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
-
       <div class="space-y-6">
         <!-- App Settings Section -->
         <Card>
@@ -93,11 +92,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { notifySuccess, notifyError } from "@/lib/notification";
 import { ENV_KEYS, languages } from "../../shared/constants";
 import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
+import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
+
+const globalStore = useMulmoGlobalStore();
 
 const mainLanguage = ref("en");
 const useLanguage = reactive<Record<string, boolean>>({});
@@ -133,6 +135,9 @@ onMounted(async () => {
     if (settings.APP_LANGUAGE) {
       selectedLanguage.value = settings.APP_LANGUAGE;
     }
+    if (settings.MAIN_LANGUAGE) {
+      mainLanguage.value = settings.MAIN_LANGUAGE;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -144,11 +149,14 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
-    await window.electronAPI.settings.set({
+    const data = {
       ...apiKeys,
       APP_LANGUAGE: selectedLanguage.value,
       USE_LANGUAGES: { ...useLanguage },
-    });
+      MAIN_LANGUAGE: mainLanguage.value,
+    };
+    await window.electronAPI.settings.set(data);
+    globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
     console.error("Failed to save settings:", error);

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
-import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore } from "./store";
+import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "./store";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -23,8 +23,18 @@ export default defineComponent({
     const mulmoEventStore = useMulmoEventStore();
     const graphAIDebugStore = useGraphAIDebugLogStore();
     const zodErrorStore = useZodErrorStore();
+    const globalStore = useMulmoGlobalStore();
 
-    onMounted(() => {
+    onMounted(async () => {
+      try {
+        const settings = await window.electronAPI.settings.get();
+        if (settings) {
+          globalStore.updateSettings(settings);
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+
       window.electronAPI.onProgress(async (_event, message) => {
         if (message.type === "mulmo") {
           mulmoEventStore.mulmoLogCallback(message as MulmoProgressLog<SessionProgressEvent>);
