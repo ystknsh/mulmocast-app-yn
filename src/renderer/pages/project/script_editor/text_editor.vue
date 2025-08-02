@@ -21,7 +21,7 @@
       class="h-8"
     />
   </div>
-  
+
   <div v-for="(lang, key) in languages" :key="key">
     <!-- WIP {{ lang }} -->
   </div>
@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-  import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { type MulmoBeat } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
@@ -79,5 +79,4 @@ const generateAudio = async (index: number) => {
     errorMessage: "Failed to generate audio",
   });
 };
-
 </script>
