@@ -40,9 +40,14 @@
           >
             <div v-for="(beat, index) in safeBeats ?? []" :key="beat?.id ?? index" class="relative">
               <Card class="gap-2 space-y-1 p-4">
-                <TextEditor :index="index" :beat="beat" :audioFile="audioFiles[index]" :projectId="projectId"
-                            @update="update" @generateAudio="generateAudio"
-                            />
+                <TextEditor
+                  :index="index"
+                  :beat="beat"
+                  :audioFile="audioFiles[index]"
+                  :projectId="projectId"
+                  @update="update"
+                  @generateAudio="generateAudio"
+                />
               </Card>
               <div
                 class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
@@ -202,7 +207,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, Button, Label, Input, Badge } from "@/components/ui";
+import { Card } from "@/components/ui";
 import CodeEditor from "@/components/code_editor.vue";
 
 import BeatEditor from "./script_editor/beat_editor.vue";
@@ -223,9 +228,7 @@ import {
   type MulmoImageMedia,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useMulmoEventStore } from "../../store";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
 
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
@@ -243,8 +246,6 @@ interface Props {
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
-
-const { t } = useI18n();
 
 const props = defineProps<Props>();
 const emit = defineEmits([

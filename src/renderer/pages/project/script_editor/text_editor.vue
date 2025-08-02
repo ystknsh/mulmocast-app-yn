@@ -10,7 +10,7 @@
       @update:model-value="(value) => update(index, 'speaker', String(value))"
       placeholder="e.g. Alice"
       class="h-8"
-      />
+    />
   </div>
   <div>
     <Label>Text</Label>
@@ -19,7 +19,7 @@
       @update:model-value="(value) => update(index, 'text', String(value))"
       placeholder="e.g. What is AI?"
       class="h-8"
-      />
+    />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { useI18n } from "vue-i18n";
 import { type MulmoBeat } from "mulmocast/browser";
 
@@ -45,19 +44,15 @@ interface Props {
   audioFile?: string;
   projectId: string;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 
-const emit = defineEmits([
-  "generateAudio","update",
-]);
+const emit = defineEmits(["generateAudio", "update"]);
 
 const update = (index: number, path: string, value: unknown) => {
   emit("update", index, path, value);
-}
+};
 
 const generateAudio = (index: number) => {
   emit("generateAudio", index);
 };
-
-
 </script>
