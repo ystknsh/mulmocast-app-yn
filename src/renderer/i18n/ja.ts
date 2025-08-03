@@ -57,6 +57,8 @@ const lang = {
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "画像生成",
     generateMovie: "動画生成",
+    generateAudio: "音声生成",
+    translateBeat: "翻訳",
     generating: "生成中...",
     add: "追加",
   },
@@ -216,6 +218,16 @@ const lang = {
   },
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+  },
+  notify: {
+    audio: {
+      successMessage: "音声生成成功!!",
+      errorMessage: "音声生成失敗",
+    },
+    translate: {
+      successMessage: "翻訳成功!!",
+      errorMessage: "翻訳失敗",
+    },
   },
   languages: {
     ja: "日本語",
