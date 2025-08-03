@@ -230,6 +230,10 @@ const lang = {
       successMessage: "Contents generated successfully",
       errorMessage: "Failed to generate contents",
     },
+    task: {
+      audio: "Audio",
+      video: "Video",
+    },
   },
   languages: {
     ja: "Japanese",

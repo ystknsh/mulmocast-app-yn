@@ -59,7 +59,7 @@ const lang = {
     generateMovie: "動画生成",
     generateAudio: "音声生成",
     translateBeat: "翻訳",
-    generating: "生成中...",
+    generating: "生成中",
     add: "追加",
   },
   generating: "生成中...",
@@ -231,6 +231,10 @@ const lang = {
     content: {
       successMessage: "作成成功!!",
       errorMessage: "作成失敗",
+    },
+    task: {
+      audio: "音声",
+      video: "動画",
     },
   },
   languages: {
