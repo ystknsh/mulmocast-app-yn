@@ -27,7 +27,9 @@
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("form.generateAudio") }}</Button>
   <div v-if="languages.length > 0">
-    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">{{ t("form.translateBeat") }}</Button>
+    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">{{
+      t("form.translateBeat")
+    }}</Button>
   </div>
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{ t("form.generating") }}</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
