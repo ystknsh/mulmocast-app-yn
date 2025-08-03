@@ -39,6 +39,7 @@ import {
   mulmoImageFiles,
   mulmoReferenceImagesFiles,
   mulmoReferenceImagesFile,
+  mulmoMultiLinguals,
 } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -454,6 +455,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
       case "mulmoReferenceImages":
         return await mulmoReferenceImages(args[0], webContents);
+      case "mulmoMultiLinguals":
+        return await mulmoMultiLinguals(args[0], webContents);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

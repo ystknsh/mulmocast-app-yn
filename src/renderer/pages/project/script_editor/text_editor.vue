@@ -21,12 +21,12 @@
       class="h-8"
     />
   </div>
-
-  <div v-for="(lang, key) in languages" :key="key">
-    <!-- WIP {{ lang }} -->
+  <div v-for="(lang, key) in supporLanguages" :key="key">
+    {{ lang }}
+    <Input :model-value="multiLingualDataset?.[lang]" />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("form.generateAudio") }}</Button>
-  <div v-if="languages.length > 0">
+  <div v-if="supporLanguages.length > 0">
     <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">{{
       t("form.translateBeat")
     }}</Button>
@@ -36,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { type MulmoBeat } from "mulmocast/browser";
+import { type MulmoBeat, languages } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
 import { getBadge } from "@/lib/beat_util.js";
@@ -56,12 +56,13 @@ interface Props {
   beat: MulmoBeat;
   audioFile?: string;
   projectId: string;
+  mulmoMultiLingual: any;
 }
 const props = defineProps<Props>();
 
 const emit = defineEmits(["update"]);
 
-const languages = computed(() => {
+const supporLanguages = computed(() => {
   const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
   return Object.keys(data).reduce((tmp, current) => {
     if (data[current]) {
@@ -86,10 +87,47 @@ const generateAudio = async (index: number) => {
 };
 
 const translateBeat = async (index: number) => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, languages.value), {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, supporLanguages.value), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.translate.successMessage"),
     errorMessage: t("notify.translate.errorMessage"),
   });
 };
+
+const multiLingualDataset = ref({});
+watch(
+  () => props.mulmoMultiLingual,
+  (mulmoMultiLingual) => {
+    const newData = {};
+    languages.forEach((lang) => {
+      if (mulmoMultiLingual?.[lang]?.text) {
+        newData[lang] = mulmoMultiLingual?.[lang]?.text;
+      }
+    });
+    multiLingualDataset.value = newData;
+  },
+  { deep: true, immediate: true },
+);
+
+watch(
+  () => mulmoEventStore.mulmoEvent[props.projectId],
+  async (mulmoEvent) => {
+    if (
+      mulmoEvent &&
+      mulmoEvent.kind === "beat" &&
+      mulmoEvent.sessionType === "multiLingual" &&
+      !mulmoEvent.inSession
+    ) {
+      const mulmoMultiLinguals = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", props.projectId);
+      const mulmoMultiLingual = mulmoMultiLinguals?.[props.index]?.multiLingualTexts;
+      const newData = {};
+      languages.forEach((lang) => {
+        if (mulmoMultiLingual?.[lang]?.text) {
+          newData[lang] = mulmoMultiLingual?.[lang]?.text;
+        }
+      });
+      multiLingualDataset.value = newData;
+    }
+  },
+);
 </script>

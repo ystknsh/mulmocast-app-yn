@@ -1,4 +1,5 @@
 import { type MulmoImageParams } from "mulmocast/browser";
+export { pdf_modes, languages } from "mulmocast/browser";
 
 export const ENV_KEYS = {
   OPENAI_API_KEY: {
@@ -254,6 +255,3 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   style: undefined,
   moderation: undefined,
 };
-
-export const languages = ["en", "ja", "fr", "es"];
-export const pdf_modes = ["slide", "talk", "handout"];
