@@ -56,6 +56,8 @@ const lang = {
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "Generate image",
     generateMovie: "Generate movie",
+    generateAudio: "generate audio",
+    translateBeat: "translate",
     generating: "Generating...",
     add: "Add",
   },
@@ -216,7 +218,10 @@ const lang = {
     clickOutsideToClose: "Click outside to close",
   },
   notify: {
-    audio: {},
+    audio: {
+      successMessage: "Audio generated successfully",
+      errorMessage: "Failed to generate audio",
+    },
     translate: {
       successMessage: "Translate successfully",
       errorMessage: "Failed to translate text",

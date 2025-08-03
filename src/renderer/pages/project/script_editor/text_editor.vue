@@ -25,11 +25,11 @@
   <div v-for="(lang, key) in languages" :key="key">
     <!-- WIP {{ lang }} -->
   </div>
-  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("form.generateAudio") }}</Button>
   <div v-if="languages.length > 0">
-    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">translate</Button>
+    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">{{ t("form.translateBeat") }}</Button>
   </div>
-  <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+  <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{ t("form.generating") }}</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
 </template>
 
@@ -78,8 +78,8 @@ const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageCompo
 const generateAudio = async (index: number) => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", props.projectId, index), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Audio generated successfully",
-    errorMessage: "Failed to generate audio",
+    successMessage: t("notify.audio.successMessage"),
+    errorMessage: t("notify.audio.errorMessage"),
   });
 };
 
