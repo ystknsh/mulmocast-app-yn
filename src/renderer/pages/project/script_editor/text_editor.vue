@@ -5,12 +5,16 @@
   </div>
   <div>
     <Label>Speaker</Label>
-    <Input
-      :model-value="beat?.speaker"
-      @update:model-value="(value) => update(index, 'speaker', String(value))"
-      placeholder="e.g. Alice"
-      class="h-8"
-    />
+    <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
+      <SelectTrigger class="h-8">
+        <SelectValue placeholder="Select a speaker" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="(_, name) in speakers" :key="name" :value="name">
+          {{ name }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
   </div>
   <div>
     <Label>Text({{ t("languages." + lang) }})</Label>
@@ -47,7 +51,9 @@ import { useI18n } from "vue-i18n";
 import { type MulmoBeat, type MultiLingualTexts, languages } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getBadge } from "@/lib/beat_util.js";
+import type { MulmoPresentationStyle } from "mulmocast/browser";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
 import { notifyProgress } from "@/lib/notification";
@@ -64,6 +70,7 @@ interface Props {
   projectId: string;
   lang: string;
   mulmoMultiLingual: MultiLingualTexts;
+  speakers?: MulmoPresentationStyle["speechParams"]["speakers"];
 }
 const props = defineProps<Props>();
 

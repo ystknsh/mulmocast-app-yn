@@ -47,6 +47,7 @@
                   :projectId="projectId"
                   :lang="mulmoValue.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
+                  :speakers="mulmoValue?.speechParams?.speakers ?? {}"
                   @update="update"
                   @saveMulmo="saveMulmo"
                 />
