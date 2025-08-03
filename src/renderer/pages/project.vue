@@ -471,8 +471,8 @@ const generateImage = async (index: number, target: string) => {
   await saveMulmo();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Image generated successfully",
-    errorMessage: "Failed to generate image",
+    successMessage: t("notify.image.successMessage"),
+    errorMessage: t("notify.image.errorMessage"),
   });
 };
 
