@@ -22,9 +22,14 @@
       class="h-8"
     />
   </div>
+  <!-- multi lingal -->
   <div v-for="(lang, key) in supporLanguages" :key="key">
     {{ t("languages." + lang) }}
-    <Input :model-value="multiLingualDataset?.[lang]" />
+    <Input
+      :model-value="multiLingualDataset[lang]"
+      @blur="saveMultiLingual"
+      @update:model-value="(val) => (multiLingualDataset[lang] = val)"
+    />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("form.generateAudio") }}</Button>
   <div v-if="supporLanguages.length > 0">
@@ -99,16 +104,26 @@ const translateBeat = async (index: number) => {
 };
 
 const multiLingualDataset = ref({});
+
+const saveMultiLingual = () => {
+  // todo updat and save multiLingual
+  console.log(multiLingualDataset.value);
+};
+
+const convMultiLingualData = (mulmoMultiLingual?: MultiLingualTexts) => {
+  const newData = {};
+  languages.forEach((lang) => {
+    if (mulmoMultiLingual?.[lang]?.text) {
+      newData[lang] = mulmoMultiLingual?.[lang]?.text;
+    }
+  });
+  return newData;
+};
+
 watch(
   () => props.mulmoMultiLingual,
   (mulmoMultiLingual) => {
-    const newData = {};
-    languages.forEach((lang) => {
-      if (mulmoMultiLingual?.[lang]?.text) {
-        newData[lang] = mulmoMultiLingual?.[lang]?.text;
-      }
-    });
-    multiLingualDataset.value = newData;
+    multiLingualDataset.value = convMultiLingualData(mulmoMultiLingual);
   },
   { deep: true, immediate: true },
 );
@@ -124,13 +139,7 @@ watch(
     ) {
       const mulmoMultiLinguals = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", props.projectId);
       const mulmoMultiLingual = mulmoMultiLinguals?.[props.index]?.multiLingualTexts;
-      const newData = {};
-      languages.forEach((lang) => {
-        if (mulmoMultiLingual?.[lang]?.text) {
-          newData[lang] = mulmoMultiLingual?.[lang]?.text;
-        }
-      });
-      multiLingualDataset.value = newData;
+      multiLingualDataset.value = convMultiLingualData(mulmoMultiLingual);
     }
   },
 );
