@@ -4,8 +4,12 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useMulmoEventStore } from "../../store";
+import { useI18n } from "vue-i18n";
 import { BeatSessionType, SessionType } from "mulmocast/browser";
+
+import { useMulmoEventStore } from "../../store";
+
+const { t } = useI18n();
 
 interface Props {
   projectId: string;
@@ -22,7 +26,7 @@ const message = computed(() => {
   const ret: string[] = [];
   Object.keys(data["artifact"] ?? {}).forEach((key: SessionType) => {
     if (data["artifact"][key]) {
-      ret.push(`${key}`);
+      ret.push(t(`notify.task.${key}`));
     }
   });
   Object.keys(data["beat"] ?? {}).forEach((key: BeatSessionType) => {
@@ -30,12 +34,12 @@ const message = computed(() => {
       const indexes = Object.keys(data["beat"][key])
         .filter((index: string) => data["beat"][key][Number(index)])
         .map((index: string) => Number(index) + 1);
-      ret.push(`beat_${key}_${indexes.join(",")}`);
+      ret.push(t(`notify.beat.${key}`) + " " + indexes.join(","));
     }
   });
   if (ret.length === 0) {
     return "";
   }
-  return `Generating ${ret.join(", ")}...`;
+  return `${t("generating")} ${ret.join(", ")}...`;
 });
 </script>
