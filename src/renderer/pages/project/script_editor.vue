@@ -45,6 +45,7 @@
                   :beat="beat"
                   :audioFile="audioFiles[index]"
                   :projectId="projectId"
+                  :lang="mulmoValue.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   @update="update"
                   @saveMulmo="saveMulmo"

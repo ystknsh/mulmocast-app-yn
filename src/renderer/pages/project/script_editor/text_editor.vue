@@ -13,7 +13,7 @@
     />
   </div>
   <div>
-    <Label>Text</Label>
+    <Label>Text({{ t("languages." + lang) }})</Label>
     <Input
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
@@ -23,7 +23,7 @@
     />
   </div>
   <div v-for="(lang, key) in supporLanguages" :key="key">
-    {{ lang }}
+    {{ t("languages." + lang) }}
     <Input :model-value="multiLingualDataset?.[lang]" />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("form.generateAudio") }}</Button>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { type MulmoBeat, languages } from "mulmocast/browser";
+import { type MulmoBeat, type MultiLingualTexts, languages } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
 import { getBadge } from "@/lib/beat_util.js";
@@ -57,7 +57,8 @@ interface Props {
   beat: MulmoBeat;
   audioFile?: string;
   projectId: string;
-  mulmoMultiLingual: any;
+  lang: string;
+  mulmoMultiLingual: MultiLingualTexts;
 }
 const props = defineProps<Props>();
 
