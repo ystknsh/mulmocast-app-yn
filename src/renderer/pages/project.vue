@@ -278,7 +278,7 @@ import {
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { Button, Badge, Label, Switch } from "@/components/ui";
+import { Button, Label, Switch } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -345,10 +345,6 @@ const graphAIDebugStore = useGraphAIDebugLogStore();
 
 const validationMessage = ref("");
 
-const currentBeatIndex = ref(0);
-const timelinePosition = ref(0);
-const isPreviewAreaVisible = ref(false);
-
 // Load project data on mount
 onMounted(async () => {
   try {
@@ -405,8 +401,6 @@ watch(
   },
   { deep: true },
 );
-
-const beatsData = computed(() => mulmoScriptHistoryStore.currentMulmoScript?.beats ?? []);
 
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
