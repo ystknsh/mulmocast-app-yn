@@ -115,10 +115,6 @@ const lang = {
         image: "Image",
       },
     },
-    generateStatus: {
-      success: "Contents generated successfully",
-      error: "Failed to generate contents",
-    },
     productTabs: {
       tabs: {
         movie: "Movie",
@@ -222,9 +218,17 @@ const lang = {
       successMessage: "Audio generated successfully",
       errorMessage: "Failed to generate audio",
     },
+    image: {
+      successMessage: "Image generated successfully",
+      errorMessage: "Failed to generate image",
+    },
     translate: {
       successMessage: "Translate successfully",
       errorMessage: "Failed to translate text",
+    },
+    content: {
+      successMessage: "Contents generated successfully",
+      errorMessage: "Failed to generate contents",
     },
   },
   languages: {

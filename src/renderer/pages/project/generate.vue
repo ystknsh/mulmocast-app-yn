@@ -72,11 +72,10 @@ watch(
 
 const generateContents = () => {
   const keys = Object.keys(options.value).filter((key) => options.value[key]);
-  console.log(keys);
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: t("project.generateStatus.success"),
-    errorMessage: t("project.generateStatus.error"),
+    successMessage: t("notify.content.successMessage"),
+    errorMessage: t("notify.content.errorMessage"),
   });
 };
 const mulmoEventStore = useMulmoEventStore();

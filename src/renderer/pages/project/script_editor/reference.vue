@@ -239,8 +239,8 @@ const submitImage = async (imageKey: string, key: number) => {
       }),
       {
         loadingMessage: ConcurrentTaskStatusMessageComponent,
-        successMessage: "Audio generated successfully",
-        errorMessage: "Failed to generate audio",
+        successMessage: t("notify.image.successMessage"),
+        errorMessage: t("notify.image.errorMessage"),
       },
     );
 
