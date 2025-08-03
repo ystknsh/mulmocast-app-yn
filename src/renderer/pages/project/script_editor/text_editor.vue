@@ -110,7 +110,7 @@ const saveMultiLingual = () => {
   console.log(multiLingualDataset.value);
 };
 
-const convMultiLincalData = (mulmoMultiLingual?: MultiLingualTexts) => {
+const convMultiLingualData = (mulmoMultiLingual?: MultiLingualTexts) => {
   const newData = {};
   languages.forEach((lang) => {
     if (mulmoMultiLingual?.[lang]?.text) {
@@ -123,7 +123,7 @@ const convMultiLincalData = (mulmoMultiLingual?: MultiLingualTexts) => {
 watch(
   () => props.mulmoMultiLingual,
   (mulmoMultiLingual) => {
-    multiLingualDataset.value = convMultiLincalData(mulmoMultiLingual);
+    multiLingualDataset.value = convMultiLingualData(mulmoMultiLingual);
   },
   { deep: true, immediate: true },
 );
@@ -139,7 +139,7 @@ watch(
     ) {
       const mulmoMultiLinguals = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", props.projectId);
       const mulmoMultiLingual = mulmoMultiLinguals?.[props.index]?.multiLingualTexts;
-      multiLingualDataset.value = convMultiLincalData(mulmoMultiLingual);
+      multiLingualDataset.value = convMultiLingualData(mulmoMultiLingual);
     }
   },
 );
