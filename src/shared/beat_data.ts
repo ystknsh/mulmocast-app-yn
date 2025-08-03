@@ -1,13 +1,14 @@
 import { type MulmoBeat } from "mulmocast";
 import { INITIAL_DESCRIPTION } from "./constants";
 
-export const initMulmoScript = (title: string) => ({
+export const initMulmoScript = (title: string, lang: string = "en") => ({
   title: title,
   description: INITIAL_DESCRIPTION,
   $mulmocast: {
     version: "1.1",
     credit: "closing",
   },
+  lang,
   beats: [
     {
       speaker: "Presenter",

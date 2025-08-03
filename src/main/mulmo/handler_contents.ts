@@ -4,6 +4,8 @@ import {
   MulmoStudioContextMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
+  getOutputMultilingualFilePath,
+  getMultiLingual,
   type MulmoStudioContext,
 } from "mulmocast";
 
@@ -165,4 +167,13 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
     console.log(error);
   }
   return null;
+};
+
+export const mulmoMultiLinguals = async (projectId: string) => {
+  const context = await getContext(projectId);
+  const fileName = MulmoStudioContextMethods.getFileName(context);
+  const outDirPath = MulmoStudioContextMethods.getOutDirPath(context);
+  const outputMultilingualFilePath = getOutputMultilingualFilePath(outDirPath, fileName);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
+  return multiLingual;
 };

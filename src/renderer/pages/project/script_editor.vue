@@ -45,7 +45,10 @@
                   :beat="beat"
                   :audioFile="audioFiles[index]"
                   :projectId="projectId"
+                  :lang="mulmoValue.lang"
+                  :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   @update="update"
+                  @saveMulmo="saveMulmo"
                 />
               </Card>
               <div
@@ -204,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui";
 import CodeEditor from "@/components/code_editor.vue";
@@ -280,6 +283,12 @@ watch(currentTab, () => {
     emit("formatAndPushHistoryMulmoScript");
     emit("update:scriptEditorActiveTab", currentTab.value);
   }
+});
+
+const mulmoMultiLinguals = ref([]);
+onMounted(async () => {
+  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+  console.log(mulmoMultiLinguals.value);
 });
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
@@ -470,6 +479,10 @@ const updateImagePath = (imageKey: string, path: string) => {
   });
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
+};
+
+const saveMulmo = () => {
+  emit("saveMulmo");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
