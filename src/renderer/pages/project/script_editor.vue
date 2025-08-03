@@ -47,6 +47,7 @@
                   :projectId="projectId"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   @update="update"
+                  @saveMulmo="saveMulmo"
                 />
               </Card>
               <div
@@ -477,6 +478,10 @@ const updateImagePath = (imageKey: string, path: string) => {
   });
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
+};
+
+const saveMulmo = () => {
+  emit("saveMulmo");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {

@@ -17,6 +17,7 @@
     <Input
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
+      @blur="saveMulmo"
       placeholder="e.g. What is AI?"
       class="h-8"
     />
@@ -60,7 +61,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const emit = defineEmits(["update"]);
+const emit = defineEmits(["update", "saveMulmo"]);
 
 const supporLanguages = computed(() => {
   const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
@@ -75,7 +76,9 @@ const supporLanguages = computed(() => {
 const update = (index: number, path: string, value: unknown) => {
   emit("update", index, path, value);
 };
-
+const saveMulmo = () => {
+  emit("saveMulmo");
+};
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
