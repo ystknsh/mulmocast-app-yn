@@ -13,6 +13,7 @@ import {
   removeSessionProgressCallback,
   generateBeatImage,
   generateBeatAudio,
+  translateBeat,
   setFfmpegPath,
   setFfprobePath,
   generateReferenceImage,
@@ -129,6 +130,34 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
     const context = await getContext(projectId);
     // context.force = true;
     await generateBeatAudio(index, context, settings);
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+export const mulmoTranslateBeat = async (
+  projectId: string,
+  index: number,
+  targetLangs: string[],
+  webContents: WebContents,
+) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    // context.force = true;
+    await translateBeat(index, context, targetLangs, { settings });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -393,6 +422,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoGenerateImage(args[0], args[1], args[2], webContents);
       case "mulmoAudioGenerate":
         return await mulmoGenerateAudio(args[0], args[1], webContents);
+      case "mulmoTranslateBeat":
+        return await mulmoTranslateBeat(args[0], args[1], args[2], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":

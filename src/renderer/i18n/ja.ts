@@ -217,6 +217,13 @@ const lang = {
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
   },
+  notify: {
+    audio: {},
+    translate: {
+      successMessage: "翻訳成功!!",
+      errorMessage: "翻訳失敗",
+    },
+  },
   languages: {
     ja: "日本語",
     en: "英語",

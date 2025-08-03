@@ -26,6 +26,9 @@
     <!-- WIP {{ lang }} -->
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+  <div v-if="languages.length > 0">
+    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">translate</Button>
+  </div>
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
 </template>
@@ -77,6 +80,14 @@ const generateAudio = async (index: number) => {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: "Audio generated successfully",
     errorMessage: "Failed to generate audio",
+  });
+};
+
+const translateBeat = async (index: number) => {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, languages.value), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: t("notify.translate.successMessage"),
+    errorMessage: t("notify.translate.errorMessage"),
   });
 };
 </script>

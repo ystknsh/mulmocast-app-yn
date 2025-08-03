@@ -215,6 +215,13 @@ const lang = {
   modal: {
     clickOutsideToClose: "Click outside to close",
   },
+  notify: {
+    audio: {},
+    translate: {
+      successMessage: "Translate successfully",
+      errorMessage: "Failed to translate text",
+    },
+  },
   languages: {
     ja: "Japanese",
     en: "English",
