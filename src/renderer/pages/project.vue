@@ -204,38 +204,6 @@
               </CardContent>
             </Card>
 
-            <!-- Beats Viewer Section -->
-            <Collapsible v-if="false" v-model:open="isBeatsViewerOpen">
-              <Card>
-                <CardHeader>
-                  <div class="flex items-center justify-between">
-                    <CardTitle class="flex items-center space-x-2">
-                      <Play :size="20" />
-                      <span>Beats</span>
-                      <Badge variant="secondary" class="ml-2"> {{ beatsData.length }} beats </Badge>
-                    </CardTitle>
-                    <CollapsibleTrigger as-child>
-                      <Button variant="ghost" size="sm">
-                        <component :is="isBeatsViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent>
-                    <BeatsViewer
-                      :beatsData="beatsData || {}"
-                      :audioFiles="audioFiles"
-                      v-model:viewMode="beatsViewMode"
-                      v-model:currentBeatIndex="currentBeatIndex"
-                      v-model:timelinePosition="timelinePosition"
-                      v-model:isPreviewAreaVisible="isPreviewAreaVisible"
-                    />
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-
             <!-- Product Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
@@ -310,7 +278,7 @@ import {
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { Button, Badge, Label, Switch } from "@/components/ui";
+import { Button, Label, Switch } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -322,7 +290,6 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import PromptGuide from "./project/prompt_guide.vue";
 import ScriptEditor from "./project/script_editor.vue";
-import BeatsViewer from "./project/beats_viewer.vue";
 import Generate from "./project/generate.vue";
 import MulmoViewer from "../components/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
@@ -341,8 +308,6 @@ import {
   selectedTheme,
   themeOptions,
   isScriptViewerOpen,
-  isBeatsViewerOpen,
-  beatsViewMode,
   getCardPadding,
   getHeaderSize,
   getContainerSpacing,
@@ -379,10 +344,6 @@ const isDevelopment = import.meta.env.DEV;
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
 const validationMessage = ref("");
-
-const currentBeatIndex = ref(0);
-const timelinePosition = ref(0);
-const isPreviewAreaVisible = ref(false);
 
 // Load project data on mount
 onMounted(async () => {
@@ -440,8 +401,6 @@ watch(
   },
   { deep: true },
 );
-
-const beatsData = computed(() => mulmoScriptHistoryStore.currentMulmoScript?.beats ?? []);
 
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
