@@ -20,11 +20,14 @@ const config: ForgeConfig = {
           entitlementsInherit: "entitlements.plist",
         } as any)
       : undefined,
-    osxNotarize: {
-      appleId: process.env.AC_APPLE_ID!,
-      appleIdPassword: process.env.AC_PASSWORD!,
-      teamId: process.env.AC_TEAM_ID!,
-    },
+    osxNotarize:
+      process.env.AC_APPLE_ID && process.env.AC_PASSWORD && process.env.AC_TEAM_ID
+        ? {
+            appleId: process.env.AC_APPLE_ID,
+            appleIdPassword: process.env.AC_PASSWORD,
+            teamId: process.env.AC_TEAM_ID,
+          }
+        : undefined,
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ["darwin"]), new MakerRpm({}), new MakerDeb({})],

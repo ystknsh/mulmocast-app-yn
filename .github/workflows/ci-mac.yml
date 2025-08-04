@@ -4,10 +4,10 @@ name: Build, Notarize, and Release for macOS
 # ワークフローが実行されるタイミング（トリガー）
 on:
   # 'v'で始まるタグ（例: v1.0.0, v1.2.3-beta）またはmainブランチがPushされた時に実行
-  # push:
-  #   branches: [main]
-  #   tags:
-  #     - 'v*'
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
   
   # GitHubのActionsページから手動で実行できるようにする
   workflow_dispatch:
@@ -67,7 +67,7 @@ jobs:
           AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
-        run: yarn run make
+        run: yarn run make:ci
         
       # 6. 生成物のアップロード（アーティファクトとして）
       # ビルドが成功したかどうかを後で確認できるように、生成された全てのファイルを一時的に保存する
