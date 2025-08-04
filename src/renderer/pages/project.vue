@@ -53,6 +53,7 @@
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
+                  @resetMediaFiles="resetMediaFiles"
                   class="flex h-full flex-col"
                 />
               </CardContent>
@@ -316,6 +317,9 @@ const validationMessage = ref("");
 
 // Load project data on mount
 onMounted(async () => {
+  downloadAudioFiles();
+  downloadImageFiles();
+
   try {
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
@@ -408,6 +412,12 @@ const audioFiles = ref<(string | null)[]>([]);
 const imageFiles = ref<(string | null)[]>([]);
 const movieFiles = ref<(string | null)[]>([]);
 
+const resetMediaFiles = () => {
+  audioFiles.value = [];
+  imageFiles.value = [];
+  movieFiles.value = [];
+};
+
 const positionUp = (index: number) => {
   imageFiles.value = arrayPositionUp<string | null>(imageFiles.value, index);
   movieFiles.value = arrayPositionUp<string | null>(movieFiles.value, index);
@@ -454,8 +464,6 @@ const downloadImageFiles = async () => {
     return "";
   });
 };
-downloadAudioFiles();
-downloadImageFiles();
 
 const isValidScriptData = ref(true);
 
@@ -466,12 +474,11 @@ watch(
   async (mulmoEvent) => {
     // generate image
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
-      await downloadImageFiles();
+      downloadImageFiles();
     }
 
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
-      // await downloadImageFiles();
-      // console.log(
+      downloadAudioFiles();
     }
 
     // beats
