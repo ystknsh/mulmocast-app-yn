@@ -21,13 +21,17 @@ import {
   MulmoStudioContextMethods,
   getOutputMultilingualFilePath,
   getMultiLingual,
+  mulmoStudioMultiLingualFileSchema,
+  currentMulmoScriptVersion,
   type MulmoImagePromptMedia,
+  type MultiLingualTexts,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
 import { z } from "zod";
 import { app, WebContents } from "electron";
 import path from "path";
 import fs from "fs";
+import { createHash } from "crypto";
 
 import { getProjectPath } from "../project_manager";
 import { loadSettings } from "../settings_manager";
@@ -416,21 +420,35 @@ const __mulmoImageFetchURL = async (
   };
 };
 
-const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: any) => {
+const hashSHA256 = (text: string) => {
+  return createHash("sha256").update(text, "utf8").digest("hex");
+};
+
+const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
   const fileName = MulmoStudioContextMethods.getFileName(context);
   const outDirPath = MulmoStudioContextMethods.getOutDirPath(context);
   const outputMultilingualFilePath = getOutputMultilingualFilePath(outDirPath, fileName);
-  const scriptData = fs.readFileSync(outputMultilingualFilePath, "utf-8");
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
 
-  const multiLingual = JSON.parse(scriptData).multiLingual;
+  const beat = context.studio.script?.beats?.[index];
+  Object.values(data).map((d) => {
+    if (!d.cacheKey) {
+      d.cacheKey = hashSHA256(beat?.text ?? "");
+    }
+  });
   multiLingual[index].multiLingualTexts = data;
-
+  if (!multiLingual[index].cacheKey) {
+    const beat = context.studio.script.beats[index];
+    multiLingual[index].cacheKey = hashSHA256(beat.text ?? "");
+  }
   const savedData = {
-    version: "1.1",
+    version: currentMulmoScriptVersion,
     multiLingual: multiLingual,
   };
-  // fs.writeFileSync(outputMultilingualFilePath,  JSON.stringify(savedData, null, 2), "utf8")
+  const result = mulmoStudioMultiLingualFileSchema.parse(savedData);
+  console.log(result);
+  fs.writeFileSync(outputMultilingualFilePath, JSON.stringify(savedData, null, 2), "utf8");
 };
 
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {

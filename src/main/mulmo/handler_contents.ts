@@ -7,6 +7,7 @@ import {
   getOutputMultilingualFilePath,
   getMultiLingual,
   type MulmoStudioContext,
+  type MulmoStudioMultiLingual,
 } from "mulmocast";
 
 import fs from "fs";
