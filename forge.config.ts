@@ -10,7 +10,7 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
-    extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts"],
+    extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts", "node_modules/mulmocast/images"],
     icon: "./images/macoro.png",
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({

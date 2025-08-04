@@ -261,14 +261,13 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     const actionNames = Array.isArray(actionName) ? actionName : [actionName];
     const enables = {
       audio: hasMatchingAction(["audio", "movie"], actionNames),
-      image: hasMatchingAction(["image", "movie", "pdf"], actionNames),
+      image: hasMatchingAction(["image", "movie", "pdf", "pdfSlide", "pdfHandout"], actionNames),
       movie: hasMatchingAction(["movie"], actionNames),
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
     const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
     const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
-
     if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);

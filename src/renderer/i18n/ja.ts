@@ -248,6 +248,7 @@ const lang = {
     task: {
       audio: "音声",
       video: "動画",
+      image: "画像",
       pdf: "PDF",
     },
   },
