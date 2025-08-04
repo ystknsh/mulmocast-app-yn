@@ -232,6 +232,18 @@ const lang = {
       successMessage: "作成成功!!",
       errorMessage: "作成失敗",
     },
+    // BeatSessionType
+    beat: {
+      imageReference: "参照画像",
+      audio: "音声",
+      image: "画像",
+      multiLingual: "多言語テキスト",
+      caption: "キャプション",
+      movie: "動画",
+      html: "HTML",
+      soundEffect: "効果音",
+      lipSync: "リップシンク",
+    },
     task: {
       audio: "音声",
       video: "動画",
