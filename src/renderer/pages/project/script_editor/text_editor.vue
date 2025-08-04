@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { type MulmoBeat, type MultiLingualTexts, languages } from "mulmocast/browser";
+import { type MulmoBeat, type MultiLingualTexts, languages, splitText } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -114,7 +114,17 @@ const multiLingualDataset = ref({});
 
 const saveMultiLingual = () => {
   // todo updat and save multiLingual
-  console.log(multiLingualDataset.value);
+  const data = supporLanguages.value.reduce((tmp, key) => {
+    tmp[key] = {
+      ...props.mulmoMultiLingual[key],
+      text: multiLingualDataset.value[key] ?? "",
+      texts: splitText({ localizedText: { text: multiLingualDataset.value[key] ?? "" }, targetLang: key }),
+      ttsTexts: splitText({ localizedText: { text: multiLingualDataset.value[key] ?? "" }, targetLang: key }),
+      lang: key,
+    };
+    return tmp;
+  }, {});
+  window.electronAPI.mulmoHandler("mulmoUpdateMultiLingual", props.projectId, props.index, data);
 };
 
 const convMultiLingualData = (mulmoMultiLingual?: MultiLingualTexts) => {
