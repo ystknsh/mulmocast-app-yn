@@ -116,6 +116,7 @@ const { messages = [] } = defineProps<{
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
+  resetMediaFiles: [];
 }>();
 
 const selectedTemplateIndex = ref(0);
@@ -211,14 +212,12 @@ const createScript = async () => {
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
     graphai.injectValue("prompt", userInput.value);
-    // graphai.injectValue("systemPrompt", scriptTemplatePrompt);
-    // graphai.injectValue("systemPrompt", specificOutputPrompt);
     const res = await graphai.run();
 
     const script = res.mulmoScript.data;
     script.beats.map(setRandomBeatId);
     emit("update:updateMulmoScript", script);
-
+    emit("resetMediaFiles");
     const newMessages = [
       ...messages.map((message) => filterMessage(message, true)),
       { content: userInput.value, role: "user", time: Date.now() },
