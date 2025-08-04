@@ -100,15 +100,15 @@ const lang = {
     },
     scriptEditor: {
       movieParams: {
-        title: "Movie Parameters",
-        provider: "Provider",
-        model: "Model",
-        transitionType: "Transition Type",
-        transitionDuration: "Transition Duration (seconds)",
-        providerNone: "None",
-        modelAuto: "Auto",
-        transitionFade: "Fade",
-        transitionSlideoutLeft: "Slide Out Left",
+        title: "動画パラメータ",
+        provider: "プロバイダ",
+        model: "モデル",
+        transitionType: "トランジションの種類",
+        transitionDuration: "トランジションの長さ（秒）",
+        providerNone: "なし",
+        modelAuto: "自動",
+        transitionFade: "フェード",
+        transitionSlideoutLeft: "左にスライドアウト",
       },
       reference: {
         generateReference: "参照イメージ生成",
@@ -231,6 +231,18 @@ const lang = {
     content: {
       successMessage: "作成成功!!",
       errorMessage: "作成失敗",
+    },
+    // BeatSessionType
+    beat: {
+      imageReference: "参照画像",
+      audio: "音声",
+      image: "画像",
+      multiLingual: "多言語テキスト",
+      caption: "キャプション",
+      movie: "動画",
+      html: "HTML",
+      soundEffect: "効果音",
+      lipSync: "リップシンク",
     },
     task: {
       audio: "音声",

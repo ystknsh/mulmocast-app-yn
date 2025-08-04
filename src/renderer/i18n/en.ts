@@ -230,6 +230,17 @@ const lang = {
       successMessage: "Contents generated successfully",
       errorMessage: "Failed to generate contents",
     },
+    beat: {
+      imageReference: "Reference Image",
+      audio: "Audio",
+      image: "Image",
+      multiLingual: "Multilingual Text",
+      caption: "Caption",
+      movie: "Movie",
+      html: "HTML",
+      soundEffect: "Sound Effect",
+      lipSync: "Lip Sync",
+    },
     task: {
       audio: "Audio",
       video: "Video",
