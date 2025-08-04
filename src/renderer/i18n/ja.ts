@@ -271,6 +271,9 @@ const lang = {
     ar: "アラビア語",
     uk: "ウクライナ語",
     el: "ギリシャ語",
+    "zh-CN": "簡体字中国語",
+    "zh-TW": "繁体字中国語",
+    hi: "ヒンディー語",
   },
   commonLanguages,
 };

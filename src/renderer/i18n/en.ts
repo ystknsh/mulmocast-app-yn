@@ -268,6 +268,9 @@ const lang = {
     ar: "Arabic",
     uk: "Ukrainian",
     el: "Greek",
+    "zh-CN": "Simplified Chinese",
+    "zh-TW": "Traditional Chinese",
+    hi: "Hindi",
   },
   commonLanguages,
 };
