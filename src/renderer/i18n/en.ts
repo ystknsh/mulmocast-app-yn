@@ -38,6 +38,7 @@ const lang = {
     notifications: {
       success: "Settings saved",
       error: "Failed to save settings",
+      createSuccess: "Script created successfully 🎉",
     },
     languages: {
       title: "Language Settings",
