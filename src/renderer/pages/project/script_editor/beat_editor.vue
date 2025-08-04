@@ -305,7 +305,7 @@ const handleDrop = (event: DragEvent) => {
       return;
     }
     update("image.type", imageType);
-    const extention = fileType === "jpeg" ? "jpg" : fileType;
+    const extension = fileType === "jpeg" ? "jpg" : fileType;
 
     const reader = new FileReader();
     reader.onload = async () => {
@@ -315,7 +315,7 @@ const handleDrop = (event: DragEvent) => {
         projectId.value,
         props.index,
         [...uint8Array],
-        extention,
+        extension,
       );
       update("image.source.path", "./" + path);
       generateImageOnlyImage();

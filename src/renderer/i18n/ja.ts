@@ -19,7 +19,7 @@ const lang = {
     mypage: "マイページ",
     signin: "ログイン",
     signout: "ログアウト",
-    about: "Abount",
+    about: "About",
   },
   settings: {
     title: "設定",

@@ -203,7 +203,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   }
 };
 
-// generate iamge by prompt
+// generate image by prompt
 export const mulmoReferenceImage = async (
   projectId: string,
   index: number,
@@ -339,20 +339,20 @@ export const mulmoReferenceImageUpload = async (
   projectId: string,
   dirKey: string,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const dirPath = "upload_reference_image";
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
 };
 export const mulmoImageUpload = async (
   projectId: string,
   index: number,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const dirPath = "upload_image";
   const dirKey = String(index);
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
 };
 
 const __mulmoImageUpload = async (
@@ -360,12 +360,12 @@ const __mulmoImageUpload = async (
   dirPath: string,
   dirKey: string,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const projectPath = getProjectPath(projectId);
   const dir = path.resolve(projectPath, dirPath, dirKey);
   fs.mkdirSync(dir, { recursive: true });
-  const filename = `${Date.now()}.${extention}`;
+  const filename = `${Date.now()}.${extension}`;
   fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
 
   return path.join(dirPath, dirKey, filename);
