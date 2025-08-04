@@ -18,7 +18,7 @@ const lang = {
     mypage: "MyPage",
     signin: "SignIn",
     signout: "SignOut",
-    about: "Abount",
+    about: "About",
   },
   settings: {
     title: "Settings",

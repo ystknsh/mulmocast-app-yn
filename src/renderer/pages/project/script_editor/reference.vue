@@ -200,7 +200,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       // TODO: Consider showing a toast notification or alert
       return;
     }
-    const extention = fileType === "jpeg" ? "jpg" : fileType;
+    const extension = fileType === "jpeg" ? "jpg" : fileType;
 
     const reader = new FileReader();
     reader.onload = async () => {
@@ -210,7 +210,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
         props.projectId,
         imageKey,
         [...uint8Array],
-        extention,
+        extension,
       );
       emit("updateImagePath", imageKey, "./" + path);
       const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
