@@ -27,6 +27,7 @@ import {
   type MultiLingualTexts,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
+import { GraphAILogger } from "graphai";
 import { z } from "zod";
 import { app, WebContents } from "electron";
 import path from "path";
@@ -325,8 +326,12 @@ const mediaFilePath = async (projectId: string, actionName: string) => {
   throw Error("no download file");
 };
 const mulmoDownload = async (projectId: string, actionName: string) => {
-  const path = await mediaFilePath(projectId, actionName);
-  const buffer = fs.readFileSync(path);
+  const fileName = await mediaFilePath(projectId, actionName);
+  if (!fs.existsSync(fileName)) {
+    GraphAILogger.info(`mulmoDownload: ${fileName} not exists`);
+    return null;
+  }
+  const buffer = fs.readFileSync(fileName);
   return buffer.buffer;
 };
 
