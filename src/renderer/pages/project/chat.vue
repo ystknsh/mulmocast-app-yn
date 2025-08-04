@@ -116,7 +116,7 @@ const { messages = [] } = defineProps<{
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
-  "resetMediaFiles": [];
+  resetMediaFiles: [];
 }>();
 
 const selectedTemplateIndex = ref(0);
