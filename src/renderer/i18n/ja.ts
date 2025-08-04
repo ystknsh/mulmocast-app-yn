@@ -39,6 +39,7 @@ const lang = {
     notifications: {
       success: "設定を保存しました",
       error: "設定の保存に失敗しました",
+      createSuccess: "Script created successfully 🎉",
     },
     languages: {
       title: "言語設定",

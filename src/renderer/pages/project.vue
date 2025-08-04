@@ -2,31 +2,8 @@
   <Layout>
     <TooltipProvider>
       <div :class="`mx-auto max-w-[95%] ${getCardPadding} ${getContainerSpacing}`">
-        <!-- Developer Mode Toggle - Always at the top -->
-        <div class="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900" v-if="false">
-          <div class="flex items-center justify-between space-x-2 text-sm">
-            <div class="flex items-center space-x-2">
-              <Settings :size="16" />
-              <span>Developer Mode</span>
-            </div>
-            <Switch v-model="isDevMode" />
-          </div>
-          <div v-if="isDevMode" class="mt-2 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <div class="space-y-2">
-              <span class="text-sm font-medium">Design Theme</span>
-              <RadioGroup v-model="selectedTheme" class="grid grid-cols-2 gap-2 text-sm">
-                <div v-for="option in themeOptions" :key="option.value" class="flex items-center space-x-2">
-                  <RadioGroupItem :value="option.value" :id="option.value" />
-                  <Label :for="option.value">{{ option.label }}</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-        </div>
-
         <!-- Header Section -->
         <ProjectHeader
-          v-if="hasProjectData"
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
           :selectedTheme="selectedTheme"
           :getHeaderSize="getHeaderSize"
@@ -99,7 +76,7 @@
 
           <!-- Middle Column - Script Editor -->
           <div class="h-full">
-            <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" class="h-full">
+            <Collapsible v-model:open="isScriptViewerOpen" class="h-full">
               <Card class="flex h-full flex-col">
                 <CardHeader class="flex-shrink-0">
                   <div class="flex items-center justify-between">
@@ -187,7 +164,7 @@
             :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
           >
             <!-- Output Section -->
-            <Card v-if="hasProjectData">
+            <Card>
               <CardHeader>
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
@@ -205,7 +182,7 @@
             </Card>
 
             <!-- Product Section -->
-            <Card v-if="hasProjectData">
+            <Card>
               <CardHeader>
                 <CardTitle class="flex items-center space-x-2">
                   <Play :size="20" />
@@ -336,9 +313,6 @@ const project = computed(() => ({
   script: mulmoScriptHistoryStore.currentMulmoScript,
 }));
 
-const hasProjectData = computed(() => true); // Todo
-
-const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
@@ -361,7 +335,7 @@ onMounted(async () => {
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
-  notifySuccess("Script created successfully 🎉");
+  notifySuccess(t("settings.notifications.createSuccess"));
 };
 
 const handleUpdateScriptFromHeader = (script: MulmoScript) => {
