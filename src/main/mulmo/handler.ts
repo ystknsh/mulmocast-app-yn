@@ -19,6 +19,8 @@ import {
   generateReferenceImage,
   getImageRefs,
   MulmoStudioContextMethods,
+  getOutputMultilingualFilePath,
+  getMultiLingual,
   type MulmoImagePromptMedia,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
@@ -414,6 +416,23 @@ const __mulmoImageFetchURL = async (
   };
 };
 
+const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: any) => {
+  const context = await getContext(projectId);
+  const fileName = MulmoStudioContextMethods.getFileName(context);
+  const outDirPath = MulmoStudioContextMethods.getOutDirPath(context);
+  const outputMultilingualFilePath = getOutputMultilingualFilePath(outDirPath, fileName);
+  const scriptData = fs.readFileSync(outputMultilingualFilePath, "utf-8");
+
+  const multiLingual = JSON.parse(scriptData).multiLingual;
+  multiLingual[index].multiLingualTexts = data;
+
+  const savedData = {
+    version: "1.1",
+    multiLingual: multiLingual,
+  };
+  // fs.writeFileSync(outputMultilingualFilePath,  JSON.stringify(savedData, null, 2), "utf8")
+};
+
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
   try {
     switch (method) {
@@ -457,6 +476,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoReferenceImages(args[0], webContents);
       case "mulmoMultiLinguals":
         return await mulmoMultiLinguals(args[0], webContents);
+      case "mulmoUpdateMultiLingual":
+        return await mulmoUpdateMultiLingual(args[0], args[1], args[2]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

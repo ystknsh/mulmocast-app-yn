@@ -169,7 +169,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
   return null;
 };
 
-export const mulmoMultiLinguals = async (projectId: string) => {
+export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
   const context = await getContext(projectId);
   const fileName = MulmoStudioContextMethods.getFileName(context);
   const outDirPath = MulmoStudioContextMethods.getOutDirPath(context);

@@ -28,7 +28,7 @@
                     <CardTitle
                       :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
                     >
-                      <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                      <Bot :size="20" />
                       <span>
                         {{ t(selectedTheme === "beginner" ? "panels.aiAssistantChat" : "panels.aiPoweredGuide") }}
                       </span>
@@ -48,8 +48,7 @@
                 :class="`flex flex-1 flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
                 v-if="projectMetadata"
               >
-                <component
-                  :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                <Chat
                   :selectedTheme="selectedTheme"
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
@@ -245,7 +244,6 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
-  Lightbulb,
   Bot,
   PanelLeftClose,
   PanelLeftOpen,
@@ -264,7 +262,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Import sub-components (to be created)
 import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
-import PromptGuide from "./project/prompt_guide.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
 import MulmoViewer from "../components/mulmo_viewer.vue";
