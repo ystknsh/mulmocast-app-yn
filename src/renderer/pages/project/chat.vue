@@ -188,13 +188,9 @@ const run = async () => {
 
 const isCreatingScript = ref(false);
 
-// system prompt and user prompt
-// const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
-  // userInput.value = readTemplatePrompt(promptTemplates[selectedTemplateIndex.value].filename);
   userInput.value = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
 };
-// end of system prompt
 
 const createScript = async () => {
   if (isRunning.value) {

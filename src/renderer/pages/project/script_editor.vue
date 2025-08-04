@@ -289,7 +289,6 @@ watch(currentTab, () => {
 const mulmoMultiLinguals = ref([]);
 onMounted(async () => {
   mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
-  console.log(mulmoMultiLinguals.value);
 });
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);

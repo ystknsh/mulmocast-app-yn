@@ -245,6 +245,7 @@ const lang = {
     task: {
       audio: "Audio",
       video: "Video",
+      pdf: "PDF",
     },
   },
   languages: {
