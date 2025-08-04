@@ -5601,6 +5601,11 @@ marked@^16.1.1:
   resolved "https://registry.yarnpkg.com/marked/-/marked-16.1.1.tgz#a7839dcf19fa5e349cad12c561f231320690acd4"
   integrity sha512-ij/2lXfCRT71L6u0M29tJPhP0bM5shLL3u5BePhFwPELj2blMJ6GDtD7PfJhRLhJ/c2UwrK17ySVcDzy2YHjHQ==
 
+marked@^16.1.2:
+  version "16.1.2"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-16.1.2.tgz#b723ad2eb0a19d5bf5809b62816af85d117672e3"
+  integrity sha512-rNQt5EvRinalby7zJZu/mB+BvaAY2oz3wCuCjt1RDrWNpS1Pdf9xqMOeC9Hm5adBdcV/3XZPJpG58eT+WBc0XQ==
+
 matcher@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/matcher/-/matcher-3.0.0.tgz#bd9060f4c5b70aa8041ccc6f80368760994f30ca"
@@ -5886,10 +5891,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.1.8.tgz#0071684e5c635607a0164cb89598cd5874709c9e"
-  integrity sha512-WOV90Age7NlEouyH3wbU8DrLxKPCUbqSJuS0L7D4gIBwNoY+t4p5s+jpSrPdKU3Jr7skzyYOBtJ3N0ykO53FoA==
+mulmocast@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.1.9.tgz#53606fb6dff4dbf6d041fd8c052d492477a32d3c"
+  integrity sha512-3ZXbnfRi8ZLkfBWahqG4Cg4Y+ZmOUQgZ//R9DFMkBNiUGAAL6o8KaHtx6QrSkqfBsZg5wZ/z5LNqemc+jxqg8w==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@graphai/anthropic_agent" "^2.0.5"
