@@ -12,12 +12,14 @@ const config: ForgeConfig = {
     asar: true,
     extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts"],
     icon: "./images/macoro.png",
-    osxSign: process.env.CODESIGN_IDENTITY ? {
-      identity: process.env.CODESIGN_IDENTITY,
-      hardenedRuntime: true,
-      entitlements: "entitlements.plist",
-      entitlementsInherit: "entitlements.plist",
-    } as any : undefined,
+    osxSign: process.env.CODESIGN_IDENTITY
+      ? ({
+          identity: process.env.CODESIGN_IDENTITY,
+          hardenedRuntime: true,
+          entitlements: "entitlements.plist",
+          entitlementsInherit: "entitlements.plist",
+        } as any)
+      : undefined,
     osxNotarize: {
       appleId: process.env.AC_APPLE_ID!,
       appleIdPassword: process.env.AC_PASSWORD!,
