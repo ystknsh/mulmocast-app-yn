@@ -92,12 +92,16 @@ const lang = {
       back: "戻る",
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
+    menu: {
+      script: "編集",
+      debugLog: "デバッグログ",
+    },
     generate: {
-      generateContents: "Generate Contents",
-      movie: "Movie",
-      audio: "Podcast",
-      pdfSlide: "PDF (Presenter)",
-      pdfHandout: "PDF (Handout)",
+      generateContents: "コンテンツ生成",
+      movie: "動画",
+      audio: "音声",
+      pdfSlide: "PDF (プレゼン)",
+      pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
       movieParams: {

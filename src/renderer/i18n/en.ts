@@ -91,6 +91,10 @@ const lang = {
       back: "Back",
       openProjectFolder: "Open Project Folder",
     },
+    menu: {
+      script: "Script",
+      debugLog: "Debug Logs",
+    },
     generate: {
       generateContents: "Generate Contents",
       movie: "Movie",
