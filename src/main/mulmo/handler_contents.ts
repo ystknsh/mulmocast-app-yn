@@ -20,7 +20,7 @@ const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {
     try {
       const { text } = beat; // TODO: multiLingual
-      const fileName = getBeatAudioPath(text, context, beat);
+      const fileName = getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
       if (fs.existsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
