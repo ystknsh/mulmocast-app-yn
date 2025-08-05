@@ -105,11 +105,29 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      menu: {
+        textMode: "会話字幕編集",
+        textModeDescription: "話者と会話や字幕へ編集ができます",
+        yamlMode: "YAML Mode",
+        yamlModeDescription: "Complete MulmoScript editing",
+        jsonMode: "JSON Mode",
+        jsonModeDescription: "Complete MulmoScript editing",
+        mediaMode: "動画像設定",
+        mediaModeDescription: "Beatごとのイメージや動画の編集とプレビュー",
+        styleMode: "Style",
+        styleModeDescription: "音声/動画像/字幕などの設定",
+        referenceMode: "参照イメージ",
+        referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
+      },
       provider: "プロバイダ",
       speechParams: {
         title: "音声設定",
         language: "言語",
         displayName: "表示名",
+      },
+      beat: {
+        speaker: "話者",
+        text: "文章",
       },
       movieParams: {
         title: "動画設定",
