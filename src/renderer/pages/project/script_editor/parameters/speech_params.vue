@@ -11,9 +11,11 @@
         <div class="mb-2 flex items-center justify-between">
           <div>
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
-              <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
-                t("update")
-              }}</Button>
+              <Input v-model="updateSpeakerId" :invalid="!validUpdateKey" /><Button
+                @click="handleUpdateSpeakerId"
+                :disabled="!validUpdateKey"
+                >{{ t("update") }}</Button
+              >
             </div>
             <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
@@ -115,9 +117,9 @@
         </div>
       </div>
       <div class="template-dropdown-container flex items-center gap-4">
-        <Input v-model="speechKey" :invalid="!validateKey" class="w-64" />
+        <Input v-model="speechKey" :invalid="!validateKey && speechKey !== ''" class="w-64" />
 
-        <Button variant="outline" size="sm" @click="handleAddSpeaker">Add Speaker</Button>
+        <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">Add Speaker</Button>
       </div>
       <div></div>
       <MulmoError :mulmoError="mulmoError" />

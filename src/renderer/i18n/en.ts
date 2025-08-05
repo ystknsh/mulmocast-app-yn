@@ -15,6 +15,7 @@ const lang = {
   },
   menu: {
     top: "Dashboard",
+    settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
     signout: "SignOut",

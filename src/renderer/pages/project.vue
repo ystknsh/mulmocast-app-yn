@@ -83,7 +83,7 @@
                     <CollapsibleTrigger as-child>
                       <CardTitle class="flex cursor-pointer items-center space-x-2">
                         <Code2 :size="20" />
-                        <span>{{t("project.menu.script")}}</span>
+                        <span>{{ t("project.menu.script") }}</span>
                       </CardTitle>
                     </CollapsibleTrigger>
                     <div class="flex items-center space-x-2">
@@ -196,7 +196,7 @@
               <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
                 <div class="rounded-lg bg-gray-50 p-4">
-                  <h3 class="mb-2 text-sm font-medium">{{t("project.menu.debugLog")}}</h3>
+                  <h3 class="mb-2 text-sm font-medium">{{ t("project.menu.debugLog") }}</h3>
                   <div class="h-40 overflow-y-auto rounded border bg-white p-2 font-mono text-xs" ref="logContainer">
                     <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
                       {{ entry }}
