@@ -61,6 +61,7 @@ const lang = {
     generateAudio: "音声生成",
     translateBeat: "翻訳",
     generating: "生成中",
+    delete: "削除",
     add: "追加",
   },
   generating: "生成中...",
@@ -104,8 +105,14 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      provider: "プロバイダ",
+      speechParams: {
+        title: "音声設定",
+        language: "言語",
+        displayName: "表示名",
+      },
       movieParams: {
-        title: "動画パラメータ",
+        title: "動画設定",
         provider: "プロバイダ",
         model: "モデル",
         transitionType: "トランジションの種類",

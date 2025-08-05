@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Speech Parameters</h4>
+    <h4 class="mb-3 font-medium">{{ t("project.scriptEditor.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
       <div
         v-if="speechParams.speakers"
@@ -26,12 +26,12 @@
             @click="handleDeleteSpeaker(name)"
             class="text-red-600 hover:text-red-700"
           >
-            Delete
+            {{ t("form.delete") }}
           </Button>
         </div>
         <div class="space-y-2">
           <div>
-            <Label>Provider</Label>
+            <Label>{{ t("project.scriptEditor.provider") }}</Label>
             <Select
               :model-value="speaker.provider || 'openai'"
               @update:model-value="(value) => handleProviderChange(name, value)"
@@ -87,7 +87,7 @@
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
-              <Label class="text-xs">Language</Label>
+              <Label class="text-xs">{{ t("project.scriptEditor.speechParams.language") }}</Label>
               <Select
                 :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
                 @update:model-value="(value) => handleLanguageChange(name, String(value))"
@@ -103,7 +103,11 @@
               </Select>
             </div>
             <div>
-              <Label class="text-xs"> Display Name ({{ selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE }}) </Label>
+              <Label class="text-xs"
+                >{{ t("project.scriptEditor.speechParams.displayName") }} ({{
+                  t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
+                }})
+              </Label>
               <Input
                 :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
                 @update:model-value="
