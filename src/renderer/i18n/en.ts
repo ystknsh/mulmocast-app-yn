@@ -261,6 +261,12 @@ const lang = {
       pdf: "PDF",
     },
   },
+  provider: {
+    openai: "OpenAI",
+    nijivoice: "Nijivoice",
+    google: "Google",
+    elevenlabs: "ElevenLabs",
+  },
   languages: {
     ja: "Japanese",
     en: "English",
