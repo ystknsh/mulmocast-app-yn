@@ -22,7 +22,9 @@
       <div
         class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
       >
-        <p class="mb-2 text-sm text-gray-500">Text Mode - Speaker and dialogue editing only</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.textMode") }} - {{ t("project.scriptEditor.menu.textModeDescription") }}
+        </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
             <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
@@ -85,7 +87,9 @@
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">YAML Mode - Complete MulmoScript editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.yamlMode") }} - {{ t("project.scriptEditor.menu.yamlModeDescription") }}
+        </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="yamlText"
@@ -107,7 +111,9 @@
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">JSON Mode - Complete MulmoScript editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.jsonMode") }} - {{ t("project.scriptEditor.menu.jsonModeDescription") }}
+        </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="jsonText"
@@ -124,7 +130,9 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">Media Mode - Beat-by-beat media editing and preview</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.mediaMode") }} - {{ t("project.scriptEditor.menu.mediaModeDescription") }}
+        </p>
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
@@ -184,7 +192,9 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">Style - Presentation style editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.styleMode") }} - {{ t("project.scriptEditor.menu.styleModeDescription") }}
+        </p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
@@ -194,6 +204,10 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.referenceMode") }} -
+          {{ t("project.scriptEditor.menu.referenceModeDescription") }}
+        </p>
         <Reference
           :projectId="projectId"
           :images="props.mulmoValue?.imageParams?.images ?? {}"
@@ -209,18 +223,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui";
-import CodeEditor from "@/components/code_editor.vue";
-
-import BeatEditor from "./script_editor/beat_editor.vue";
-import BeatSelector from "./script_editor/beat_selector.vue";
-import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
-import Reference from "./script_editor/reference.vue";
-import TextEditor from "./script_editor/text_editor.vue";
-
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
-
 import YAML from "yaml";
 import {
   mulmoScriptSchema,
@@ -231,7 +236,16 @@ import {
   type MulmoImageMedia,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useRoute } from "vue-router";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui";
+import CodeEditor from "@/components/code_editor.vue";
+
+import BeatEditor from "./script_editor/beat_editor.vue";
+import BeatSelector from "./script_editor/beat_selector.vue";
+import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
+import Reference from "./script_editor/reference.vue";
+import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
@@ -239,6 +253,8 @@ import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
+
+const { t } = useI18n();
 
 interface Props {
   mulmoValue: MulmoScript;

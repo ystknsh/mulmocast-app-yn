@@ -105,7 +105,25 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      menu: {
+        textMode: "Text Mode",
+        textModeDescription: "Speaker and dialogue editing only",
+        yamlMode: "YAML Mode",
+        yamlModeDescription: "Complete MulmoScript editing",
+        jsonMode: "JSON Mode",
+        jsonModeDescription: "Complete MulmoScript editing",
+        mediaMode: "Media Mode",
+        mediaModeDescription: "Beat-by-beat media editing and preview",
+        styleMode: "Style",
+        styleModeDescription: "Presentation style editing",
+        referenceMode: "Image Reference",
+        referenceModeDescription: "Reference image for character consistency",
+      },
       provider: "Provider",
+      beat: {
+        speaker: "Speaker",
+        text: "Text",
+      },
       speechParams: {
         title: "Speech Parameters",
         language: "Language",
