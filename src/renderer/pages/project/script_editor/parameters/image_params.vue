@@ -85,11 +85,15 @@ import {
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
-const PROVIDERS = Object.entries(provider2ImageAgent).map(([provider, agent]) => ({
-  name: provider,
-  value: provider,
-  models: agent.models,
-}));
+const PROVIDERS = Object.entries(provider2ImageAgent)
+  .filter(([provider, __]) => {
+    return provider !== "mock";
+  })
+  .map(([provider, agent]) => ({
+    name: provider,
+    value: provider,
+    models: agent.models,
+  }));
 
 const props = withDefaults(
   defineProps<{

@@ -86,13 +86,18 @@ import { provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/brow
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
-const PROVIDERS = Object.entries(provider2MovieAgent).map(([provider, agent]) => {
-  return {
-    name: provider,
-    value: provider,
-    models: agent.models,
-  };
-});
+const PROVIDERS = Object.entries(provider2MovieAgent)
+  .filter(([provider, __]) => {
+    return provider !== "mock";
+  })
+  .map(([provider, agent]) => {
+    console.log(provider, agent);
+    return {
+      name: provider,
+      value: provider,
+      models: agent.models,
+    };
+  });
 
 const { t } = useI18n();
 
