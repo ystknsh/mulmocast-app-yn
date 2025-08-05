@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -175,17 +175,6 @@ const getVoiceList = (provider: string) => {
   return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
 };
 
-const getDefaultVoiceId = (provider: string): string => {
-  return DEFAULT_VOICE_IDS[provider as keyof typeof DEFAULT_VOICE_IDS] || DEFAULT_VOICE_IDS.openai;
-};
-
-const createSpeaker = (name: string, voiceId: string): Speaker => ({
-  voiceId,
-  displayName: {
-    [SPEECH_DEFAULT_LANGUAGE]: name,
-  },
-});
-
 const updateSpeechParams = (updates: Partial<NonNullable<SpeechParams>>): void => {
   const baseParams = props.speechParams || {
     provider: "openai" as Provider,
@@ -211,8 +200,11 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-const handleProviderChange = (name: string, provider: string) => {
+const handleProviderChange = async (name: string, provider: string) => {
   updateSpeaker(name, { provider });
+  await nextTick();
+  const voiceId = DEFAULT_VOICE_IDS[provider];
+  updateSpeaker(name, { voiceId });
 };
 
 const handleLanguageChange = (name: string, language: string) => {
@@ -287,26 +279,34 @@ const speechKey = ref("");
 const validateKey = computed(() => {
   return validateKeyFunc(speechKey.value);
 });
+
+const defaultProvider = "openai";
+
 const handleAddSpeaker = () => {
   if (!validateKey.value) {
     return;
   }
-  const voiceId = getDefaultVoiceId("openai");
   updateSpeakers({
     ...speakers.value,
-    [speechKey.value]: createSpeaker(speechKey.value, voiceId),
+    [speechKey.value]: {
+      provider: defaultProvider,
+      voiceId: DEFAULT_VOICE_IDS[defaultProvider],
+      displayName: {
+        [SPEECH_DEFAULT_LANGUAGE]: speechKey.value,
+      },
+    },
   });
   speechKey.value = "";
 };
 
 const initializeSpeechParams = () => {
   updateSpeechParams({
-    provider: "openai",
+    provider: defaultProvider,
     speakers: {
       Presenter: {
-        voiceId: DEFAULT_VOICE_IDS.openai,
+        voiceId: DEFAULT_VOICE_IDS[defaultProvider],
         displayName: {
-          en: "Presenter",
+          [SPEECH_DEFAULT_LANGUAGE]: "Presenter",
         },
       },
     },
