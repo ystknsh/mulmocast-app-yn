@@ -45,8 +45,12 @@
         <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
 
         <div>
+          <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
+          {{ pdfCurrentPage }}/{{ pages }}
+          <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
           <VuePDF
             :pdf="pdfData.value"
+            :page="pdfCurrentPage"
             v-if="pdfData"
             :scale="0.8"
             :fit-parent="true"
@@ -139,7 +143,9 @@ const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
+
 const pdfData = ref();
+const pdfCurrentPage = ref(1);
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
@@ -169,6 +175,10 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
   URL.revokeObjectURL(url);
 };
 
+const pdfBuffer = ref();
+const { pdf, pages } = usePDF(pdfBuffer);
+pdfData.value = pdf;
+
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
   videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
@@ -177,8 +187,7 @@ const updateResources = async () => {
 
   const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
   if (bufferPdf) {
-    const pdf = usePDF(ref(new Uint8Array(bufferPdf)));
-    pdfData.value = pdf.pdf;
+    pdfBuffer.value = new Uint8Array(bufferPdf);
   }
 };
 
