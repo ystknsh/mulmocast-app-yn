@@ -40,10 +40,9 @@
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="openai">OpenAI</SelectItem>
-                <SelectItem value="nijivoice">Nijivoice</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
+                <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
+                  t("provider." + provider)
+                }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -148,12 +147,12 @@ type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
 type Speaker = NonNullable<SpeechParams>["speakers"][string];
 
-const DEFAULT_VOICE_IDS: Record<string, string> = {
-  openai: VOICE_LISTS.openai[0].id,
-  google: VOICE_LISTS.google[0].id,
-  nijivoice: VOICE_LISTS.nijivoice[0].id,
-  elevenlabs: VOICE_LISTS.elevenlabs[0].id,
-} as const;
+const providers = Object.keys(VOICE_LISTS);
+
+const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provider) => {
+  tmp[provider] = VOICE_LISTS[provider][0].id;
+  return tmp;
+}, {});
 
 const props = defineProps<{
   speechParams?: SpeechParams;
