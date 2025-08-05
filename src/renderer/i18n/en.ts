@@ -61,6 +61,7 @@ const lang = {
     generateAudio: "generate audio",
     translateBeat: "translate",
     generating: "Generating...",
+    delete: "Delete",
     add: "Add",
   },
   generating: "Generating...",
@@ -104,6 +105,12 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      provider: "Provider",
+      speechParams: {
+        title: "Speech Parameters",
+        language: "Language",
+        displayName: "Display Name",
+      },
       movieParams: {
         title: "Movie Parameters",
         provider: "Provider",
