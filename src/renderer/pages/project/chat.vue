@@ -113,6 +113,9 @@ const { messages = [] } = defineProps<{
   messages: ChatMessage[];
 }>();
 
+const llmAgent = "ollamaAgent";
+// const llmAgent = "openAIAgent";
+
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
@@ -142,6 +145,7 @@ const clearChat = () => {
 const graphAIAgents = {
   ...agents,
   openAIAgent,
+  ollamaAgent: openAIAgent,
   validateSchemaAgent,
 };
 const filterMessage = (message, setTime = false) => {
@@ -160,11 +164,16 @@ const run = async () => {
 
   try {
     const env = await window.electronAPI.getEnv();
-    const graphai = new GraphAI(graphChat, graphAIAgents, {
+    const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
       agentFilters,
       config: {
         openAIAgent: {
           apiKey: env.OPENAI_API_KEY,
+        },
+        ollamaAgent: {
+          baseURL: "http://localhost:11434/v1",
+          model: "gpt-oss:20b",
+          apiKey: "not-needed",
         },
       },
     });
@@ -198,14 +207,19 @@ const createScript = async () => {
     return;
   }
   isRunning.value = true;
-
   try {
     const env = await window.electronAPI.getEnv();
-    const graphai = new GraphAI(graphGenerateMulmoScript, graphAIAgents, {
+    const graphai = new GraphAI(graphGenerateMulmoScript(llmAgent), graphAIAgents, {
       agentFilters,
       config: {
         openAIAgent: {
           apiKey: env.OPENAI_API_KEY,
+          model: "gpt-4o",
+        },
+        ollamaAgent: {
+          baseURL: "http://localhost:11434/v1",
+          model: "gpt-oss:20b",
+          apiKey: "not-needed",
         },
       },
     });
