@@ -5,7 +5,7 @@
     <Card class="mt-8 gap-2 space-y-1 p-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
-          {{ t("project.scriptEditor.reference.key") }} : {{ imageKey }}
+          {{ t("ui.common.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
             <Label class="mb-1 block">{{ t("common.imagePrompt") }} : </Label>
 
@@ -18,7 +18,7 @@
             />
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-            <Label class="mb-1 block">{{ t("project.scriptEditor.reference.image") }}</Label>
+            <Label class="mb-1 block">{{ t("ui.common.image") }}</Label>
 
             <div
               @dragover.prevent

@@ -77,6 +77,7 @@ const lang = {
       // Content generation
       generateImage: "Generate image",
       generateMovie: "Generate movie",
+      changeBeatTypeFirst: "Change beat type first",
       generateReference: "Generate Reference",
       generateAudio: "Generate audio",
       translateBeat: "Translate",
@@ -271,20 +272,6 @@ const lang = {
         styleModeDescription: "Presentation style editing",
         referenceMode: "Reference",
         referenceModeDescription: "Reference image for character consistency",
-      },
-      beat: {
-        speaker: "Speaker",
-        text: "Text",
-      },
-      speechParams: {
-        title: "Speech Parameters",
-        language: "Language",
-        displayName: "Display Name",
-      },
-      reference: {
-        generateReference: "Generate Reference",
-        key: "Key",
-        image: "Image",
       },
     },
     productTabs: {

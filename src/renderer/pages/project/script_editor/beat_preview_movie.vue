@@ -12,7 +12,7 @@
             class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
             @click="generateMovie"
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
-            :title="t('form.' + movieGenerateButtonTitle)"
+            :title="t('ui.actions.' + movieGenerateButtonTitle)"
           >
             <Loader2 v-if="isMovieGenerating" class="h-4 w-4 animate-spin" />
             <Sparkles v-else class="h-4 w-4" />

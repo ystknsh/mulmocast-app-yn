@@ -4,7 +4,7 @@
     <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
   </div>
   <div>
-    <Label>{{ t("project.scriptEditor.beat.speaker") }}</Label>
+    <Label>{{ t("ui.common.speaker") }}</Label>
     <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
       <SelectTrigger class="h-8">
         <SelectValue placeholder="Select a speaker" />
@@ -17,7 +17,7 @@
     </Select>
   </div>
   <div>
-    <Label>{{ t("project.scriptEditor.beat.text") }} ({{ t("languages." + lang) }})</Label>
+    <Label>{{ t("ui.tabs.text") }} ({{ t("languages." + lang) }})</Label>
     <Input
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"

@@ -77,6 +77,7 @@ const lang = {
       // Content generation
       generateImage: "画像生成",
       generateMovie: "動画生成",
+      changeBeatTypeFirst: "まずビートタイプを変更してください",
       generateReference: "参照イメージ生成",
       generateAudio: "音声生成",
       translateBeat: "翻訳",
@@ -271,20 +272,6 @@ const lang = {
         styleModeDescription: "音声/動画/画像/字幕などの設定",
         referenceMode: "参照",
         referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
-      },
-      speechParams: {
-        title: "音声設定",
-        language: "言語",
-        displayName: "表示名",
-      },
-      beat: {
-        speaker: "話者",
-        text: "文章",
-      },
-      reference: {
-        generateReference: "参照イメージ生成",
-        key: "キー",
-        image: "画像",
       },
     },
     productTabs: {
