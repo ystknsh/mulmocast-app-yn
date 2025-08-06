@@ -5,7 +5,6 @@ import {
   pdf,
   captions,
   updateNpmRoot,
-  // audioFilePath,
   getAudioArtifactFilePath,
   movieFilePath,
   pdfFilePath,
@@ -23,6 +22,7 @@ import {
   getMultiLingual,
   mulmoStudioMultiLingualFileSchema,
   currentMulmoScriptVersion,
+  hashSHA256,
   type MulmoImagePromptMedia,
   type MultiLingualTexts,
 } from "mulmocast";
@@ -32,7 +32,6 @@ import { z } from "zod";
 import { app, WebContents } from "electron";
 import path from "path";
 import fs from "fs";
-import { createHash } from "crypto";
 
 import { getProjectPath } from "../project_manager";
 import { loadSettings } from "../settings_manager";
@@ -422,10 +421,6 @@ const __mulmoImageFetchURL = async (
   return {
     result: false,
   };
-};
-
-const hashSHA256 = (text: string) => {
-  return createHash("sha256").update(text, "utf8").digest("hex");
 };
 
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
