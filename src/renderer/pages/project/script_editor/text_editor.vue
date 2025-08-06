@@ -26,8 +26,12 @@
       class="h-8"
     />
   </div>
-  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{ t("ui.actions.generateAudio") }}</Button>
-  <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{ t("ui.status.generating") }}</span>
+  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{
+    t("ui.actions.generateAudio")
+  }}</Button>
+  <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
+    t("ui.status.generating")
+  }}</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
   <!-- multi lingal -->
   <div v-if="supporLanguages.length > 0">

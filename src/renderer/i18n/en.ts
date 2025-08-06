@@ -400,7 +400,7 @@ const lang = {
       placeholder: "Image Reference Key (a-z0-9)",
     },
   },
-  
+
   // Parameters structure (extracted from project.scriptEditor.*)
   parameters: {
     movieParams: {
@@ -418,7 +418,7 @@ const lang = {
       displayName: "Display Name",
     },
   },
-  
+
   modal: {
     clickOutsideToClose: "Click outside to close",
   },

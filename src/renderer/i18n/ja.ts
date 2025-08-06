@@ -401,7 +401,7 @@ const lang = {
       placeholder: "キー(英数字のみ)",
     },
   },
-  
+
   // Parameters structure (extracted from project.scriptEditor.*)
   parameters: {
     movieParams: {
@@ -419,7 +419,7 @@ const lang = {
       displayName: "表示名",
     },
   },
-  
+
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
   },

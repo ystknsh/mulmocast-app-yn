@@ -35,7 +35,11 @@
                     </CardTitle>
                     <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
                       {{
-                        t(selectedTheme === "beginner" ? "project.chat.beginnerDescription" : "project.chat.advancedDescription")
+                        t(
+                          selectedTheme === "beginner"
+                            ? "project.chat.beginnerDescription"
+                            : "project.chat.advancedDescription",
+                        )
                       }}
                     </p>
                   </div>

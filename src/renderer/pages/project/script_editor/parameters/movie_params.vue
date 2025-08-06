@@ -53,9 +53,7 @@
           <SelectContent>
             <SelectItem value="__undefined__">{{ t("parameters.movieParams.providerNone") }}</SelectItem>
             <SelectItem value="fade">{{ t("parameters.movieParams.transitionFade") }}</SelectItem>
-            <SelectItem value="slideout_left">{{
-              t("parameters.movieParams.transitionSlideoutLeft")
-            }}</SelectItem>
+            <SelectItem value="slideout_left">{{ t("parameters.movieParams.transitionSlideoutLeft") }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
