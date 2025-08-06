@@ -208,7 +208,6 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
-    console.log(llmConfigs);
     const data = {
       ...apiKeys,
 
