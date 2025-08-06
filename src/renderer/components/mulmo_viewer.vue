@@ -101,7 +101,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
+import { Video, FileText, Volume2, FileImage, Play } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 
 import { Button } from "@/components/ui/button";
