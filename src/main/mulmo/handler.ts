@@ -18,8 +18,8 @@ import {
   generateReferenceImage,
   getImageRefs,
   MulmoStudioContextMethods,
-  getOutputMultilingualFilePath,
   getMultiLingual,
+  getOutputMultilingualFilePathAndMkdir,
   mulmoStudioMultiLingualFileSchema,
   currentMulmoScriptVersion,
   hashSHA256,
@@ -425,9 +425,7 @@ const __mulmoImageFetchURL = async (
 
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
-  const fileName = MulmoStudioContextMethods.getFileName(context);
-  const outDirPath = MulmoStudioContextMethods.getOutDirPath(context);
-  const outputMultilingualFilePath = getOutputMultilingualFilePath(outDirPath, fileName);
+  const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
 
   const beat = context.studio.script?.beats?.[index];
