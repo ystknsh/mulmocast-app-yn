@@ -9,80 +9,78 @@ const defaultSchema = zodToJsonSchema(mulmoScriptSchema, {
 */
 
 // just chat
-export const graphChat: GraphData = {
-  version: 0.5,
-  nodes: {
-    messages: {
-      value: [],
-    },
-    prompt: {},
-    llm: {
-      agent: "openAIAgent",
-      isResult: true,
-      params: {
-        forWeb: true,
-        stream: true,
+export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
+  return {
+    version: 0.5,
+    nodes: {
+      messages: {
+        value: [],
+      },
+      prompt: {},
+      llm: {
+        agent: llmAgent,
         isResult: true,
-      },
-      inputs: { messages: ":messages", prompt: ":prompt" },
-    },
-  },
-};
-
-export const graphGenerateMulmoScript: GraphData = {
-  version: 0.5,
-  nodes: {
-    messages: {
-      value: [],
-    },
-    prompt: {},
-    // systemPrompt: {},
-    // generate the mulmo script
-    mulmoScript: {
-      agent: "nestedAgent",
-      inputs: {
-        messages: ":messages",
-        prompt: ":prompt",
-        // systemPrompt: ":systemPrompt",
-      },
-      graph: {
-        loop: {
-          while: ":continue",
+        params: {
+          forWeb: true,
+          stream: true,
+          isResult: true,
         },
-        nodes: {
-          counter: {
-            value: 0,
-            update: ":counter.add(1)",
+        inputs: { messages: ":messages", prompt: ":prompt" },
+      },
+    },
+  };
+};
+export const graphGenerateMulmoScript = (llmAgent: string = "openAIAgent"): GraphData => {
+  return {
+    version: 0.5,
+    nodes: {
+      messages: {
+        value: [],
+      },
+      prompt: {},
+      mulmoScript: {
+        agent: "nestedAgent",
+        inputs: {
+          messages: ":messages",
+          prompt: ":prompt",
+        },
+        graph: {
+          loop: {
+            while: ":continue",
           },
-          messages: {
-            update: ":newMessages.array",
-          },
-          newMessages: {
-            agent: "pushAgent",
-            inputs: {
-              array: ":messages",
-              items: [{ role: "user", content: ":prompt" }, ":llm.message"],
+          nodes: {
+            counter: {
+              value: 0,
+              update: ":counter.add(1)",
             },
-            console: { after: true },
-          },
-          prompt: {
-            update: ":nextPrompt.text",
-          },
-          llm: {
-            agent: "openAIAgent",
-            isResult: true,
-            params: {
-              forWeb: true,
-              stream: true,
+            messages: {
+              update: ":newMessages.array",
+            },
+            newMessages: {
+              agent: "pushAgent",
+              inputs: {
+                array: ":messages",
+                items: [{ role: "user", content: ":prompt" }, ":llm.message"],
+              },
+              console: { after: true },
+            },
+            prompt: {
+              update: ":nextPrompt.text",
+            },
+            llm: {
+              agent: llmAgent,
               isResult: true,
-              model: "gpt-4o",
-            },
-            console: { before: true },
-            inputs: {
-              // system: ":systemPrompt",
-              prompt: ":prompt",
-              messages: ":messages",
-              /*
+              params: {
+                forWeb: true,
+                stream: true,
+                isResult: true,
+              },
+              console: { before: true },
+              inputs: {
+                // system: ":systemPrompt",
+                prompt: ":prompt",
+                messages: ":messages",
+                /*
               response_format: {
                 type: "json_schema" as const,
                 json_schema: {
@@ -94,39 +92,40 @@ export const graphGenerateMulmoScript: GraphData = {
                 }
                 }
               */
+              },
             },
-          },
-          validateSchema: {
-            agent: "validateSchemaAgent",
-            console: { after: true },
-            inputs: {
-              // text: ":llm.text",
-              text: ":llm.text.codeBlock()",
-              schema: mulmoScriptSchema,
+            validateSchema: {
+              agent: "validateSchemaAgent",
+              console: { after: true },
+              inputs: {
+                // text: ":llm.text",
+                text: ":llm.text.codeBlock()",
+                schema: mulmoScriptSchema,
+              },
+              isResult: true,
             },
-            isResult: true,
-          },
-          nextPrompt: {
-            agent: "copyAgent",
-            inputs: {
-              text: "Those are zod errors in the previous generation, fix them!! Perfect.\n\n${:validateSchema.error}",
+            nextPrompt: {
+              agent: "copyAgent",
+              inputs: {
+                text: "Those are zod errors in the previous generation, fix them!! Perfect.\n\n${:validateSchema.error}",
+              },
             },
-          },
-          continue: {
-            agent: ({ isValid, counter }) => {
-              return !isValid && counter < 3;
-            },
-            inputs: {
-              isValid: ":validateSchema.isValid",
-              counter: ":counter",
+            continue: {
+              agent: ({ isValid, counter }) => {
+                return !isValid && counter < 3;
+              },
+              inputs: {
+                isValid: ":validateSchema.isValid",
+                counter: ":counter",
+              },
             },
           },
         },
-      },
-      isResult: true,
-      output: {
-        data: ".validateSchema.data",
+        isResult: true,
+        output: {
+          data: ".validateSchema.data",
+        },
       },
     },
-  },
+  };
 };
