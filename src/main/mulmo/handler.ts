@@ -113,7 +113,7 @@ export const mulmoGenerateImage = async (
       }
     };
 
-    await generateBeatImage({ index, context, settings, forceImage, forceMovie, callbacks: [graphaiCallbacks] });
+    await generateBeatImage({ index, context, settings: settings.APIKEY ?? {}, forceImage, forceMovie, callbacks: [graphaiCallbacks] });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -136,7 +136,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
     // context.force = true;
-    await generateBeatAudio(index, context, settings);
+    await generateBeatAudio(index, context, settings.APIKEY ?? {});
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -164,7 +164,7 @@ export const mulmoTranslateBeat = async (
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
     // context.force = true;
-    await translateBeat(index, context, targetLangs, { settings });
+    await translateBeat(index, context, targetLangs, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -265,8 +265,8 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
-    const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
-    const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
+    const audioContext = enables.audio ? await audio(context, settings.APIKEY ?? {}, graphAICallbacks) : context;
+    const imageContext = enables.image ? await images(audioContext, settings.APIKEY ?? {}, graphAICallbacks) : audioContext;
     if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);

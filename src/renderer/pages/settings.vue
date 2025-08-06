@@ -174,7 +174,10 @@ onMounted(async () => {
   try {
     const settings = await window.electronAPI.settings.get();
     Object.keys(ENV_KEYS).forEach((envKey) => {
-      if (envKey in settings) {
+      if (settings.APIKEY && settings.APIKEY[envKey]) {
+        apiKeys[envKey] = settings.APIKEY[envKey as keyof typeof settings] || "";
+      } else if (envKey in settings) {
+        // backward compatibility
         apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
@@ -210,7 +213,7 @@ const saveSettings = async () => {
   try {
     const data = {
       ...apiKeys,
-
+      APIKEY: toRaw(apiKeys),
       APP_LANGUAGE: selectedLanguage.value,
       USE_LANGUAGES: { ...useLanguage },
       MAIN_LANGUAGE: mainLanguage.value,
@@ -228,7 +231,7 @@ const saveSettings = async () => {
 
 const debouncedSave = useDebounceFn(saveSettings, 1000);
 
-// Watch for changes in apiKeys
+// Watch for changes in text
 watch(
   [apiKeys, llmConfigs],
   () => {
