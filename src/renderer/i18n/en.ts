@@ -1,5 +1,4 @@
-import languages from "./languages";
-import { beat_badge } from "./common";
+import { commonLanguages, beatBadge } from "./common";
 
 const lang = {
   message: {
@@ -116,11 +115,12 @@ const lang = {
     defaultTitle: "[untitled]",
   },
   menu: {
-    top: "Home",
+    top: "Dashboard",
+    settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
     signout: "SignOut",
-    about: "Abount",
+    about: "About",
   },
   settings: {
     title: "Settings",
@@ -140,6 +140,13 @@ const lang = {
     notifications: {
       success: "Settings saved",
       error: "Failed to save settings",
+      createSuccess: "Script created successfully 🎉",
+    },
+    languages: {
+      title: "Language Settings",
+      description: "Script language and translation language settings",
+      mainTitle: "The main language of the script",
+      translatedTitle: "Language to be translated",
     },
   },
   form: {
@@ -152,7 +159,10 @@ const lang = {
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "Generate image",
     generateMovie: "Generate movie",
+    generateAudio: "generate audio",
+    translateBeat: "translate",
     generating: "Generating...",
+    delete: "Delete",
     add: "Add",
   },
   generating: "Generating...",
@@ -184,6 +194,10 @@ const lang = {
       back: "Back",
       openProjectFolder: "Open Project Folder",
     },
+    menu: {
+      script: "Script",
+      debugLog: "Debug Logs",
+    },
     generate: {
       generateContents: "Generate Contents",
       movie: "Movie",
@@ -192,6 +206,30 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      menu: {
+        textMode: "Text Mode",
+        textModeDescription: "Speaker and dialogue editing only",
+        yamlMode: "YAML Mode",
+        yamlModeDescription: "Complete MulmoScript editing",
+        jsonMode: "JSON Mode",
+        jsonModeDescription: "Complete MulmoScript editing",
+        mediaMode: "Media Mode",
+        mediaModeDescription: "Beat-by-beat media editing and preview",
+        styleMode: "Style",
+        styleModeDescription: "Presentation style editing",
+        referenceMode: "Image Reference",
+        referenceModeDescription: "Reference image for character consistency",
+      },
+      provider: "Provider",
+      beat: {
+        speaker: "Speaker",
+        text: "Text",
+      },
+      speechParams: {
+        title: "Speech Parameters",
+        language: "Language",
+        displayName: "Display Name",
+      },
       movieParams: {
         title: "Movie Parameters",
         provider: "Provider",
@@ -208,10 +246,6 @@ const lang = {
         key: "Key",
         image: "Image",
       },
-    },
-    generateStatus: {
-      success: "Contents generated successfully",
-      error: "Failed to generate contents",
     },
     productTabs: {
       tabs: {
@@ -270,7 +304,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
-    badge: beat_badge,
+    badge: beatBadge,
     form: {
       image: {
         url: "url",
@@ -311,7 +345,73 @@ const lang = {
   modal: {
     clickOutsideToClose: "Click outside to close",
   },
-  languages,
+  notify: {
+    audio: {
+      successMessage: "Audio generated successfully",
+      errorMessage: "Failed to generate audio",
+    },
+    image: {
+      successMessage: "Image generated successfully",
+      errorMessage: "Failed to generate image",
+    },
+    translate: {
+      successMessage: "Translate successfully",
+      errorMessage: "Failed to translate text",
+    },
+    content: {
+      successMessage: "Contents generated successfully",
+      errorMessage: "Failed to generate contents",
+    },
+    beat: {
+      imageReference: "Reference Image",
+      audio: "Audio",
+      image: "Image",
+      multiLingual: "Multilingual Text",
+      caption: "Caption",
+      movie: "Movie",
+      html: "HTML",
+      soundEffect: "Sound Effect",
+      lipSync: "Lip Sync",
+    },
+    task: {
+      audio: "Audio",
+      video: "Video",
+      image: "Image",
+      pdf: "PDF",
+    },
+  },
+  provider: {
+    openai: "OpenAI",
+    nijivoice: "Nijivoice",
+    google: "Google",
+    elevenlabs: "ElevenLabs",
+  },
+  languages: {
+    ja: "Japanese",
+    en: "English",
+    fr: "French",
+    es: "Spanish",
+    de: "German",
+    ru: "Russian",
+    pt: "Portuguese",
+    tr: "Turkish",
+    it: "Italian",
+    fa: "Persian",
+    nl: "Dutch",
+    pl: "Polish",
+    zh: "Chinese",
+    vi: "Vietnamese",
+    id: "Indonesian",
+    cs: "Czech",
+    ko: "Korean",
+    ar: "Arabic",
+    uk: "Ukrainian",
+    el: "Greek",
+    "zh-CN": "Simplified Chinese",
+    "zh-TW": "Traditional Chinese",
+    hi: "Hindi",
+  },
+  commonLanguages,
 };
 
 export default lang;

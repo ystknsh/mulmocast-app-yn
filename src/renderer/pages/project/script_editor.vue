@@ -22,7 +22,9 @@
       <div
         class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
       >
-        <p class="mb-2 text-sm text-gray-500">Text Mode - Speaker and dialogue editing only</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.textMode") }} - {{ t("project.scriptEditor.menu.textModeDescription") }}
+        </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
             <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
@@ -40,31 +42,17 @@
           >
             <div v-for="(beat, index) in safeBeats ?? []" :key="beat?.id ?? index" class="relative">
               <Card class="gap-2 space-y-1 p-4">
-                <div class="flex items-center justify-between font-bold text-gray-700">
-                  <span>Beat {{ index + 1 }}</span>
-                  <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
-                </div>
-                <div>
-                  <Label>Speaker</Label>
-                  <Input
-                    :model-value="beat?.speaker"
-                    @update:model-value="(value) => update(index, 'speaker', String(value))"
-                    placeholder="e.g. Alice"
-                    class="h-8"
-                  />
-                </div>
-                <div>
-                  <Label>Text</Label>
-                  <Input
-                    :model-value="beat.text"
-                    @update:model-value="(value) => update(index, 'text', String(value))"
-                    placeholder="e.g. What is AI?"
-                    class="h-8"
-                  />
-                </div>
-                <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-                <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-                <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+                <TextEditor
+                  :index="index"
+                  :beat="beat"
+                  :audioFile="audioFiles[index]"
+                  :projectId="projectId"
+                  :lang="mulmoValue.lang"
+                  :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
+                  :speakers="mulmoValue?.speechParams?.speakers ?? {}"
+                  @update="update"
+                  @saveMulmo="saveMulmo"
+                />
               </Card>
               <div
                 class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
@@ -99,7 +87,9 @@
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">YAML Mode - Complete MulmoScript editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.yamlMode") }} - {{ t("project.scriptEditor.menu.yamlModeDescription") }}
+        </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="yamlText"
@@ -121,7 +111,9 @@
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">JSON Mode - Complete MulmoScript editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.jsonMode") }} - {{ t("project.scriptEditor.menu.jsonModeDescription") }}
+        </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
             v-model="jsonText"
@@ -138,7 +130,9 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">Media Mode - Beat-by-beat media editing and preview</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.mediaMode") }} - {{ t("project.scriptEditor.menu.mediaModeDescription") }}
+        </p>
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
@@ -198,7 +192,9 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">Style - Presentation style editing</p>
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.styleMode") }} - {{ t("project.scriptEditor.menu.styleModeDescription") }}
+        </p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
@@ -208,6 +204,10 @@
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
+        <p class="mb-2 text-sm text-gray-500">
+          {{ t("project.scriptEditor.menu.referenceMode") }} -
+          {{ t("project.scriptEditor.menu.referenceModeDescription") }}
+        </p>
         <Reference
           :projectId="projectId"
           :images="props.mulmoValue?.imageParams?.images ?? {}"
@@ -222,18 +222,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, Button, Label, Input, Badge } from "@/components/ui";
-import CodeEditor from "@/components/code_editor.vue";
-
-import BeatEditor from "./script_editor/beat_editor.vue";
-import BeatSelector from "./script_editor/beat_selector.vue";
-import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
-import Reference from "./script_editor/reference.vue";
-
+import { ref, computed, watch, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
-
 import YAML from "yaml";
 import {
   mulmoScriptSchema,
@@ -244,17 +236,25 @@ import {
   type MulmoImageMedia,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { useMulmoEventStore } from "../../store";
-import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui";
+import CodeEditor from "@/components/code_editor.vue";
+
+import BeatEditor from "./script_editor/beat_editor.vue";
+import BeatSelector from "./script_editor/beat_selector.vue";
+import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
+import Reference from "./script_editor/reference.vue";
+import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
-import { getBadge } from "@/lib/beat_util.js";
 import { setRandomBeatId } from "@/lib/beat_util";
+
+const { t } = useI18n();
 
 interface Props {
   mulmoValue: MulmoScript;
@@ -266,14 +266,11 @@ interface Props {
   scriptEditorActiveTab?: ScriptEditorTab;
 }
 
-const { t } = useI18n();
-
 const props = defineProps<Props>();
 const emit = defineEmits([
   "update:mulmoValue",
   "update:isValidScriptData",
   "generateImage",
-  "generateAudio",
   "formatAndPushHistoryMulmoScript",
   "addBeat",
   "deleteBeat",
@@ -283,7 +280,6 @@ const emit = defineEmits([
 ]);
 
 const route = useRoute();
-const mulmoEventStore = useMulmoEventStore();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
@@ -304,6 +300,11 @@ watch(currentTab, () => {
     emit("formatAndPushHistoryMulmoScript");
     emit("update:scriptEditorActiveTab", currentTab.value);
   }
+});
+
+const mulmoMultiLinguals = ref([]);
+onMounted(async () => {
+  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
 });
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
@@ -402,12 +403,8 @@ const update = (index: number, path: string, value: unknown) => {
 
 const generateImage = (index: number, target: string) => {
   emit("generateImage", index, target);
-  console.log(index);
 };
-const generateAudio = (index: number) => {
-  emit("generateAudio", index);
-  console.log(index);
-};
+
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoValue.beats.length) {
     const newBeats = arrayRemoveAt(props.mulmoValue.beats, index);
@@ -498,6 +495,10 @@ const updateImagePath = (imageKey: string, path: string) => {
   });
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
+};
+
+const saveMulmo = () => {
+  emit("saveMulmo");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {

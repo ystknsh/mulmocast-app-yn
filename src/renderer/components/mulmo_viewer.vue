@@ -1,9 +1,8 @@
 <template>
   <Tabs default-value="movie" class="max-h-[90vh] w-full">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="movie">{{ t("project.productTabs.tabs.movie") }}</TabsTrigger>
       <TabsTrigger value="pdf">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger>
-      <TabsTrigger value="html">{{ t("project.productTabs.tabs.html") }}</TabsTrigger>
       <TabsTrigger value="podcast">{{ t("project.productTabs.tabs.podcast") }}</TabsTrigger>
       <TabsTrigger value="slide">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
@@ -32,36 +31,31 @@
         <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button>
-            <FileText :size="16" class="mr-2" />
-            {{ t("project.productTabs.pdf.view") }}
-          </Button>
-          <Button variant="outline">
-            <FileText :size="16" class="mr-2" />
-            {{ t("project.productTabs.pdf.download") }}
-          </Button>
-        </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
-      </div>
-    </TabsContent>
+        <div v-if="pages === 0">PDF not generated</div>
+        <div v-if="pages > 0">
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <Button variant="outline" @click="downloadPdf">
+              <FileText :size="16" class="mr-2" />
+              {{ t("project.productTabs.pdf.download") }}
+            </Button>
+          </div>
+          <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
 
-    <TabsContent value="html" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-      <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.html.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button>
-            <Eye :size="16" class="mr-2" />
-            {{ t("project.productTabs.html.view") }}
-          </Button>
-          <Button variant="outline">
-            <Download :size="16" class="mr-2" />
-            {{ t("project.productTabs.html.download") }}
-          </Button>
+          <div>
+            <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
+            {{ pdfCurrentPage }}/{{ pages }}
+            <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
+            <VuePDF
+              :pdf="pdfData.value"
+              :page="pdfCurrentPage"
+              v-if="pdfData"
+              :scale="0.8"
+              :fit-parent="true"
+              class="mx-auto"
+              style="max-width: 100% !important; width: auto !important"
+            />
+          </div>
         </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.html.details") }}</div>
       </div>
     </TabsContent>
 
@@ -106,12 +100,16 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+import { Video, FileText, Volume2, FileImage, Play } from "lucide-vue-next";
+import { VuePDF, usePDF } from "@tato30/vue-pdf";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useI18n } from "vue-i18n";
+
 import type { Project } from "@/lib/project_api";
 import { bufferToUrl } from "@/lib/utils";
+
 import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
@@ -125,11 +123,17 @@ const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
 
+const pdfData = ref();
+const pdfCurrentPage = ref(1);
+
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
 };
 const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
+};
+const downloadPdf = async () => {
+  return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
 
 const videoRef = ref(null);
@@ -150,11 +154,20 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
   URL.revokeObjectURL(url);
 };
 
+const pdfBuffer = ref();
+const { pdf, pages } = usePDF(pdfBuffer);
+pdfData.value = pdf;
+
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
   videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
   audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
+
+  const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
+  if (bufferPdf) {
+    pdfBuffer.value = new Uint8Array(bufferPdf);
+  }
 };
 
 watch(

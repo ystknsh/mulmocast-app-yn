@@ -116,6 +116,7 @@ const { messages = [] } = defineProps<{
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
+  resetMediaFiles: [];
 }>();
 
 const selectedTemplateIndex = ref(0);
@@ -188,13 +189,9 @@ const run = async () => {
 
 const isCreatingScript = ref(false);
 
-// system prompt and user prompt
-// const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
-  // userInput.value = readTemplatePrompt(promptTemplates[selectedTemplateIndex.value].filename);
   userInput.value = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
 };
-// end of system prompt
 
 const createScript = async () => {
   if (isRunning.value) {
@@ -215,14 +212,12 @@ const createScript = async () => {
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
     graphai.injectValue("prompt", userInput.value);
-    // graphai.injectValue("systemPrompt", scriptTemplatePrompt);
-    // graphai.injectValue("systemPrompt", specificOutputPrompt);
     const res = await graphai.run();
 
     const script = res.mulmoScript.data;
     script.beats.map(setRandomBeatId);
     emit("update:updateMulmoScript", script);
-
+    emit("resetMediaFiles");
     const newMessages = [
       ...messages.map((message) => filterMessage(message, true)),
       { content: userInput.value, role: "user", time: Date.now() },

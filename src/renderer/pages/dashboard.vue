@@ -184,10 +184,11 @@ const sortedProjects = computed(() => {
 
 const handleCreateProject = async () => {
   const title = newProjectName.value.trim() || t("common.defaultTitle");
+  const settings = await window.electronAPI.settings.get();
 
   try {
     creating.value = true;
-    const project = await projectApi.create(title);
+    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en");
     // Close dialog and refresh project list
     showNewProjectDialog.value = false;
     newProjectName.value = "";

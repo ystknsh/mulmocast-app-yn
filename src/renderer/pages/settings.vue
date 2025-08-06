@@ -2,7 +2,6 @@
   <Layout>
     <div class="container mx-auto max-w-2xl p-6">
       <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
-
       <div class="space-y-6">
         <!-- App Settings Section -->
         <Card>
@@ -19,7 +18,7 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="language in I18N_SUPPORTED_LANGUAGES" :key="language.id" :value="language.id">
-                    {{ language.name }}
+                    {{ t("commonLanguages." + language.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -53,6 +52,26 @@
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>{{ t("settings.languages.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <div>{{ t("settings.languages.mainTitle") }}</div>
+            <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
+              <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
+                <RadioGroupItem :value="language" :id="language" />
+                <Label :for="language">{{ t("languages." + language) }}</Label>
+              </div>
+            </RadioGroup>
+            <div>{{ t("settings.languages.translatedTitle") }}</div>
+            <div v-for="(language, key) in languages" :key="key">
+              {{ t("languages." + language) }}
+              <Checkbox v-model="useLanguage[language]" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   </Layout>
@@ -64,19 +83,27 @@ import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff } from "lucide-vue-next";
 
-import { Button, Input, Label } from "@/components/ui";
+import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Layout from "@/components/layout.vue";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { ENV_KEYS } from "../../shared/constants";
+import { ENV_KEYS, languages } from "../../shared/constants";
 import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
+import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
+
+const globalStore = useMulmoGlobalStore();
+
+const mainLanguage = ref("en");
+const useLanguage = reactive<Record<string, boolean>>({});
+
 const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
@@ -84,6 +111,9 @@ const isInitialLoad = ref(true);
 Object.keys(ENV_KEYS).forEach((envKey) => {
   apiKeys[envKey] = "";
   showKeys[envKey] = false;
+});
+Object.values(languages).forEach((langKey) => {
+  useLanguage[langKey] = false;
 });
 
 onMounted(async () => {
@@ -95,9 +125,18 @@ onMounted(async () => {
         apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
+    if (settings.USE_LANGUAGES) {
+      Object.values(languages).forEach((langKey) => {
+        useLanguage[langKey] = settings.USE_LANGUAGES[langKey] ?? false;
+      });
+    }
+
     // Load language preference
     if (settings.APP_LANGUAGE) {
       selectedLanguage.value = settings.APP_LANGUAGE;
+    }
+    if (settings.MAIN_LANGUAGE) {
+      mainLanguage.value = settings.MAIN_LANGUAGE;
     }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
@@ -110,7 +149,14 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
-    await window.electronAPI.settings.set({ ...apiKeys, APP_LANGUAGE: selectedLanguage.value });
+    const data = {
+      ...apiKeys,
+      APP_LANGUAGE: selectedLanguage.value,
+      USE_LANGUAGES: { ...useLanguage },
+      MAIN_LANGUAGE: mainLanguage.value,
+    };
+    await window.electronAPI.settings.set(data);
+    globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
     console.error("Failed to save settings:", error);
@@ -127,6 +173,17 @@ watch(
     // Skip save during initial load
     if (!isInitialLoad.value) {
       debouncedSave();
+    }
+  },
+  { deep: true },
+);
+
+watch(
+  [mainLanguage, useLanguage],
+  () => {
+    // Skip save during initial load
+    if (!isInitialLoad.value) {
+      saveSettings();
     }
   },
   { deep: true },

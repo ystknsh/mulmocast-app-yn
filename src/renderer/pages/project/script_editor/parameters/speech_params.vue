@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Speech Parameters</h4>
+    <h4 class="mb-3 font-medium">{{ t("project.scriptEditor.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
       <div
         v-if="speechParams.speakers"
@@ -11,9 +11,11 @@
         <div class="mb-2 flex items-center justify-between">
           <div>
             <div class="template-dropdown-container flex items-center gap-4" v-if="isUpdate && updateKey === name">
-              <Input v-model="updateSpeakerId" /><Button @click="handleUpdateSpeakerId" :disabled="!validUpdateKey">{{
-                t("update")
-              }}</Button>
+              <Input v-model="updateSpeakerId" :invalid="!validUpdateKey" /><Button
+                @click="handleUpdateSpeakerId"
+                :disabled="!validUpdateKey"
+                >{{ t("update") }}</Button
+              >
             </div>
             <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
@@ -24,12 +26,12 @@
             @click="handleDeleteSpeaker(name)"
             class="text-red-600 hover:text-red-700"
           >
-            Delete
+            {{ t("form.delete") }}
           </Button>
         </div>
         <div class="space-y-2">
           <div>
-            <Label>Provider</Label>
+            <Label>{{ t("project.scriptEditor.provider") }}</Label>
             <Select
               :model-value="speaker.provider || 'openai'"
               @update:model-value="(value) => handleProviderChange(name, value)"
@@ -38,10 +40,9 @@
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="openai">OpenAI</SelectItem>
-                <SelectItem value="nijivoice">Nijivoice</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="elevenlabs">ElevenLabs</SelectItem>
+                <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
+                  t("provider." + provider)
+                }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -85,27 +86,32 @@
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
-              <Label class="text-xs">Language</Label>
+              <Label class="text-xs">{{ t("project.scriptEditor.speechParams.language") }}</Label>
               <Select
-                :model-value="selectedLanguages[name] || DEFAULT_LANGUAGE"
+                :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
                 @update:model-value="(value) => handleLanguageChange(name, String(value))"
               >
                 <SelectTrigger class="h-8">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem v-for="lang in LANGUAGES" :key="lang.code" :value="lang.code">
-                    {{ t("languages." + lang.code) }}
+                  <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.id" :value="lang.id">
+                    {{ t("languages." + lang.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label class="text-xs"> Display Name ({{ selectedLanguages[name] || DEFAULT_LANGUAGE }}) </Label>
+              <Label class="text-xs"
+                >{{ t("project.scriptEditor.speechParams.displayName") }} ({{
+                  t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
+                }})
+              </Label>
               <Input
-                :model-value="speaker.displayName[selectedLanguages[name] || DEFAULT_LANGUAGE] || ''"
+                :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
                 @update:model-value="
-                  (value) => handleDisplayNameChange(name, selectedLanguages[name] || DEFAULT_LANGUAGE, String(value))
+                  (value) =>
+                    handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
                 "
                 class="h-8"
               />
@@ -114,9 +120,9 @@
         </div>
       </div>
       <div class="template-dropdown-container flex items-center gap-4">
-        <Input v-model="speechKey" :invalid="!validateKey" class="w-64" />
+        <Input v-model="speechKey" :invalid="!validateKey && speechKey !== ''" class="w-64" />
 
-        <Button variant="outline" size="sm" @click="handleAddSpeaker">Add Speaker</Button>
+        <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">Add Speaker</Button>
       </div>
       <div></div>
       <MulmoError :mulmoError="mulmoError" />
@@ -129,11 +135,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { VOICE_LISTS } from "@/../shared/constants";
+import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -141,12 +147,12 @@ type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
 type Speaker = NonNullable<SpeechParams>["speakers"][string];
 
-const DEFAULT_VOICE_IDS: Record<string, string> = {
-  openai: VOICE_LISTS.openai[0].id,
-  google: VOICE_LISTS.google[0].id,
-  nijivoice: VOICE_LISTS.nijivoice[0].id,
-  elevenlabs: VOICE_LISTS.elevenlabs[0].id,
-} as const;
+const providers = Object.keys(VOICE_LISTS);
+
+const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provider) => {
+  tmp[provider] = VOICE_LISTS[provider][0].id;
+  return tmp;
+}, {});
 
 const props = defineProps<{
   speechParams?: SpeechParams;
@@ -159,10 +165,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const LANGUAGES = [{ code: "en" }, { code: "ja" }] as const;
-
-const DEFAULT_LANGUAGE = "en";
-
 const selectedLanguages = ref<Record<string, string>>({});
 
 const speakers = computed(() => props.speechParams?.speakers || {});
@@ -172,17 +174,6 @@ const canDeleteSpeaker = computed(() => speakerCount.value > 1);
 const getVoiceList = (provider: string) => {
   return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
 };
-
-const getDefaultVoiceId = (provider: string): string => {
-  return DEFAULT_VOICE_IDS[provider as keyof typeof DEFAULT_VOICE_IDS] || DEFAULT_VOICE_IDS.openai;
-};
-
-const createSpeaker = (name: string, voiceId: string): Speaker => ({
-  voiceId,
-  displayName: {
-    [DEFAULT_LANGUAGE]: name,
-  },
-});
 
 const updateSpeechParams = (updates: Partial<NonNullable<SpeechParams>>): void => {
   const baseParams = props.speechParams || {
@@ -209,8 +200,11 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
   updateSpeakers(updatedSpeakers);
 };
 
-const handleProviderChange = (name: string, provider: string) => {
+const handleProviderChange = async (name: string, provider: string) => {
   updateSpeaker(name, { provider });
+  await nextTick();
+  const voiceId = DEFAULT_VOICE_IDS[provider];
+  updateSpeaker(name, { voiceId });
 };
 
 const handleLanguageChange = (name: string, language: string) => {
@@ -285,26 +279,34 @@ const speechKey = ref("");
 const validateKey = computed(() => {
   return validateKeyFunc(speechKey.value);
 });
+
+const defaultProvider = "openai";
+
 const handleAddSpeaker = () => {
   if (!validateKey.value) {
     return;
   }
-  const voiceId = getDefaultVoiceId("openai");
   updateSpeakers({
     ...speakers.value,
-    [speechKey.value]: createSpeaker(speechKey.value, voiceId),
+    [speechKey.value]: {
+      provider: defaultProvider,
+      voiceId: DEFAULT_VOICE_IDS[defaultProvider],
+      displayName: {
+        [SPEECH_DEFAULT_LANGUAGE]: speechKey.value,
+      },
+    },
   });
   speechKey.value = "";
 };
 
 const initializeSpeechParams = () => {
   updateSpeechParams({
-    provider: "openai",
+    provider: defaultProvider,
     speakers: {
       Presenter: {
-        voiceId: DEFAULT_VOICE_IDS.openai,
+        voiceId: DEFAULT_VOICE_IDS[defaultProvider],
         displayName: {
-          en: "Presenter",
+          [SPEECH_DEFAULT_LANGUAGE]: "Presenter",
         },
       },
     },

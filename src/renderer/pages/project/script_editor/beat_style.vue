@@ -51,8 +51,8 @@ const updateImageNames = (value: string[]) => {
 
 const updateBeatImageParams = async (event) => {
   if (event) {
-    const { images, ...newImageParams } = props?.imageParams ?? {};
-    emit("update", "imageParams", { ...(newImageParams ?? IMAGE_PARAMS_DEFAULT_VALUES) });
+    const { images } = props?.imageParams ?? {};
+    emit("update", "imageParams", IMAGE_PARAMS_DEFAULT_VALUES);
     await nextTick();
     emit("updateImageNames", Object.keys(images ?? {}));
   } else {

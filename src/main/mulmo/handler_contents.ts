@@ -4,7 +4,10 @@ import {
   MulmoStudioContextMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
+  getMultiLingual,
+  getOutputMultilingualFilePathAndMkdir,
   type MulmoStudioContext,
+  type MulmoStudioMultiLingual,
 } from "mulmocast";
 
 import fs from "fs";
@@ -17,7 +20,7 @@ const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {
     try {
       const { text } = beat; // TODO: multiLingual
-      const fileName = getBeatAudioPath(text, context, beat);
+      const fileName = getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
       if (fs.existsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
@@ -165,4 +168,11 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
     console.log(error);
   }
   return null;
+};
+
+export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
+  const context = await getContext(projectId);
+  const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
+  return multiLingual;
 };

@@ -5,20 +5,29 @@ import {
   pdf,
   captions,
   updateNpmRoot,
-  audioFilePath,
+  getAudioArtifactFilePath,
   movieFilePath,
+  pdfFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
   generateBeatImage,
   generateBeatAudio,
+  translateBeat,
   setFfmpegPath,
   setFfprobePath,
   generateReferenceImage,
   getImageRefs,
   MulmoStudioContextMethods,
+  getMultiLingual,
+  getOutputMultilingualFilePathAndMkdir,
+  mulmoStudioMultiLingualFileSchema,
+  currentMulmoScriptVersion,
+  hashSHA256,
   type MulmoImagePromptMedia,
+  type MultiLingualTexts,
 } from "mulmocast";
 import type { TransactionLog } from "graphai";
+import { GraphAILogger } from "graphai";
 import { z } from "zod";
 import { app, WebContents } from "electron";
 import path from "path";
@@ -36,6 +45,7 @@ import {
   mulmoImageFiles,
   mulmoReferenceImagesFiles,
   mulmoReferenceImagesFile,
+  mulmoMultiLinguals,
 } from "./handler_contents";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -142,6 +152,34 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
   }
 };
 
+export const mulmoTranslateBeat = async (
+  projectId: string,
+  index: number,
+  targetLangs: string[],
+  webContents: WebContents,
+) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    // context.force = true;
+    await translateBeat(index, context, targetLangs, { settings });
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
 // generate all reference
 export const mulmoReferenceImages = async (projectId: string, webContents: WebContents) => {
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
@@ -164,7 +202,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   }
 };
 
-// generate iamge by prompt
+// generate image by prompt
 export const mulmoReferenceImage = async (
   projectId: string,
   index: number,
@@ -222,14 +260,13 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     const actionNames = Array.isArray(actionName) ? actionName : [actionName];
     const enables = {
       audio: hasMatchingAction(["audio", "movie"], actionNames),
-      image: hasMatchingAction(["image", "movie", "pdf"], actionNames),
+      image: hasMatchingAction(["image", "movie", "pdf", "pdfSlide", "pdfHandout"], actionNames),
       movie: hasMatchingAction(["movie"], actionNames),
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
     const audioContext = enables.audio ? await audio(context, settings, graphAICallbacks) : context;
     const imageContext = enables.image ? await images(audioContext, settings, graphAICallbacks) : audioContext;
-
     if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);
@@ -275,16 +312,24 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
   if (actionName === "audio") {
-    return audioFilePath(context);
+    return getAudioArtifactFilePath(context);
+    // return audioFilePath(context);
   }
   if (actionName === "movie") {
     return movieFilePath(context);
   }
+  if (actionName === "pdf") {
+    return pdfFilePath(context, "slide");
+  }
   throw Error("no download file");
 };
 const mulmoDownload = async (projectId: string, actionName: string) => {
-  const path = await mediaFilePath(projectId, actionName);
-  const buffer = fs.readFileSync(path);
+  const fileName = await mediaFilePath(projectId, actionName);
+  if (!fs.existsSync(fileName)) {
+    GraphAILogger.info(`mulmoDownload: ${fileName} not exists`);
+    return null;
+  }
+  const buffer = fs.readFileSync(fileName);
   return buffer.buffer;
 };
 
@@ -292,20 +337,20 @@ export const mulmoReferenceImageUpload = async (
   projectId: string,
   dirKey: string,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const dirPath = "upload_reference_image";
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
 };
 export const mulmoImageUpload = async (
   projectId: string,
   index: number,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const dirPath = "upload_image";
   const dirKey = String(index);
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extention);
+  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
 };
 
 const __mulmoImageUpload = async (
@@ -313,12 +358,12 @@ const __mulmoImageUpload = async (
   dirPath: string,
   dirKey: string,
   bufferArray: Uint8Array,
-  extention: string,
+  extension: string,
 ) => {
   const projectPath = getProjectPath(projectId);
   const dir = path.resolve(projectPath, dirPath, dirKey);
   fs.mkdirSync(dir, { recursive: true });
-  const filename = `${Date.now()}.${extention}`;
+  const filename = `${Date.now()}.${extension}`;
   fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
 
   return path.join(dirPath, dirKey, filename);
@@ -378,6 +423,31 @@ const __mulmoImageFetchURL = async (
   };
 };
 
+const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
+  const context = await getContext(projectId);
+  const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
+
+  const beat = context.studio.script?.beats?.[index];
+  Object.values(data).map((d) => {
+    if (!d.cacheKey) {
+      d.cacheKey = hashSHA256(beat?.text ?? "");
+    }
+  });
+  multiLingual[index].multiLingualTexts = data;
+  if (!multiLingual[index].cacheKey) {
+    const beat = context.studio.script.beats[index];
+    multiLingual[index].cacheKey = hashSHA256(beat.text ?? "");
+  }
+  const savedData = {
+    version: currentMulmoScriptVersion,
+    multiLingual: multiLingual,
+  };
+  const result = mulmoStudioMultiLingualFileSchema.parse(savedData);
+  console.log(result);
+  fs.writeFileSync(outputMultilingualFilePath, JSON.stringify(savedData, null, 2), "utf8");
+};
+
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
   try {
     switch (method) {
@@ -387,6 +457,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoGenerateImage(args[0], args[1], args[2], webContents);
       case "mulmoAudioGenerate":
         return await mulmoGenerateAudio(args[0], args[1], webContents);
+      case "mulmoTranslateBeat":
+        return await mulmoTranslateBeat(args[0], args[1], args[2], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":
@@ -417,6 +489,10 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
       case "mulmoReferenceImages":
         return await mulmoReferenceImages(args[0], webContents);
+      case "mulmoMultiLinguals":
+        return await mulmoMultiLinguals(args[0], webContents);
+      case "mulmoUpdateMultiLingual":
+        return await mulmoUpdateMultiLingual(args[0], args[1], args[2]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

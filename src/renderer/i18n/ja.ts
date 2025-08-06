@@ -1,5 +1,4 @@
-import languages from "./languages";
-import { beat_badge } from "./common";
+import { beatBadge, commonLanguages } from "./common";
 
 const lang = {
   message: {
@@ -116,11 +115,12 @@ const lang = {
     defaultTitle: "[無題]",
   },
   menu: {
-    top: "Home",
+    top: "ホーム",
+    settings: "設定",
     mypage: "マイページ",
     signin: "ログイン",
     signout: "ログアウト",
-    about: "Abount",
+    about: "About",
   },
   settings: {
     title: "設定",
@@ -140,6 +140,13 @@ const lang = {
     notifications: {
       success: "設定を保存しました",
       error: "設定の保存に失敗しました",
+      createSuccess: "Script created successfully 🎉",
+    },
+    languages: {
+      title: "言語設定",
+      description: "スクリプトの言語および翻訳言語の設定",
+      mainTitle: "スクリプトの主言語",
+      translatedTitle: "翻訳先の言語",
     },
   },
   form: {
@@ -152,7 +159,10 @@ const lang = {
     changeBeatTypeFirst: "Change beat type first",
     generateImage: "画像生成",
     generateMovie: "動画生成",
-    generating: "生成中...",
+    generateAudio: "音声生成",
+    translateBeat: "翻訳",
+    generating: "生成中",
+    delete: "削除",
     add: "追加",
   },
   generating: "生成中...",
@@ -184,34 +194,58 @@ const lang = {
       back: "戻る",
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
+    menu: {
+      script: "編集",
+      debugLog: "デバッグログ",
+    },
     generate: {
-      generateContents: "Generate Contents",
-      movie: "Movie",
-      audio: "Podcast",
-      pdfSlide: "PDF (Presenter)",
-      pdfHandout: "PDF (Handout)",
+      generateContents: "コンテンツ生成",
+      movie: "動画",
+      audio: "音声",
+      pdfSlide: "PDF (プレゼン)",
+      pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      menu: {
+        textMode: "会話字幕編集",
+        textModeDescription: "話者と会話や字幕へ編集ができます",
+        yamlMode: "YAML Mode",
+        yamlModeDescription: "Complete MulmoScript editing",
+        jsonMode: "JSON Mode",
+        jsonModeDescription: "Complete MulmoScript editing",
+        mediaMode: "動画像設定",
+        mediaModeDescription: "Beatごとのイメージや動画の編集とプレビュー",
+        styleMode: "Style",
+        styleModeDescription: "音声/動画像/字幕などの設定",
+        referenceMode: "参照イメージ",
+        referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
+      },
+      provider: "プロバイダ",
+      speechParams: {
+        title: "音声設定",
+        language: "言語",
+        displayName: "表示名",
+      },
+      beat: {
+        speaker: "話者",
+        text: "文章",
+      },
       movieParams: {
-        title: "Movie Parameters",
-        provider: "Provider",
-        model: "Model",
-        transitionType: "Transition Type",
-        transitionDuration: "Transition Duration (seconds)",
-        providerNone: "None",
-        modelAuto: "Auto",
-        transitionFade: "Fade",
-        transitionSlideoutLeft: "Slide Out Left",
+        title: "動画設定",
+        provider: "プロバイダ",
+        model: "モデル",
+        transitionType: "トランジションの種類",
+        transitionDuration: "トランジションの長さ（秒）",
+        providerNone: "なし",
+        modelAuto: "自動",
+        transitionFade: "フェード",
+        transitionSlideoutLeft: "左にスライドアウト",
       },
       reference: {
         generateReference: "参照イメージ生成",
         key: "キー",
         image: "画像",
       },
-    },
-    generateStatus: {
-      success: "Contents generated successfully",
-      error: "Failed to generate contents",
     },
     productTabs: {
       tabs: {
@@ -270,7 +304,7 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
-    badge: beat_badge,
+    badge: beatBadge,
     form: {
       image: {
         url: "URL",
@@ -312,7 +346,74 @@ const lang = {
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
   },
-  languages,
+  notify: {
+    audio: {
+      successMessage: "音声生成成功!!",
+      errorMessage: "音声生成失敗",
+    },
+    image: {
+      successMessage: "画像生成成功!!",
+      errorMessage: "画像生成失敗",
+    },
+    translate: {
+      successMessage: "翻訳成功!!",
+      errorMessage: "翻訳失敗",
+    },
+    content: {
+      successMessage: "作成成功!!",
+      errorMessage: "作成失敗",
+    },
+    // BeatSessionType
+    beat: {
+      imageReference: "参照画像",
+      audio: "音声",
+      image: "画像",
+      multiLingual: "多言語テキスト",
+      caption: "キャプション",
+      movie: "動画",
+      html: "HTML",
+      soundEffect: "効果音",
+      lipSync: "リップシンク",
+    },
+    task: {
+      audio: "音声",
+      video: "動画",
+      image: "画像",
+      pdf: "PDF",
+    },
+  },
+  provider: {
+    openai: "OpenAI",
+    nijivoice: "Nijivoice",
+    google: "Google",
+    elevenlabs: "ElevenLabs",
+  },
+  languages: {
+    ja: "日本語",
+    en: "英語",
+    fr: "フランス語",
+    es: "イスパニア語",
+    de: "ドイツ語",
+    ru: "ロシア語",
+    pt: "ポルトガル語",
+    tr: "トルコ語",
+    it: "イタリア語",
+    fa: "ペルシャ語",
+    nl: "オランダ語",
+    pl: "ポーランド語",
+    zh: "中国語",
+    vi: "ベトナム語",
+    id: "インドネシア語",
+    cs: "チェコ語",
+    ko: "韓国語",
+    ar: "アラビア語",
+    uk: "ウクライナ語",
+    el: "ギリシャ語",
+    "zh-CN": "簡体字中国語",
+    "zh-TW": "繁体字中国語",
+    hi: "ヒンディー語",
+  },
+  commonLanguages,
 };
 
 export default lang;

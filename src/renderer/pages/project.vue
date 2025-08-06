@@ -2,31 +2,8 @@
   <Layout>
     <TooltipProvider>
       <div :class="`mx-auto max-w-[95%] ${getCardPadding} ${getContainerSpacing}`">
-        <!-- Developer Mode Toggle - Always at the top -->
-        <div class="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900" v-if="false">
-          <div class="flex items-center justify-between space-x-2 text-sm">
-            <div class="flex items-center space-x-2">
-              <Settings :size="16" />
-              <span>Developer Mode</span>
-            </div>
-            <Switch v-model="isDevMode" />
-          </div>
-          <div v-if="isDevMode" class="mt-2 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <div class="space-y-2">
-              <span class="text-sm font-medium">Design Theme</span>
-              <RadioGroup v-model="selectedTheme" class="grid grid-cols-2 gap-2 text-sm">
-                <div v-for="option in themeOptions" :key="option.value" class="flex items-center space-x-2">
-                  <RadioGroupItem :value="option.value" :id="option.value" />
-                  <Label :for="option.value">{{ option.label }}</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-        </div>
-
         <!-- Header Section -->
         <ProjectHeader
-          v-if="hasProjectData"
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
           :selectedTheme="selectedTheme"
           :getHeaderSize="getHeaderSize"
@@ -51,7 +28,7 @@
                     <CardTitle
                       :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
                     >
-                      <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                      <Bot :size="20" />
                       <span>
                         {{ t(selectedTheme === "beginner" ? "panels.aiAssistantChat" : "panels.aiPoweredGuide") }}
                       </span>
@@ -71,12 +48,12 @@
                 :class="`flex flex-1 flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
                 v-if="projectMetadata"
               >
-                <component
-                  :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                <Chat
                   :selectedTheme="selectedTheme"
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
+                  @resetMediaFiles="resetMediaFiles"
                   class="flex h-full flex-col"
                 />
               </CardContent>
@@ -99,14 +76,14 @@
 
           <!-- Middle Column - Script Editor -->
           <div class="h-full">
-            <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" class="h-full">
+            <Collapsible v-model:open="isScriptViewerOpen" class="h-full">
               <Card class="flex h-full flex-col">
                 <CardHeader class="flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
                       <CardTitle class="flex cursor-pointer items-center space-x-2">
                         <Code2 :size="20" />
-                        <span>Script</span>
+                        <span>{{ t("project.menu.script") }}</span>
                       </CardTitle>
                     </CollapsibleTrigger>
                     <div class="flex items-center space-x-2">
@@ -121,9 +98,6 @@
                           </span>
                         </div>
                         <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
-                        <span v-if="!isValidScriptData" class="text-sm text-gray-600">
-                          {{ validationMessage }}
-                        </span>
                       </div>
                       <!-- Undo/Redo buttons -->
                       <Button
@@ -167,7 +141,6 @@
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
                       @generateImage="generateImage"
-                      @generateAudio="generateAudio"
                       @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                       @positionUp="positionUp"
                       @addBeat="addBeat"
@@ -188,7 +161,7 @@
             :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
           >
             <!-- Output Section -->
-            <Card v-if="hasProjectData">
+            <Card>
               <CardHeader>
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
@@ -205,40 +178,8 @@
               </CardContent>
             </Card>
 
-            <!-- Beats Viewer Section -->
-            <Collapsible v-if="false" v-model:open="isBeatsViewerOpen">
-              <Card>
-                <CardHeader>
-                  <div class="flex items-center justify-between">
-                    <CardTitle class="flex items-center space-x-2">
-                      <Play :size="20" />
-                      <span>Beats</span>
-                      <Badge variant="secondary" class="ml-2"> {{ beatsData.length }} beats </Badge>
-                    </CardTitle>
-                    <CollapsibleTrigger as-child>
-                      <Button variant="ghost" size="sm">
-                        <component :is="isBeatsViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                </CardHeader>
-                <CollapsibleContent>
-                  <CardContent>
-                    <BeatsViewer
-                      :beatsData="beatsData || {}"
-                      :audioFiles="audioFiles"
-                      v-model:viewMode="beatsViewMode"
-                      v-model:currentBeatIndex="currentBeatIndex"
-                      v-model:timelinePosition="timelinePosition"
-                      v-model:isPreviewAreaVisible="isPreviewAreaVisible"
-                    />
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-
             <!-- Product Section -->
-            <Card v-if="hasProjectData">
+            <Card>
               <CardHeader>
                 <CardTitle class="flex items-center space-x-2">
                   <Play :size="20" />
@@ -255,7 +196,7 @@
               <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
                 <div class="rounded-lg bg-gray-50 p-4">
-                  <h3 class="mb-2 text-sm font-medium">Debug Logs</h3>
+                  <h3 class="mb-2 text-sm font-medium">{{ t("project.menu.debugLog") }}</h3>
                   <div class="h-40 overflow-y-auto rounded border bg-white p-2 font-mono text-xs" ref="logContainer">
                     <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
                       {{ entry }}
@@ -301,7 +242,6 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
-  Lightbulb,
   Bot,
   PanelLeftClose,
   PanelLeftOpen,
@@ -311,19 +251,16 @@ import {
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
-import { Button, Badge, Label, Switch } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Import sub-components (to be created)
 import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
-import PromptGuide from "./project/prompt_guide.vue";
 import ScriptEditor from "./project/script_editor.vue";
-import BeatsViewer from "./project/beats_viewer.vue";
 import Generate from "./project/generate.vue";
 import MulmoViewer from "../components/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
@@ -340,10 +277,7 @@ import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore
 
 import {
   selectedTheme,
-  themeOptions,
   isScriptViewerOpen,
-  isBeatsViewerOpen,
-  beatsViewMode,
   getCardPadding,
   getHeaderSize,
   getContainerSpacing,
@@ -372,21 +306,15 @@ const project = computed(() => ({
   script: mulmoScriptHistoryStore.currentMulmoScript,
 }));
 
-const hasProjectData = computed(() => true); // Todo
-
-const isDevMode = ref(false);
 const isDevelopment = import.meta.env.DEV;
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
-const validationMessage = ref("");
-
-const currentBeatIndex = ref(0);
-const timelinePosition = ref(0);
-const isPreviewAreaVisible = ref(false);
-
 // Load project data on mount
 onMounted(async () => {
+  downloadAudioFiles();
+  downloadImageFiles();
+
   try {
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
@@ -401,7 +329,7 @@ onMounted(async () => {
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
-  notifySuccess("Script created successfully 🎉");
+  notifySuccess(t("settings.notifications.createSuccess"));
 };
 
 const handleUpdateScriptFromHeader = (script: MulmoScript) => {
@@ -442,8 +370,6 @@ watch(
   { deep: true },
 );
 
-const beatsData = computed(() => mulmoScriptHistoryStore.currentMulmoScript?.beats ?? []);
-
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
@@ -472,22 +398,20 @@ const generateImage = async (index: number, target: string) => {
   await saveMulmo();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Image generated successfully",
-    errorMessage: "Failed to generate image",
-  });
-};
-
-const generateAudio = async (index: number) => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Audio generated successfully",
-    errorMessage: "Failed to generate audio",
+    successMessage: t("notify.image.successMessage"),
+    errorMessage: t("notify.image.errorMessage"),
   });
 };
 
 const audioFiles = ref<(string | null)[]>([]);
 const imageFiles = ref<(string | null)[]>([]);
 const movieFiles = ref<(string | null)[]>([]);
+
+const resetMediaFiles = () => {
+  audioFiles.value = [];
+  imageFiles.value = [];
+  movieFiles.value = [];
+};
 
 const positionUp = (index: number) => {
   imageFiles.value = arrayPositionUp<string | null>(imageFiles.value, index);
@@ -535,8 +459,6 @@ const downloadImageFiles = async () => {
     return "";
   });
 };
-downloadAudioFiles();
-downloadImageFiles();
 
 const isValidScriptData = ref(true);
 
@@ -547,12 +469,11 @@ watch(
   async (mulmoEvent) => {
     // generate image
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
-      await downloadImageFiles();
+      downloadImageFiles();
     }
 
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
-      // await downloadImageFiles();
-      // console.log(
+      downloadAudioFiles();
     }
 
     // beats

@@ -24,7 +24,7 @@ export const registerIPCHandler = () => {
   // Project management handlers
   ipcMain.handle("project:list", () => projectManager.listProjects());
 
-  ipcMain.handle("project:create", (_event, title: string) => projectManager.createProject(title));
+  ipcMain.handle("project:create", (_event, title: string, lang: string) => projectManager.createProject(title, lang));
 
   ipcMain.handle("project:getProjectMetadata", (_event, id: string) => projectManager.getProjectMetadata(id));
 
