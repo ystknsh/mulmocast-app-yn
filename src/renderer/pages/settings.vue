@@ -52,23 +52,59 @@
             </div>
           </CardContent>
         </Card>
+        <!-- language -->
         <Card>
           <CardHeader>
             <CardTitle>{{ t("settings.languages.title") }}</CardTitle>
             <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
-            <div>{{ t("settings.languages.mainTitle") }}</div>
+            <div class="text-base font-semibold text-gray-800 dark:text-white">
+              {{ t("settings.languages.mainTitle") }}
+            </div>
             <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
               <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
                 <RadioGroupItem :value="language" :id="language" />
                 <Label :for="language">{{ t("languages." + language) }}</Label>
               </div>
             </RadioGroup>
-            <div>{{ t("settings.languages.translatedTitle") }}</div>
+            <div class="text-base font-semibold text-gray-800 dark:text-white">
+              {{ t("settings.languages.translatedTitle") }}
+            </div>
             <div v-for="(language, key) in languages" :key="key">
-              {{ t("languages." + language) }}
+              &ensp;{{ t("languages." + language) }}
               <Checkbox v-model="useLanguage[language]" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- llm -->
+        <Card>
+          <CardHeader>
+            <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="space-y-2">
+              <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
+              <Select v-model="selectedLLM">
+                <SelectTrigger id="llm">
+                  <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
+                    {{ t("llms." + llm.id) }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
+            </div>
+            <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
+              <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
+              {{ t("settings.llmSettings.ollama.url") }}:
+              <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
+              {{ t("settings.llmSettings.ollama.model") }}:
+              <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
             </div>
           </CardContent>
         </Card>
@@ -78,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff } from "lucide-vue-next";
@@ -96,6 +132,15 @@ import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();
 
+const llms = [
+  {
+    id: "openAIAgent",
+  },
+  {
+    id: "ollamaAgent",
+  },
+];
+
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
 
@@ -106,6 +151,14 @@ const useLanguage = reactive<Record<string, boolean>>({});
 
 const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
+
+const selectedLLM = ref("openAIAgent");
+const llmConfigs = reactive<Record<string, Record<string, string>>>({
+  ollama: {
+    url: "http://localhost:11434/v1",
+    model: "gpt-oss:20b",
+  },
+});
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -138,6 +191,12 @@ onMounted(async () => {
     if (settings.MAIN_LANGUAGE) {
       mainLanguage.value = settings.MAIN_LANGUAGE;
     }
+    if (settings.CHAT_LLM) {
+      selectedLLM.value = settings.CHAT_LLM;
+    }
+    if (settings.llmConfigs) {
+      llmConfigs.ollama = settings.llmConfigs.ollama;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -149,11 +208,15 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
+    console.log(llmConfigs);
     const data = {
       ...apiKeys,
+
       APP_LANGUAGE: selectedLanguage.value,
       USE_LANGUAGES: { ...useLanguage },
       MAIN_LANGUAGE: mainLanguage.value,
+      CHAT_LLM: selectedLLM.value,
+      llmConfigs: toRaw(llmConfigs),
     };
     await window.electronAPI.settings.set(data);
     globalStore.updateSettings(data);
@@ -168,7 +231,7 @@ const debouncedSave = useDebounceFn(saveSettings, 1000);
 
 // Watch for changes in apiKeys
 watch(
-  apiKeys,
+  [apiKeys, llmConfigs],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {
@@ -179,7 +242,7 @@ watch(
 );
 
 watch(
-  [mainLanguage, useLanguage],
+  [mainLanguage, useLanguage, selectedLLM],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {

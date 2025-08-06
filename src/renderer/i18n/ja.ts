@@ -13,6 +13,10 @@ const lang = {
     htmlPrompt: "HTMLプロンプト",
     defaultTitle: "[無題]",
   },
+  llms: {
+    openAIAgent: "OpenAI",
+    ollamaAgent: "Ollama",
+  },
   menu: {
     top: "ホーム",
     settings: "設定",
@@ -46,6 +50,20 @@ const lang = {
       description: "スクリプトの言語および翻訳言語の設定",
       mainTitle: "スクリプトの主言語",
       translatedTitle: "翻訳先の言語",
+    },
+    llmSettings: {
+      title: "LLM設定",
+      description: "LLMの設定を行います",
+      llm: {
+        label: "LLMエージェント",
+        placeholder: "LLM",
+        description: "Chatで使うLLMを選択してください",
+      },
+      ollama: {
+        label: "Ollama設定",
+        url: "URL",
+        model: "モデル",
+      },
     },
   },
   form: {
