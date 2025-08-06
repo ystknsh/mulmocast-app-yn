@@ -13,6 +13,10 @@ const lang = {
     htmlPrompt: "HTML Prompt",
     defaultTitle: "[untitled]",
   },
+  llms: {
+    openAIAgent: "OpenAI",
+    ollamaAgent: "Ollama",
+  },
   menu: {
     top: "Dashboard",
     settings: "Settings",
@@ -46,6 +50,20 @@ const lang = {
       description: "Script language and translation language settings",
       mainTitle: "The main language of the script",
       translatedTitle: "Language to be translated",
+    },
+    llmSettings: {
+      title: "LLM Settings",
+      description: "Configure your LLM settings",
+      llm: {
+        label: "LLM Agent",
+        placeholder: "LLM",
+        description: "Select the LLM to use in chat",
+      },
+      ollama: {
+        label: "Ollama Setting",
+        url: "URL",
+        model: "Model",
+      },
     },
   },
   form: {
