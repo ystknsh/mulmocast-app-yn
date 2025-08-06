@@ -10,7 +10,7 @@
             <Label class="mb-1 block">{{ t("common.imagePrompt") }} : </Label>
 
             <Textarea
-              :placeholder="t('beat.form.imagePrompt.contents')"
+              :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="images[imageKey].prompt"
               @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
               class="mb-2 h-20 overflow-y-auto"
@@ -30,7 +30,7 @@
             </div>
             {{ t("common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+              <Input :placeholder="t('beat.image.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="() => submitUrlImage(imageKey)"
                 :disabled="!fetchEnable"
                 class="ml-2"
