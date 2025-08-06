@@ -113,7 +113,14 @@ export const mulmoGenerateImage = async (
       }
     };
 
-    await generateBeatImage({ index, context, settings: settings.APIKEY ?? {}, forceImage, forceMovie, callbacks: [graphaiCallbacks] });
+    await generateBeatImage({
+      index,
+      context,
+      settings: settings.APIKEY ?? {},
+      forceImage,
+      forceMovie,
+      callbacks: [graphaiCallbacks],
+    });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -266,7 +273,9 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
     const audioContext = enables.audio ? await audio(context, settings.APIKEY ?? {}, graphAICallbacks) : context;
-    const imageContext = enables.image ? await images(audioContext, settings.APIKEY ?? {}, graphAICallbacks) : audioContext;
+    const imageContext = enables.image
+      ? await images(audioContext, settings.APIKEY ?? {}, graphAICallbacks)
+      : audioContext;
     if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);
