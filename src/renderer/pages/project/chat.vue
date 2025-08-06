@@ -23,7 +23,10 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
-        <Label class="mb-2">{{ t("project.chat.enterMessage") }} </Label>
+        <Label class="mb-2"
+          >{{ t("project.chat.enterMessage") }}
+          <span class="text-gray-400">({{ llmAgent }})</span>
+        </Label>
         <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
             ref="textareaRef"
@@ -107,14 +110,16 @@ import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
+import { useMulmoGlobalStore } from "../../store";
 
 const { t } = useI18n();
+const globalStore = useMulmoGlobalStore();
+
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
 }>();
 
-const llmAgent = "ollamaAgent";
-// const llmAgent = "openAIAgent";
+const llmAgent = globalStore.settings.CHAT_LLM || "openAIAgent";
 
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
@@ -156,6 +161,22 @@ const filterMessage = (message, setTime = false) => {
 };
 
 const isRunning = ref(false);
+
+const getGraphConfig = async () => {
+  const env = await window.electronAPI.getEnv();
+  const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
+
+  return {
+    openAIAgent: {
+      apiKey: env.OPENAI_API_KEY,
+    },
+    ollamaAgent: {
+      baseURL: ollama?.url ?? "http://localhost:11434/v1",
+      model: ollama?.model ?? "gpt-oss:20b",
+      apiKey: "not-needed",
+    },
+  };
+};
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -163,19 +184,10 @@ const run = async () => {
   isRunning.value = true;
 
   try {
-    const env = await window.electronAPI.getEnv();
+    const config = await getGraphConfig();
     const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
       agentFilters,
-      config: {
-        openAIAgent: {
-          apiKey: env.OPENAI_API_KEY,
-        },
-        ollamaAgent: {
-          baseURL: "http://localhost:11434/v1",
-          model: "gpt-oss:20b",
-          apiKey: "not-needed",
-        },
-      },
+      config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
@@ -208,20 +220,10 @@ const createScript = async () => {
   }
   isRunning.value = true;
   try {
-    const env = await window.electronAPI.getEnv();
+    const config = await getGraphConfig();
     const graphai = new GraphAI(graphGenerateMulmoScript(llmAgent), graphAIAgents, {
       agentFilters,
-      config: {
-        openAIAgent: {
-          apiKey: env.OPENAI_API_KEY,
-          model: "gpt-4o",
-        },
-        ollamaAgent: {
-          baseURL: "http://localhost:11434/v1",
-          model: "gpt-oss:20b",
-          apiKey: "not-needed",
-        },
-      },
+      config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage));
