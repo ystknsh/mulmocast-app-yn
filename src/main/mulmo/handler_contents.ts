@@ -4,7 +4,6 @@ import {
   MulmoStudioContextMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
-  getOutputMultilingualFilePath,
   getMultiLingual,
   getOutputMultilingualFilePathAndMkdir,
   type MulmoStudioContext,
