@@ -1,9 +1,8 @@
 <template>
   <Tabs default-value="movie" class="max-h-[90vh] w-full">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="movie">{{ t("project.productTabs.tabs.movie") }}</TabsTrigger>
       <TabsTrigger value="pdf">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger>
-      <TabsTrigger value="html">{{ t("project.productTabs.tabs.html") }}</TabsTrigger>
       <TabsTrigger value="podcast">{{ t("project.productTabs.tabs.podcast") }}</TabsTrigger>
       <TabsTrigger value="slide">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
@@ -32,51 +31,31 @@
         <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button>
-            <FileText :size="16" class="mr-2" />
-            {{ t("project.productTabs.pdf.view") }}
-          </Button>
-          <Button variant="outline" @click="downloadPdf">
-            <FileText :size="16" class="mr-2" />
-            {{ t("project.productTabs.pdf.download") }}
-          </Button>
-        </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
+        <div v-if="pages === 0">PDF not generated</div>
+        <div v-if="pages > 0">
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <Button variant="outline" @click="downloadPdf">
+              <FileText :size="16" class="mr-2" />
+              {{ t("project.productTabs.pdf.download") }}
+            </Button>
+          </div>
+          <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
 
-        <div>
-          <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
-          {{ pdfCurrentPage }}/{{ pages }}
-          <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
-          <VuePDF
-            :pdf="pdfData.value"
-            :page="pdfCurrentPage"
-            v-if="pdfData"
-            :scale="0.8"
-            :fit-parent="true"
-            class="mx-auto"
-            style="max-width: 100% !important; width: auto !important"
-          />
+          <div>
+            <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
+            {{ pdfCurrentPage }}/{{ pages }}
+            <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
+            <VuePDF
+              :pdf="pdfData.value"
+              :page="pdfCurrentPage"
+              v-if="pdfData"
+              :scale="0.8"
+              :fit-parent="true"
+              class="mx-auto"
+              style="max-width: 100% !important; width: auto !important"
+            />
+          </div>
         </div>
-      </div>
-    </TabsContent>
-
-    <TabsContent value="html" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-      <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <Globe :size="64" class="mx-auto mb-4 text-gray-400" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.html.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.html.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button>
-            <Eye :size="16" class="mr-2" />
-            {{ t("project.productTabs.html.view") }}
-          </Button>
-          <Button variant="outline">
-            <Download :size="16" class="mr-2" />
-            {{ t("project.productTabs.html.download") }}
-          </Button>
-        </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.html.details") }}</div>
       </div>
     </TabsContent>
 
