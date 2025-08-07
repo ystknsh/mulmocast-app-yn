@@ -13,11 +13,16 @@
             <div class="space-y-2">
               <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
               <Select v-model="selectedLanguage">
-                <SelectTrigger id="language">
+                <SelectTrigger id="language" data-testid="language-select">
                   <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem v-for="language in I18N_SUPPORTED_LANGUAGES" :key="language.id" :value="language.id">
+                  <SelectItem
+                    v-for="language in I18N_SUPPORTED_LANGUAGES"
+                    :key="language.id"
+                    :value="language.id"
+                    :data-testid="`language-option-${language.id}`"
+                  >
                     {{ t("commonLanguages." + language.id) }}
                   </SelectItem>
                 </SelectContent>
