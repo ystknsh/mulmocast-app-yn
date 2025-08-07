@@ -91,6 +91,7 @@ import { useI18n } from "vue-i18n";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
+import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -157,6 +158,7 @@ const graphAIAgents = {
   anthropicAgent,
   groqAgent,
   validateSchemaAgent,
+  toolsAgent,
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
