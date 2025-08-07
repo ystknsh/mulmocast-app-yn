@@ -42,7 +42,7 @@ async function testChangeLanguage(targetLanguage: "en" | "ja"): Promise<void> {
         if (attempts === 1) {
           console.log(`Attempting to connect to ${cdpUrl} (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
         }
-        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY_MS));
       }
     }
 
@@ -55,14 +55,12 @@ async function testChangeLanguage(targetLanguage: "en" | "ja"): Promise<void> {
     const appUrl = process.env.APP_URL || "localhost:5173";
     const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
-        const pages = context.pages();
-        for (const p of pages) {
+        const page = context.pages().find(p => {
           const url = p.url();
           console.log(`Found page: ${url}`);
-          if (url.includes(appUrl)) {
-            return p;
-          }
-        }
+          return url.includes(appUrl);
+        });
+        if (page) return page;
       }
       return null;
     };
