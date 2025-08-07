@@ -55,7 +55,7 @@ async function testChangeLanguage(targetLanguage: "en" | "ja"): Promise<void> {
     const appUrl = process.env.APP_URL || "localhost:5173";
     const findApplicationPage = (): Page | null => {
       for (const context of contexts) {
-        const page = context.pages().find(p => {
+        const page = context.pages().find((p) => {
           const url = p.url();
           console.log(`Found page: ${url}`);
           return url.includes(appUrl);
