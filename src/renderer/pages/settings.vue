@@ -145,11 +145,9 @@ const llms = [
   {
     id: "anthropicAgent",
   },
-  /*
-    {
-    id: "replicateAgent",
-    },
-  */
+  {
+    id: "groqAgent",
+  },
 ];
 
 const apiKeys = reactive<Record<string, string>>({});

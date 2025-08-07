@@ -19,6 +19,7 @@ const lang = {
     geminiAgent: "Gemini",
     anthropicAgent: "Anthropic",
     replicateAgent: "Replicate",
+    groqAgent: "Groq",
   },
   menu: {
     top: "ホーム",

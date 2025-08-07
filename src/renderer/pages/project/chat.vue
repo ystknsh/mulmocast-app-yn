@@ -90,7 +90,7 @@ import { useI18n } from "vue-i18n";
 // graphai
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { openAIAgent, geminiAgent, anthropicAgent, replicateAgent } from "@graphai/llm_agents";
+import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -155,7 +155,7 @@ const graphAIAgents = {
   ollamaAgent: openAIAgent,
   geminiAgent,
   anthropicAgent,
-  replicateAgent,
+  groqAgent,
   validateSchemaAgent,
 };
 const filterMessage = (setTime = false) => {
@@ -172,15 +172,16 @@ const isRunning = ref(false);
 const getGraphConfig = async () => {
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
   const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
-  const replicateApikey = globalStore.settings?.APIKEY?.REPLICATE_API_TOKEN;
+  const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_TOKEN;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   return {
     openAIAgent: {
       apiKey: openaiApikey,
     },
-    replicateAgent: {
-      apiKey: replicateApikey,
+    groqAgent: {
+      apiKey: groqApikey,
+      model: "llama3-8b-8192",
     },
     geminiAgent: {
       apiKey: geminiApikey,
