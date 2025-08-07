@@ -41,7 +41,7 @@
         <!-- Hamburger menu for other items -->
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" data-testid="menu-button">
               <Menu :size="20" />
             </Button>
           </DropdownMenuTrigger>
@@ -52,6 +52,7 @@
               :key="item.path"
               as-child
               :class="route.path === item.path ? 'bg-blue-50 text-blue-600' : ''"
+              :data-testid="`menu-item-${item.key}`"
             >
               <RouterLink :to="item.path" class="flex w-full items-center space-x-2">
                 <component :is="item.icon" :size="16" />
