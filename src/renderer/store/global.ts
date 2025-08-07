@@ -8,9 +8,10 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     USE_LANGUAGES: Record<string, boolean>;
     CHAT_LLM: string;
     llmConfigs: Record<string, Record<string, string>>;
+    APIKEY: Record<string, string>;
   }) => {
-    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs } = data;
-    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs };
+    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY } = data;
+    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY };
     settings.value = newData;
   };
 

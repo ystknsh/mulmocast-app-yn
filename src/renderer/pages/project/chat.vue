@@ -82,35 +82,37 @@
 </template>
 
 <script setup lang="ts">
+// vue
 import { ref, computed, useTemplateRef } from "vue";
 import { Send } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+
+// graphai
+import { GraphAI } from "graphai";
+import * as agents from "@graphai/vanilla";
+import { openAIAgent } from "@graphai/llm_agents";
+
+// mulmo
+import { validateSchemaAgent } from "mulmocast/browser";
+import type { MulmoScript } from "mulmocast/browser";
+import { promptTemplates, templateDataSet } from "mulmocast/data";
+
+// components
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { GraphAI } from "graphai";
+import { ChatMessage } from "@/types";
 import { useStreamData } from "@/lib/stream";
+import { setRandomBeatId } from "@/lib/beat_util.js";
 
-import { useI18n } from "vue-i18n";
+import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
+import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
-
-import * as agents from "@graphai/vanilla";
-import { openAIAgent } from "@graphai/llm_agents";
-import { validateSchemaAgent } from "mulmocast/browser";
-import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates, templateDataSet } from "mulmocast/data";
-
-import { ChatMessage } from "@/types";
-import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
-
-// import { notifyError } from "@/lib/notification";
-import { setRandomBeatId } from "@/lib/beat_util.js";
-
 import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
-import { useMulmoGlobalStore } from "../../store";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -165,10 +167,11 @@ const isRunning = ref(false);
 const getGraphConfig = async () => {
   const env = await window.electronAPI.getEnv();
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
+  const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
 
   return {
     openAIAgent: {
-      apiKey: env.OPENAI_API_KEY,
+      apiKey: openaiApikey,
     },
     ollamaAgent: {
       baseURL: ollama?.url ?? "http://localhost:11434/v1",
