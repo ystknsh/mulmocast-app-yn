@@ -90,7 +90,7 @@ import { useI18n } from "vue-i18n";
 // graphai
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { openAIAgent } from "@graphai/llm_agents";
+import { openAIAgent, geminiAgent, anthropicAgent, replicateAgent } from "@graphai/llm_agents";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -153,13 +153,18 @@ const graphAIAgents = {
   ...agents,
   openAIAgent,
   ollamaAgent: openAIAgent,
+  geminiAgent,
+  anthropicAgent,
+  replicateAgent,
   validateSchemaAgent,
 };
-const filterMessage = (message, setTime = false) => {
-  if (setTime) {
-    return { role: message.role, content: message.content, time: message.time ?? Date.now() };
-  }
-  return { role: message.role, content: message.content };
+const filterMessage = (setTime = false) => {
+  return (message) => {
+    if (setTime) {
+      return { role: message.role, content: message.content, time: message.time ?? Date.now() };
+    }
+    return { role: message.role, content: message.content };
+  };
 };
 
 const isRunning = ref(false);
@@ -168,10 +173,21 @@ const getGraphConfig = async () => {
   const env = await window.electronAPI.getEnv();
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
   const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
-
+  const replicateApikey = globalStore.settings?.APIKEY?.REPLICATE_API_TOKEN;
+  const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
+  const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   return {
     openAIAgent: {
       apiKey: openaiApikey,
+    },
+    replicateAgent: {
+      apiKey: replicateApikey,
+    },
+    geminiAgent: {
+      apiKey: geminiApikey,
+    },
+    anthropicAgent: {
+      apiKey: anthropicApikey,
     },
     ollamaAgent: {
       baseURL: ollama?.url ?? "http://localhost:11434/v1",
@@ -193,14 +209,14 @@ const run = async () => {
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
-    graphai.injectValue("messages", messages.map(filterMessage));
+    graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
     const res = await graphai.run();
 
     const newMessages = [
-      ...messages.map((message) => filterMessage(message, true)),
+      ...messages.map((message) => filterMessage(true)(message)),
       { content: userInput.value, role: "user", time: Date.now() },
-      filterMessage(res.llm.message, true),
+      filterMessage(true)(res.llm.message),
     ];
     //console.log(newMessages);
     userInput.value = "";
@@ -229,7 +245,7 @@ const createScript = async () => {
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
-    graphai.injectValue("messages", messages.map(filterMessage));
+    graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
     const res = await graphai.run();
 
@@ -238,7 +254,7 @@ const createScript = async () => {
     emit("update:updateMulmoScript", script);
     emit("resetMediaFiles");
     const newMessages = [
-      ...messages.map((message) => filterMessage(message, true)),
+      ...messages.map((message) => filterMessage(true)(message)),
       { content: userInput.value, role: "user", time: Date.now() },
       { content: JSON.stringify(script ?? {}, null, 2), role: "assistant", time: Date.now() },
     ];
