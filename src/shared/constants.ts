@@ -38,6 +38,10 @@ export const ENV_KEYS = {
     title: "GROQ API Key",
     placeholder: "gsk-...",
   },
+  EXA_API_TOKEN: {
+    title: "EXA API Key",
+    placeholder: "xxx...",
+  },
 } as const;
 
 export type EnvKey = keyof typeof ENV_KEYS;

@@ -83,6 +83,7 @@
     "deep-equal": "^2.2.3",
     "dompurify": "^3.2.6",
     "electron-squirrel-startup": "^1.0.1",
+    "exa-js": "^1.8.27",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.13",
     "lucide-vue-next": "^0.536.0",
