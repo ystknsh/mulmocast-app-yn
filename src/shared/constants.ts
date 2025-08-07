@@ -34,6 +34,10 @@ export const ENV_KEYS = {
     title: "Anthropic API Key",
     placeholder: "sk-...",
   },
+  GROQ_API_TOKEN: {
+    title: "GROQ API Key",
+    placeholder: "gsk-...",
+  },
 } as const;
 
 export type EnvKey = keyof typeof ENV_KEYS;
