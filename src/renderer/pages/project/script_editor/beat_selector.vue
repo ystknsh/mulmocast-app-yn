@@ -10,7 +10,7 @@
         </SelectItem>
       </SelectContent>
     </Select>
-    <Button size="sm" @click="emitBeat"> {{ t("form.template_selector." + buttonKey) }} </Button>
+    <Button size="sm" @click="emitBeat"> {{ t("ui.actions." + buttonKey) }} </Button>
     <slot />
   </div>
 </template>

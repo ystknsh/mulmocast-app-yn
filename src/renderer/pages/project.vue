@@ -30,12 +30,16 @@
                     >
                       <Bot :size="20" />
                       <span>
-                        {{ t(selectedTheme === "beginner" ? "panels.aiAssistantChat" : "panels.aiPoweredGuide") }}
+                        {{ t(selectedTheme === "beginner" ? "project.chat.title" : "project.chat.aiPoweredGuide") }}
                       </span>
                     </CardTitle>
                     <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
                       {{
-                        t(selectedTheme === "beginner" ? "panels.beginnerDescription" : "panels.advancedDescription")
+                        t(
+                          selectedTheme === "beginner"
+                            ? "project.chat.beginnerDescription"
+                            : "project.chat.advancedDescription",
+                        )
                       }}
                     </p>
                   </div>
@@ -65,12 +69,12 @@
             <button
               @click="isLeftColumnOpen = true"
               class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-gray-200"
-              :aria-label="t('panels.openAiChat')"
-              :title="t('panels.openAiChat')"
+              :aria-label="t('project.chat.openPanel')"
+              :title="t('project.chat.openPanel')"
             >
               <PanelLeftOpen :size="16" class="mt-2 mb-4 text-gray-600" />
               <Bot :size="20" class="mb-2 text-blue-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.aiAssistantChat") }}</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("project.chat.title") }}</span>
             </button>
           </div>
 
@@ -166,7 +170,7 @@
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
                     <Settings :size="20" />
-                    <span>{{ t("panels.outputSettingsGeneration") }}</span>
+                    <span>{{ t("project.generate.outputSettingsGeneration") }}</span>
                   </CardTitle>
                   <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
                     <PanelRightClose :size="16" />
@@ -212,12 +216,12 @@
             <button
               @click="isRightColumnOpen = true"
               class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-gray-200"
-              :aria-label="t('panels.openOutputProduct')"
-              :title="t('panels.openOutputProduct')"
+              :aria-label="t('project.generate.openPanel')"
+              :title="t('project.generate.openPanel')"
             >
               <PanelRightOpen :size="16" class="mt-2 mb-4 text-gray-600" />
               <Settings :size="20" class="mb-2 text-gray-700" />
-              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("panels.outputProduct") }}</span>
+              <span class="writing-mode-vertical text-sm text-gray-600">{{ t("project.generate.outputProduct") }}</span>
             </button>
           </div>
         </div>

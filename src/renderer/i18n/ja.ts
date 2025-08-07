@@ -4,6 +4,183 @@ const lang = {
   message: {
     hello: "こんにちは、世界",
   },
+  // UI common vocabulary (reuse-focused)
+  ui: {
+    common: {
+      // Navigation
+      back: "戻る",
+
+      // File operations
+      drophere: "画像をここにドロップ",
+      or: "または",
+
+      // Common labels and nouns
+      title: "タイトル",
+      description: "説明",
+      key: "キー",
+      image: "画像",
+      audio: "音声",
+      video: "動画",
+      movie: "動画",
+      file: "ファイル",
+      url: "URL",
+      prompt: "プロンプト",
+      contents: "内容",
+      content: "コンテンツ",
+      data: "データ",
+      code: "コード",
+      name: "名前",
+      size: "サイズ",
+      width: "幅",
+      height: "高さ",
+      duration: "再生時間",
+      quality: "品質",
+      style: "スタイル",
+      type: "種類",
+      format: "フォーマット",
+      language: "言語",
+      provider: "プロバイダ",
+      model: "モデル",
+      speed: "速度",
+      volume: "音量",
+      padding: "パディング",
+      beat: "ビート",
+      slide: "スライド",
+      chart: "チャート",
+      speaker: "スピーカー",
+      chat: "チャット",
+      panel: "パネル",
+      parameters: "パラメータ",
+
+      // Modal
+      clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+    },
+
+    // Common actions (placeholder pairs)
+    actions: {
+      // Basic actions (no placeholder)
+      create: "作成",
+      update: "更新",
+      generate: "生成",
+      generateThing: "{thing}を生成",
+      fetch: "取得",
+      cancel: "キャンセル",
+
+      // Media actions (placeholder pairs)
+      play: "再生",
+      playThing: "{thing}を再生",
+      download: "ダウンロード",
+      downloadThing: "{thing}をダウンロード",
+      view: "表示",
+      viewThing: "{thing}を表示",
+
+      // Content generation
+      generateImage: "画像生成",
+      generateMovie: "動画生成",
+      changeBeatTypeFirst: "まずビートタイプを変更してください",
+      generateReference: "参照イメージ生成",
+      generateAudio: "音声生成",
+      translateBeat: "翻訳",
+
+      // CRUD operations (placeholder pairs)
+      add: "追加",
+      addThing: "{thing}を追加",
+      delete: "削除",
+      deleteThing: "{thing}を削除",
+      edit: "編集",
+      editThing: "{thing}を編集",
+      open: "開く",
+      openThing: "{thing}を開く",
+
+      // Chat actions
+      clearChat: "チャットリセット",
+      copyScript: "チャットへコピー",
+      createScript: "スクリプト作成",
+
+      // Template actions
+      insert: "追加",
+      change: "変更",
+      reference: "画像をセット",
+
+      // Project actions
+      createNew: "新規作成",
+      openProjectFolder: "プロジェクトのフォルダを開く",
+    },
+
+    // Status messages
+    status: {
+      // Processing states
+      loading: "読み込み中...",
+      loadingThing: "{thing}読み込み中...",
+      generating: "生成中...",
+      generatingThing: "{thing}生成中...",
+      creating: "作成中...",
+      saving: "保存中...",
+      processing: "処理中...",
+
+      // Completion states
+      complete: "完了",
+      success: "成功",
+      ready: "準備完了",
+
+      // Error states
+      error: "エラー",
+      failed: "失敗",
+      cancelled: "キャンセル",
+
+      // Specific loading states
+      loadingProjects: "プロジェクト読み込み中...",
+      generatingImage: "画像生成中...",
+      generatingAudio: "音声生成中...",
+      generatingMovie: "動画生成中...",
+    },
+
+    // Common UI element names
+    elements: {
+      button: "ボタン",
+      input: "入力",
+      textarea: "テキストエリア",
+      select: "選択",
+      checkbox: "チェックボックス",
+      radio: "ラジオボタン",
+      slider: "スライダー",
+      tab: "タブ",
+      panel: "パネル",
+      dialog: "ダイアログ",
+      modal: "モーダル",
+      dropdown: "ドロップダウン",
+      menu: "メニュー",
+      tooltip: "ツールチップ",
+      placeholder: "プレースホルダー",
+      label: "ラベル",
+      field: "フィールド",
+      form: "フォーム",
+      table: "テーブル",
+      list: "リスト",
+      card: "カード",
+      badge: "バッジ",
+    },
+
+    // Tab related vocabulary
+    tabs: {
+      text: "テキスト",
+      yaml: "YAML",
+      json: "JSON",
+      media: "メディア",
+      style: "スタイル",
+      ref: "参照",
+    },
+
+    // Validation messages
+    validation: {
+      required: "この項目は必須です",
+      invalid: "無効な形式です",
+      tooShort: "短すぎます",
+      tooLong: "長すぎます",
+      mustBeNumber: "数値である必要があります",
+      mustBeUrl: "有効なURLである必要があります",
+    },
+  },
   common: {
     drophere: "画像をここにドロップ",
     or: "もしくは",
@@ -69,22 +246,6 @@ const lang = {
       },
     },
   },
-  form: {
-    cancel: "キャンセル",
-    template_selector: {
-      insert: "追加",
-      change: "変更",
-      reference: "画像をセット",
-    },
-    changeBeatTypeFirst: "Change beat type first",
-    generateImage: "画像生成",
-    generateMovie: "動画生成",
-    generateAudio: "音声生成",
-    translateBeat: "翻訳",
-    generating: "生成中",
-    delete: "削除",
-    add: "追加",
-  },
   generating: "生成中...",
   generate: "生成",
   update: "更新",
@@ -99,16 +260,6 @@ const lang = {
       titleDesc: "タイトル（降順）",
     },
   },
-  panels: {
-    openAiChat: "AI アシスタントチャットパネルを開く",
-    openOutputProduct: "出力設定 & 生成 / 成果物パネルを開く",
-    aiAssistantChat: "AI アシスタントチャット",
-    outputProduct: "出力設定 & 生成 / 成果物",
-    outputSettingsGeneration: "出力設定 & 生成",
-    aiPoweredGuide: "AI搭載MulmoScript生成ガイド",
-    beginnerDescription: "AI アシスタントとの会話を通じてスクリプトを作成しましょう",
-    advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
-  },
   project: {
     header: {
       back: "戻る",
@@ -119,6 +270,9 @@ const lang = {
       debugLog: "デバッグログ",
     },
     generate: {
+      openPanel: "出力設定 & 生成 / 成果物パネルを開く",
+      outputProduct: "出力設定 & 生成 / 成果物",
+      outputSettingsGeneration: "出力設定 & 生成",
       generateContents: "コンテンツ生成",
       movie: "動画",
       audio: "音声",
@@ -127,44 +281,18 @@ const lang = {
     },
     scriptEditor: {
       menu: {
-        textMode: "会話字幕編集",
+        textMode: "Text モード",
         textModeDescription: "話者と会話や字幕へ編集ができます",
-        yamlMode: "YAML Mode",
-        yamlModeDescription: "Complete MulmoScript editing",
-        jsonMode: "JSON Mode",
-        jsonModeDescription: "Complete MulmoScript editing",
-        mediaMode: "動画像設定",
+        yamlMode: "YAML モード",
+        yamlModeDescription: "MulmoScript を直接編集します",
+        jsonMode: "JSON モード",
+        jsonModeDescription: "MulmoScript を直接編集します",
+        mediaMode: "Media モード",
         mediaModeDescription: "Beatごとのイメージや動画の編集とプレビュー",
         styleMode: "Style",
-        styleModeDescription: "音声/動画像/字幕などの設定",
-        referenceMode: "参照イメージ",
+        styleModeDescription: "音声/動画/画像/字幕などの設定",
+        referenceMode: "参照",
         referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
-      },
-      provider: "プロバイダ",
-      speechParams: {
-        title: "音声設定",
-        language: "言語",
-        displayName: "表示名",
-      },
-      beat: {
-        speaker: "話者",
-        text: "文章",
-      },
-      movieParams: {
-        title: "動画設定",
-        provider: "プロバイダ",
-        model: "モデル",
-        transitionType: "トランジションの種類",
-        transitionDuration: "トランジションの長さ（秒）",
-        providerNone: "なし",
-        modelAuto: "自動",
-        transitionFade: "フェード",
-        transitionSlideoutLeft: "左にスライドアウト",
-      },
-      reference: {
-        generateReference: "参照イメージ生成",
-        key: "キー",
-        image: "画像",
       },
     },
     productTabs: {
@@ -212,6 +340,11 @@ const lang = {
       },
     },
     chat: {
+      openPanel: "AI アシスタントチャットパネルを開く",
+      title: "AI アシスタントチャット",
+      aiPoweredGuide: "AI搭載MulmoScript生成ガイド",
+      beginnerDescription: "AI アシスタントとの会話を通じてスクリプトを作成しましょう",
+      advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
       enterMessage: "メッセージを入力してください:",
       clearChat: "チャットリセット",
       createButtonDescription:
@@ -225,44 +358,76 @@ const lang = {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
     badge: beatBadge,
-    form: {
-      image: {
-        url: "URL",
-      },
-      textSlide: {
-        title: "スライドタイトル",
-        contents: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
-      },
-      markdown: {
-        contents: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
-      },
-      htmlPrompt: {
-        contents: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
-      },
-      chart: {
-        contents:
-          "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
-      },
-      mermaid: {
-        contents: "Mermaidダイアグラムコードを入力してください。",
-      },
-      htmlTailwind: {
-        contents: "Tailwind CSSクラスを使用したHTMLを入力してください。",
-      },
-      reference: {
-        id: "参照するビートIDを入力してください（例: beat_1）",
-      },
-      imagePrompt: {
-        contents: "画像を生成するためのプロンプトを入力してください。",
-      },
-      moviePrompt: {
-        contents: "空白では動作しません。スペースを入力してください。",
-      },
-      imageReference: {
-        key: "キー(英数字のみ)",
-      },
+    // Beat type structures (moved from beat.form.*)
+    image: {
+      urlField: "URL",
+      placeholder: "画像URLを入力するかファイルをアップロード",
+    },
+    textSlide: {
+      titleField: "タイトル",
+      contentsField: "内容",
+      placeholder: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
+    },
+    markdown: {
+      contentsField: "内容",
+      placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
+    },
+    htmlPrompt: {
+      promptField: "プロンプト",
+      placeholder: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
+    },
+    chart: {
+      titleField: "タイトル",
+      chartDataField: "チャートデータ",
+      placeholder:
+        "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+    },
+    mermaid: {
+      titleField: "タイトル",
+      codeField: "コード",
+      placeholder: "Mermaidダイアグラムコードを入力してください。",
+    },
+    htmlTailwind: {
+      htmlField: "HTML",
+      placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
+    },
+    reference: {
+      idField: "ビートID",
+      referenceField: "ビート参照",
+      placeholder: "参照するビートIDを入力してください（例: beat_1）",
+    },
+    imagePrompt: {
+      promptField: "プロンプト",
+      placeholder: "画像を生成するためのプロンプトを入力してください。",
+    },
+    moviePrompt: {
+      promptField: "プロンプト",
+      placeholder: "空白では動作しません。スペースを入力してください。",
+    },
+    imageReference: {
+      keyField: "画像参照キー",
+      placeholder: "キー(英数字のみ)",
     },
   },
+
+  // Parameters structure (extracted from project.scriptEditor.*)
+  parameters: {
+    movieParams: {
+      title: "動画設定",
+      transitionType: "トランジションの種類",
+      transitionDuration: "トランジションの長さ（秒）",
+      providerNone: "なし",
+      modelAuto: "自動",
+      transitionFade: "フェード",
+      transitionSlideoutLeft: "左にスライドアウト",
+    },
+    speechParams: {
+      title: "音声設定",
+      language: "言語",
+      displayName: "表示名",
+    },
+  },
+
   modal: {
     clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
   },

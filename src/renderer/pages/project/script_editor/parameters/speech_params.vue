@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("project.scriptEditor.speechParams.title") }}</h4>
+    <h4 class="mb-3 font-medium">{{ t("parameters.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
       <div
         v-if="speechParams.speakers"
@@ -26,12 +26,12 @@
             @click="handleDeleteSpeaker(name)"
             class="text-red-600 hover:text-red-700"
           >
-            {{ t("form.delete") }}
+            {{ t("ui.actions.delete") }}
           </Button>
         </div>
         <div class="space-y-2">
           <div>
-            <Label>{{ t("project.scriptEditor.provider") }}</Label>
+            <Label>{{ t("ui.common.provider") }}</Label>
             <Select
               :model-value="speaker.provider || 'openai'"
               @update:model-value="(value) => handleProviderChange(name, value)"
@@ -86,7 +86,7 @@
           </div>
           <div v-if="speaker.displayName">
             <div class="mb-2">
-              <Label class="text-xs">{{ t("project.scriptEditor.speechParams.language") }}</Label>
+              <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
               <Select
                 :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
                 @update:model-value="(value) => handleLanguageChange(name, String(value))"
@@ -103,7 +103,7 @@
             </div>
             <div>
               <Label class="text-xs"
-                >{{ t("project.scriptEditor.speechParams.displayName") }} ({{
+                >{{ t("parameters.speechParams.displayName") }} ({{
                   t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
                 }})
               </Label>

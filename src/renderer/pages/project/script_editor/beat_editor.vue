@@ -10,7 +10,7 @@
       >
       <div v-if="toggleTypeMode">
         <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change">
-          <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("form.cancel") }} </Button>
+          <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("ui.actions.cancel") }} </Button>
         </BeatSelector>
       </div>
     </div>
@@ -35,7 +35,7 @@
             </div>
             {{ t("common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.form.image.url')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+              <Input :placeholder="t('beat.image.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
                 :disabled="!fetchEnable"
               >
@@ -56,13 +56,13 @@
           <template v-else-if="beat.image.type === 'textSlide'">
             <Label class="mb-1 block"> SlideContent </Label>
             <Input
-              :placeholder="t('beat.form.textSlide.title')"
+              :placeholder="t('ui.common.title')"
               :model-value="beat.image?.slide?.title"
               @update:model-value="(value) => update('image.slide.title', String(value))"
               class="mb-2"
             />
             <Textarea
-              :placeholder="t('beat.form.textSlide.contents')"
+              :placeholder="t('beat.textSlide.placeholder')"
               :model-value="beat.image?.slide?.bullets?.join('\n')"
               @update:model-value="(value) => update('image.slide.bullets', String(value).split('\n'))"
               rows="4"
@@ -73,7 +73,7 @@
           <template v-else-if="beat.image.type === 'markdown'">
             <Label class="mb-1 block"> Markdown Text </Label>
             <Textarea
-              :placeholder="t('beat.form.markdown.contents')"
+              :placeholder="t('beat.markdown.placeholder')"
               :model-value="
                 Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
               "
@@ -87,7 +87,7 @@
           <template v-else-if="beat.image.type === 'chart'">
             <Label class="mb-1 block"> Chart JSON </Label>
             <Textarea
-              :placeholder="t('beat.form.chart.contents')"
+              :placeholder="t('beat.chart.placeholder')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
               @update:model-value="
                 (value) => {
@@ -105,7 +105,7 @@
           <template v-else-if="beat.image.type === 'mermaid'">
             <Label class="mb-1 block"> Mermaid Diagram </Label>
             <Textarea
-              :placeholder="t('beat.form.mermaid.contents')"
+              :placeholder="t('beat.mermaid.placeholder')"
               :model-value="beat?.image?.code?.text"
               @update:model-value="(value) => update('image.code.text', String(value))"
               class="font-mono"
@@ -117,7 +117,7 @@
           <template v-else-if="beat.image.type === 'html_tailwind'">
             <Label class="mb-1 block"> HTML(Tailwind) </Label>
             <Textarea
-              :placeholder="t('beat.form.htmlTailwind.contents')"
+              :placeholder="t('beat.htmlTailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
               class="font-mono"
@@ -128,7 +128,7 @@
           <template v-else-if="beat.image.type === 'beat'">
             <Label class="mb-1 block"> Reference </Label>
             <Input
-              :placeholder="t('beat.form.reference.id')"
+              :placeholder="t('beat.reference.placeholder')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
               type="text"
@@ -143,7 +143,7 @@
           <template v-if="beat.htmlPrompt">
             <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
             <Textarea
-              :placeholder="t('beat.form.htmlPrompt.contents')"
+              :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
               class="mt-2 font-mono"
@@ -153,7 +153,7 @@
           <template v-else>
             <Label class="mb-1 block">{{ t("common.imagePrompt") }}: </Label>
             <Textarea
-              :placeholder="t('beat.form.imagePrompt.contents')"
+              :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
               class="my-2 h-20 overflow-y-auto"
@@ -181,7 +181,7 @@
       <div v-if="!beat.image && !beat.htmlPrompt">
         <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
         <Textarea
-          :placeholder="t('beat.form.moviePrompt.contents')"
+          :placeholder="t('beat.moviePrompt.placeholder')"
           :model-value="beat.moviePrompt"
           @update:model-value="(value) => update('moviePrompt', String(value))"
           class="mb-2 h-20 overflow-y-auto"

@@ -1,7 +1,7 @@
 <template>
   <div class="template-dropdown-container flex items-center gap-4">
     <Input
-      :placeholder="t('beat.form.imageReference.key')"
+      :placeholder="t('beat.imageReference.placeholder')"
       v-model="referenceKey"
       :invalid="!validateKey"
       class="w-64"
@@ -17,7 +17,7 @@
       </SelectContent>
     </Select>
     <Button size="sm" @click="emitReferenceImage" :disabled="!validateKey">
-      {{ t("form.add") }}
+      {{ t("ui.actions.add") }}
     </Button>
     <slot />
   </div>

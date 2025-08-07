@@ -1,15 +1,15 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("project.scriptEditor.movieParams.title") }}</h4>
+    <h4 class="mb-3 font-medium">{{ t("parameters.movieParams.title") }}</h4>
     <div class="space-y-3">
       <div>
-        <Label>{{ t("project.scriptEditor.movieParams.provider") }}</Label>
+        <Label>{{ t("ui.common.provider") }}</Label>
         <Select
           :model-value="movieParams?.provider || DEFAULT_VALUES.provider"
           @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('project.scriptEditor.movieParams.providerNone')" />
+            <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
@@ -19,17 +19,17 @@
         </Select>
       </div>
       <div>
-        <Label>{{ t("project.scriptEditor.movieParams.model") }}</Label>
+        <Label>{{ t("ui.common.model") }}</Label>
         <Select
           :model-value="movieParams?.model || DEFAULT_VALUES.model"
           @update:model-value="handleModelChange"
           :disabled="!movieParams?.provider"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('project.scriptEditor.movieParams.modelAuto')" />
+            <SelectValue :placeholder="t('parameters.movieParams.modelAuto')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.modelAuto") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.movieParams.modelAuto") }}</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === movieParams?.provider)?.models || []"
               :key="model"
@@ -41,26 +41,24 @@
         </Select>
       </div>
       <div>
-        <Label>{{ t("project.scriptEditor.movieParams.transitionType") }}</Label>
+        <Label>{{ t("parameters.movieParams.transitionType") }}</Label>
         <Select
           :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
           @update:model-value="handleTransitionTypeChange"
           :disabled="!movieParams?.provider"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('project.scriptEditor.movieParams.providerNone')" />
+            <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("project.scriptEditor.movieParams.providerNone") }}</SelectItem>
-            <SelectItem value="fade">{{ t("project.scriptEditor.movieParams.transitionFade") }}</SelectItem>
-            <SelectItem value="slideout_left">{{
-              t("project.scriptEditor.movieParams.transitionSlideoutLeft")
-            }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.movieParams.providerNone") }}</SelectItem>
+            <SelectItem value="fade">{{ t("parameters.movieParams.transitionFade") }}</SelectItem>
+            <SelectItem value="slideout_left">{{ t("parameters.movieParams.transitionSlideoutLeft") }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label>{{ t("project.scriptEditor.movieParams.transitionDuration") }}</Label>
+        <Label>{{ t("parameters.movieParams.transitionDuration") }}</Label>
         <Input
           :model-value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
           @update:model-value="handleTransitionDurationChange"
