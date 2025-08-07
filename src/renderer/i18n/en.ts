@@ -262,6 +262,10 @@ const lang = {
     },
   },
   project: {
+    newProject: {
+      title: "Create New Project",
+      placeholder: "Enter project title",
+    },
     header: {
       back: "Back",
       openProjectFolder: "Open Project Folder",

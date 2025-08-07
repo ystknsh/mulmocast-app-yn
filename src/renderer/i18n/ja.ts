@@ -262,6 +262,10 @@ const lang = {
     },
   },
   project: {
+    newProject: {
+      title: "新規プロジェクト作成",
+      placeholder: "プロジェクトタイトルを入力",
+    },
     header: {
       back: "戻る",
       openProjectFolder: "プロジェクトのフォルダを開く",
