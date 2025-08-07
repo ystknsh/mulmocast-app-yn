@@ -34,7 +34,7 @@ export const ENV_KEYS = {
     title: "Anthropic API Key",
     placeholder: "sk-...",
   },
-  GROQ_API_TOKEN: {
+  GROQ_API_KEY: {
     title: "GROQ API Key",
     placeholder: "gsk-...",
   },
