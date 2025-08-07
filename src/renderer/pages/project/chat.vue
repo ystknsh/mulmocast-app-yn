@@ -172,7 +172,7 @@ const isRunning = ref(false);
 const getGraphConfig = async () => {
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
   const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
-  const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_TOKEN;
+  const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_KEY;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   return {
