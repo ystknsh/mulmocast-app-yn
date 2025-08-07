@@ -18,14 +18,20 @@ export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
       },
       prompt: {},
       llm: {
-        agent: llmAgent,
-        isResult: true,
-        params: {
-          forWeb: true,
-          stream: true,
-          isResult: true,
+        // agent: llmAgent,
+        agent: "toolsAgent",
+        inputs: {
+          llmAgent,
+          tools: [],
+          messages: ":messages",
+          userInputs: {
+            text: ":prompt",
+            message: {
+              role: "user",
+              content: ":prompt",
+            },
+          },
         },
-        inputs: { messages: ":messages", prompt: ":prompt" },
       },
     },
   };
