@@ -22,7 +22,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "isamu",
+    "name": "receptron team",
     "email": "isamu@to-kyo.to"
   },
   "license": "MIT",
@@ -62,7 +62,7 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.9.2",
     "utf-8-validate": "^6.0.5",
-    "vite": "^7.0.6",
+    "vite": "^7.1.0",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.0.5"
@@ -70,6 +70,7 @@
   "dependencies": {
     "@graphai/llm_agents": "^2.0.2",
     "@graphai/stream_agent_filter": "^2.0.2",
+    "@graphai/tools_agent": "^0.2.3",
     "@graphai/vanilla": "^2.0.6",
     "@monaco-editor/loader": "^1.5.0",
     "@receptron/event_agent_generator": "^0.0.6",
@@ -86,7 +87,7 @@
     "exa-js": "^1.8.27",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.13",
-    "lucide-vue-next": "^0.536.0",
+    "lucide-vue-next": "^0.537.0",
     "marked": "^16.1.2",
     "monaco-editor": "^0.52.2",
     "monaco-yaml": "^5.4.0",
