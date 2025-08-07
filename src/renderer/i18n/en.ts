@@ -16,6 +16,9 @@ const lang = {
   llms: {
     openAIAgent: "OpenAI",
     ollamaAgent: "Ollama",
+    geminiAgent: "Gemini",
+    anthropicAgent: "Anthropic",
+    replicateAgent: "Replicate",
   },
   menu: {
     top: "Dashboard",

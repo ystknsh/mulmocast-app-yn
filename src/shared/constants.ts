@@ -26,6 +26,14 @@ export const ENV_KEYS = {
     title: "Replicate API Token",
     placeholder: "r8_...",
   },
+  GEMINI_API_KEY: {
+    title: "Gemini API Key",
+    placeholder: "AI...",
+  },
+  ANTHROPIC_API_KEY: {
+    title: "Anthropic API Key",
+    placeholder: "sk-...",
+  },
 } as const;
 
 export type EnvKey = keyof typeof ENV_KEYS;
