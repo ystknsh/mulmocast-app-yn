@@ -38,7 +38,7 @@ export const ENV_KEYS = {
     title: "GROQ API Key",
     placeholder: "gsk-...",
   },
-  EXA_API_TOKEN: {
+  EXA_API_KEY: {
     title: "EXA API Key",
     placeholder: "xxx...",
   },
