@@ -170,7 +170,6 @@ const filterMessage = (setTime = false) => {
 const isRunning = ref(false);
 
 const getGraphConfig = async () => {
-  const env = await window.electronAPI.getEnv();
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
   const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
   const replicateApikey = globalStore.settings?.APIKEY?.REPLICATE_API_TOKEN;
