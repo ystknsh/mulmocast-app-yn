@@ -2,10 +2,10 @@ import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 
 // Configuration constants
 const CONFIG = {
-  CDP_RETRY_DELAY: 1000, // CDP connection retry delay (1 second)
+  CDP_RETRY_DELAY_MS: 1000, // CDP connection retry delay (1 second)
   CDP_MAX_ATTEMPTS: 30, // Maximum CDP connection attempts
-  TAB_SWITCH_DELAY: 500, // Tab switching delay
-  INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
+  TAB_SWITCH_DELAY_MS: 500, // Tab switching delay
+  INITIAL_WAIT_MS: 3000, // Initial wait before test starts (3 seconds)
 } as const;
 
 interface Resources {
