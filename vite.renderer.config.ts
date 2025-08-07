@@ -8,6 +8,9 @@ export default defineConfig(async () => {
   // @ts-expect-error warkaround for commonjs
   const { default: tailwindcss } = await import("@tailwindcss/vite");
   return {
+    define: {
+      'process.env': {},
+    },
     plugins: [
       monacoEditorPlugin({
         languageWorkers: ["json", "editorWorkerService"],
