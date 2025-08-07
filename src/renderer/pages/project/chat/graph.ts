@@ -7,7 +7,18 @@ const defaultSchema = zodToJsonSchema(mulmoScriptSchema, {
   strictUnions: true,
 });
 */
-
+export const graphExa: GraphData = {
+  version: 0.5,
+  nodes: {
+    exa: {
+      isResult: true,
+      agent: "exaAgent",
+      inputs: {
+        query: "国会議事堂",
+      },
+    }
+  }
+};
 // just chat
 export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
   return {

@@ -91,6 +91,7 @@ import { useI18n } from "vue-i18n";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
+import exaAgent from "../../exa_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -112,7 +113,7 @@ import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
-import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
+import { graphChat, graphGenerateMulmoScript, graphExa } from "./chat/graph";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -157,6 +158,7 @@ const graphAIAgents = {
   anthropicAgent,
   groqAgent,
   validateSchemaAgent,
+  exaAgent,
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
@@ -175,6 +177,8 @@ const getGraphConfig = async () => {
   const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_TOKEN;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
+  const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY; 
+
   return {
     openAIAgent: {
       apiKey: openaiApikey,
@@ -194,6 +198,9 @@ const getGraphConfig = async () => {
       model: ollama?.model ?? "gpt-oss:20b",
       apiKey: "not-needed",
     },
+    exaAgent: {
+      apiKey: exaApikey,
+    },
   };
 };
 const run = async () => {
@@ -204,6 +211,13 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
+    /*
+    const graphaiTest = new GraphAI(graphExa, graphAIAgents, {
+      agentFilters,
+      config,
+    });
+    console.log(await graphaiTest.run());
+    */
     const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
       agentFilters,
       config,
