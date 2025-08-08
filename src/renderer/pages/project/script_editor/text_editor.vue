@@ -22,12 +22,14 @@
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
       @blur="saveMulmo"
-      :placeholder="t('beat.speaker.placeholder', { 
-        speaker: beat?.speaker || t('ui.common.speaker'), 
-        language: t('languages.' + lang) 
-      })"
+      :placeholder="
+        t('beat.speaker.placeholder', {
+          speaker: beat?.speaker || t('ui.common.speaker'),
+          language: t('languages.' + lang),
+        })
+      "
       rows="1"
-      class="resize-y min-h-8"
+      class="min-h-8 resize-y"
     />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{

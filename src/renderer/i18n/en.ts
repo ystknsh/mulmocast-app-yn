@@ -182,7 +182,6 @@ const lang = {
       mustBeNumber: "Must be a number",
       mustBeUrl: "Must be a valid URL",
     },
-
   },
   common: {
     drophere: "Drop file here",
