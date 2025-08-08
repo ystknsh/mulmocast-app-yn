@@ -176,10 +176,11 @@ const graphAIAgents = {
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
+    const { role, content, tool_calls, tool_call_id, name } = message;
     if (setTime) {
-      return { role: message.role, content: message.content, time: message.time ?? Date.now() };
+      return { role, content, tool_calls, tool_call_id, name, time: message.time ?? Date.now() };
     }
-    return { role: message.role, content: message.content };
+    return { role, content, tool_calls, tool_call_id, name };
   };
 };
 

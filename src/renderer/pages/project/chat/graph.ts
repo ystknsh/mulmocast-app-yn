@@ -101,21 +101,8 @@ export const graphGenerateMulmoScript = (llmAgent: string = "openAIAgent"): Grap
               },
               console: { before: true },
               inputs: {
-                // system: ":systemPrompt",
                 prompt: ":prompt",
                 messages: ":messages",
-                /*
-              response_format: {
-                type: "json_schema" as const,
-                json_schema: {
-                  name: "mulmoScript",
-                  schema: {
-                    type: "object",
-                    properties: defaultSchema.properties
-                  }
-                }
-                }
-              */
               },
             },
             validateSchema: {
