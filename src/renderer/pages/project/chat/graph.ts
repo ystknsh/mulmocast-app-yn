@@ -26,7 +26,6 @@ export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
   };
 };
 
-
 // just chat with tools
 export const graphChatWithSearch = (llmAgent: string = "openAIAgent"): GraphData => {
   return {

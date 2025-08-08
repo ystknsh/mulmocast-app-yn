@@ -5,55 +5,55 @@ import Exa from "exa-js";
 type ExaSearchInputs = {
   arg?: {
     query: string;
-    search_args?: Record<string, any>;
+    search_args?: Record<string, unknown>;
   };
   func?: string;
 };
 
-type ExaSearchParams = {
-  apiKey?: string;
-  search_args?: Record<string, any>;
-} & GraphAISupressError &
-  GraphAIDebug;
+type ExaSearchParams = GraphAISupressError & GraphAIDebug;
 
-type ExaSearchResponse =
-  | any
-  | GraphAIOnError<string>;
+type ExaSearchResponse = { hasNext: boolean; result: string } | GraphAIOnError<string>;
 
 // https://github.com/exa-labs/exa-js
-export const exaToolsAgent: AgentFunction<ExaSearchParams, ExaSearchResponse, ExaSearchInputs, DefaultConfigData> = async ({ params, namedInputs, config }) => {
-
-  const { arg, func } = {
+export const exaToolsAgent: AgentFunction<
+  ExaSearchParams,
+  ExaSearchResponse,
+  ExaSearchInputs,
+  DefaultConfigData
+> = async ({ params, namedInputs, config }) => {
+  const { arg } = {
     ...params,
     ...namedInputs,
   };
   const { query, search_args } = arg;
-  
+
   const { apiKey } = {
     ...(config || {}),
-    ...params,
   };
 
   try {
     const exa = new Exa(apiKey);
-    const basicResults = (await (async() => {
-      if (func === "search") {
-        return await exa.searchAndContents(query, {...search_args, numResults:3, text: true });
-        // return await exa.search(query, search_args);
-      }
-      return {results: []};
-    })());
+    const basicResults = await (async () => {
+      //if (func === "search") {
+      return await exa.searchAndContents(query, { ...search_args, numResults: 3, text: true });
+      // return await exa.search(query, search_args);
+      // }
+      // return { result: [] };
+    })();
 
     return {
       hasNext: true,
-      result: JSON.stringify(basicResults.results.map((item) => {
-        return {
-          title: item.title,
-          link: item.url,
-          snippet: item.text,
-        };
-        
-      }), null, 2)
+      result: JSON.stringify(
+        basicResults.results.map((item) => {
+          return {
+            title: item.title,
+            link: item.url,
+            snippet: item.text,
+          };
+        }),
+        null,
+        2,
+      ),
     };
   } catch (error) {
     const isErrorInstance = error instanceof Error;
