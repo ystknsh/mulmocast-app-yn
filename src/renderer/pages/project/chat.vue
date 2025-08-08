@@ -219,7 +219,7 @@ const getGraphConfig = async () => {
   };
 };
 
-const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY;
+const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY && llmAgent === "openAIAgent";
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -228,13 +228,14 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
-    const graphai = new GraphAI(hasExa ? graphChatWithSearch(llmAgent) : graphChat(llmAgent), graphAIAgents, {
+    const graphai = new GraphAI(hasExa ? graphChatWithSearch : graphChat, graphAIAgents, {
       agentFilters,
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
+    graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
       graphai.injectValue("tools", exaToolsAgent.tools);
     }
@@ -262,13 +263,14 @@ const createScript = async () => {
   isRunning.value = true;
   try {
     const config = await getGraphConfig();
-    const graphai = new GraphAI(graphGenerateMulmoScript(llmAgent), graphAIAgents, {
+    const graphai = new GraphAI(graphGenerateMulmoScript, graphAIAgents, {
       agentFilters,
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
+    graphai.injectValue("llmAgent", llmAgent);
     const res = await graphai.run();
 
     const script = res.mulmoScript.data;

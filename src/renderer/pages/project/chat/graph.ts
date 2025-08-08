@@ -4,135 +4,132 @@ import { mulmoScriptSchema } from "mulmocast/browser";
 // chat
 
 // just chat
-export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
-  return {
-    version: 0.5,
-    nodes: {
-      messages: {
-        value: [],
-      },
-      prompt: {},
-      llm: {
-        agent: llmAgent,
-        isResult: true,
-        params: {
-          forWeb: true,
-          stream: true,
-          isResult: true,
-        },
-        inputs: { messages: ":messages", prompt: ":prompt" },
-      },
+export const graphChat: GraphData = {
+  version: 0.5,
+  nodes: {
+    messages: {
+      value: [],
     },
-  };
+    prompt: {},
+    llmAgent: {},
+    llm: {
+      agent: ":llmAgent",
+      isResult: true,
+      params: {
+        forWeb: true,
+        stream: true,
+        isResult: true,
+      },
+      inputs: { messages: ":messages", prompt: ":prompt" },
+    },
+  },
 };
 
 // just chat with tools
-export const graphChatWithSearch = (llmAgent: string = "openAIAgent"): GraphData => {
-  return {
-    version: 0.5,
-    nodes: {
-      messages: {},
-      tools: {},
-      prompt: {},
-      llm: {
-        // agent: llmAgent,
-        isResult: true,
-        agent: "toolsAgent",
-        inputs: {
-          llmAgent,
-          tools: ":tools",
-          messages: ":messages",
-          userInput: {
-            text: ":prompt",
-            message: {
-              role: "user",
-              content: ":prompt",
-            },
+export const graphChatWithSearch: GraphData = {
+  version: 0.5,
+  nodes: {
+    messages: {},
+    tools: {},
+    prompt: {},
+    llmAgent: {},
+    llm: {
+      isResult: true,
+      agent: "toolsAgent",
+      inputs: {
+        llmAgent: ":llmAgent",
+        tools: ":tools",
+        messages: ":messages",
+        userInput: {
+          text: ":prompt",
+          message: {
+            role: "user",
+            content: ":prompt",
           },
         },
       },
     },
-  };
+  },
 };
-export const graphGenerateMulmoScript = (llmAgent: string = "openAIAgent"): GraphData => {
-  return {
-    version: 0.5,
-    nodes: {
-      messages: {
-        value: [],
+export const graphGenerateMulmoScript: GraphData = {
+  version: 0.5,
+  nodes: {
+    messages: {
+      value: [],
+    },
+    llmAgent: {},
+    prompt: {},
+    mulmoScript: {
+      agent: "nestedAgent",
+      inputs: {
+        messages: ":messages",
+        prompt: ":prompt",
+        llmAgent: ":llmAgent",
       },
-      prompt: {},
-      mulmoScript: {
-        agent: "nestedAgent",
-        inputs: {
-          messages: ":messages",
-          prompt: ":prompt",
+      graph: {
+        loop: {
+          while: ":continue",
         },
-        graph: {
-          loop: {
-            while: ":continue",
+        nodes: {
+          messages: {
+            update: ":newMessages.array",
           },
-          nodes: {
-            messages: {
-              update: ":newMessages.array",
+          newMessages: {
+            agent: "pushAgent",
+            inputs: {
+              array: ":messages",
+              items: [{ role: "user", content: ":prompt" }, ":llm.message"],
             },
-            newMessages: {
-              agent: "pushAgent",
-              inputs: {
-                array: ":messages",
-                items: [{ role: "user", content: ":prompt" }, ":llm.message"],
-              },
-              console: { after: true },
-            },
-            prompt: {
-              update: ":nextPrompt.text",
-            },
-            llm: {
-              agent: llmAgent,
-              isResult: true,
-              params: {
-                forWeb: true,
-                stream: true,
-                isResult: true,
-              },
-              console: { before: true },
-              inputs: {
-                prompt: ":prompt",
-                messages: ":messages",
-              },
-            },
-            validateSchema: {
-              agent: "validateSchemaAgent",
-              console: { after: true },
-              inputs: {
-                // text: ":llm.text",
-                text: ":llm.text.codeBlock()",
-                schema: mulmoScriptSchema,
-              },
+            console: { after: true },
+          },
+          prompt: {
+            update: ":nextPrompt.text",
+          },
+          llm: {
+            agent: ":llmAgent",
+            isResult: true,
+            params: {
+              forWeb: true,
+              stream: true,
               isResult: true,
             },
-            nextPrompt: {
-              agent: "copyAgent",
-              inputs: {
-                text: "Those are zod errors in the previous generation, fix them!! Perfect.\n\n${:validateSchema.error}",
-              },
+            console: { before: true },
+            inputs: {
+              prompt: ":prompt",
+              messages: ":messages",
             },
-            continue: {
-              agent: ({ isValid, loop }) => {
-                return !isValid && loop < 3;
-              },
-              inputs: {
-                isValid: ":validateSchema.isValid",
-                loop: "${@loop}",
-              },
+          },
+          validateSchema: {
+            agent: "validateSchemaAgent",
+            console: { after: true },
+            inputs: {
+              // text: ":llm.text",
+              text: ":llm.text.codeBlock()",
+              schema: mulmoScriptSchema,
+            },
+            isResult: true,
+          },
+          nextPrompt: {
+            agent: "copyAgent",
+            inputs: {
+              text: "Those are zod errors in the previous generation, fix them!! Perfect.\n\n${:validateSchema.error}",
+            },
+          },
+          continue: {
+            agent: ({ isValid, loop }) => {
+              return !isValid && loop < 3;
+            },
+            inputs: {
+              isValid: ":validateSchema.isValid",
+              loop: "${@loop}",
             },
           },
         },
-        isResult: true,
-        output: {
-          data: ".validateSchema.data",
-        },
+      },
+      isResult: true,
+      output: {
+        data: ".validateSchema.data",
       },
     },
-  };
+  },
 };
