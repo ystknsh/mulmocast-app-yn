@@ -26,6 +26,7 @@
       </div>
       <UserMessage :message="userInput" v-if="userInput !== ''" />
       <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" />
+      <BotMessage v-if="isStreaming['toolsResponseLLM']" :message="streamData['toolsResponseLLM'] ?? ''" />
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -234,7 +235,6 @@ const run = async () => {
     const res = await graphai.run();
 
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
-    //console.log(newMessages);
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
   } catch (error) {
