@@ -73,10 +73,6 @@ export const graphGenerateMulmoScript = (llmAgent: string = "openAIAgent"): Grap
             while: ":continue",
           },
           nodes: {
-            counter: {
-              value: 0,
-              update: ":counter.add(1)",
-            },
             messages: {
               update: ":newMessages.array",
             },
@@ -122,12 +118,12 @@ export const graphGenerateMulmoScript = (llmAgent: string = "openAIAgent"): Grap
               },
             },
             continue: {
-              agent: ({ isValid, counter }) => {
-                return !isValid && counter < 3;
+              agent: ({ isValid, loop }) => {
+                return !isValid && loop < 3;
               },
               inputs: {
                 isValid: ":validateSchema.isValid",
-                counter: ":counter",
+                loop: "${@loop}",
               },
             },
           },
