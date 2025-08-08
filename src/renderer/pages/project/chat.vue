@@ -7,7 +7,16 @@
       v-show="messages.length > 0 || isRunning"
     >
       <div v-for="(message, key) in messages" :key="key">
-        <BotMessage :message="message.content" :time="message.time" v-if="message.role === 'assistant'" />
+        <BotMessage
+          :message="message.content ?? ''"
+          :time="message.time"
+          v-if="message.role === 'assistant' && message.content"
+        />
+        <BotMessage
+          :message="message.content ?? ''"
+          :time="message.time"
+          v-if="message.role === 'tool' && message.content"
+        />
         <UserMessage
           :message="message.content"
           :time="message.time"
@@ -91,8 +100,10 @@ import { useI18n } from "vue-i18n";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
-import exaAgent from "../../exa_agent";
+import exaAgent from "../../agents/exa_agent";
+
 import { toolsAgent } from "@graphai/tools_agent";
+// import toolsAgent from "../../tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -133,7 +144,7 @@ const emit = defineEmits<{
 
 const selectedTemplateIndex = ref(0);
 
-const streamNodes = ["llm"];
+const streamNodes = ["llm", "toolsResponseLLM"];
 
 const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
@@ -179,7 +190,7 @@ const getGraphConfig = async () => {
   const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_KEY;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
-  const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY; 
+  const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY;
 
   return {
     openAIAgent: {
@@ -213,13 +224,6 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
-    /*
-    const graphaiTest = new GraphAI(graphExa, graphAIAgents, {
-      agentFilters,
-      config,
-    });
-    console.log(await graphaiTest.run());
-    */
     const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
       agentFilters,
       config,
@@ -229,11 +233,7 @@ const run = async () => {
     graphai.injectValue("prompt", userInput.value);
     const res = await graphai.run();
 
-    const newMessages = [
-      ...messages.map((message) => filterMessage(true)(message)),
-      { content: userInput.value, role: "user", time: Date.now() },
-      filterMessage(true)(res.llm.message),
-    ];
+    const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     //console.log(newMessages);
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);

@@ -13,16 +13,20 @@ type ExaSearchParams = {
 } & GraphAISupressError &
   GraphAIDebug;
 
-type ExaSearchResponse =
-  | any
-  | GraphAIOnError<string>;
+type ExaSearchResponse = any | GraphAIOnError<string>;
 
 // https://github.com/exa-labs/exa-js
-export const exaAgent: AgentFunction<ExaSearchParams, ExaSearchResponse, ExaSearchInputs, DefaultConfigData> = async ({ params, namedInputs, config }) => {
-  const { query, search_args } = {
+export const exaToolsAgent: AgentFunction<
+  ExaSearchParams,
+  ExaSearchResponse,
+  ExaSearchInputs,
+  DefaultConfigData
+> = async ({ params, namedInputs, config }) => {
+  const { arg, func } = {
     ...params,
     ...namedInputs,
   };
+  const { query, search_args } = arg;
 
   const { apiKey } = {
     ...(config || {}),
@@ -31,14 +35,28 @@ export const exaAgent: AgentFunction<ExaSearchParams, ExaSearchResponse, ExaSear
 
   try {
     const exa = new Exa(apiKey);
-    const basicResults = await ((search_args?.text) ? exa.searchAndContents(query, search_args) : exa.search(query, search_args));
-    return basicResults.results.map((item) => {
-      return {
-        title: item.title,
-        link: item.url,
-        snippet: item.text,
-      };
-    });
+    const basicResults = await (async () => {
+      if (func === "search") {
+        return await exa.searchAndContents(query, { ...search_args, numResults: 3, text: true });
+        // return await exa.search(query, search_args);
+      }
+      return { results: [] };
+    })();
+
+    return {
+      hasNext: true,
+      result: JSON.stringify(
+        basicResults.results.map((item) => {
+          return {
+            title: item.title,
+            link: item.url,
+            snippet: item.text,
+          };
+        }),
+        null,
+        2,
+      ),
+    };
   } catch (error) {
     const isErrorInstance = error instanceof Error;
     const errorMessage = isErrorInstance ? error.message : "Unknown error occurred";
@@ -57,10 +75,10 @@ export const exaAgent: AgentFunction<ExaSearchParams, ExaSearchResponse, ExaSear
   }
 };
 
-const exaAgentInfo: AgentFunctionInfo = {
-  name: "exaAgent",
-  agent: exaAgent,
-  mock: exaAgent,
+const exaToolsAgentInfo: AgentFunctionInfo = {
+  name: "exaToolsAgent",
+  agent: exaToolsAgent,
+  mock: exaToolsAgent,
 
   samples: [
     {
@@ -78,4 +96,4 @@ const exaAgentInfo: AgentFunctionInfo = {
   license: "MIT",
 };
 
-export default exaAgentInfo;
+export default exaToolsAgentInfo;

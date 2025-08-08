@@ -16,8 +16,8 @@ export const graphExa: GraphData = {
       inputs: {
         query: "国会議事堂",
       },
-    }
-  }
+    },
+  },
 };
 // just chat
 export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
@@ -30,12 +30,31 @@ export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
       prompt: {},
       llm: {
         // agent: llmAgent,
+        isResult: true,
         agent: "toolsAgent",
         inputs: {
           llmAgent,
-          tools: [],
+          tools: [
+            {
+              type: "function",
+              function: {
+                name: "exaAgent--search",
+                description: "search web site",
+                parameters: {
+                  type: "object",
+                  properties: {
+                    query: {
+                      type: "string",
+                      description: "search query",
+                    },
+                  },
+                  required: ["query"],
+                },
+              },
+            },
+          ],
           messages: ":messages",
-          userInputs: {
+          userInput: {
             text: ":prompt",
             message: {
               role: "user",
