@@ -262,6 +262,10 @@ const lang = {
     },
   },
   project: {
+    newProject: {
+      title: "新規プロジェクト作成",
+      placeholder: "プロジェクトタイトルを入力",
+    },
     header: {
       back: "戻る",
       openProjectFolder: "プロジェクトのフォルダを開く",
@@ -359,6 +363,11 @@ const lang = {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
     badge: beatBadge,
+    // Beat speaker settings
+    speaker: {
+      selectSpeaker: "スピーカーを選択",
+      placeholder: "{language}入力: {speaker}の音声生成内容",
+    },
     // Beat type structures (moved from beat.form.*)
     image: {
       urlField: "URL",

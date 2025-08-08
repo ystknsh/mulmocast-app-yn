@@ -262,6 +262,10 @@ const lang = {
     },
   },
   project: {
+    newProject: {
+      title: "Create New Project",
+      placeholder: "Enter project title",
+    },
     header: {
       back: "Back",
       openProjectFolder: "Open Project Folder",
@@ -359,6 +363,11 @@ const lang = {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
     badge: beatBadge,
+    // Beat speaker settings
+    speaker: {
+      selectSpeaker: "Select a speaker",
+      placeholder: "{language} input: {speaker}'s voice content",
+    },
     // Beat type structures (moved from beat.form.*)
     image: {
       urlField: "URL",

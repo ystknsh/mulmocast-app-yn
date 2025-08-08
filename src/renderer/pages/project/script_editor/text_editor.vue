@@ -7,7 +7,7 @@
     <Label>{{ t("ui.common.speaker") }}</Label>
     <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
       <SelectTrigger class="h-8">
-        <SelectValue placeholder="Select a speaker" />
+        <SelectValue :placeholder="t('beat.speaker.selectSpeaker')" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="(_, name) in speakers" :key="name" :value="name">
@@ -18,12 +18,18 @@
   </div>
   <div>
     <Label>{{ t("ui.tabs.text") }} ({{ t("languages." + lang) }})</Label>
-    <Input
+    <Textarea
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
       @blur="saveMulmo"
-      placeholder="e.g. What is AI?"
-      class="h-8"
+      :placeholder="
+        t('beat.speaker.placeholder', {
+          speaker: beat?.speaker || t('ui.common.speaker'),
+          language: t('languages.' + lang),
+        })
+      "
+      rows="1"
+      class="min-h-8 resize-y"
     />
   </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{
@@ -54,7 +60,7 @@ import { computed, watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { type MulmoBeat, type MultiLingualTexts, languages, splitText } from "mulmocast/browser";
 
-import { Button, Label, Input, Badge } from "@/components/ui";
+import { Button, Label, Input, Badge, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getBadge } from "@/lib/beat_util.js";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
