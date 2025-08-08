@@ -35,7 +35,7 @@
       <div class="chat-input-wrapper">
         <Label class="mb-2"
           >{{ t("project.chat.enterMessage") }}
-          <span class="text-gray-400">({{ llmAgent }})</span>
+          <span class="text-gray-400">({{ llmAgent }} {{ hasExa ? "with Search" : ""}})</span>
         </Label>
         <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
@@ -126,7 +126,7 @@ import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
-import { graphChat, graphGenerateMulmoScript, graphExa } from "./chat/graph";
+import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -217,6 +217,8 @@ const getGraphConfig = async () => {
     },
   };
 };
+
+const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY;
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -225,15 +227,16 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
-    const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
+    const graphai = new GraphAI(hasExa ? graphChatWithSearch(llmAgent) : graphChat(llmAgent), graphAIAgents, {
       agentFilters,
       config,
     });
-    console.log(exaToolsAgent.tools);
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
-    graphai.injectValue("tools", exaToolsAgent.tools);
+    if (hasExa) {
+      graphai.injectValue("tools", exaToolsAgent.tools);
+    }
     const res = await graphai.run();
 
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];

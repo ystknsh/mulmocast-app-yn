@@ -1,8 +1,34 @@
 import { type GraphData } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
 
+// chat
+
 // just chat
 export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
+  return {
+    version: 0.5,
+    nodes: {
+      messages: {
+        value: [],
+      },
+      prompt: {},
+      llm: {
+        agent: llmAgent,
+        isResult: true,
+        params: {
+          forWeb: true,
+          stream: true,
+          isResult: true,
+        },
+        inputs: { messages: ":messages", prompt: ":prompt" },
+      },
+    },
+  };
+};
+
+
+// just chat with tools
+export const graphChatWithSearch = (llmAgent: string = "openAIAgent"): GraphData => {
   return {
     version: 0.5,
     nodes: {
