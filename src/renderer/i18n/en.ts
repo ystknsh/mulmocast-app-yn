@@ -16,6 +16,8 @@ const lang = {
 
       // Common labels and nouns
       title: "Title",
+      selectSpeaker: "Select a speaker",
+      examplePrompt: "e.g. What is AI?",
       description: "Description",
       key: "Key",
       image: "Image",
@@ -180,6 +182,7 @@ const lang = {
       mustBeNumber: "Must be a number",
       mustBeUrl: "Must be a valid URL",
     },
+
   },
   common: {
     drophere: "Drop file here",
@@ -363,6 +366,10 @@ const lang = {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
     badge: beatBadge,
+    // Beat speaker settings
+    speaker: {
+      placeholder: "{language} input: {speaker}'s voice content",
+    },
     // Beat type structures (moved from beat.form.*)
     image: {
       urlField: "URL",

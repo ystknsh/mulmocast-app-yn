@@ -16,6 +16,8 @@ const lang = {
 
       // Common labels and nouns
       title: "タイトル",
+      selectSpeaker: "スピーカーを選択",
+      examplePrompt: "例：AIとは何ですか？",
       description: "説明",
       key: "キー",
       image: "画像",
@@ -180,6 +182,7 @@ const lang = {
       mustBeNumber: "数値である必要があります",
       mustBeUrl: "有効なURLである必要があります",
     },
+
   },
   common: {
     drophere: "画像をここにドロップ",
@@ -363,6 +366,10 @@ const lang = {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
     badge: beatBadge,
+    // Beat speaker settings
+    speaker: {
+      placeholder: "{language}入力: {speaker}の音声生成内容",
+    },
     // Beat type structures (moved from beat.form.*)
     image: {
       urlField: "URL",
