@@ -101,7 +101,7 @@ import { useI18n } from "vue-i18n";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
-import exaAgent from "../../agents/exa_agent";
+import exaToolsAgent from "../../agents/exa_agent";
 
 import { toolsAgent } from "@graphai/tools_agent";
 // import toolsAgent from "../../tools_agent";
@@ -171,7 +171,7 @@ const graphAIAgents = {
   anthropicAgent,
   groqAgent,
   validateSchemaAgent,
-  exaAgent,
+  exaToolsAgent,
   toolsAgent,
 };
 const filterMessage = (setTime = false) => {
@@ -212,7 +212,7 @@ const getGraphConfig = async () => {
       model: ollama?.model ?? "gpt-oss:20b",
       apiKey: "not-needed",
     },
-    exaAgent: {
+    exaToolsAgent: {
       apiKey: exaApikey,
     },
   };
@@ -229,9 +229,11 @@ const run = async () => {
       agentFilters,
       config,
     });
+    console.log(exaToolsAgent.tools);
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
+    graphai.injectValue("tools", exaToolsAgent.tools);
     const res = await graphai.run();
 
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];

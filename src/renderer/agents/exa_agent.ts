@@ -3,8 +3,11 @@ import { AgentFunction, AgentFunctionInfo, DefaultConfigData } from "graphai";
 import Exa from "exa-js";
 
 type ExaSearchInputs = {
-  query: string;
-  search_args?: Record<string, any>;
+  arg?: {
+    query: string;
+    search_args?: Record<string, any>;
+  };
+  func?: string;
 };
 
 type ExaSearchParams = {
@@ -13,21 +16,19 @@ type ExaSearchParams = {
 } & GraphAISupressError &
   GraphAIDebug;
 
-type ExaSearchResponse = any | GraphAIOnError<string>;
+type ExaSearchResponse =
+  | any
+  | GraphAIOnError<string>;
 
 // https://github.com/exa-labs/exa-js
-export const exaToolsAgent: AgentFunction<
-  ExaSearchParams,
-  ExaSearchResponse,
-  ExaSearchInputs,
-  DefaultConfigData
-> = async ({ params, namedInputs, config }) => {
+export const exaToolsAgent: AgentFunction<ExaSearchParams, ExaSearchResponse, ExaSearchInputs, DefaultConfigData> = async ({ params, namedInputs, config }) => {
+
   const { arg, func } = {
     ...params,
     ...namedInputs,
   };
   const { query, search_args } = arg;
-
+  
   const { apiKey } = {
     ...(config || {}),
     ...params,
@@ -35,27 +36,24 @@ export const exaToolsAgent: AgentFunction<
 
   try {
     const exa = new Exa(apiKey);
-    const basicResults = await (async () => {
+    const basicResults = (await (async() => {
       if (func === "search") {
-        return await exa.searchAndContents(query, { ...search_args, numResults: 3, text: true });
+        return await exa.searchAndContents(query, {...search_args, numResults:3, text: true });
         // return await exa.search(query, search_args);
       }
-      return { results: [] };
-    })();
+      return {results: []};
+    })());
 
     return {
       hasNext: true,
-      result: JSON.stringify(
-        basicResults.results.map((item) => {
-          return {
-            title: item.title,
-            link: item.url,
-            snippet: item.text,
-          };
-        }),
-        null,
-        2,
-      ),
+      result: JSON.stringify(basicResults.results.map((item) => {
+        return {
+          title: item.title,
+          link: item.url,
+          snippet: item.text,
+        };
+        
+      }), null, 2)
     };
   } catch (error) {
     const isErrorInstance = error instanceof Error;
@@ -79,12 +77,30 @@ const exaToolsAgentInfo: AgentFunctionInfo = {
   name: "exaToolsAgent",
   agent: exaToolsAgent,
   mock: exaToolsAgent,
-
   samples: [
     {
       params: {},
       inputs: {},
       result: {},
+    },
+  ],
+  tools: [
+    {
+      type: "function",
+      function: {
+        name: "exaToolsAgent--search",
+        description: "search web site",
+        parameters: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "search query",
+            },
+          },
+          required: ["query"],
+        },
+      },
     },
   ],
   description: "Exa Agent",
