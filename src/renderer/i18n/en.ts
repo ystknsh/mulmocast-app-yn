@@ -16,8 +16,6 @@ const lang = {
 
       // Common labels and nouns
       title: "Title",
-      selectSpeaker: "Select a speaker",
-      examplePrompt: "e.g. What is AI?",
       description: "Description",
       key: "Key",
       image: "Image",
@@ -367,6 +365,7 @@ const lang = {
     badge: beatBadge,
     // Beat speaker settings
     speaker: {
+      selectSpeaker: "Select a speaker",
       placeholder: "{language} input: {speaker}'s voice content",
     },
     // Beat type structures (moved from beat.form.*)

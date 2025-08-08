@@ -16,8 +16,6 @@ const lang = {
 
       // Common labels and nouns
       title: "タイトル",
-      selectSpeaker: "スピーカーを選択",
-      examplePrompt: "例：AIとは何ですか？",
       description: "説明",
       key: "キー",
       image: "画像",
@@ -367,6 +365,7 @@ const lang = {
     badge: beatBadge,
     // Beat speaker settings
     speaker: {
+      selectSpeaker: "スピーカーを選択",
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },
     // Beat type structures (moved from beat.form.*)

@@ -7,7 +7,7 @@
     <Label>{{ t("ui.common.speaker") }}</Label>
     <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
       <SelectTrigger class="h-8">
-        <SelectValue :placeholder="t('ui.common.selectSpeaker')" />
+        <SelectValue :placeholder="t('beat.speaker.selectSpeaker')" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="(_, name) in speakers" :key="name" :value="name">
