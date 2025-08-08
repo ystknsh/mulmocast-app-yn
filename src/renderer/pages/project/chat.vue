@@ -7,7 +7,16 @@
       v-show="messages.length > 0 || isRunning"
     >
       <div v-for="(message, key) in messages" :key="key">
-        <BotMessage :message="message.content" :time="message.time" v-if="message.role === 'assistant'" />
+        <BotMessage
+          :message="message.content ?? ''"
+          :time="message.time"
+          v-if="message.role === 'assistant' && message.content"
+        />
+        <BotMessage
+          :message="message.content ?? ''"
+          :time="message.time"
+          v-if="message.role === 'tool' && message.content"
+        />
         <UserMessage
           :message="message.content"
           :time="message.time"
@@ -17,6 +26,7 @@
       </div>
       <UserMessage :message="userInput" v-if="userInput !== ''" />
       <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" />
+      <BotMessage v-if="isStreaming['toolsResponseLLM']" :message="streamData['toolsResponseLLM'] ?? ''" />
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -25,7 +35,7 @@
       <div class="chat-input-wrapper">
         <Label class="mb-2"
           >{{ t("project.chat.enterMessage") }}
-          <span class="text-gray-400">({{ llmAgent }})</span>
+          <span class="text-gray-400">({{ llmAgent }} {{ hasExa ? "with Search" : "" }})</span>
         </Label>
         <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
@@ -91,7 +101,10 @@ import { useI18n } from "vue-i18n";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
+import exaToolsAgent from "../../agents/exa_agent";
+
 import { toolsAgent } from "@graphai/tools_agent";
+// import toolsAgent from "../../tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -113,7 +126,7 @@ import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
-import { graphChat, graphGenerateMulmoScript } from "./chat/graph";
+import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -132,7 +145,7 @@ const emit = defineEmits<{
 
 const selectedTemplateIndex = ref(0);
 
-const streamNodes = ["llm"];
+const streamNodes = ["llm", "toolsResponseLLM"];
 
 const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
@@ -158,6 +171,7 @@ const graphAIAgents = {
   anthropicAgent,
   groqAgent,
   validateSchemaAgent,
+  exaToolsAgent,
   toolsAgent,
 };
 const filterMessage = (setTime = false) => {
@@ -177,6 +191,8 @@ const getGraphConfig = async () => {
   const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_KEY;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
+  const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY;
+
   return {
     openAIAgent: {
       apiKey: openaiApikey,
@@ -196,8 +212,13 @@ const getGraphConfig = async () => {
       model: ollama?.model ?? "gpt-oss:20b",
       apiKey: "not-needed",
     },
+    exaToolsAgent: {
+      apiKey: exaApikey,
+    },
   };
 };
+
+const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY;
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -206,21 +227,19 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
-    const graphai = new GraphAI(graphChat(llmAgent), graphAIAgents, {
+    const graphai = new GraphAI(hasExa ? graphChatWithSearch(llmAgent) : graphChat(llmAgent), graphAIAgents, {
       agentFilters,
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
     graphai.injectValue("messages", messages.map(filterMessage()));
     graphai.injectValue("prompt", userInput.value);
+    if (hasExa) {
+      graphai.injectValue("tools", exaToolsAgent.tools);
+    }
     const res = await graphai.run();
 
-    const newMessages = [
-      ...messages.map((message) => filterMessage(true)(message)),
-      { content: userInput.value, role: "user", time: Date.now() },
-      filterMessage(true)(res.llm.message),
-    ];
-    //console.log(newMessages);
+    const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
   } catch (error) {

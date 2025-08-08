@@ -1,12 +1,7 @@
 import { type GraphData } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
-// import { zodToJsonSchema } from "zod-to-json-schema";
 
-/*
-const defaultSchema = zodToJsonSchema(mulmoScriptSchema, {
-  strictUnions: true,
-});
-*/
+// chat
 
 // just chat
 export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
@@ -18,13 +13,36 @@ export const graphChat = (llmAgent: string = "openAIAgent"): GraphData => {
       },
       prompt: {},
       llm: {
+        agent: llmAgent,
+        isResult: true,
+        params: {
+          forWeb: true,
+          stream: true,
+          isResult: true,
+        },
+        inputs: { messages: ":messages", prompt: ":prompt" },
+      },
+    },
+  };
+};
+
+// just chat with tools
+export const graphChatWithSearch = (llmAgent: string = "openAIAgent"): GraphData => {
+  return {
+    version: 0.5,
+    nodes: {
+      messages: {},
+      tools: {},
+      prompt: {},
+      llm: {
         // agent: llmAgent,
+        isResult: true,
         agent: "toolsAgent",
         inputs: {
           llmAgent,
-          tools: [],
+          tools: ":tools",
           messages: ":messages",
-          userInputs: {
+          userInput: {
             text: ":prompt",
             message: {
               role: "user",
