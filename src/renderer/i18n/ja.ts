@@ -261,6 +261,11 @@ const lang = {
       titleDesc: "タイトル（降順）",
     },
     empty: "まだプロジェクトはありません。最初のプロジェクトを作成して始めましょう！",
+    confirmDelete: "「{title}」を削除しますか？",
+    errors: {
+      createProjectFailed: "プロジェクトの作成に失敗しました。再試行してください。",
+      deleteProjectFailed: "プロジェクトの削除に失敗しました。再試行してください。",
+    },
   },
   project: {
     newProject: {
