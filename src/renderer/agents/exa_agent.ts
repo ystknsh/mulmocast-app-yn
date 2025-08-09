@@ -35,7 +35,7 @@ export const exaToolsAgent: AgentFunction<
     const exa = new Exa(apiKey);
     const basicResults = await (async () => {
       //if (func === "search") {
-      return await exa.searchAndContents(query, { ...search_args, numResults: 3, text: true });
+      return await exa.searchAndContents(query, { ...search_args, numResults: 3, maxCharacters: 3000, text: true });
       // return await exa.search(query, search_args);
       // }
       // return { result: [] };
