@@ -239,12 +239,12 @@ const run = async () => {
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
       graphai.injectValue("tools", exaToolsAgent.tools);
+      graphai.injectValue("passthrough", {
+        exaToolsAgent: {
+          messages: messages.map(filterMessage()),
+        },
+      });
     }
-    graphai.injectValue("passthrough", {
-      exaToolsAgent: {
-        messages: messages.map(filterMessage()),
-      },
-    });
 
     const res = await graphai.run();
     console.log(res);
