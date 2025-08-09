@@ -43,7 +43,7 @@
             autofocus
             v-model="userInput"
             :disabled="isRunning"
-            placeholder="ex) Thank you very much! Please proceed with the creation."
+            :placeholder="t('project.chat.exampleMessage')"
             class="field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border-2 border-none border-gray-200 bg-transparent bg-white px-3 py-2 text-sm outline-none focus-within:border-2 focus-within:border-blue-500"
             @keydown="handleKeydown"
           />

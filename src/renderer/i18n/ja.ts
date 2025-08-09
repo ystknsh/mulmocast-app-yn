@@ -363,6 +363,7 @@ const lang = {
       copyScript: "チャットへコピー",
       creating: "作成中...",
       createScript: "スクリプト作成",
+      exampleMessage: "例）ありがとうございます！作成を進めてください。",
     },
   },
   beat: {

@@ -363,6 +363,7 @@ const lang = {
       copyScript: "Copy script",
       creating: "Creating...",
       createScript: "Create Script",
+      exampleMessage: "ex) Thank you very much! Please proceed with the creation.",
     },
   },
   beat: {
