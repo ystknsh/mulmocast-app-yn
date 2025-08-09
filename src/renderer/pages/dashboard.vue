@@ -69,7 +69,7 @@
 
         <!-- Empty State -->
         <div v-else-if="projects.length === 0" class="py-16 text-center">
-          <p class="mb-4 text-gray-500">No projects yet. Create your first project to get started!</p>
+          <p class="mb-4 text-gray-500">{{ t("dashboard.empty") }}</p>
         </div>
 
         <!-- Project Items -->

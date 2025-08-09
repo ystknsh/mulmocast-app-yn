@@ -260,6 +260,7 @@ const lang = {
       titleAsc: "タイトル（昇順）",
       titleDesc: "タイトル（降順）",
     },
+    empty: "まだプロジェクトはありません。最初のプロジェクトを作成して始めましょう！",
   },
   project: {
     newProject: {

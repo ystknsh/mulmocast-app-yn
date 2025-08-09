@@ -260,6 +260,7 @@ const lang = {
       titleAsc: "Title (A-Z)",
       titleDesc: "Title (Z-A)",
     },
+    empty: "No projects yet. Create your first project to get started!",
   },
   project: {
     newProject: {
