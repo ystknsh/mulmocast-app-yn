@@ -12,7 +12,7 @@ type ExaSearchInputs = {
 
 type ExaSearchParams = GraphAISupressError & GraphAIDebug;
 
-type ExaSearchResponse = { hasNext: boolean; result: string } | GraphAIOnError<string>;
+type ExaSearchResponse = { hasNext: boolean; content: string; data: unknown } | GraphAIOnError<string>;
 
 // https://github.com/exa-labs/exa-js
 export const exaToolsAgent: AgentFunction<
@@ -43,7 +43,7 @@ export const exaToolsAgent: AgentFunction<
 
     return {
       hasNext: true,
-      result: JSON.stringify(
+      content: JSON.stringify(
         basicResults.results.map((item) => {
           return {
             title: item.title,
@@ -54,6 +54,7 @@ export const exaToolsAgent: AgentFunction<
         null,
         2,
       ),
+      data: basicResults.results,
     };
   } catch (error) {
     const isErrorInstance = error instanceof Error;

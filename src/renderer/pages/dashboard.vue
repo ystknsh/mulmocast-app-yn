@@ -69,7 +69,7 @@
 
         <!-- Empty State -->
         <div v-else-if="projects.length === 0" class="py-16 text-center">
-          <p class="mb-4 text-gray-500">No projects yet. Create your first project to get started!</p>
+          <p class="mb-4 text-gray-500">{{ t("dashboard.empty") }}</p>
         </div>
 
         <!-- Project Items -->
@@ -197,7 +197,7 @@ const handleCreateProject = async () => {
     router.push(`/project/${project.metadata.id}`);
   } catch (error) {
     console.error("Failed to create project:", error);
-    alert("Failed to create project. Please try again.");
+    alert(t("dashboard.errors.createProjectFailed"));
   } finally {
     creating.value = false;
   }
@@ -210,13 +210,13 @@ const handleCancelDialog = () => {
 };
 
 const handleDeleteProject = async (project: Project) => {
-  if (confirm(`Are you sure you want to delete "${project?.script?.title}"`)) {
+  if (confirm(t("dashboard.confirmDelete", { title: project?.script?.title }))) {
     try {
       await projectApi.delete(project.metadata.id);
       await loadProjects();
     } catch (error) {
       console.error("Failed to delete project:", error);
-      alert("Failed to delete project. Please try again.");
+      alert(t("dashboard.errors.deleteProjectFailed"));
     }
   }
 };

@@ -33,6 +33,7 @@ export const graphChatWithSearch: GraphData = {
     tools: {},
     prompt: {},
     llmAgent: {},
+    passthrough: {},
     llm: {
       isResult: true,
       agent: "toolsAgent",
@@ -40,6 +41,7 @@ export const graphChatWithSearch: GraphData = {
         llmAgent: ":llmAgent",
         tools: ":tools",
         messages: ":messages",
+        passthrough: ":passthrough",
         userInput: {
           text: ":prompt",
           message: {

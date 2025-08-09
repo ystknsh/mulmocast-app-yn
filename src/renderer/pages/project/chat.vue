@@ -12,7 +12,7 @@
           :time="message.time"
           v-if="message.role === 'assistant' && message.content"
         />
-        <BotMessage
+        <ToolsMessage
           :message="message.content ?? ''"
           :time="message.time"
           v-if="message.role === 'tool' && message.content"
@@ -43,7 +43,7 @@
             autofocus
             v-model="userInput"
             :disabled="isRunning"
-            placeholder="ex) Thank you very much! Please proceed with the creation."
+            :placeholder="t('project.chat.exampleMessage')"
             class="field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border-2 border-none border-gray-200 bg-transparent bg-white px-3 py-2 text-sm outline-none focus-within:border-2 focus-within:border-blue-500"
             @keydown="handleKeydown"
           />
@@ -102,9 +102,9 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
+import toolsAgent from "../../agents/tools_agent";
 
-import { toolsAgent } from "@graphai/tools_agent";
-// import toolsAgent from "../../tools_agent";
+//import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -126,6 +126,7 @@ import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
+import ToolsMessage from "./chat/tools_message.vue";
 import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 
 const { t } = useI18n();
@@ -239,8 +240,14 @@ const run = async () => {
     if (hasExa) {
       graphai.injectValue("tools", exaToolsAgent.tools);
     }
-    const res = await graphai.run();
+    graphai.injectValue("passthrough", {
+      exaToolsAgent: {
+        messages: messages.map(filterMessage()),
+      },
+    });
 
+    const res = await graphai.run();
+    console.log(res);
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
