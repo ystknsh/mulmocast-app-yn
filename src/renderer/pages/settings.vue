@@ -39,8 +39,29 @@
             <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
-            <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2">
-              <Label :for="envKey">{{ config.title }}</Label>
+            <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
+              <div class="flex items-center justify-between">
+                <Label :for="envKey" class="text-base font-medium">{{ config.title }}</Label>
+                <a
+                  v-if="config.url"
+                  :href="config.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {{ t('settings.apiKeys.getApiKey') }}
+                  <ExternalLink class="h-3 w-3" />
+                </a>
+              </div>
+              <div v-if="config.features" class="flex flex-wrap gap-2 mb-2">
+                <span
+                  v-for="feature in config.features"
+                  :key="feature"
+                  class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md"
+                >
+                  {{ t(`settings.apiKeys.features.${feature}`) }}
+                </span>
+              </div>
               <div class="flex gap-2">
                 <Input
                   :id="envKey"
@@ -122,7 +143,7 @@
 import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff, ExternalLink } from "lucide-vue-next";
 
 import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

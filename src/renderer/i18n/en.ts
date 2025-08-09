@@ -220,6 +220,17 @@ const lang = {
     apiKeys: {
       title: "API Key Settings",
       description: "Configure API keys for external services",
+      getApiKey: "Get API Key",
+      features: {
+        tts: "Text-to-Speech",
+        "tts-jp": "Japanese TTS",
+        imageGeneration: "Image Generation",
+        videoGeneration: "Video Generation",
+        llm: "LLM Processing",
+        webSearch: "Web Search",
+        soundEffects: "Sound Effects",
+        lipSync: "Lip Sync",
+      },
     },
     notifications: {
       success: "Settings saved",
