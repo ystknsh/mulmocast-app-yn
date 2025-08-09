@@ -261,6 +261,11 @@ const lang = {
       titleDesc: "Title (Z-A)",
     },
     empty: "No projects yet. Create your first project to get started!",
+    confirmDelete: 'Are you sure you want to delete "{title}"?',
+    errors: {
+      createProjectFailed: "Failed to create project. Please try again.",
+      deleteProjectFailed: "Failed to delete project. Please try again.",
+    },
   },
   project: {
     newProject: {
