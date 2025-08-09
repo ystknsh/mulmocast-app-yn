@@ -84,12 +84,16 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // Handle external links - open in default browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    // Open external links in default browser
+    // Default deny all new window creation for security
+    // Only open trusted protocols (http/https) in external browser
     if (url.startsWith("http://") || url.startsWith("https://")) {
-      shell.openExternal(url);
-      return { action: "deny" }; // Prevent opening in Electron
+      // Use void to explicitly ignore the promise and add error handling
+      void shell.openExternal(url).catch((error) => {
+        console.error("Failed to open external URL:", error);
+      });
     }
-    return { action: "allow" };
+    // Always deny new window creation in Electron
+    return { action: "deny" };
   });
 
   // Handle navigation to external URLs
@@ -97,7 +101,10 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     // If navigating to external URL, open in default browser instead
     if (!url.startsWith("file://") && !url.includes("localhost")) {
       event.preventDefault();
-      shell.openExternal(url);
+      // Use void to explicitly ignore the promise and add error handling
+      void shell.openExternal(url).catch((error) => {
+        console.error("Failed to open external URL during navigation:", error);
+      });
     }
   });
 
