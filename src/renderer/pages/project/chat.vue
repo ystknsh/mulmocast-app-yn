@@ -102,9 +102,9 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
+import toolsAgent from "../../agents/tools_agent";
 
-import { toolsAgent } from "@graphai/tools_agent";
-// import toolsAgent from "./tools_agent";
+//import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -240,8 +240,14 @@ const run = async () => {
     if (hasExa) {
       graphai.injectValue("tools", exaToolsAgent.tools);
     }
-    const res = await graphai.run();
+    graphai.injectValue("passthrough", {
+      exaToolsAgent: {
+        messages: messages.map(filterMessage()),
+      },
+    });
 
+    const res = await graphai.run();
+    console.log(res);
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);

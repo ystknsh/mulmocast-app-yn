@@ -3,6 +3,7 @@ import { nestedAgentGenerator } from "@graphai/vanilla/lib/generator";
 const toolWorkFlowStep = {
   version: 0.5,
   nodes: {
+    passthrough: { value: {} },
     llm: {
       agent: ":llmAgent",
       isResult: true,
@@ -26,20 +27,40 @@ const toolWorkFlowStep = {
     tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",
-      inputs: { rows: ":llm.tool_calls" },
+      inputs: {
+        rows: ":llm.tool_calls",
+        messages: ":messages",
+        passthrough: ":passthrough",
+      },
       params: {
         compositeResult: true,
+        rowKey: "tool_call",
       },
       graph: {
         version: 0.5,
         nodes: {
+          data: {
+            // console: { before: true},
+            agent: ({ passthrough, agentName }) => {
+              // console.log({passthrough, agentName});
+              if (passthrough && passthrough[agentName]) {
+                return passthrough[agentName];
+              }
+              return {};
+            },
+            inputs: {
+              passthrough: ":passthrough",
+              agentName: ":tool_call.name.split(--).$0",
+            },
+          },
           tool: {
             isResult: true,
-            agent: ":row.name.split(--).$0",
+            agent: ":tool_call.name.split(--).$0",
             inputs: {
-              arg: ":row.arguments",
-              func: ":row.name.split(--).$1",
-              tool_call: ":row",
+              arg: ":tool_call.arguments",
+              func: ":tool_call.name.split(--).$1",
+              tool_call: ":tool_call",
+              data: ":data",
             },
           },
           message: {
@@ -47,9 +68,9 @@ const toolWorkFlowStep = {
             agent: "copyAgent",
             inputs: {
               role: "tool",
-              tool_call_id: ":row.id",
-              name: ":row.name",
-              content: ":tool.result",
+              tool_call_id: ":tool_call.id",
+              name: ":tool_call.name",
+              content: ":tool.content",
             },
           },
         },
@@ -108,7 +129,9 @@ const toolWorkFlowStep = {
             isResult: true,
             agent: "copyAgent",
             anyInput: true,
-            inputs: { array: [":toolsResMessage.array", ":skipToolsResponseLLM.array"] },
+            inputs: {
+              array: [":toolsResMessage.array", ":skipToolsResponseLLM.array"],
+            },
           },
         },
       },
@@ -122,10 +145,24 @@ const toolWorkFlowStep = {
       agent: "pushAgent",
       inputs: { array: ":messages", items: ":buffer.array.$0" },
     },
+    mergedData: {
+      inputs: {
+        data: ":tool_calls.tool",
+        tool_calls: ":llm.tool_calls",
+      },
+      agent: ({ tool_calls, data }) => {
+        const ret: Record<string, unknown> = {};
+        tool_calls.forEach((tool, index) => {
+          const { name } = tool;
+          ret[name] = data[index];
+        });
+        return ret;
+      },
+    },
     result: {
       agent: "copyAgent",
       isResult: true,
-      inputs: { messages: ":reducer.array" },
+      inputs: { messages: ":reducer.array", data: ":mergedData" },
     },
   },
 };
