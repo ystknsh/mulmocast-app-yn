@@ -18,12 +18,17 @@ const toolWorkFlowStep = {
         tools: ":tools",
       },
     },
-    textMessage: {
+    textMessagesArray: {
       unless: ":llm.tool.id",
-      agent: "copyAgent",
+      agent: "pushAgent",
       inputs: {
-        messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
+        array: ":messages",
+        items: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
+    },
+    textMessages: {
+      agent: "copyAgent",
+      inputs: { messages: ":textMessagesArray.array" },
     },
     tool_calls: {
       if: ":llm.tool_calls",
@@ -137,15 +142,6 @@ const toolWorkFlowStep = {
         },
       },
     },
-    buffer: {
-      agent: "copyAgent",
-      anyInput: true,
-      inputs: { array: [":textMessage.messages", ":tool_call_response.mergeToolsResponse.array.$0"] },
-    },
-    reducer: {
-      agent: "pushAgent",
-      inputs: { array: ":messages", items: ":buffer.array.$0" },
-    },
     mergedData: {
       inputs: {
         data: ":tool_calls.tool",
@@ -160,10 +156,26 @@ const toolWorkFlowStep = {
         return ret;
       },
     },
+    toolsMessages: {
+      agent: "pushAgent",
+      inputs: { array: ":messages", items: ":tool_call_response.mergeToolsResponse.array.$0" },
+    },
+    toolsResult: {
+      agent: "copyAgent",
+      inputs: {
+        messages: ":toolsMessages.array",
+        data: ":mergedData",
+      },
+    },
+    buffer: {
+      agent: "copyAgent",
+      anyInput: true,
+      inputs: { array: [":textMessages", ":toolsResult"] },
+    },
     result: {
       agent: "copyAgent",
       isResult: true,
-      inputs: { messages: ":reducer.array", data: ":mergedData" },
+      inputs: { messages: ":buffer.array.$0.messages", data: ":buffer.array.$0.data" },
     },
   },
 };
