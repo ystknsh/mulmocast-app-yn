@@ -44,7 +44,7 @@
               </CollapsibleTrigger>
               <CardDescription class="mt-2">
                 {{ t("settings.apiKeys.description") }}
-                <span class="block mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
                   {{ t("settings.apiKeys.llmDescription") }}
                 </span>
               </CardDescription>
@@ -61,15 +61,15 @@
                       rel="noopener noreferrer"
                       class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                     >
-                      {{ t('settings.apiKeys.getApiKey') }}
+                      {{ t("settings.apiKeys.getApiKey") }}
                       <ExternalLink class="h-3 w-3" />
                     </a>
                   </div>
-                  <div v-if="config.features" class="flex flex-wrap gap-2 mb-2">
+                  <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
                     <span
                       v-for="feature in config.features"
                       :key="feature"
-                      class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md"
+                      class="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
                     >
                       {{ t(`settings.apiKeys.features.${feature}`) }}
                     </span>

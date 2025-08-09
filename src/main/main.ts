@@ -85,17 +85,17 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   // Handle external links - open in default browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     // Open external links in default browser
-    if (url.startsWith('http://') || url.startsWith('https://')) {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
       shell.openExternal(url);
-      return { action: 'deny' }; // Prevent opening in Electron
+      return { action: "deny" }; // Prevent opening in Electron
     }
-    return { action: 'allow' };
+    return { action: "allow" };
   });
 
   // Handle navigation to external URLs
-  mainWindow.webContents.on('will-navigate', (event, url) => {
+  mainWindow.webContents.on("will-navigate", (event, url) => {
     // If navigating to external URL, open in default browser instead
-    if (!url.startsWith('file://') && !url.includes('localhost')) {
+    if (!url.startsWith("file://") && !url.includes("localhost")) {
       event.preventDefault();
       shell.openExternal(url);
     }
