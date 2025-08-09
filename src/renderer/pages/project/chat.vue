@@ -12,7 +12,7 @@
           :time="message.time"
           v-if="message.role === 'assistant' && message.content"
         />
-        <BotMessage
+        <ToolsMessage
           :message="message.content ?? ''"
           :time="message.time"
           v-if="message.role === 'tool' && message.content"
@@ -104,7 +104,7 @@ import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/ll
 import exaToolsAgent from "../../agents/exa_agent";
 
 import { toolsAgent } from "@graphai/tools_agent";
-// import toolsAgent from "../../tools_agent";
+// import toolsAgent from "./tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -126,6 +126,7 @@ import { useMulmoGlobalStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
+import ToolsMessage from "./chat/tools_message.vue";
 import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 
 const { t } = useI18n();
