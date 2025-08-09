@@ -98,13 +98,32 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // Handle navigation to external URLs
   mainWindow.webContents.on("will-navigate", (event, url) => {
-    // If navigating to external URL, open in default browser instead
-    if (!url.startsWith("file://") && !url.includes("localhost")) {
+    try {
+      const parsedUrl = new URL(url);
+      
+      // Define allowed protocols and hosts
+      const allowedProtocols = ["file:"];
+      const allowedHosts = ["localhost", "127.0.0.1", "::1"];
+      
+      // Check if navigation should be allowed
+      const isAllowedProtocol = allowedProtocols.includes(parsedUrl.protocol);
+      const isAllowedHost = allowedHosts.includes(parsedUrl.hostname);
+      
+      // Only allow navigation for file protocol or whitelisted hosts
+      if (!isAllowedProtocol && !isAllowedHost) {
+        event.preventDefault();
+        
+        // Open external URLs (http/https) in default browser
+        if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
+          void shell.openExternal(url).catch((error) => {
+            console.error("Failed to open external URL during navigation:", error);
+          });
+        }
+      }
+    } catch (error) {
+      // If URL parsing fails, prevent navigation for safety
       event.preventDefault();
-      // Use void to explicitly ignore the promise and add error handling
-      void shell.openExternal(url).catch((error) => {
-        console.error("Failed to open external URL during navigation:", error);
-      });
+      console.error("Failed to parse URL for navigation:", error);
     }
   });
 
