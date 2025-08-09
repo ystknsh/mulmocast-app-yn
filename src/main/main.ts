@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -81,6 +81,25 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // Save window state when closed
   mainWindow.on("close", () => saveWindowState(mainWindow));
+
+  // Handle external links - open in default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    // Open external links in default browser
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      shell.openExternal(url);
+      return { action: 'deny' }; // Prevent opening in Electron
+    }
+    return { action: 'allow' };
+  });
+
+  // Handle navigation to external URLs
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    // If navigating to external URL, open in default browser instead
+    if (!url.startsWith('file://') && !url.includes('localhost')) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
 
   ipcMain.on("request-env", async (event) => {
     const settings = await settingsManager.loadSettings();
