@@ -41,12 +41,14 @@ export const ENV_KEYS = {
     url: "https://elevenlabs.io/app/settings/api-keys",
     features: ["tts"] as FeatureKey[],
   },
+  /*
   GOOGLE_PROJECT_ID: {
     title: "Google Project ID",
     placeholder: "your-project-id",
     url: "https://console.cloud.google.com/apis/dashboard",
     features: ["imageGeneration", "videoGeneration"] as FeatureKey[],
-  },
+    },
+*/
   REPLICATE_API_TOKEN: {
     title: "Replicate API Token",
     placeholder: "r8_...",
@@ -57,7 +59,7 @@ export const ENV_KEYS = {
     title: "Gemini API Key",
     placeholder: "AI...",
     url: "https://aistudio.google.com/app/apikey",
-    features: ["llm"] as FeatureKey[],
+    features: ["llm", "imageGeneration", "videoGeneration"] as FeatureKey[],
   },
   ANTHROPIC_API_KEY: {
     title: "Anthropic API Key",
