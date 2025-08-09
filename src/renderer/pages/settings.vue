@@ -36,7 +36,12 @@
         <Card>
           <CardHeader>
             <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
+            <CardDescription>
+              {{ t("settings.apiKeys.description") }}
+              <span class="block mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ t("settings.apiKeys.llmDescription") }}
+              </span>
+            </CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">

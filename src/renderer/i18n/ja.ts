@@ -220,6 +220,7 @@ const lang = {
     apiKeys: {
       title: "APIキー設定",
       description: "外部サービスのAPIキーを設定します",
+      llmDescription: "※ LLM処理: スクリプト生成・翻訳・リサーチなどのテキスト生成・処理に使用されます",
       getApiKey: "APIキーを取得",
       features: {
         tts: "音声生成",
