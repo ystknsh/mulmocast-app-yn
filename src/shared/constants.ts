@@ -14,7 +14,7 @@ export const FEATURE_KEYS = [
 ] as const;
 
 // Create a union type from the tuple for type safety
-export type FeatureKey = typeof FEATURE_KEYS[number];
+export type FeatureKey = (typeof FEATURE_KEYS)[number];
 
 export const ENV_KEYS = {
   OPENAI_API_KEY: {

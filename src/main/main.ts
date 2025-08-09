@@ -100,19 +100,19 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   mainWindow.webContents.on("will-navigate", (event, url) => {
     try {
       const parsedUrl = new URL(url);
-      
+
       // Define allowed protocols and hosts
       const allowedProtocols = ["file:"];
       const allowedHosts = ["localhost", "127.0.0.1", "::1"];
-      
+
       // Check if navigation should be allowed
       const isAllowedProtocol = allowedProtocols.includes(parsedUrl.protocol);
       const isAllowedHost = allowedHosts.includes(parsedUrl.hostname);
-      
+
       // Only allow navigation for file protocol or whitelisted hosts
       if (!isAllowedProtocol && !isAllowedHost) {
         event.preventDefault();
-        
+
         // Open external URLs (http/https) in default browser
         if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
           void shell.openExternal(url).catch((error) => {
