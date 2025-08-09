@@ -1,3 +1,4 @@
+import type { AgentFunctionInfo } from "graphai";
 import { nestedAgentGenerator } from "@graphai/vanilla/lib/generator";
 
 const toolWorkFlowStep = {
@@ -41,7 +42,7 @@ const toolWorkFlowStep = {
         nodes: {
           data: {
             // console: { before: true},
-            agent: ({ passthrough, agentName }) => {
+            agent: ({ passthrough, agentName }: { passthrough: Record<string, unknown>; agentName: string }) => {
               // console.log({passthrough, agentName});
               if (passthrough && passthrough[agentName]) {
                 return passthrough[agentName];
@@ -150,7 +151,7 @@ const toolWorkFlowStep = {
         data: ":tool_calls.tool",
         tool_calls: ":llm.tool_calls",
       },
-      agent: ({ tool_calls, data }) => {
+      agent: ({ tool_calls, data }: { tool_calls: { name: string }[]; data: unknown[] }) => {
         const ret: Record<string, unknown> = {};
         tool_calls.forEach((tool, index) => {
           const { name } = tool;
@@ -169,7 +170,7 @@ const toolWorkFlowStep = {
 
 const toolsAgent = nestedAgentGenerator(toolWorkFlowStep, { resultNodeId: "result" });
 
-const toolsAgentInfo = {
+const toolsAgentInfo: AgentFunctionInfo = {
   name: "toolsAgent",
   agent: toolsAgent,
   mock: toolsAgent,
@@ -219,7 +220,6 @@ const toolsAgentInfo = {
   repository: "",
   source: "https://github.com/receptron/graphai/blob/main/llm_agents/tools_agent/src/tools_agent.ts",
   package: "@graphai/tools_agent",
-  tools: [],
   license: "",
   hasGraphData: true,
 };
