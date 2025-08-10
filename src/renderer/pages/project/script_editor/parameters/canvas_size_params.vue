@@ -1,9 +1,9 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Canvas Size</h4>
+    <h4 class="mb-3 font-medium">{{ t("parameters.canvasSizeParams.title") }}</h4>
     <div class="space-y-3">
       <div>
-        <Label>Size Preset</Label>
+        <Label>{{ t("parameters.canvasSizeParams.sizePreset") }}</Label>
         <Select :model-value="selectedPreset" @update:model-value="handlePresetChange">
           <SelectTrigger>
             <SelectValue />
@@ -18,7 +18,7 @@
       </div>
       <div v-if="showCustom" class="grid grid-cols-2 gap-4">
         <div>
-          <Label>Width</Label>
+          <Label>{{ t("parameters.canvasSizeParams.width") }}</Label>
           <Input
             :model-value="canvasSize?.width || 1280"
             @update:model-value="(value) => handleCustomChange(value, 'width')"
@@ -26,7 +26,7 @@
           />
         </div>
         <div>
-          <Label>Height</Label>
+          <Label>{{ t("parameters.canvasSizeParams.height") }}</Label>
           <Input
             :model-value="canvasSize?.height || 720"
             @update:model-value="(value) => handleCustomChange(value, 'height')"
@@ -41,6 +41,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -53,6 +54,8 @@ const PRESET_CANVAS_SIZE = {
   "1536x1024": { width: 1536, height: 1024 },
   "1024x1536": { width: 1024, height: 1536 },
 } as const;
+
+const { t } = useI18n();
 
 const props = defineProps<{
   canvasSize?: MulmoPresentationStyle["canvasSize"];

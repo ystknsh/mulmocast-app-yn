@@ -455,6 +455,12 @@ const lang = {
       language: "言語",
       displayName: "表示名",
     },
+    canvasSizeParams: {
+      title: "キャンバスサイズ",
+      sizePreset: "サイズ設定",
+      width: "幅",
+      height: "高さ",
+    },
   },
 
   modal: {
