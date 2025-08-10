@@ -326,7 +326,7 @@ const lang = {
         pdf: "PDF",
         html: "HTML",
         podcast: "Podcast",
-        slide: "Slide",
+        slide: "スライド",
       },
       movie: {
         title: "動画プレビュー",
@@ -358,11 +358,11 @@ const lang = {
         details: "再生時間: 12:34 - サイズ: 8.2 MB",
       },
       slide: {
-        title: "Slide Preview",
-        description: "Slide format display and navigation",
-        start: "Start Slideshow",
-        export: "Export Images",
-        details: "8 slides - 1920x1080 resolution",
+        title: "スライド プレビュー",
+        description: "スライド形式の表示とナビゲーション",
+        start: "スライドショーの開始",
+        export: "スライドをエクスポート",
+        details: "8 スライド - 解像度: 1920x1080",
       },
     },
     chat: {
