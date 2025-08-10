@@ -51,6 +51,7 @@ const lang = {
       chat: "チャット",
       panel: "パネル",
       parameters: "パラメータ",
+      example: "例)",
 
       // Modal
       clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
@@ -460,6 +461,13 @@ const lang = {
       sizePreset: "サイズ設定",
       width: "幅",
       height: "高さ",
+    },
+    captionParams: {
+      title: "字幕設定",
+      language: "言語",
+      languageDescription: "字幕の言語",
+      styles: "スタイル",
+      stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
     },
   },
 

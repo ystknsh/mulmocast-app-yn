@@ -51,6 +51,7 @@ const lang = {
       chat: "Chat",
       panel: "Panel",
       parameters: "Parameters",
+      example: "ex)",
 
       // Modal
       clickOutsideToClose: "Click outside to close",
@@ -460,6 +461,13 @@ const lang = {
       sizePreset: "Size Preset",
       width: "Width",
       height: "Height",
+    },
+    captionParams: {
+      title: "Caption Parameters",
+      language: "Language",
+      languageDescription: "Caption language",
+      styles: "Styles",
+      stylesDescription: "Enter CSS styles (one per line)",
     },
   },
 
