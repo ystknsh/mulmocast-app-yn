@@ -59,6 +59,14 @@ const sonarjsRules = {
   "sonarjs/todo-tag": "off",
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-nested-conditional": "off",
+  "sonarjs/use-type-alias": "warn",
+  "sonarjs/no-unused-vars": "warn",
+  "sonarjs/no-ignored-exceptions": "warn",
+  "sonarjs/no-os-command-from-path": "warn",
+  "sonarjs/no-nested-functions": "warn",
+  "sonarjs/no-small-switch": "warn",
+  "sonarjs/slow-regex": "warn",
+  "sonarjs/no-nested-template-literals": "warn"
 };
 
 export default [
