@@ -112,8 +112,9 @@
               {{ t("settings.languages.translatedTitle") }}
             </div>
             <div v-for="(language, key) in languages" :key="key">
-              &ensp;{{ t("languages." + language) }}
+              &ensp;
               <Checkbox v-model="useLanguage[language]" />
+              {{ t("languages." + language) }}
             </div>
           </CardContent>
         </Card>
