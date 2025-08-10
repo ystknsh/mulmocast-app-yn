@@ -33,9 +33,9 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
-        <Label class="mb-2"
-          >{{ t("project.chat.enterMessage") }}
-          <span class="text-gray-400">({{ llmAgent }} {{ hasExa ? "with Search" : "" }})</span>
+        <Label class="mb-2">
+          {{ t("project.chat.enterMessage") }}
+          <span class="text-gray-400">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
         </Label>
         <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
@@ -103,8 +103,6 @@ import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
 import toolsAgent from "../../agents/tools_agent";
-
-//import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
