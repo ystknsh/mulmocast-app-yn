@@ -1,14 +1,14 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">Text Slide Parameters</h4>
+    <h4 class="mb-3 font-medium">{{ t("parameters.textSlideParams.title") }}</h4>
     <div class="space-y-3">
       <div>
-        <Label>CSS Styles</Label>
-        <div class="mb-2 text-xs text-gray-500">Enter CSS styles as a single string or multiple lines.</div>
+        <Label>{{ t("parameters.textSlideParams.css") }}</Label>
+        <div class="mb-2 text-xs text-gray-500">{{ t("parameters.textSlideParams.cssDescription") }}</div>
         <Textarea
           :model-value="cssStylesText"
           @update:model-value="handleCssStylesInput"
-          placeholder="e.g. font-size: 24px;&#10;color: #333;&#10;margin: 20px;"
+          :placeholder="`${t('ui.common.example')}\nfont-size: 24px;\ncolor: #333;\nmargin: 20px;`"
           class="font-mono"
           rows="6"
         />
@@ -20,9 +20,12 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { Card, Label, Textarea } from "@/components/ui";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   textSlideParams?: MulmoPresentationStyle["textSlideParams"];
