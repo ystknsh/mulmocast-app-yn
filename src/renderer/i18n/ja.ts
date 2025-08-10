@@ -335,11 +335,12 @@ const lang = {
         details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
       },
       pdf: {
-        title: "PDF Preview",
-        description: "PDF document display and download",
-        view: "View PDF",
-        download: "Download PDF",
-        details: "8 pages - A4 format - Size: 2.1 MB",
+        title: "PDFプレビュー",
+        description: "PDFファイルの表示とダウンロード",
+        view: "PDFを表示",
+        download: "PDFをダウンロード",
+        details: "8 ページ - A4 サイズ - サイズ: 2.1 MB",
+        empty: "PDF未生成",
       },
       html: {
         title: "HTML Preview",

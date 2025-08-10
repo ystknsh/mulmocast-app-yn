@@ -341,6 +341,7 @@ const lang = {
         view: "View PDF",
         download: "Download PDF",
         details: "8 pages - A4 format - Size: 2.1 MB",
+        empty: "PDF not generated",
       },
       html: {
         title: "HTML Preview",
