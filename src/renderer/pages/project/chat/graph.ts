@@ -1,6 +1,6 @@
 import { nestedAgentGenerator } from "@graphai/vanilla/lib/graph_agents/nested_agent";
 
-import { type GraphData, graphDataLatestVersion } from "graphai";
+import { type GraphData, type AgentFunctionInfo, graphDataLatestVersion } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
 
 // chat
