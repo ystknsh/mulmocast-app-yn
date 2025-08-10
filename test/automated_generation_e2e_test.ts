@@ -574,21 +574,17 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
   }
 }
 
-// Main execution
-async function runContentGenerationTest(): Promise<boolean> {
-  console.log("=== MulmoCast Content Generation Test (CI/CD) ===");
-  console.log("Starting automated test for CI/CD environment...");
-  console.log(`Testing with ${TEST_JSON_FILES.length} JSON files: ${TEST_JSON_FILES.join(", ")}`);
-
-  const projectsCreated: ProjectInfo[] = [];
+async function runGenerationE2ETest(): Promise<void> {
+  // Initialize resources
   const resources: Resources = {
     electronProcess: null,
     browser: null,
   };
 
   try {
-    console.log("\n1. Starting Electron app...");
-    
+    console.log("=== MulmoCast Generation E2E Test ===");
+    console.log("1. Starting Electron app with yarn start...");
+
     // Start Electron app with spawn (create process group)
     // Note: Using yarn from PATH - ensure trusted environment in CI/CD
     resources.electronProcess = spawn("yarn", ["start"], {
@@ -623,11 +619,13 @@ async function runContentGenerationTest(): Promise<boolean> {
         break;
       } catch (error: unknown) {
         attempts++;
-        console.log(`CDP connection attempt ${attempts}/${CONFIG.CDP_MAX_ATTEMPTS} failed, retrying...`);
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
           throw new Error(
             `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
           );
+        }
+        if (attempts === 1) {
+          console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
         }
         await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY));
       }
@@ -652,6 +650,8 @@ async function runContentGenerationTest(): Promise<boolean> {
     }
 
     console.log("✓ Found application page");
+
+    const projectsCreated: ProjectInfo[] = [];
 
     // Create all projects and start generation
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
@@ -684,37 +684,54 @@ async function runContentGenerationTest(): Promise<boolean> {
       console.log("\n✗ Test FAILED - Some projects could not be played");
       console.log("Failed projects:");
       playResult.failedProjects.forEach((p) => console.log(`  - ${p}`));
-      // Don't exit here, let finally block run first
-      return false;
+      throw new Error("Some projects failed to play");
     } else {
       console.log("\n✓ Test PASSED - All generations completed and played successfully!");
-      return true;
-    }
-  } catch (error: unknown) {
-    console.error("Test execution failed:", error);
-    return false;
-  } finally {
-    // Cleanup resources
-    if (resources.browser) {
-      try {
-        await resources.browser.close();
-        console.log("Browser connection closed.");
-      } catch (closeError: unknown) {
-        console.log("Error closing browser:", closeError instanceof Error ? closeError.message : String(closeError));
-      }
     }
 
-    if (resources.electronProcess) {
-      await terminateElectronProcess(resources.electronProcess);
-      console.log("Electron process terminated.");
+    // Close application normally after test completion
+    console.log("\nClosing application window...");
+    try {
+      // Close Electron app window
+      await page.evaluate(() => {
+        (window as Window & { close: () => void }).close();
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for window to close
+    } catch (closeError: unknown) {
+      console.log(
+        "Failed to close window gracefully:",
+        closeError instanceof Error ? closeError.message : String(closeError),
+      );
     }
+  } catch (error: unknown) {
+    console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
+    throw error;
+  } finally {
+    // Close browser connection
+    if (resources.browser) {
+      await resources.browser.close();
+      console.log("\nBrowser connection closed.");
+    }
+
+    // Terminate Electron process
+    await terminateElectronProcess(resources.electronProcess);
+  }
+}
+
+// Main execution
+async function main(): Promise<void> {
+  console.log("Starting Generation E2E test...");
+  console.log("This test will automatically start and stop the Electron app.\n");
+
+  try {
+    await runGenerationE2ETest();
+    console.log("\n✅ All tests passed!");
+    process.exit(0);
+  } catch (error: unknown) {
+    console.error("\n❌ Test failed:", error);
+    process.exit(1);
   }
 }
 
 // Execute
-runContentGenerationTest().then((success) => {
-  process.exit(success ? 0 : 1);
-}).catch((error) => {
-  console.error("Unexpected error:", error);
-  process.exit(1);
-});
+main();
