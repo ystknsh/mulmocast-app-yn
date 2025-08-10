@@ -39,8 +39,11 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
         console.log("Force killing process...");
         try {
           electronProcess.kill("SIGKILL");
-        } catch (__error) {
-          console.log("Process may have already exited");
+        } catch (killError: unknown) {
+          console.log(
+            "Process may have already exited:",
+            killError instanceof Error ? killError.message : String(killError),
+          );
         }
         cleanup();
       }
@@ -77,12 +80,15 @@ async function runE2ETest(): Promise<void> {
     console.log("1. Starting Electron app with yarn start...");
 
     // Start Electron app with spawn (create process group)
+    // Note: Using yarn from PATH - ensure trusted environment in CI/CD
     resources.electronProcess = spawn("yarn", ["start"], {
       shell: true,
       detached: process.platform !== "win32", // Don't use detached on Windows
       env: {
         ...process.env,
         NODE_ENV: "development",
+        // Explicitly include common paths to reduce risk
+        PATH: process.env.PATH,
       },
     });
 

@@ -309,7 +309,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       const deleteTargetPath = "../../assets/audio/local_voice.mp3";
 
       if (jsonData.beats && Array.isArray(jsonData.beats)) {
-        jsonData.beats.forEach((beat: any, index: number) => {
+        jsonData.beats.forEach((beat: unknown, index: number) => {
           const beatStr = JSON.stringify(beat);
           if (beatStr.includes(deleteTargetPath)) {
             problematicBeatIndices.push(index);
@@ -386,18 +386,22 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           let hasChanges = false;
 
           if (jsonData.beats && Array.isArray(jsonData.beats)) {
-            jsonData.beats.forEach((beat: any) => {
+            jsonData.beats.forEach((beat: unknown) => {
+              const beatObj = beat as Record<string, unknown>;
+              const image = beatObj.image as Record<string, unknown>;
+              const source = image?.source as Record<string, unknown>;
+
               if (
-                beat.image &&
-                beat.image.source &&
-                beat.image.source.kind === "path" &&
-                beat.image.source.path === "../../assets/images/mulmocast_credit.png"
+                image &&
+                source &&
+                source.kind === "path" &&
+                source.path === "../../assets/images/mulmocast_credit.png"
               ) {
                 console.log("Converting path to URL for mulmocast_credit.png");
-                beat.image.source.kind = "url";
-                beat.image.source.url =
+                source.kind = "url";
+                source.url =
                   "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/assets/images/mulmocast_credit.png";
-                delete beat.image.source.path; // Remove the path property
+                delete source.path; // Remove the path property
                 hasChanges = true;
               }
             });
@@ -485,7 +489,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           await page.click(deleteButtonSelector);
           console.log(`✓ Deleted beat ${beatIndex} (UI: Beat ${beatIndex + 1}) with local_voice.mp3`);
           await new Promise((resolve) => setTimeout(resolve, 500));
-        } catch (error) {
+        } catch {
           console.log(`⚠️ Could not find or click delete button for beat ${beatIndex}`);
         }
       }
