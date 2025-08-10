@@ -19,6 +19,12 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     pushDataToHistory("init", data);
   };
 
+  const resetMulmoScript = () => {
+    currentMulmoScript.value = null;
+    index.value = 0;
+    histories.value = [];
+  };
+
   const updateMulmoScriptAndPushToHistory = (data: MulmoScript) => {
     currentMulmoScript.value = data;
     pushDataToHistory("push", data);
@@ -68,5 +74,6 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     undo,
     redoable,
     redo,
+    resetMulmoScript,
   };
 });

@@ -1,5 +1,5 @@
 <template>
-  <Tabs class="w-full" v-model="currentTab">
+  <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
     <TabsList class="grid w-full grid-cols-6">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT">Text</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML">YAML</TabsTrigger>
@@ -289,18 +289,14 @@ const safeBeats = computed(() => {
   return props.mulmoValue?.beats ?? [];
 });
 
-watch(currentTab, () => {
-  if (
-    !props.isValidScriptData &&
-    ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(currentTab.value as "yaml" | "json")
-  ) {
-    currentTab.value = lastTab.value;
-  } else {
-    lastTab.value = currentTab.value;
-    emit("formatAndPushHistoryMulmoScript");
-    emit("update:scriptEditorActiveTab", currentTab.value);
+const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
+  if (!props.isValidScriptData) {
+    return;
   }
-});
+  lastTab.value = tab;
+  emit("formatAndPushHistoryMulmoScript");
+  emit("update:scriptEditorActiveTab", tab);
+};
 
 const mulmoMultiLinguals = ref([]);
 onMounted(async () => {
