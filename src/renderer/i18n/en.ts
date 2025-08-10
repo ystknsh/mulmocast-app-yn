@@ -319,6 +319,7 @@ const lang = {
         referenceMode: "Reference",
         referenceModeDescription: "Reference image for character consistency",
       },
+      validationStatus: "Validation Status",
     },
     productTabs: {
       tabs: {
