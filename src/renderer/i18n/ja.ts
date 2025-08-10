@@ -318,6 +318,7 @@ const lang = {
         referenceMode: "参照",
         referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
       },
+      validationStatus: "検証ステータス",
     },
     productTabs: {
       tabs: {
