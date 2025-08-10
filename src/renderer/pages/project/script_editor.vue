@@ -1,12 +1,12 @@
 <template>
   <Tabs class="w-full" v-model="currentTab">
     <TabsList class="grid w-full grid-cols-6">
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT">Text</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML">YAML</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON">JSON</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA">Media</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE">Style</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE">Ref</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="tab-text">Text</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="tab-yaml">YAML</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="tab-json">JSON</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="tab-media">Media</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="tab-style">Style</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="tab-reference">Ref</TabsTrigger>
     </TabsList>
 
     <div

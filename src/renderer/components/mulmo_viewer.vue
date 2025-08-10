@@ -13,7 +13,7 @@
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
         <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button @click="playVideo">
+          <Button @click="playVideo" data-testid="play-video-button">
             <Play :size="16" class="mr-2" />
             {{ t("project.productTabs.movie.play") }}
           </Button>

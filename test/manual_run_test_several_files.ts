@@ -145,10 +145,10 @@ async function visitProjectsAndPlay(
     // Look for play button
     let playSuccessful = false;
     try {
-      await page.waitForSelector('button:has-text("Play"), button[aria-label="Play"], button[title*="Play"]', {
+      await page.waitForSelector('[data-testid="play-video-button"]', {
         timeout: 5000,
       });
-      const playButton = await page.$('button:has-text("Play"), button[aria-label="Play"], button[title*="Play"]');
+      const playButton = await page.$('[data-testid="play-video-button"]');
 
       if (playButton) {
         console.log("✓ Found play button, clicking...");
@@ -235,8 +235,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Click the create new button
     console.log('\n2. Clicking "Create New" button...');
-    await page.click('button:has-text("新規作成")');
-    await page.waitForSelector('input[placeholder="Enter project title"]');
+    await page.click('[data-testid="create-new-button"]');
+    await page.waitForSelector('[data-testid="project-title-input"]');
     console.log("✓ New project dialog opened");
 
     // Parse JSON to get title for project name
@@ -253,12 +253,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Enter project title (based on JSON title + timestamp)
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
     console.log(`\n3. Entering project title: ${projectTitle}`);
-    await page.fill('input[placeholder="Enter project title"]', projectTitle);
+    await page.fill('[data-testid="project-title-input"]', projectTitle);
     console.log("✓ Project title entered");
 
     // Click the Create button
     console.log('\n4. Clicking "Create" button...');
-    await page.click('button:has-text("Create")');
+    await page.click('[data-testid="create-button"]');
 
     // Wait for project page to load
     await page.waitForSelector(`h1:has-text("${projectTitle}")`);
@@ -276,11 +276,11 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Navigate to JSON tab
     console.log("\n6. Navigating to JSON tab...");
-    await page.click('[role="tab"]:has-text("JSON")');
+    await page.click('[data-testid="tab-json"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
     // Verify JSON tab is active
-    const jsonTab = await page.$('[role="tab"]:has-text("JSON")');
+    const jsonTab = await page.$('[data-testid="tab-json"]');
     if (jsonTab) {
       const isSelected = await jsonTab.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
       if (isSelected) {
@@ -393,21 +393,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Find and click the generate button in output settings section
     console.log("\n10. Looking for generate button in output settings section...");
 
-    // Use CSS selector to find the generate button more reliably
-    // This button is in a grid layout with specific classes
-    const generateButton = await page.$('button.flex.flex-col.items-center:has-text("Generate Contents")');
+    // Use data-testid to find the generate button
+    const generateButton = await page.$('[data-testid="generate-contents-button"]');
     if (!generateButton) {
-      // Fallback: try finding by button structure
-      const fallbackButton = await page.$('.grid button:has-text("Generate")');
-      if (!fallbackButton) {
-        throw new Error("Generate Contents button not found");
-      }
-      console.log("✓ Found generate button using fallback selector");
-      await fallbackButton.click();
-    } else {
-      console.log("✓ Found generate button using primary selector");
-      await generateButton.click();
+      throw new Error("Generate Contents button not found");
     }
+    console.log("✓ Found generate button");
+    await generateButton.click();
 
     // Start generation without waiting
     console.log("\n10. Generation started, moving to next file...");

@@ -11,6 +11,7 @@
                 newProjectName = '';
               "
               class="flex items-center space-x-2"
+              data-testid="create-new-button"
             >
               <Plus class="h-5 w-5" />
               <span>{{ t("dashboard.createNew") }}</span>
