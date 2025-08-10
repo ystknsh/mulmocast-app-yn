@@ -455,6 +455,12 @@ const lang = {
       language: "Language",
       displayName: "Display Name",
     },
+    canvasSizeParams: {
+      title: "Canvas Size",
+      sizePreset: "Size Preset",
+      width: "Width",
+      height: "Height",
+    },
   },
 
   modal: {
