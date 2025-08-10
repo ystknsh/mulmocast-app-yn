@@ -70,6 +70,7 @@
                 <Trash
                   @click="deleteBeat(index)"
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
+                  :data-testid="`delete-beat-${index}`"
                 />
               </div>
               <div class="px-4 pt-2">
@@ -180,6 +181,7 @@
                 <Trash
                   @click="deleteBeat(index)"
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
+                  :data-testid="`delete-beat-${index}`"
                 />
               </div>
               <div class="px-4 pt-2">

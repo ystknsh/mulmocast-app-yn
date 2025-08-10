@@ -16,8 +16,8 @@ const CONFIG = {
 
 // Test JSON files to process
 const TEST_JSON_FILES = [
-  "test_order.json",
-  "test_beats.json",
+  // "test_order.json",
+  // "test_beats.json",
   "test_no_audio.json",
   "test_no_audio_with_credit.json",
   "test_transition_no_audio.json",
@@ -298,9 +298,27 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Read JSON from local node_modules
     console.log("\n8. Reading test JSON from local node_modules...");
     let jsonContent: string;
+    let problematicBeatIndices: number[] = [];
 
     try {
       jsonContent = await readLocalJSON(currentTestFile);
+      
+      // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
+      console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
+      const jsonData = JSON.parse(jsonContent);
+      const deleteTargetPath = "../../assets/audio/local_voice.mp3";
+      
+      if (jsonData.beats && Array.isArray(jsonData.beats)) {
+        jsonData.beats.forEach((beat: any, index: number) => {
+          const beatStr = JSON.stringify(beat);
+          if (beatStr.includes(deleteTargetPath)) {
+            problematicBeatIndices.push(index);
+            console.log(`Found beat to delete at index ${index} with path: ${deleteTargetPath}`);
+          }
+        });
+      }
+      
+      console.log(`Total beats to delete: ${problematicBeatIndices.length} at indices: [${problematicBeatIndices.join(', ')}]`);
     } catch (error) {
       console.error("Failed to read from local file:", error);
       throw new Error(`Could not read ${currentTestFile} from node_modules`);
@@ -344,6 +362,55 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }, jsonContent);
 
     console.log("✓ Test JSON inputted directly into editor");
+
+    // Fix problematic image paths by converting to URL
+    console.log("\nFixing problematic image paths by converting to URLs...");
+    await page.evaluate(() => {
+      const windowWithMonaco = window as Window & {
+        monaco?: {
+          editor?: {
+            getModels?: () => Array<{
+              setValue: (value: string) => void;
+              getValue: () => string;
+            }>;
+          };
+        };
+      };
+      const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
+      if (editor) {
+        let content = editor.getValue();
+        try {
+          const jsonData = JSON.parse(content);
+          let hasChanges = false;
+          
+          if (jsonData.beats && Array.isArray(jsonData.beats)) {
+            jsonData.beats.forEach((beat: any) => {
+              if (beat.image && beat.image.source && 
+                  beat.image.source.kind === "path" && 
+                  beat.image.source.path === "../../assets/images/mulmocast_credit.png") {
+                
+                console.log("Converting path to URL for mulmocast_credit.png");
+                beat.image.source.kind = "url";
+                beat.image.source.url = "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/assets/images/mulmocast_credit.png";
+                delete beat.image.source.path; // Remove the path property
+                hasChanges = true;
+              }
+            });
+          }
+          
+          if (hasChanges) {
+            const updatedContent = JSON.stringify(jsonData, null, 2);
+            editor.setValue(updatedContent);
+            console.log("✓ Successfully converted problematic paths to URLs");
+          } else {
+            console.log("✓ No problematic paths found to convert");
+          }
+        } catch (e) {
+          console.error("Failed to parse/update JSON:", e);
+        }
+      }
+    });
+    console.log("✓ Path conversion completed");
 
     // Add title field to JSON with timestamp
     console.log("\nAdding title to JSON with timestamp...");
@@ -389,6 +456,43 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("\nWaiting for JSON validation and UI update...");
     await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log("✓ JSON processing time completed");
+
+    // Navigate to Media tab to delete problematic beats
+    console.log("\n7. Navigating to Media tab to clean up problematic assets...");
+    await page.click('[data-testid="tab-media"]');
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
+    console.log("✓ Navigated to Media tab");
+
+    // Delete beats with local_voice.mp3 using pre-identified indices
+    console.log("\n8. Deleting beats with local_voice.mp3...");
+    
+    if (problematicBeatIndices.length > 0) {
+      // Delete in reverse order to avoid index shifting issues
+      const sortedIndices = problematicBeatIndices.sort((a, b) => b - a);
+      console.log(`Deleting beats in reverse order: [${sortedIndices.join(', ')}]`);
+      
+      for (const beatIndex of sortedIndices) {
+        const deleteButtonSelector = `[data-testid="delete-beat-${beatIndex}"]`;
+        console.log(`Looking for delete button: ${deleteButtonSelector}`);
+        
+        try {
+          await page.waitForSelector(deleteButtonSelector, { timeout: 2000 });
+          await page.click(deleteButtonSelector);
+          console.log(`✓ Deleted beat ${beatIndex} (UI: Beat ${beatIndex + 1}) with local_voice.mp3`);
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } catch (error) {
+          console.log(`⚠️ Could not find or click delete button for beat ${beatIndex}`);
+        }
+      }
+      
+      console.log("✓ Completed deletion of beats with local_voice.mp3");
+      
+      // Wait for UI to update after deletions
+      console.log("Waiting for UI to update after deletions...");
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
+    } else {
+      console.log("✓ No beats with local_voice.mp3 found to delete");
+    }
 
     // Find and click the generate button in output settings section
     console.log("\n10. Looking for generate button in output settings section...");
