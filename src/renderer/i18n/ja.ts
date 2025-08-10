@@ -349,11 +349,11 @@ const lang = {
         details: "Interactive content - Responsive design",
       },
       podcast: {
-        title: "Podcast Preview",
-        description: "Audio content playback and preview",
-        play: "Play",
-        download: "Download MP3",
-        details: "Duration: 12:34 - Size: 8.2 MB",
+        title: "ポッドキャスト プレビュー",
+        description: "音声の再生とプレビュー",
+        play: "再生",
+        download: "MP3をダウンロード",
+        details: "再生時間: 12:34 - サイズ: 8.2 MB",
       },
       slide: {
         title: "Slide Preview",
