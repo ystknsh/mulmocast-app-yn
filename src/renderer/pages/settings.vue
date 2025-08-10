@@ -167,8 +167,7 @@ import Layout from "@/components/layout.vue";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { ENV_KEYS, languages } from "../../shared/constants";
-import { I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
+import { ENV_KEYS, languages, I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();

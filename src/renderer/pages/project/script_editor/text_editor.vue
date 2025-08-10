@@ -58,12 +58,17 @@
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { type MulmoBeat, type MultiLingualTexts, languages, splitText } from "mulmocast/browser";
+import {
+  type MulmoBeat,
+  type MultiLingualTexts,
+  type MulmoPresentationStyle,
+  languages,
+  splitText,
+} from "mulmocast/browser";
 
 import { Button, Label, Input, Badge, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getBadge } from "@/lib/beat_util.js";
-import type { MulmoPresentationStyle } from "mulmocast/browser";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
 import { notifyProgress } from "@/lib/notification";
