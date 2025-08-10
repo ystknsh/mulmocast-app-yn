@@ -31,7 +31,7 @@
         <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
         <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
-        <div v-if="pages === 0">PDF not generated</div>
+        <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
         <div v-if="pages > 0">
           <div class="flex flex-wrap items-center justify-center gap-2">
             <Button variant="outline" @click="downloadPdf">
