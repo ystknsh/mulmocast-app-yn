@@ -53,6 +53,21 @@
             @click="startEditingDescription"
           />
         </div>
+
+        <!-- Language Selection -->
+        <div class="mt-2 flex items-center gap-2">
+          <Languages :size="14" class="text-gray-500" />
+          <Select :model-value="currentLanguage" @update:model-value="handleLanguageChange">
+            <SelectTrigger class="h-6! w-30 border-gray-200 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="lang in LANGUAGES" :key="lang.id" :value="lang.id">
+                {{ t("languages." + lang.id) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
     <div v-if="isDevelopment">
@@ -68,9 +83,9 @@
 import { ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { RouterLink } from "vue-router";
-import { ArrowLeft, FolderOpen, Pencil } from "lucide-vue-next";
-import { Button, Input } from "@/components/ui";
-import { INITIAL_DESCRIPTION } from "../../../shared/constants";
+import { ArrowLeft, FolderOpen, Pencil, Languages } from "lucide-vue-next";
+import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
+import { INITIAL_DESCRIPTION, LANGUAGES } from "../../../shared/constants";
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -93,6 +108,7 @@ const isEditingDescription = ref(false);
 
 const displayTitle = ref(props.mulmoScript?.title || t("common.defaultTitle"));
 const displayDescription = ref(props.mulmoScript?.description || INITIAL_DESCRIPTION);
+const currentLanguage = ref(props.mulmoScript?.lang || "en");
 
 watch(
   () => props.mulmoScript?.title,
@@ -108,6 +124,15 @@ watch(
   (newDescription) => {
     if (newDescription && !isEditingDescription.value) {
       displayDescription.value = newDescription;
+    }
+  },
+);
+
+watch(
+  () => props.mulmoScript?.lang,
+  (newLang) => {
+    if (newLang) {
+      currentLanguage.value = newLang;
     }
   },
 );
@@ -155,5 +180,10 @@ const handleDescriptionEnter = (event: KeyboardEvent) => {
   event.preventDefault();
   saveDescription();
   (event.target as HTMLElement)?.blur();
+};
+
+const handleLanguageChange = (value: string) => {
+  currentLanguage.value = value;
+  saveChanges({ lang: value });
 };
 </script>
