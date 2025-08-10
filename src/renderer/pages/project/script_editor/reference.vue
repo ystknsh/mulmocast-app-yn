@@ -193,7 +193,6 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       if (["jpg", "jpeg", "png"].includes(fileType)) {
         return "image";
       }
-      return;
     })();
     if (!imageType) {
       console.warn(`Unsupported file type: ${fileType}`);

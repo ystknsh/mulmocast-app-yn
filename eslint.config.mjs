@@ -8,6 +8,7 @@ import prettier from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import checkFile from "eslint-plugin-check-file";
+import sonarjs from "eslint-plugin-sonarjs";
 
 // Common base rules configuration
 const baseRules = {
@@ -53,8 +54,24 @@ const baseLanguageOptions = {
   },
 };
 
+const sonarjsRules = {
+  "sonarjs/no-commented-code": "off",
+  "sonarjs/todo-tag": "off",
+  "sonarjs/cognitive-complexity": "off",
+  "sonarjs/no-nested-conditional": "off",
+  "sonarjs/use-type-alias": "warn",
+  "sonarjs/no-unused-vars": "warn",
+  "sonarjs/no-ignored-exceptions": "warn",
+  "sonarjs/no-os-command-from-path": "warn",
+  "sonarjs/no-nested-functions": "warn",
+  "sonarjs/no-small-switch": "warn",
+  "sonarjs/slow-regex": "warn",
+  "sonarjs/no-nested-template-literals": "warn"
+};
+
 export default [
   js.configs.recommended,
+  sonarjs.configs.recommended,
   {
     ignores: [
       "node_modules/**",
@@ -85,6 +102,7 @@ export default [
     rules: {
       ...typescript.configs.recommended.rules,
       ...baseRules,
+      ...sonarjsRules,
     },
     settings: {
       "import/resolver": {
@@ -128,6 +146,7 @@ export default [
           math: "always",
         },
       ],
+      ...sonarjsRules,
     },
     settings: {
       "import/resolver": {
@@ -151,6 +170,7 @@ export default [
     rules: {
       ...typescript.configs.recommended.rules,
       ...baseRules,
+      ...sonarjsRules,
     },
     settings: {
       "import/resolver": {
@@ -196,6 +216,7 @@ export default [
     rules: {
       ...typescript.configs.recommended.rules,
       ...baseRules,
+      ...sonarjsRules,
     },
     settings: {
       "import/resolver": {

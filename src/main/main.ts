@@ -88,7 +88,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     // Only open trusted protocols (http/https) in external browser
     if (url.startsWith("http://") || url.startsWith("https://")) {
       // Use void to explicitly ignore the promise and add error handling
-      void shell.openExternal(url).catch((error) => {
+      shell.openExternal(url).catch((error) => {
         console.error("Failed to open external URL:", error);
       });
     }
@@ -115,7 +115,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
         // Open external URLs (http/https) in default browser
         if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
-          void shell.openExternal(url).catch((error) => {
+          shell.openExternal(url).catch((error) => {
             console.error("Failed to open external URL during navigation:", error);
           });
         }

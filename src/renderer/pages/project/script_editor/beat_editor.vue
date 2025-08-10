@@ -297,7 +297,6 @@ const handleDrop = (event: DragEvent) => {
       if (["mov", "mp4", "mpg"].includes(fileType)) {
         return "movie";
       }
-      return;
     })();
     if (!imageType) {
       console.warn(`Unsupported file type: ${fileType}`);
