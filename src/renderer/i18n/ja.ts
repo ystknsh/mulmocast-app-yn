@@ -320,18 +320,18 @@ const lang = {
     },
     productTabs: {
       tabs: {
-        movie: "Movie",
+        movie: "動画",
         pdf: "PDF",
         html: "HTML",
         podcast: "Podcast",
         slide: "Slide",
       },
       movie: {
-        title: "Movie Preview",
-        description: "Video content playback and preview",
-        play: "Play",
-        download: "Download MP4",
-        details: "Duration: 12:34 - Resolution: 1920x1080 - Size: 145 MB",
+        title: "動画プレビュー",
+        description: "動画コンテンツの再生とプレビュー",
+        play: "再生",
+        download: "MP4をダウンロード",
+        details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
       },
       pdf: {
         title: "PDF Preview",
