@@ -127,7 +127,7 @@ import { useMulmoGlobalStore } from "@/store";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
-import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
+import graphMulmoScriptGeneratorAgent, { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -173,6 +173,7 @@ const graphAIAgents = {
   groqAgent,
   validateSchemaAgent,
   exaToolsAgent,
+  graphMulmoScriptGeneratorAgent,
   toolsAgent,
 };
 const filterMessage = (setTime = false) => {
@@ -238,10 +239,15 @@ const run = async () => {
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
-      graphai.injectValue("tools", exaToolsAgent.tools);
+      graphai.injectValue("tools", [...exaToolsAgent.tools, ...graphMulmoScriptGeneratorAgent.tools]);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
           messages: messages.map(filterMessage()),
+        },
+        graphMulmoScriptGeneratorAgent: {
+          messages: messages.map(filterMessage()),
+          prompt: userInput.value,
+          llmAgent: llmAgent,
         },
       });
     }
@@ -251,6 +257,11 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
+    if (res?.llm?.data?.["graphMulmoScriptGeneratorAgent--generate"]?.data) {
+      const script = res?.llm?.data?.["graphMulmoScriptGeneratorAgent--generate"]?.data;
+      script.beats.map(setRandomBeatId);
+      emit("update:updateMulmoScript", script);
+    }
   } catch (error) {
     console.log(error);
   }
