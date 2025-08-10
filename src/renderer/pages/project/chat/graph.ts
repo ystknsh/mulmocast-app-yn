@@ -159,6 +159,7 @@ const graphMulmoScriptGeneratorAgentGraph = {
       isResult: true,
       output: {
         data: ".validateSchema.data",
+        content: ".llm.text",
       },
     },
   },
