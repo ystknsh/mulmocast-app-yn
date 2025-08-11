@@ -162,11 +162,6 @@ const playVideo = () => {
   }
 };
 
-const hasVideo = computed(() => {
-  console.log("videoUrl", videoUrl.value);
-  return videoUrl.value && videoUrl.value.length > 0 && videoUrl.value !== "data:video/mp4;base64,";
-});
-
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
   const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, fileType)) as ArrayBuffer;
   const blob = new Blob([buffer], { type: mimeType });
