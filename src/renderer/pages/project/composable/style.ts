@@ -9,18 +9,15 @@ export const themeOptions = [
   { value: "developer-debug", label: "Developer Debug" },
 ];
 
-export const isScriptViewerOpen = ref(true);
 export const isBeatsViewerOpen = ref(false);
 export const beatsViewMode = ref<"list" | "timeline">("list");
 
 // Theme change effect
 watch(selectedTheme, (newTheme) => {
   if (newTheme === "beginner") {
-    isScriptViewerOpen.value = true;
     isBeatsViewerOpen.value = true;
     beatsViewMode.value = "timeline";
   } else {
-    isScriptViewerOpen.value = false;
     isBeatsViewerOpen.value = false;
     beatsViewMode.value = "list";
   }

@@ -332,6 +332,7 @@ const lang = {
         title: "動画プレビュー",
         description: "動画コンテンツの再生とプレビュー",
         play: "再生",
+        pause: "停止",
         download: "MP4をダウンロード",
         details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
       },

@@ -19,7 +19,7 @@
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
-      <div>
+      <div class="flex flex-col gap-4">
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
@@ -160,11 +160,20 @@
             />
           </template>
         </div>
-        <!-- end of image edit -->
+        <!-- movie edit -->
+        <div v-if="!beat.image && !beat.htmlPrompt">
+          <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
+          <Textarea
+            :placeholder="t('beat.moviePrompt.placeholder')"
+            :model-value="beat.moviePrompt"
+            @update:model-value="(value) => update('moviePrompt', String(value))"
+            class="mb-2 h-20 overflow-y-auto"
+          />
+        </div>
       </div>
 
       <!-- right: image preview -->
-      <div>
+      <div class="flex flex-col gap-4">
         <BeatPreviewImage
           :beat="beat"
           :index="index"
@@ -175,20 +184,6 @@
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
         />
-      </div>
-
-      <!-- movie edit left -->
-      <div v-if="!beat.image && !beat.htmlPrompt">
-        <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
-        <Textarea
-          :placeholder="t('beat.moviePrompt.placeholder')"
-          :model-value="beat.moviePrompt"
-          @update:model-value="(value) => update('moviePrompt', String(value))"
-          class="mb-2 h-20 overflow-y-auto"
-        />
-      </div>
-      <!-- movie preview right -->
-      <div v-if="!beat.image && !beat.htmlPrompt">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -198,6 +193,7 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
+          v-if="!beat.image && !beat.htmlPrompt"
         />
       </div>
     </div>

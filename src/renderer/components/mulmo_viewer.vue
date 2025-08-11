@@ -9,20 +9,34 @@
 
     <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <video :size="64" class="mx-auto mb-4 max-h-[90vh] text-gray-400" controls :src="videoUrl" ref="videoRef" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button @click="playVideo">
-            <Play :size="16" class="mr-2" />
-            {{ t("project.productTabs.movie.play") }}
-          </Button>
-          <Button variant="outline" @click="downloadMp4">
-            <Video :size="16" class="mr-2" />
-            {{ t("project.productTabs.movie.download") }}
-          </Button>
+        <div>
+          <video
+            v-if="videoUrl"
+            :size="64"
+            class="mx-auto mb-4 max-h-[90vh] text-gray-400"
+            controls
+            :src="videoUrl"
+            ref="videoRef"
+          />
+          <Video v-else :size="64" class="mx-auto mb-4 text-gray-400" />
+
+          <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
+          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <Button @click="playVideo" :disabled="!videoUrl">
+              <Pause v-if="isPlaying" :size="16" />
+              <Play v-else :size="16" />
+              {{ isPlaying ? t("project.productTabs.movie.pause") : t("project.productTabs.movie.play") }}
+            </Button>
+            <Button variant="outline" @click="downloadMp4" :disabled="!videoUrl">
+              <Video :size="16" class="mr-2" />
+              {{ t("project.productTabs.movie.download") }}
+            </Button>
+          </div>
+          <div class="mt-4 text-sm text-gray-500" v-if="videoUrl">
+            {{ t("project.productTabs.movie.details") }}
+          </div>
         </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.movie.details") }}</div>
       </div>
     </TabsContent>
 
@@ -101,7 +115,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { Video, FileText, Volume2, FileImage, Play } from "lucide-vue-next";
+import { Video, FileText, Volume2, FileImage, Play, Pause } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 
 import { Button } from "@/components/ui/button";
@@ -137,8 +151,15 @@ const downloadPdf = async () => {
 };
 
 const videoRef = ref(null);
+const isPlaying = ref(false);
 const playVideo = () => {
-  videoRef.value?.play();
+  if (videoRef.value?.paused) {
+    videoRef.value?.play();
+    isPlaying.value = true;
+  } else {
+    videoRef.value?.pause();
+    isPlaying.value = false;
+  }
 };
 
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
@@ -160,12 +181,15 @@ pdfData.value = pdf;
 
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
+  if (bufferMovie && bufferMovie.byteLength > 0) {
+    videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
+  }
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
-  audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
-
+  if (bufferAudio && bufferAudio.byteLength > 0) {
+    audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "video/mp4");
+  }
   const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
-  if (bufferPdf) {
+  if (bufferPdf && bufferPdf.byteLength > 0) {
     pdfBuffer.value = new Uint8Array(bufferPdf);
   }
 };
