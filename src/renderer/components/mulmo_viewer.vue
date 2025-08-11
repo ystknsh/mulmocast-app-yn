@@ -74,14 +74,14 @@
               </Button>
             </div>
           </div>
-          <div class="text-xs text-gray-500">
-            {{
-              t("project.productTabs.pdf.details", {
-                pages: pages || "-",
-                size: pdfMetadata.fileSize || "-",
-              })
-            }}
-          </div>
+        </div>
+        <div class="mt-2 text-xs text-gray-500">
+          {{
+            t("project.productTabs.pdf.details", {
+              pages: pages || "-",
+              size: pdfMetadata.fileSize || "-",
+            })
+          }}
         </div>
       </div>
     </TabsContent>
