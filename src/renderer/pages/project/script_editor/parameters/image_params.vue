@@ -1,10 +1,10 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium" v-if="showTitle">Image Parameters</h4>
+    <h4 class="mb-3 font-medium" v-if="showTitle">{{ t("parameters.imageParams.title") }}</h4>
 
     <div class="space-y-3">
       <div>
-        <Label>Provider</Label>
+        <Label>{{ t("ui.common.provider") }}</Label>
         <Select
           :model-value="imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider"
           @update:model-value="handleProviderChange"
@@ -20,16 +20,16 @@
         </Select>
       </div>
       <div>
-        <Label>Model</Label>
+        <Label>{{ t("ui.common.model") }}</Label>
         <Select
           :model-value="imageParams?.model || IMAGE_PARAMS_DEFAULT_VALUES.model"
           @update:model-value="(value) => handleUpdate('model', String(value))"
         >
           <SelectTrigger>
-            <SelectValue placeholder="Auto" />
+            <SelectValue :placeholder="t('parameters.imageParams.modelAuto')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">Auto</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.imageParams.modelAuto") }}</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
               :key="model"
@@ -41,23 +41,23 @@
         </Select>
       </div>
       <div>
-        <Label>Style</Label>
+        <Label>{{ t("ui.common.style") }}</Label>
         <Input
           :model-value="imageParams?.style || IMAGE_PARAMS_DEFAULT_VALUES.style"
           @update:model-value="(value) => handleUpdate('style', String(value))"
-          :placeholder="defaultStyle ?? 'e.g. vivid, natural'"
+          :placeholder="defaultStyle ?? t('parameters.imageParams.stylePlaceholder')"
         />
       </div>
       <div class="my-2">
-        <Label>Moderation</Label>
+        <Label>{{ t("parameters.imageParams.moderation") }}</Label>
         <Input
           :model-value="imageParams?.moderation || IMAGE_PARAMS_DEFAULT_VALUES.moderation"
           @update:model-value="(value) => handleUpdate('moderation', String(value))"
-          placeholder="e.g. low, auto"
+          :placeholder="t('parameters.imageParams.moderationPlaceholder')"
         />
       </div>
       <div v-if="images" class="my-2">
-        <Label>Images</Label>
+        <Label>{{ t("parameters.imageParams.images") }}</Label>
         <div v-for="(imageKey, key) in Object.keys(images)" :key="imageKey">
           <Checkbox
             :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { Label, Input, Checkbox, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -84,6 +85,8 @@ import {
 } from "mulmocast/browser";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
+
+const { t } = useI18n();
 
 const PROVIDERS = Object.entries(provider2ImageAgent)
   .filter(([provider, __]) => {
