@@ -465,6 +465,7 @@ const lang = {
       sizePreset: "Size Preset",
       width: "Width",
       height: "Height",
+      custom: "Custom",
     },
     captionParams: {
       title: "Caption Parameters",

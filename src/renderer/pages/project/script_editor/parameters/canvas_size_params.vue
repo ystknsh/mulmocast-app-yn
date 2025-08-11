@@ -12,7 +12,7 @@
             <SelectItem v-for="(size, key) in PRESET_CANVAS_SIZE" :key="key" :value="key">
               {{ size.width }}×{{ size.height }}
             </SelectItem>
-            <SelectItem value="custom">Custom</SelectItem>
+            <SelectItem value="custom">{{ t("parameters.canvasSizeParams.custom") }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
