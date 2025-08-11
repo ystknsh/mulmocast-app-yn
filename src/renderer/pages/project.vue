@@ -252,7 +252,7 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
-import MulmoViewer from "../components/mulmo_viewer.vue";
+import MulmoViewer from "../components/mulmo_viewer/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
