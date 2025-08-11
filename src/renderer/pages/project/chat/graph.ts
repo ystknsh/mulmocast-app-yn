@@ -1,7 +1,7 @@
 import { nestedAgentGenerator } from "@graphai/vanilla/lib/graph_agents/nested_agent";
 
 import { type GraphData, type AgentFunctionInfo, graphDataLatestVersion } from "graphai";
-import { mulmoScriptSchema } from "mulmocast/browser";
+import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
 // chat
 
@@ -168,7 +168,7 @@ const graphMulmoScriptGeneratorAgentGraph = {
         isValid: ":mulmoScript.isValid",
       },
       isResult: true,
-      agent: ({ data, isValid }) => {
+      agent: ({ data, isValid }: { data: MulmoScript; isValid: boolean }) => {
         return {
           data,
           content: isValid ? "script accepted" : "failed",
