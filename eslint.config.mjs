@@ -59,7 +59,6 @@ const sonarjsRules = {
   "sonarjs/todo-tag": "off",
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-nested-conditional": "off",
-  "sonarjs/use-type-alias": "warn",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
   "sonarjs/no-ignored-exceptions": "warn",
   "sonarjs/no-os-command-from-path": "warn",

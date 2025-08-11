@@ -238,12 +238,14 @@ import { useMulmoEventStore } from "../../../store";
 import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
+type FileData = ArrayBuffer | string | null;
+
 interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
   index: number;
-  imageFile: ArrayBuffer | string | null;
-  movieFile: ArrayBuffer | string | null;
+  imageFile: FileData;
+  movieFile: FileData;
   isEnd: boolean;
   mulmoError: string[];
 }
