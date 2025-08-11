@@ -465,6 +465,7 @@ const lang = {
       sizePreset: "サイズ設定",
       width: "幅",
       height: "高さ",
+      custom: "カスタム",
     },
     captionParams: {
       title: "字幕設定",
