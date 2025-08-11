@@ -62,7 +62,7 @@ jobs:
       
       - run: yarn install --frozen-lockfile
       - run: npx playwright install-deps && npx playwright install chromium
-      - run: yarn build
+      - run: yarn package
       - run: xvfb-run -a npx ts-node test/automated_generation_e2e_test.ts
         env:
           CI: true
