@@ -48,3 +48,22 @@ jobs:
         with:
           name: bin-${{ matrix.node-version }}
           path: out/
+
+  content-generation-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'yarn'
+      
+      - run: yarn install --frozen-lockfile
+      - run: npx playwright install-deps && npx playwright install chromium
+      - run: yarn build
+      - run: xvfb-run -a npx ts-node test/automated_generation_e2e_test.ts
+        env:
+          CI: true
+          NODE_ENV: test
