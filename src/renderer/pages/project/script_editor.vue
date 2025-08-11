@@ -290,7 +290,10 @@ const safeBeats = computed(() => {
 });
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
-  if (!props.isValidScriptData) {
+  if (
+    !props.isValidScriptData &&
+    ![SCRIPT_EDITOR_TABS.JSON, SCRIPT_EDITOR_TABS.YAML].includes(tab as "yaml" | "json")
+  ) {
     return;
   }
   lastTab.value = tab;
