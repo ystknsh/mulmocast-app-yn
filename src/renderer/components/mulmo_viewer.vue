@@ -166,14 +166,11 @@ const audioMetadata = ref({
   fileSize: "",
 });
 
-const pdfData = ref(null);
+const pdfData = ref();
 const pdfCurrentPage = ref(1);
 const pdfMetadata = ref({
   pageSize: "", // TODO: add page size.
   fileSize: "",
-});
-watch(pdfData, (newPdfData) => {
-  console.log(newPdfData);
 });
 
 const downloadMp4 = async () => {
