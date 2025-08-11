@@ -3,6 +3,7 @@
     <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
       <Bot :size="16" class="text-blue-600" />
     </div>
+
     <div class="flex-1">
       <div
         class="chat-markdown block max-w-md rounded-lg bg-gray-100 p-3 text-sm break-words whitespace-pre-wrap text-gray-800"
@@ -26,7 +27,7 @@ const props = defineProps<{
 }>();
 
 const formatedTime = computed(() => {
-  return dayjs(props.time ?? Date.now()).format("MM/DD hh:mm"); // TODO: format i18n
+  return dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"); // TODO: format i18n
 });
 
 function markdownCodeBlocks(input: string): string {
