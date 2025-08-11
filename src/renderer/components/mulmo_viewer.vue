@@ -51,15 +51,9 @@
 
     <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <VuePDF
-          :pdf="pdfData.value"
-          :page="pdfCurrentPage"
-          v-if="pdfData"
-          :scale="0.8"
-          :fit-parent="true"
-          class="mx-auto"
-          style="max-width: 100% !important; width: auto !important"
-        />
+        <div class="mx-auto" v-if="pdfData">
+          <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" class="mx-auto" />
+        </div>
         <template v-else>
           <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
           <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
