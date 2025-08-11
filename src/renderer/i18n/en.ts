@@ -333,6 +333,7 @@ const lang = {
         title: "Movie Preview",
         description: "Video content playback and preview",
         play: "Play",
+        pause: "Pause",
         download: "Download MP4",
         details: "Duration: 12:34 - Resolution: 1920x1080 - Size: 145 MB",
       },

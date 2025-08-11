@@ -24,8 +24,9 @@
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
           <div class="flex flex-wrap items-center justify-center gap-2">
             <Button @click="playVideo" :disabled="!videoUrl">
-              <Play :size="16" class="mr-2" />
-              {{ t("project.productTabs.movie.play") }}
+              <Pause v-if="isPlaying" :size="16" />
+              <Play v-else :size="16" />
+              {{ isPlaying ? t("project.productTabs.movie.pause") : t("project.productTabs.movie.play") }}
             </Button>
             <Button variant="outline" @click="downloadMp4" :disabled="!videoUrl">
               <Video :size="16" class="mr-2" />
@@ -114,7 +115,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { Video, FileText, Volume2, FileImage, Play } from "lucide-vue-next";
+import { Video, FileText, Volume2, FileImage, Play, Pause } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 
 import { Button } from "@/components/ui/button";
@@ -150,8 +151,15 @@ const downloadPdf = async () => {
 };
 
 const videoRef = ref(null);
+const isPlaying = ref(false);
 const playVideo = () => {
-  videoRef.value?.play();
+  if (videoRef.value?.paused) {
+    videoRef.value?.play();
+    isPlaying.value = true;
+  } else {
+    videoRef.value?.pause();
+    isPlaying.value = false;
+  }
 };
 
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
