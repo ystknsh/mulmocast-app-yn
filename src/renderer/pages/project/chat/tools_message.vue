@@ -35,7 +35,11 @@ import dayjs from "dayjs";
 const props = defineProps<{
   message: string;
   time?: number;
-  data?: any;
+  data?: {
+    agent: string;
+    func: string;
+    arg: unknown;
+  };
 }>();
 
 const isOpen = ref(false);
