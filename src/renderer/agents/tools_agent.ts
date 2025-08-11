@@ -27,7 +27,7 @@ const toolWorkFlowStep = {
       },
       inputs: {
         array: ":messages",
-        items: [":userInput.message", ":llmCallWithTools.message" ],
+        items: [":userInput.message", ":llmCallWithTools.message"],
       },
     },
     // Call agents specified in the tools result
