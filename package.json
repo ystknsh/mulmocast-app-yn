@@ -69,9 +69,8 @@
     "vue-tsc": "^3.0.5"
   },
   "dependencies": {
-    "@graphai/llm_agents": "^2.0.2",
+    "@graphai/llm_agents": "^2.0.3",
     "@graphai/stream_agent_filter": "^2.0.2",
-    "@graphai/tools_agent": "^0.2.4",
     "@graphai/vanilla": "^2.0.9",
     "@monaco-editor/loader": "^1.5.0",
     "@receptron/event_agent_generator": "^0.0.6",
