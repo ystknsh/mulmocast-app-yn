@@ -1,5 +1,5 @@
 import { spawn, ChildProcess } from "child_process";
-import playwright, { Browser, BrowserContext, Page } from "playwright-core";
+import playwright, { Browser, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
