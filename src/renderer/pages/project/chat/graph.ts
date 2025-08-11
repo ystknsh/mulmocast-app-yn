@@ -168,7 +168,7 @@ const graphMulmoScriptGeneratorAgentGraph = {
         isValid: ":mulmoScript.isValid",
       },
       isResult: true,
-      agent: ({data, isValid}) => {
+      agent: ({ data, isValid }) => {
         return {
           data,
           content: isValid ? "script accepted" : "failed",
