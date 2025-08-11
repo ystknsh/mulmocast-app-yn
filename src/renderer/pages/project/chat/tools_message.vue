@@ -4,6 +4,9 @@
       <Search :size="16" class="text-blue-600" @click="isOpen = !isOpen" />
     </div>
     <div class="flex-1">
+      <div class="mb-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+        {{ data.agent }}({{ data.func }}){{ data.arg }}
+      </div>
       <div
         v-if="!isOpen"
         class="chat-markdown block max-w-md rounded-lg bg-gray-100 p-3 text-sm break-words whitespace-pre-wrap text-gray-800"
@@ -32,6 +35,11 @@ import dayjs from "dayjs";
 const props = defineProps<{
   message: string;
   time?: number;
+  data?: {
+    agent: string;
+    func: string;
+    arg: unknown;
+  };
 }>();
 
 const isOpen = ref(false);

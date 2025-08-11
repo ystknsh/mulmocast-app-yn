@@ -75,6 +75,11 @@ const toolWorkFlowStep = {
               tool_call_id: ":llmToolCall.id",
               name: ":llmToolCall.name",
               content: ":toolCallAgent.content",
+              extra: {
+                agent: ":llmToolCall.name.split(--).$0",
+                arg: ":llmToolCall.arguments",
+                func: ":llmToolCall.name.split(--).$1",
+              },
             },
           },
         },

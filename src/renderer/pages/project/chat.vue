@@ -15,6 +15,7 @@
         <ToolsMessage
           :message="message.content ?? ''"
           :time="message.time"
+          :data="message?.extra"
           v-if="message.role === 'tool' && message.content"
         />
         <UserMessage
@@ -176,11 +177,11 @@ const graphAIAgents = {
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
-    const { role, content, tool_calls, tool_call_id, name } = message;
+    const { role, content, tool_calls, tool_call_id, name, extra } = message;
     if (setTime) {
-      return { role, content, tool_calls, tool_call_id, name, time: message.time ?? Date.now() };
+      return { extra, role, content, tool_calls, tool_call_id, name, time: message.time ?? Date.now() };
     }
-    return { role, content, tool_calls, tool_call_id, name };
+    return { extra, role, content, tool_calls, tool_call_id, name };
   };
 };
 
