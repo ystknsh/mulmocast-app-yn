@@ -11,7 +11,7 @@
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <div>
           <video
-            v-if="hasVideo"
+            v-if="videoUrl"
             :size="64"
             class="mx-auto mb-4 max-h-[90vh] text-gray-400"
             controls
@@ -23,16 +23,18 @@
           <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
           <div class="flex flex-wrap items-center justify-center gap-2">
-            <Button @click="playVideo" :disabled="!hasVideo">
+            <Button @click="playVideo" :disabled="!videoUrl">
               <Play :size="16" class="mr-2" />
               {{ t("project.productTabs.movie.play") }}
             </Button>
-            <Button variant="outline" @click="downloadMp4" :disabled="!hasVideo">
+            <Button variant="outline" @click="downloadMp4" :disabled="!videoUrl">
               <Video :size="16" class="mr-2" />
               {{ t("project.productTabs.movie.download") }}
             </Button>
           </div>
-          <div class="mt-4 text-sm text-gray-500" v-if="hasVideo">{{ t("project.productTabs.movie.details") }}</div>
+          <div class="mt-4 text-sm text-gray-500" v-if="videoUrl">
+            {{ t("project.productTabs.movie.details") }}
+          </div>
         </div>
       </div>
     </TabsContent>
@@ -133,11 +135,6 @@ const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
-
-// 動画の存在チェック
-const hasVideo = computed(() => {
-  return videoUrl.value && videoUrl.value.length > 0 && videoUrl.value !== "data:video/mp4;base64,";
-});
 
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
