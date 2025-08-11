@@ -80,7 +80,7 @@
 
           <!-- Middle Column - Script Editor -->
           <div class="h-full">
-            <Collapsible v-model:open="isScriptViewerOpen" class="h-full">
+            <Collapsible class="h-full">
               <Card class="flex h-full flex-col">
                 <CardHeader class="flex-shrink-0">
                   <div class="flex items-center justify-between">
@@ -120,41 +120,29 @@
                       >
                         <Redo :size="16" :class="mulmoScriptHistoryStore.redoable ? 'text-black' : 'text-gray-400'" />
                       </Button>
-                      <!-- Collapse/Expand Button -->
-                      <CollapsibleTrigger as-child>
-                        <Button variant="ghost" size="sm">
-                          <component :is="isScriptViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                        </Button>
-                      </CollapsibleTrigger>
                     </div>
                   </div>
                 </CardHeader>
-                <CollapsibleContent
-                  :class="`flex-1 overflow-hidden transition-all duration-300 ${
-                    isScriptViewerOpen ? 'h-full' : 'max-h-[180px]'
-                  }`"
-                >
-                  <CardContent class="h-full">
-                    <ScriptEditor
-                      :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
-                      :imageFiles="imageFiles"
-                      :movieFiles="movieFiles"
-                      :audioFiles="audioFiles"
-                      :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
-                      @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
-                      :isValidScriptData="isValidScriptData"
-                      @update:isValidScriptData="(val) => (isValidScriptData = val)"
-                      @generateImage="generateImage"
-                      @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                      @positionUp="positionUp"
-                      @addBeat="addBeat"
-                      @deleteBeat="deleteBeat"
-                      @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
-                      :mulmoError="mulmoError"
-                      @saveMulmo="saveMulmo"
-                    />
-                  </CardContent>
-                </CollapsibleContent>
+                <CardContent class="h-full">
+                  <ScriptEditor
+                    :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
+                    :imageFiles="imageFiles"
+                    :movieFiles="movieFiles"
+                    :audioFiles="audioFiles"
+                    :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
+                    @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
+                    :isValidScriptData="isValidScriptData"
+                    @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                    @generateImage="generateImage"
+                    @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                    @positionUp="positionUp"
+                    @addBeat="addBeat"
+                    @deleteBeat="deleteBeat"
+                    @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
+                    :mulmoError="mulmoError"
+                    @saveMulmo="saveMulmo"
+                  />
+                </CardContent>
               </Card>
             </Collapsible>
           </div>
@@ -244,8 +232,6 @@ import {
   Redo,
   CheckCircle,
   XCircle,
-  ChevronDown,
-  ChevronUp,
   Bot,
   PanelLeftClose,
   PanelLeftOpen,
@@ -281,7 +267,6 @@ import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore
 
 import {
   selectedTheme,
-  isScriptViewerOpen,
   getCardPadding,
   getHeaderSize,
   getContainerSpacing,
@@ -336,7 +321,6 @@ onUnmounted(() => {
 
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
-  isScriptViewerOpen.value = true;
   notifySuccess(t("settings.notifications.createSuccess"));
 };
 
