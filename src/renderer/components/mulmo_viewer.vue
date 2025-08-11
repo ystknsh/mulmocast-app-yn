@@ -180,44 +180,13 @@ const { pdf, pages } = usePDF(pdfBuffer);
 pdfData.value = pdf;
 
 const updateResources = async () => {
-  try {
-    const bufferMovie = (await window.electronAPI.mulmoHandler(
-      "downloadFile",
-      projectId.value,
-      "movie",
-    )) as ArrayBuffer;
-    if (bufferMovie && bufferMovie.byteLength > 0) {
-      videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
-    } else {
-      videoUrl.value = "";
-    }
-  } catch (error) {
-    // 動画ファイルが存在しない場合
-    videoUrl.value = "";
-  }
-
-  try {
-    const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
-    if (bufferAudio && bufferAudio.length > 0) {
-      audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
-    } else {
-      audioUrl.value = "";
-    }
-  } catch (error) {
-    // 音声ファイルが存在しない場合
-    audioUrl.value = "";
-  }
-
-  try {
-    const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
-    if (bufferPdf && bufferPdf.length > 0) {
-      pdfBuffer.value = new Uint8Array(bufferPdf);
-    } else {
-      pdfBuffer.value = undefined;
-    }
-  } catch (error) {
-    // PDFファイルが存在しない場合
-    pdfBuffer.value = undefined;
+  const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+  videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
+  const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
+  audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "video/mp4");
+  const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
+  if (bufferPdf) {
+    pdfBuffer.value = new Uint8Array(bufferPdf);
   }
 };
 
