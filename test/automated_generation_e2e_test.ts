@@ -127,12 +127,12 @@ async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
 
   while (elapsed < maxWaitTime) {
     const generatingCount = await page.evaluate(() => {
-      // Look for "generating" text with count in header
-      const elements = document.querySelectorAll("*");
-      for (const element of elements) {
-        const text = element.textContent || "";
-        // Match patterns like "generating (2)" or "生成中 (2)"
-        const match = text.match(/(?:generating|生成中)\s*\((\d+)\)/i);
+      // Look for generating count badge using data-testid
+      const badge = document.querySelector('[data-testid="generating-count-badge"]');
+      if (badge) {
+        const text = badge.textContent || "";
+        // Extract number from text like "3 generating"
+        const match = text.match(/(\d+)/);
         if (match) {
           return parseInt(match[1], 10);
         }
