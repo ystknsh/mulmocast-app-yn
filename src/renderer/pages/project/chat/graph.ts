@@ -156,17 +156,30 @@ const graphMulmoScriptGeneratorAgentGraph = {
         llmAgent: ":data.llmAgent",
       },
       graph: graphGenerateMulmoScriptInternal,
-      isResult: true,
       output: {
         data: ".validateSchema.data",
-        content: ".llm.text",
+        isValid: ".validateSchema.isValid",
+        // content: ".llm.text",
+      },
+    },
+    result: {
+      inputs: {
+        data: ":mulmoScript.data",
+        isValid: ":mulmoScript.isValid",
+      },
+      isResult: true,
+      agent: ({data, isValid}) => {
+        return {
+          data,
+          content: isValid ? "script accepted" : "failed",
+        };
       },
     },
   },
 };
 
 const graphMulmoScriptGeneratorAgent = nestedAgentGenerator(graphMulmoScriptGeneratorAgentGraph, {
-  resultNodeId: "mulmoScript",
+  resultNodeId: "result",
 });
 console.log(graphMulmoScriptGeneratorAgent);
 
