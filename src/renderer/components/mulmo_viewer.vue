@@ -19,10 +19,12 @@
             ref="videoRef"
             @loadedmetadata="updateVideoMetadata"
           />
-          <Video v-else :size="64" class="mx-auto mb-4 text-gray-400" />
 
-          <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
-          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+          <template v-else>
+            <Video :size="64" class="mx-auto mb-4 text-gray-400" />
+            <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
+            <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+          </template>
           <div class="flex flex-wrap items-center justify-center gap-2">
             <Button @click="playVideo" :disabled="!videoUrl">
               <Pause v-if="isPlaying" :size="16" />
@@ -49,42 +51,47 @@
 
     <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
+        <VuePDF
+          :pdf="pdfData.value"
+          :page="pdfCurrentPage"
+          v-if="pdfData"
+          :scale="0.8"
+          :fit-parent="true"
+          class="mx-auto"
+          style="max-width: 100% !important; width: auto !important"
+        />
+        <template v-else>
+          <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
+          <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
+          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
+        </template>
         <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
-        <div v-if="pages > 0">
-          <div class="flex flex-wrap items-center justify-center gap-2">
-            <Button variant="outline" @click="downloadPdf">
-              <FileText :size="16" class="mr-2" />
-              {{ t("project.productTabs.pdf.download") }}
-            </Button>
+        <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-4">
+          <div class="flex items-center justify-center gap-4">
+            <div>
+              <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
+              {{ pdfCurrentPage }}/{{ pages }}
+              <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-2">
+              <Button variant="outline" @click="downloadPdf">
+                <FileText :size="16" class="mr-2" />
+                {{ t("project.productTabs.pdf.download") }}
+              </Button>
+            </div>
           </div>
-          <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
-
-          <div>
-            <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
-            {{ pdfCurrentPage }}/{{ pages }}
-            <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
-            <VuePDF
-              :pdf="pdfData.value"
-              :page="pdfCurrentPage"
-              v-if="pdfData"
-              :scale="0.8"
-              :fit-parent="true"
-              class="mx-auto"
-              style="max-width: 100% !important; width: auto !important"
-            />
-          </div>
+          <div class="text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
         </div>
       </div>
     </TabsContent>
 
     <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
+        <template v-if="!audioUrl">
+          <Volume2 :size="64" class="mx-auto mb-4 text-gray-400" />
+          <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
+          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
+        </template>
         <div class="flex flex-wrap items-center justify-center gap-2">
           <div>
             <audio :src="audioUrl" v-if="!!audioUrl" controls />
