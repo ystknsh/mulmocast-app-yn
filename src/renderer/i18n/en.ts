@@ -336,14 +336,14 @@ const lang = {
         play: "Play",
         pause: "Pause",
         download: "Download MP4",
-        details: "Duration: 12:34 - Resolution: 1920x1080 - Size: 145 MB",
+        details: "Duration: {duration} - Resolution: {resolution} - Size: {size}",
       },
       pdf: {
         title: "PDF Preview",
         description: "PDF document display and download",
         view: "View PDF",
         download: "Download PDF",
-        details: "8 pages - A4 format - Size: 2.1 MB",
+        details: "{pages} pages - Size: {size}",
         empty: "PDF not generated",
       },
       html: {
@@ -358,7 +358,7 @@ const lang = {
         description: "Audio content playback and preview",
         play: "Play",
         download: "Download MP3",
-        details: "Duration: 12:34 - Size: 8.2 MB",
+        details: "Duration: {duration} - Size: {size}",
       },
       slide: {
         title: "Slide Preview",

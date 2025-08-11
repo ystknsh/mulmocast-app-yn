@@ -3,7 +3,8 @@
     <Input
       :placeholder="t('beat.imageReference.placeholder')"
       v-model="referenceKey"
-      :invalid="!validateKey"
+      @input="referenceKeyDirty = true"
+      :invalid="showInvalid"
       class="w-64"
     />
     <Select v-model="selectedImageKey">
@@ -58,6 +59,7 @@ const templates = [
   },
 ];
 const referenceKey = ref("");
+const referenceKeyDirty = ref(false);
 
 const validateKey = computed(() => {
   return (
@@ -67,9 +69,14 @@ const validateKey = computed(() => {
   );
 });
 
+const showInvalid = computed(() => {
+  return referenceKeyDirty.value && !validateKey.value;
+});
+
 const emitReferenceImage = () => {
   const reference = { ...templates[selectedImageKey.value].data };
   emit("addReferenceImage", referenceKey.value, reference);
   referenceKey.value = "";
+  referenceKeyDirty.value = false; // dirty状態をリセット
 };
 </script>
