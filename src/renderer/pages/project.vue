@@ -231,7 +231,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -330,6 +330,10 @@ onMounted(async () => {
   }
 });
 
+onUnmounted(() => {
+  mulmoScriptHistoryStore.resetMulmoScript();
+});
+
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   isScriptViewerOpen.value = true;
@@ -367,8 +371,12 @@ const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(
   () => mulmoScriptHistoryStore.currentMulmoScript,
-  () => {
-    // Be careful not to save a page just by opening it.
+  (newVal, oldVal) => {
+    // Skip saving when first watch
+    if (oldVal === null) {
+      return;
+    }
+    console.log("🙏saveMulmoScript");
     saveMulmoScript(mulmoScriptHistoryStore.currentMulmoScript);
   },
   { deep: true },
@@ -383,6 +391,7 @@ const mulmoError = computed<MulmoError>(() => {
 });
 
 const formatAndPushHistoryMulmoScript = () => {
+  console.log("🙏formatAndPushHistoryMulmoScript");
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
