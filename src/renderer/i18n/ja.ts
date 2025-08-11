@@ -357,7 +357,7 @@ const lang = {
         description: "音声の再生とプレビュー",
         play: "再生",
         download: "MP3をダウンロード",
-        details: "再生時間: 12:34 - サイズ: 8.2 MB",
+        details: "再生時間: {duration} - サイズ: {size}",
       },
       slide: {
         title: "スライド プレビュー",

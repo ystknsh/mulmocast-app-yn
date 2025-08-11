@@ -36,7 +36,7 @@
               {{ t("project.productTabs.movie.download") }}
             </Button>
           </div>
-          <div class="mt-4 text-xs text-gray-500" v-if="videoUrl">
+          <div class="mt-2 text-xs text-gray-500" v-if="videoUrl">
             {{
               t("project.productTabs.movie.details", {
                 duration: videoMetadata.duration || "-",
@@ -60,7 +60,7 @@
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.pdf.description") }}</p>
         </template>
         <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
-        <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-4">
+        <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-2">
           <div class="flex items-center justify-center gap-4">
             <div>
               <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
@@ -74,7 +74,7 @@
               </Button>
             </div>
           </div>
-          <div class="text-sm text-gray-500">
+          <div class="text-xs text-gray-500">
             {{
               t("project.productTabs.pdf.details", {
                 pages: pages || "-",
@@ -93,16 +93,21 @@
           <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
         </template>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <div>
-            <audio :src="audioUrl" v-if="!!audioUrl" controls />
-          </div>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <audio :src="audioUrl" v-if="!!audioUrl" controls ref="audioRef" @loadedmetadata="updateAudioMetadata" />
           <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
             {{ t("project.productTabs.podcast.download") }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.podcast.details") }}</div>
+        <div class="mt-2 text-xs text-gray-500" v-if="audioUrl">
+          {{
+            t("project.productTabs.podcast.details", {
+              duration: audioMetadata.duration || "-",
+              size: audioMetadata.fileSize || "-",
+            })
+          }}
+        </div>
       </div>
     </TabsContent>
 
@@ -156,6 +161,10 @@ const videoMetadata = ref({
   resolution: "",
   fileSize: "",
 });
+const audioMetadata = ref({
+  duration: "",
+  fileSize: "",
+});
 
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
@@ -175,6 +184,7 @@ const downloadPdf = async () => {
 };
 
 const videoRef = ref<HTMLVideoElement | null>(null);
+const audioRef = ref<HTMLAudioElement | null>(null);
 const isPlaying = ref(false);
 const playVideo = () => {
   if (videoRef.value?.paused) {
@@ -235,6 +245,16 @@ const updateVideoMetadata = () => {
   }
 };
 
+const updateAudioMetadata = () => {
+  if (!audioRef.value) return;
+
+  const audio = audioRef.value;
+
+  if (!isNaN(audio.duration)) {
+    audioMetadata.value.duration = formatDuration(audio.duration);
+  }
+};
+
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
   if (bufferMovie && bufferMovie.byteLength > 0) {
@@ -247,7 +267,12 @@ const updateResources = async () => {
   }
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
   if (bufferAudio && bufferAudio.byteLength > 0) {
-    audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "video/mp4");
+    audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "audio/mp3");
+    audioMetadata.value.fileSize = formatFileSize(bufferAudio.byteLength);
+
+    // Wait for audio to load metadata
+    await nextTick();
+    updateAudioMetadata();
   }
   const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
   if (bufferPdf && bufferPdf.byteLength > 0) {

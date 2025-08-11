@@ -358,7 +358,7 @@ const lang = {
         description: "Audio content playback and preview",
         play: "Play",
         download: "Download MP3",
-        details: "Duration: 12:34 - Size: 8.2 MB",
+        details: "Duration: {duration} - Size: {size}",
       },
       slide: {
         title: "Slide Preview",
