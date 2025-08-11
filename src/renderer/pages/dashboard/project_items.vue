@@ -46,7 +46,7 @@
             class="inline-flex items-center space-x-1 rounded bg-blue-100 px-2 py-1"
           >
             <Loader2 class="h-3 w-3 animate-spin text-blue-500" />
-            <span class="text-xs font-medium text-blue-600">Generating</span>
+            <span class="text-xs font-medium text-blue-600">{{ t("generating") }}</span>
           </div>
         </div>
 
