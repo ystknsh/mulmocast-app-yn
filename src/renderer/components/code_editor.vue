@@ -103,14 +103,6 @@ onMounted(async () => {
         emit("update:modelValue", value);
       }
     });
-
-    editorInstance.value.onDidFocusEditorText(() => {
-      emit("focus");
-    });
-
-    editorInstance.value.onDidBlurEditorText(() => {
-      emit("blur");
-    });
   }
 });
 
