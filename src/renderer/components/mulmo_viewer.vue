@@ -162,6 +162,11 @@ const playVideo = () => {
   }
 };
 
+const hasVideo = computed(() => {
+  console.log("videoUrl", videoUrl.value);
+  return videoUrl.value && videoUrl.value.length > 0 && videoUrl.value !== "data:video/mp4;base64,";
+});
+
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
   const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, fileType)) as ArrayBuffer;
   const blob = new Blob([buffer], { type: mimeType });
@@ -181,11 +186,15 @@ pdfData.value = pdf;
 
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
+  if (bufferMovie && bufferMovie.byteLength > 0) {
+    videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
+  }
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
-  audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "video/mp4");
+  if (bufferAudio && bufferAudio.byteLength > 0) {
+    audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "video/mp4");
+  }
   const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
-  if (bufferPdf) {
+  if (bufferPdf && bufferPdf.byteLength > 0) {
     pdfBuffer.value = new Uint8Array(bufferPdf);
   }
 };
