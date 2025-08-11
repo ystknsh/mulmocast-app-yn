@@ -176,9 +176,13 @@ pdfData.value = pdf;
 
 const updateResources = async () => {
   try {
-    const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-    if (bufferMovie && bufferMovie.length > 0) {
-      videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
+    const bufferMovie = (await window.electronAPI.mulmoHandler(
+      "downloadFile",
+      projectId.value,
+      "movie",
+    )) as ArrayBuffer;
+    if (bufferMovie && bufferMovie.byteLength > 0) {
+      videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
     } else {
       videoUrl.value = "";
     }
