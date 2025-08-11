@@ -15,6 +15,7 @@
         <ToolsMessage
           :message="message.content ?? ''"
           :time="message.time"
+          :data="message?.extra"
           v-if="message.role === 'tool' && message.content"
         />
         <UserMessage
@@ -33,9 +34,9 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
-        <Label class="mb-2"
-          >{{ t("project.chat.enterMessage") }}
-          <span class="text-gray-400">({{ llmAgent }} {{ hasExa ? "with Search" : "" }})</span>
+        <Label class="mb-2">
+          {{ t("project.chat.enterMessage") }}
+          <span class="text-gray-400">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
         </Label>
         <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
           <Textarea
@@ -102,9 +103,8 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
-import toolsAgent from "../../agents/tools_agent";
-
-//import { toolsAgent } from "@graphai/tools_agent";
+// import toolsAgent from "../../agents/tools_agent";
+import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -178,11 +178,11 @@ const graphAIAgents = {
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
-    const { role, content, tool_calls, tool_call_id, name } = message;
+    const { role, content, tool_calls, tool_call_id, name, extra } = message;
     if (setTime) {
-      return { role, content, tool_calls, tool_call_id, name, time: message.time ?? Date.now() };
+      return { extra, role, content, tool_calls, tool_call_id, name, time: message.time ?? Date.now() };
     }
-    return { role, content, tool_calls, tool_call_id, name };
+    return { extra, role, content, tool_calls, tool_call_id, name };
   };
 };
 

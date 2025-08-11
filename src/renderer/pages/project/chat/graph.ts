@@ -1,7 +1,7 @@
 import { nestedAgentGenerator } from "@graphai/vanilla/lib/graph_agents/nested_agent";
 
 import { type GraphData, type AgentFunctionInfo, graphDataLatestVersion } from "graphai";
-import { mulmoScriptSchema } from "mulmocast/browser";
+import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 
 // chat
 
@@ -95,7 +95,7 @@ const graphGenerateMulmoScriptInternal: GraphData = {
       console: { after: true },
       inputs: {
         // text: ":llm.text",
-        text: ":llm.text.codeBlock()",
+        text: ":llm.text.codeBlockOrRaw()",
         schema: mulmoScriptSchema,
       },
       isResult: true,
@@ -156,19 +156,31 @@ const graphMulmoScriptGeneratorAgentGraph = {
         llmAgent: ":data.llmAgent",
       },
       graph: graphGenerateMulmoScriptInternal,
-      isResult: true,
       output: {
         data: ".validateSchema.data",
-        content: ".llm.text",
+        isValid: ".validateSchema.isValid",
+        // content: ".llm.text",
+      },
+    },
+    result: {
+      inputs: {
+        data: ":mulmoScript.data",
+        isValid: ":mulmoScript.isValid",
+      },
+      isResult: true,
+      agent: ({ data, isValid }: { data: MulmoScript; isValid: boolean }) => {
+        return {
+          data,
+          content: isValid ? "script accepted" : "failed",
+        };
       },
     },
   },
 };
 
 const graphMulmoScriptGeneratorAgent = nestedAgentGenerator(graphMulmoScriptGeneratorAgentGraph, {
-  resultNodeId: "mulmoScript",
+  resultNodeId: "result",
 });
-console.log(graphMulmoScriptGeneratorAgent);
 
 const graphMulmoScriptGeneratorAgentInfo: AgentFunctionInfo = {
   name: "graphMulmoScriptGeneratorAgent",

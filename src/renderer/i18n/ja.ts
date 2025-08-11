@@ -291,6 +291,7 @@ const lang = {
     },
     menu: {
       script: "編集",
+      product: "成果物",
       debugLog: "デバッグログ",
     },
     generate: {
@@ -318,6 +319,7 @@ const lang = {
         referenceMode: "参照",
         referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
       },
+      validationStatus: "検証ステータス",
     },
     productTabs: {
       tabs: {
@@ -325,21 +327,23 @@ const lang = {
         pdf: "PDF",
         html: "HTML",
         podcast: "Podcast",
-        slide: "Slide",
+        slide: "スライド",
       },
       movie: {
         title: "動画プレビュー",
         description: "動画コンテンツの再生とプレビュー",
         play: "再生",
+        pause: "停止",
         download: "MP4をダウンロード",
-        details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
+        details: "再生時間: {duration} - 解像度: {resolution} - サイズ: {size}",
       },
       pdf: {
-        title: "PDF Preview",
-        description: "PDF document display and download",
-        view: "View PDF",
-        download: "Download PDF",
-        details: "8 pages - A4 format - Size: 2.1 MB",
+        title: "PDFプレビュー",
+        description: "PDFファイルの表示とダウンロード",
+        view: "PDFを表示",
+        download: "PDFをダウンロード",
+        details: "{pages} ページ - サイズ: {size}",
+        empty: "PDF未生成",
       },
       html: {
         title: "HTML Preview",
@@ -349,18 +353,18 @@ const lang = {
         details: "Interactive content - Responsive design",
       },
       podcast: {
-        title: "Podcast Preview",
-        description: "Audio content playback and preview",
-        play: "Play",
-        download: "Download MP3",
-        details: "Duration: 12:34 - Size: 8.2 MB",
+        title: "ポッドキャスト プレビュー",
+        description: "音声の再生とプレビュー",
+        play: "再生",
+        download: "MP3をダウンロード",
+        details: "再生時間: {duration} - サイズ: {size}",
       },
       slide: {
-        title: "Slide Preview",
-        description: "Slide format display and navigation",
-        start: "Start Slideshow",
-        export: "Export Images",
-        details: "8 slides - 1920x1080 resolution",
+        title: "スライド プレビュー",
+        description: "スライド形式の表示とナビゲーション",
+        start: "スライドショーの開始",
+        export: "スライドをエクスポート",
+        details: "8 スライド - 解像度: 1920x1080",
       },
     },
     chat: {
@@ -461,6 +465,7 @@ const lang = {
       sizePreset: "サイズ設定",
       width: "幅",
       height: "高さ",
+      custom: "カスタム",
     },
     captionParams: {
       title: "字幕設定",

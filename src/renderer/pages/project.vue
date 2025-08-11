@@ -80,7 +80,7 @@
 
           <!-- Middle Column - Script Editor -->
           <div class="h-full">
-            <Collapsible v-model:open="isScriptViewerOpen" class="h-full">
+            <Collapsible class="h-full">
               <Card class="flex h-full flex-col">
                 <CardHeader class="flex-shrink-0">
                   <div class="flex items-center justify-between">
@@ -98,7 +98,7 @@
                           <span
                             class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                           >
-                            Validation Status
+                            {{ t("project.scriptEditor.validationStatus") }}
                           </span>
                         </div>
                         <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
@@ -120,41 +120,29 @@
                       >
                         <Redo :size="16" :class="mulmoScriptHistoryStore.redoable ? 'text-black' : 'text-gray-400'" />
                       </Button>
-                      <!-- Collapse/Expand Button -->
-                      <CollapsibleTrigger as-child>
-                        <Button variant="ghost" size="sm">
-                          <component :is="isScriptViewerOpen ? ChevronUp : ChevronDown" :size="16" />
-                        </Button>
-                      </CollapsibleTrigger>
                     </div>
                   </div>
                 </CardHeader>
-                <CollapsibleContent
-                  :class="`flex-1 overflow-hidden transition-all duration-300 ${
-                    isScriptViewerOpen ? 'h-full' : 'max-h-[180px]'
-                  }`"
-                >
-                  <CardContent class="h-full">
-                    <ScriptEditor
-                      :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
-                      :imageFiles="imageFiles"
-                      :movieFiles="movieFiles"
-                      :audioFiles="audioFiles"
-                      :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
-                      @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
-                      :isValidScriptData="isValidScriptData"
-                      @update:isValidScriptData="(val) => (isValidScriptData = val)"
-                      @generateImage="generateImage"
-                      @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                      @positionUp="positionUp"
-                      @addBeat="addBeat"
-                      @deleteBeat="deleteBeat"
-                      @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
-                      :mulmoError="mulmoError"
-                      @saveMulmo="saveMulmo"
-                    />
-                  </CardContent>
-                </CollapsibleContent>
+                <CardContent class="h-full">
+                  <ScriptEditor
+                    :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
+                    :imageFiles="imageFiles"
+                    :movieFiles="movieFiles"
+                    :audioFiles="audioFiles"
+                    :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
+                    @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
+                    :isValidScriptData="isValidScriptData"
+                    @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                    @generateImage="generateImage"
+                    @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                    @positionUp="positionUp"
+                    @addBeat="addBeat"
+                    @deleteBeat="deleteBeat"
+                    @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
+                    :mulmoError="mulmoError"
+                    @saveMulmo="saveMulmo"
+                  />
+                </CardContent>
               </Card>
             </Collapsible>
           </div>
@@ -187,7 +175,7 @@
               <CardHeader>
                 <CardTitle class="flex items-center space-x-2">
                   <Play :size="20" />
-                  <span>Product</span>
+                  <span>{{ t("project.menu.product") }}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -231,7 +219,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -244,8 +232,6 @@ import {
   Redo,
   CheckCircle,
   XCircle,
-  ChevronDown,
-  ChevronUp,
   Bot,
   PanelLeftClose,
   PanelLeftOpen,
@@ -258,7 +244,7 @@ import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Separator } from "@/components/ui/separator"; // Will be used for mobile layout
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Import sub-components (to be created)
@@ -266,7 +252,7 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
-import MulmoViewer from "../components/mulmo_viewer.vue";
+import MulmoViewer from "../components/mulmo_viewer/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
@@ -281,7 +267,6 @@ import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore
 
 import {
   selectedTheme,
-  isScriptViewerOpen,
   getCardPadding,
   getHeaderSize,
   getContainerSpacing,
@@ -330,9 +315,12 @@ onMounted(async () => {
   }
 });
 
+onUnmounted(() => {
+  mulmoScriptHistoryStore.resetMulmoScript();
+});
+
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
-  isScriptViewerOpen.value = true;
   notifySuccess(t("settings.notifications.createSuccess"));
 };
 
@@ -367,8 +355,12 @@ const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
 watch(
   () => mulmoScriptHistoryStore.currentMulmoScript,
-  () => {
-    // Be careful not to save a page just by opening it.
+  (newVal, oldVal) => {
+    // Skip saving when first watch
+    if (oldVal === null) {
+      return;
+    }
+    console.log("🙏saveMulmoScript");
     saveMulmoScript(mulmoScriptHistoryStore.currentMulmoScript);
   },
   { deep: true },
@@ -383,6 +375,7 @@ const mulmoError = computed<MulmoError>(() => {
 });
 
 const formatAndPushHistoryMulmoScript = () => {
+  console.log("🙏formatAndPushHistoryMulmoScript");
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);

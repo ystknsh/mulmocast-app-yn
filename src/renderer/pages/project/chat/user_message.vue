@@ -23,7 +23,7 @@ const props = defineProps<{
 const emit = defineEmits(["editUser"]);
 
 const formatedTime = computed(() => {
-  return dayjs(props.time ?? Date.now()).format("MM/DD hh:mm"); // TODO: format i18n
+  return dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"); // TODO: format i18n
 });
 const editUser = () => {
   emit("editUser");
