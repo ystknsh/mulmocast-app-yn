@@ -17,6 +17,9 @@
           :time="message.time"
           v-if="message.role === 'tool' && message.content"
         />
+        <div v-if="message.role === 'assistant' && message.tool_calls">
+          {{ message.tool_calls }}
+        </div>
         <UserMessage
           :message="message.content"
           :time="message.time"

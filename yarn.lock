@@ -845,10 +845,10 @@
   dependencies:
     "@graphai/agent_utils" "^2.0.1"
 
-"@graphai/vanilla@^2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-2.0.7.tgz#71255f15a598cc1218034c92107fa42e21b92dd7"
-  integrity sha512-6q3CK+Jl+EQDJktkqndMuwnw86KQcVXear5Db801t98sm5QxWYSwGMPoIveWc2kecYh7trMDgUTXbRdcSYcHxw==
+"@graphai/vanilla@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-2.0.9.tgz#4092a515f4b20148a75f6f46986b57dab14ca166"
+  integrity sha512-WwvsOEV4JQT/HzgMnbxp3c7m8Qt9cBo0la18X0OalhZswAn0ixB/S3hbJpehV0cIre20ebw0d8iPuFbf6r9U+g==
   dependencies:
     "@graphai/agent_utils" "^2.0.1"
 

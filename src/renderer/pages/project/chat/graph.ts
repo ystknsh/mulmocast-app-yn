@@ -95,7 +95,7 @@ const graphGenerateMulmoScriptInternal: GraphData = {
       console: { after: true },
       inputs: {
         // text: ":llm.text",
-        text: ":llm.text.codeBlock()",
+        text: ":llm.text.codeBlockOrRaw()",
         schema: mulmoScriptSchema,
       },
       isResult: true,

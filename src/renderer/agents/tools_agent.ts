@@ -18,17 +18,16 @@ const toolWorkFlowStep = {
         tools: ":tools",
       },
     },
-    textMessagesArray: {
+    textMessages: {
       unless: ":llm.tool.id",
       agent: "pushAgent",
+      params: {
+        arrayKey: "messages",
+      },
       inputs: {
         array: ":messages",
         items: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
-    },
-    textMessages: {
-      agent: "copyAgent",
-      inputs: { messages: ":textMessagesArray.array" },
     },
     tool_calls: {
       if: ":llm.tool_calls",
@@ -95,7 +94,7 @@ const toolWorkFlowStep = {
       inputs: {
         toolsResponse: ":tool_calls.tool",
         llmAgent: ":llmAgent",
-        toolsMessage: ":toolsMessage",
+        toolsMessage: ":toolsMessage.array",
       },
       graph: {
         nodes: {
@@ -115,12 +114,12 @@ const toolWorkFlowStep = {
               forWeb: true,
               stream: true,
             },
-            inputs: { messages: ":toolsMessage.array" },
+            inputs: { messages: ":toolsMessage" },
           },
           toolsResMessage: {
             agent: "pushAgent",
             inputs: {
-              array: ":toolsMessage.array",
+              array: ":toolsMessage",
               item: ":toolsResponseLLM.message",
             },
           },
@@ -128,7 +127,7 @@ const toolWorkFlowStep = {
             unless: ":hasNext",
             agent: "copyAgent",
             inputs: {
-              array: ":toolsMessage.array",
+              array: ":toolsMessage",
             },
           },
           mergeToolsResponse: {
@@ -156,26 +155,27 @@ const toolWorkFlowStep = {
         return ret;
       },
     },
-    toolsMessages: {
-      agent: "pushAgent",
-      inputs: { array: ":messages", items: ":tool_call_response.mergeToolsResponse.array.$0" },
-    },
     toolsResult: {
-      agent: "copyAgent",
+      agent: "pushAgent",
+      params: {
+        arrayKey: "messages",
+      },
       inputs: {
-        messages: ":toolsMessages.array",
+        array: ":messages",
+        items: ":tool_call_response.mergeToolsResponse.array.$0",
         data: ":mergedData",
       },
     },
     buffer: {
-      agent: "copyAgent",
+      agent: "arrayFindFirstExistsAgent",
       anyInput: true,
       inputs: { array: [":textMessages", ":toolsResult"] },
     },
+
     result: {
       agent: "copyAgent",
       isResult: true,
-      inputs: { messages: ":buffer.array.$0.messages", data: ":buffer.array.$0.data" },
+      inputs: { messages: ":buffer.messages", data: ":buffer.data" },
     },
   },
 };
