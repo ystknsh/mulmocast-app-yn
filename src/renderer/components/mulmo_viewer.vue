@@ -17,6 +17,7 @@
             controls
             :src="videoUrl"
             ref="videoRef"
+            @loadedmetadata="updateVideoMetadata"
           />
           <Video v-else :size="64" class="mx-auto mb-4 text-gray-400" />
 
@@ -33,8 +34,14 @@
               {{ t("project.productTabs.movie.download") }}
             </Button>
           </div>
-          <div class="mt-4 text-sm text-gray-500" v-if="videoUrl">
-            {{ t("project.productTabs.movie.details") }}
+          <div class="mt-4 text-xs text-gray-500" v-if="videoUrl">
+            {{
+              t("project.productTabs.movie.details", {
+                duration: videoMetadata.duration || "-",
+                resolution: videoMetadata.resolution || "-",
+                size: videoMetadata.fileSize || "-",
+              })
+            }}
           </div>
         </div>
       </div>
@@ -113,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { Video, FileText, Volume2, FileImage, Play, Pause } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
@@ -136,6 +143,11 @@ const props = defineProps<Props>();
 const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
+const videoMetadata = ref({
+  duration: "",
+  resolution: "",
+  fileSize: "",
+});
 
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
@@ -150,7 +162,7 @@ const downloadPdf = async () => {
   return downloadFile("pdf", "application/pdf", projectId.value + "_slide.pdf");
 };
 
-const videoRef = ref(null);
+const videoRef = ref<HTMLVideoElement | null>(null);
 const isPlaying = ref(false);
 const playVideo = () => {
   if (videoRef.value?.paused) {
@@ -179,10 +191,47 @@ const pdfBuffer = ref();
 const { pdf, pages } = usePDF(pdfBuffer);
 pdfData.value = pdf;
 
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
+};
+
+const formatDuration = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
+};
+
+const updateVideoMetadata = () => {
+  if (!videoRef.value) return;
+
+  const video = videoRef.value;
+
+  if (!isNaN(video.duration)) {
+    videoMetadata.value.duration = formatDuration(video.duration);
+  }
+
+  if (video.videoWidth && video.videoHeight) {
+    videoMetadata.value.resolution = `${video.videoWidth}×${video.videoHeight}`;
+  }
+};
+
 const updateResources = async () => {
   const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
   if (bufferMovie && bufferMovie.byteLength > 0) {
     videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
+    videoMetadata.value.fileSize = formatFileSize(bufferMovie.byteLength);
+
+    // Wait for video to load metadata
+    await nextTick();
+    updateVideoMetadata();
   }
   const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
   if (bufferAudio && bufferAudio.byteLength > 0) {

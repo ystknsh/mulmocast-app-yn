@@ -336,7 +336,7 @@ const lang = {
         play: "Play",
         pause: "Pause",
         download: "Download MP4",
-        details: "Duration: 12:34 - Resolution: 1920x1080 - Size: 145 MB",
+        details: "Duration: {duration} - Resolution: {resolution} - Size: {size}",
       },
       pdf: {
         title: "PDF Preview",

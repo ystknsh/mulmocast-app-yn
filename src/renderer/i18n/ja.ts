@@ -335,7 +335,7 @@ const lang = {
         play: "再生",
         pause: "停止",
         download: "MP4をダウンロード",
-        details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
+        details: "再生時間: {duration} - 解像度: {resolution} - サイズ: {size}",
       },
       pdf: {
         title: "PDFプレビュー",
