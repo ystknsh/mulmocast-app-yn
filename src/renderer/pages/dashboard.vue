@@ -116,7 +116,7 @@ import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
-import MulmoViewer from "@/components/mulmo_viewer.vue";
+import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
 import ProjectItems from "./dashboard/project_items.vue";
 import NewProjectDialog from "./dashboard/new_project_dialog.vue";
 

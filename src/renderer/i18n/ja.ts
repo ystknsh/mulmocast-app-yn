@@ -335,14 +335,14 @@ const lang = {
         play: "再生",
         pause: "停止",
         download: "MP4をダウンロード",
-        details: "再生時間: 12:34 - 解像度: 1920x1080 - サイズ: 145 MB",
+        details: "再生時間: {duration} - 解像度: {resolution} - サイズ: {size}",
       },
       pdf: {
         title: "PDFプレビュー",
         description: "PDFファイルの表示とダウンロード",
         view: "PDFを表示",
         download: "PDFをダウンロード",
-        details: "8 ページ - A4 サイズ - サイズ: 2.1 MB",
+        details: "{pages} ページ - サイズ: {size}",
         empty: "PDF未生成",
       },
       html: {
@@ -357,7 +357,7 @@ const lang = {
         description: "音声の再生とプレビュー",
         play: "再生",
         download: "MP3をダウンロード",
-        details: "再生時間: 12:34 - サイズ: 8.2 MB",
+        details: "再生時間: {duration} - サイズ: {size}",
       },
       slide: {
         title: "スライド プレビュー",

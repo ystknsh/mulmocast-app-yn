@@ -4,8 +4,8 @@
       <Search :size="16" class="text-blue-600" @click="isOpen = !isOpen" />
     </div>
     <div class="flex-1">
-      <div class="mb-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-        {{ data.agent }}({{ data.func }}){{ data.arg }}
+      <div class="mb-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700" v-if="data">
+        {{ data?.agent }}({{ data?.func }}){{ data?.arg }}
       </div>
       <div
         v-if="!isOpen"
