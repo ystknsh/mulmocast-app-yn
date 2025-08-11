@@ -266,7 +266,7 @@ const lang = {
   update: "Update",
   dashboard: {
     createNew: "Create New",
-    project: "No projects | One project | {count} projects",
+    project: "No projects | 1 project | {count} projects",
     sortBy: "Sort by",
     sort: {
       updatedAtDesc: "Last updated (newest first)",
