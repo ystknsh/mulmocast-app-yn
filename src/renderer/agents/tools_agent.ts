@@ -18,6 +18,7 @@ const toolWorkFlowStep = {
         tools: ":tools",
       },
     },
+    // case1. return just messages
     textMessages: {
       unless: ":llm.tool.id",
       agent: "pushAgent",
@@ -29,6 +30,7 @@ const toolWorkFlowStep = {
         items: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
     },
+    // 
     tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",
@@ -45,9 +47,7 @@ const toolWorkFlowStep = {
         version: 0.5,
         nodes: {
           data: {
-            // console: { before: true},
             agent: ({ passthrough, agentName }: { passthrough: Record<string, unknown>; agentName: string }) => {
-              // console.log({passthrough, agentName});
               if (passthrough && passthrough[agentName]) {
                 return passthrough[agentName];
               }
@@ -132,7 +132,7 @@ const toolWorkFlowStep = {
           },
           mergeToolsResponse: {
             isResult: true,
-            agent: "copyAgent",
+            agent: "arrayFindFirstExistsAgent",
             anyInput: true,
             inputs: {
               array: [":toolsResMessage.array", ":skipToolsResponseLLM.array"],
@@ -162,20 +162,15 @@ const toolWorkFlowStep = {
       },
       inputs: {
         array: ":messages",
-        items: ":tool_call_response.mergeToolsResponse.array.$0",
+        items: ":tool_call_response.mergeToolsResponse",
         data: ":mergedData",
       },
     },
-    buffer: {
-      agent: "arrayFindFirstExistsAgent",
-      anyInput: true,
-      inputs: { array: [":textMessages", ":toolsResult"] },
-    },
-
     result: {
-      agent: "copyAgent",
       isResult: true,
-      inputs: { messages: ":buffer.messages", data: ":buffer.data" },
+      anyInput: true,
+      agent: "arrayFindFirstExistsAgent",
+      inputs: { array: [":textMessages", ":toolsResult"] },
     },
   },
 };
