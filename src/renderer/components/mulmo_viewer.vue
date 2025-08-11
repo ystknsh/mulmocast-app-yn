@@ -9,20 +9,31 @@
 
     <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <video :size="64" class="mx-auto mb-4 max-h-[90vh] text-gray-400" controls :src="videoUrl" ref="videoRef" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
-        <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button @click="playVideo">
-            <Play :size="16" class="mr-2" />
-            {{ t("project.productTabs.movie.play") }}
-          </Button>
-          <Button variant="outline" @click="downloadMp4">
-            <Video :size="16" class="mr-2" />
-            {{ t("project.productTabs.movie.download") }}
-          </Button>
+        <div>
+          <video
+            v-if="hasVideo"
+            :size="64"
+            class="mx-auto mb-4 max-h-[90vh] text-gray-400"
+            controls
+            :src="videoUrl"
+            ref="videoRef"
+          />
+          <Video v-else :size="64" class="mx-auto mb-4 text-gray-400" />
+
+          <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
+          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <Button @click="playVideo" :disabled="!hasVideo">
+              <Play :size="16" class="mr-2" />
+              {{ t("project.productTabs.movie.play") }}
+            </Button>
+            <Button variant="outline" @click="downloadMp4" :disabled="!hasVideo">
+              <Video :size="16" class="mr-2" />
+              {{ t("project.productTabs.movie.download") }}
+            </Button>
+          </div>
+          <div class="mt-4 text-sm text-gray-500" v-if="hasVideo">{{ t("project.productTabs.movie.details") }}</div>
         </div>
-        <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.movie.details") }}</div>
       </div>
     </TabsContent>
 
@@ -123,6 +134,11 @@ const projectId = computed(() => props.project?.metadata?.id || "");
 const videoUrl = ref("");
 const audioUrl = ref("");
 
+// 動画の存在チェック
+const hasVideo = computed(() => {
+  return videoUrl.value && videoUrl.value.length > 0 && videoUrl.value !== "data:video/mp4;base64,";
+});
+
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
 
@@ -159,14 +175,40 @@ const { pdf, pages } = usePDF(pdfBuffer);
 pdfData.value = pdf;
 
 const updateResources = async () => {
-  const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
-  const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
-  audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
+  try {
+    const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+    if (bufferMovie && bufferMovie.length > 0) {
+      videoUrl.value = bufferToUrl(bufferMovie, "video/mp4");
+    } else {
+      videoUrl.value = "";
+    }
+  } catch (error) {
+    // 動画ファイルが存在しない場合
+    videoUrl.value = "";
+  }
 
-  const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
-  if (bufferPdf) {
-    pdfBuffer.value = new Uint8Array(bufferPdf);
+  try {
+    const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "audio")) as Buffer;
+    if (bufferAudio && bufferAudio.length > 0) {
+      audioUrl.value = bufferToUrl(bufferAudio, "video/mp4");
+    } else {
+      audioUrl.value = "";
+    }
+  } catch (error) {
+    // 音声ファイルが存在しない場合
+    audioUrl.value = "";
+  }
+
+  try {
+    const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
+    if (bufferPdf && bufferPdf.length > 0) {
+      pdfBuffer.value = new Uint8Array(bufferPdf);
+    } else {
+      pdfBuffer.value = undefined;
+    }
+  } catch (error) {
+    // PDFファイルが存在しない場合
+    pdfBuffer.value = undefined;
   }
 };
 
