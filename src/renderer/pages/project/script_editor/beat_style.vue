@@ -3,7 +3,9 @@
     <CollapsibleTrigger as-child>
       <div class="mb-3 flex items-center gap-2">
         <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-gray-500' : ''">Image Parameters</h4>
+        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-gray-500' : ''">
+          {{ t("parameters.imageParams.title") }}
+        </h4>
       </div>
     </CollapsibleTrigger>
     <CollapsibleContent>
@@ -23,11 +25,14 @@
 
 <script setup lang="ts">
 import { nextTick } from "vue";
+import { useI18n } from "vue-i18n";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./parameters/image_params.vue";
+
+const { t } = useI18n();
 
 interface Props {
   beat: MulmoBeat;

@@ -479,6 +479,14 @@ const lang = {
       css: "CSSスタイル",
       cssDescription: "CSSスタイルを単一文字列または複数行で入力してください",
     },
+    imageParams: {
+      title: "画像設定",
+      modelAuto: "自動",
+      stylePlaceholder: "例) 鮮やか、自然",
+      moderation: "モデレーション",
+      moderationPlaceholder: "例) 低、自動",
+      images: "画像",
+    },
   },
 
   modal: {

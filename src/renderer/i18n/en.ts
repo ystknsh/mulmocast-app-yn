@@ -479,6 +479,14 @@ const lang = {
       css: "CSS Styles",
       cssDescription: "Enter CSS styles as a single string or multiple lines.",
     },
+    imageParams: {
+      title: "Image Parameters",
+      modelAuto: "Auto",
+      stylePlaceholder: "ex) vivid, natural",
+      moderation: "Moderation",
+      moderationPlaceholder: "ex) low, auto",
+      images: "Images",
+    },
   },
 
   modal: {
