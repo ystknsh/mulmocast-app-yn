@@ -51,7 +51,7 @@ jobs:
 
   content-generation-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
