@@ -51,7 +51,7 @@
 
     <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
-        <div class="mx-auto" v-if="pdfData">
+        <div class="mx-auto" v-if="pdfData.value">
           <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
         </div>
         <template v-else>
@@ -74,14 +74,14 @@
               </Button>
             </div>
           </div>
-          <div class="text-xs text-gray-500">
-            {{
-              t("project.productTabs.pdf.details", {
-                pages: pages || "-",
-                size: pdfMetadata.fileSize || "-",
-              })
-            }}
-          </div>
+        </div>
+        <div class="mt-2 text-xs text-gray-500" v-if="pdfData.value">
+          {{
+            t("project.productTabs.pdf.details", {
+              pages: pages || "-",
+              size: pdfMetadata.fileSize || "-",
+            })
+          }}
         </div>
       </div>
     </TabsContent>
@@ -95,7 +95,7 @@
         </template>
         <div class="flex flex-col items-center justify-center gap-4">
           <audio :src="audioUrl" v-if="!!audioUrl" controls ref="audioRef" @loadedmetadata="updateAudioMetadata" />
-          <Button variant="outline" @click="downloadMp3">
+          <Button variant="outline" @click="downloadMp3" :disabled="!audioUrl">
             <Volume2 :size="16" class="mr-2" />
             {{ t("project.productTabs.podcast.download") }}
           </Button>
