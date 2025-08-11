@@ -27,21 +27,20 @@ const toolWorkFlowStep = {
       },
       inputs: {
         array: ":messages",
-        items: [":userInput.message", { role: "assistant", content: ":llmCallWithTools.message.content" }],
+        items: [":userInput.message", ":llmCallWithTools.message" ],
       },
     },
-    // 
+    // Call agents specified in the tools result
     llmToolAgentCallMap: {
       if: ":llmCallWithTools.tool_calls",
       agent: "mapAgent",
       inputs: {
         rows: ":llmCallWithTools.tool_calls",
-        messages: ":messages",
         passthrough: ":passthrough",
       },
       params: {
         compositeResult: true,
-        rowKey: "tool_call",
+        rowKey: "llmToolCall",
       },
       graph: {
         version: 0.5,
@@ -55,26 +54,26 @@ const toolWorkFlowStep = {
             },
             inputs: {
               passthrough: ":passthrough",
-              agentName: ":tool_call.name.split(--).$0",
+              agentName: ":llmToolCall.name.split(--).$0",
             },
           },
           toolCallAgent: {
             isResult: true,
-            agent: ":tool_call.name.split(--).$0",
+            agent: ":llmToolCall.name.split(--).$0",
             inputs: {
-              arg: ":tool_call.arguments",
-              func: ":tool_call.name.split(--).$1",
-              tool_call: ":tool_call",
+              arg: ":llmToolCall.arguments",
+              func: ":llmToolCall.name.split(--).$1",
+              tool_call: ":llmToolCall",
               data: ":data",
             },
           },
-          message: {
+          toolsAgentResponseMessage: {
             isResult: true,
             agent: "copyAgent",
             inputs: {
               role: "tool",
-              tool_call_id: ":tool_call.id",
-              name: ":tool_call.name",
+              tool_call_id: ":llmToolCall.id",
+              name: ":llmToolCall.name",
               content: ":toolCallAgent.content",
             },
           },
@@ -86,14 +85,14 @@ const toolWorkFlowStep = {
       agent: "pushAgent",
       inputs: {
         array: [":userInput.message", ":llmCallWithTools.message"],
-        items: ":llmToolAgentCallMap.message",
+        items: ":llmToolAgentCallMap.toolsAgentResponseMessage",
       },
     },
-    tool_call_response: {
+    toLLMToolCallAgentResponse: {
       agent: "nestedAgent",
       inputs: {
-        toolsAgentResponse: ":llmToolAgentCallMap.toolCallAgent",
         llmAgent: ":llmAgent",
+        toolsAgentResponse: ":llmToolAgentCallMap.toolCallAgent",
         toolsMessages: ":toolsMessage.array",
       },
       graph: {
@@ -106,6 +105,7 @@ const toolWorkFlowStep = {
               array: ":toolsAgentResponse",
             },
           },
+          // next llm flow
           toolsResponseLLM: {
             if: ":hasNext",
             agent: ":llmAgent",
@@ -123,6 +123,7 @@ const toolWorkFlowStep = {
               item: ":toolsResponseLLM.message",
             },
           },
+          // no llm flow, just return tools response
           skipToolsResponseLLM: {
             unless: ":hasNext",
             agent: "copyAgent",
@@ -130,7 +131,7 @@ const toolWorkFlowStep = {
               array: ":toolsMessages",
             },
           },
-          choiceToolsResponse: {
+          choiceToolsResponseMessages: {
             isResult: true,
             agent: "arrayFindFirstExistsAgent",
             anyInput: true,
@@ -144,11 +145,11 @@ const toolWorkFlowStep = {
     mergedData: {
       inputs: {
         data: ":llmToolAgentCallMap.toolCallAgent",
-        tool_calls: ":llmCallWithTools.tool_calls",
+        llmToolCalls: ":llmCallWithTools.tool_calls",
       },
-      agent: ({ tool_calls, data }: { tool_calls: { name: string }[]; data: unknown[] }) => {
+      agent: ({ llmToolCalls, data }: { llmToolCalls: { name: string }[]; data: unknown[] }) => {
         const ret: Record<string, unknown> = {};
-        tool_calls.forEach((tool, index) => {
+        llmToolCalls.forEach((tool, index) => {
           const { name } = tool;
           ret[name] = data[index];
         });
@@ -162,7 +163,7 @@ const toolWorkFlowStep = {
       },
       inputs: {
         array: ":messages",
-        items: ":tool_call_response.choiceToolsResponse",
+        items: ":toLLMToolCallAgentResponse.choiceToolsResponseMessages",
         data: ":mergedData",
       },
     },
