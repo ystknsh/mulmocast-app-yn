@@ -52,7 +52,7 @@
     <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <div class="rounded-lg border bg-gray-50 p-8 text-center">
         <div class="mx-auto" v-if="pdfData">
-          <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" class="mx-auto" />
+          <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
         </div>
         <template v-else>
           <FileText :size="64" class="mx-auto mb-4 text-gray-400" />
@@ -93,7 +93,7 @@
           <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.podcast.description") }}</p>
         </template>
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <div class="flex flex-col items-center justify-center gap-4">
           <audio :src="audioUrl" v-if="!!audioUrl" controls ref="audioRef" @loadedmetadata="updateAudioMetadata" />
           <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
