@@ -74,7 +74,14 @@
               </Button>
             </div>
           </div>
-          <div class="text-sm text-gray-500">{{ t("project.productTabs.pdf.details") }}</div>
+          <div class="text-sm text-gray-500">
+            {{
+              t("project.productTabs.pdf.details", {
+                pages: pages || "-",
+                size: pdfMetadata.fileSize || "-",
+              })
+            }}
+          </div>
         </div>
       </div>
     </TabsContent>
@@ -152,6 +159,10 @@ const videoMetadata = ref({
 
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
+const pdfMetadata = ref({
+  pageSize: "", // TODO: add page size.
+  fileSize: "",
+});
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
@@ -241,6 +252,7 @@ const updateResources = async () => {
   const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "pdf")) as Buffer;
   if (bufferPdf && bufferPdf.byteLength > 0) {
     pdfBuffer.value = new Uint8Array(bufferPdf);
+    pdfMetadata.value.fileSize = formatFileSize(bufferPdf.byteLength);
   }
 };
 

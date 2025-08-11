@@ -342,7 +342,7 @@ const lang = {
         description: "PDFファイルの表示とダウンロード",
         view: "PDFを表示",
         download: "PDFをダウンロード",
-        details: "8 ページ - A4 サイズ - サイズ: 2.1 MB",
+        details: "{pages} ページ - サイズ: {size}",
         empty: "PDF未生成",
       },
       html: {

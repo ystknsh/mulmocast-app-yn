@@ -343,7 +343,7 @@ const lang = {
         description: "PDF document display and download",
         view: "View PDF",
         download: "Download PDF",
-        details: "8 pages - A4 format - Size: 2.1 MB",
+        details: "{pages} pages - Size: {size}",
         empty: "PDF not generated",
       },
       html: {
