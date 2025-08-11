@@ -19,7 +19,7 @@ const CONFIG = {
 // Test JSON files to process
 const TEST_JSON_FILES = [
   "test_no_audio.json",
-  "test_no_audio_with_credit.json", 
+  "test_no_audio_with_credit.json",
   "test_transition_no_audio.json",
   "test_slideout_left_no_audio.json",
 ];
@@ -292,12 +292,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     try {
       jsonContent = await readLocalJSON(currentTestFile);
-      
+
       // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
       console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
       const jsonData = JSON.parse(jsonContent);
       const deleteTargetPath = "../../assets/audio/local_voice.mp3";
-      
+
       if (jsonData.beats && Array.isArray(jsonData.beats)) {
         jsonData.beats.forEach((beat: unknown, index: number) => {
           const beatStr = JSON.stringify(beat);
@@ -307,7 +307,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           }
         });
       }
-      
+
       console.log(
         `Total beats to delete: ${problematicBeatIndices.length} at indices: [${problematicBeatIndices.join(", ")}]`,
       );
@@ -430,13 +430,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
         try {
           const jsonData = JSON.parse(content);
           let hasChanges = false;
-          
+
           if (jsonData.beats && Array.isArray(jsonData.beats)) {
             jsonData.beats.forEach((beat: unknown) => {
               const beatObj = beat as Record<string, unknown>;
               const image = beatObj.image as Record<string, unknown>;
               const source = image?.source as Record<string, unknown>;
-              
+
               if (
                 image &&
                 source &&
@@ -452,7 +452,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
               }
             });
           }
-          
+
           if (hasChanges) {
             const updatedContent = JSON.stringify(jsonData, null, 2);
             editor.setValue(updatedContent);
@@ -520,16 +520,16 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Delete beats with local_voice.mp3 using pre-identified indices
     console.log("\n8. Deleting beats with local_voice.mp3...");
-    
+
     if (problematicBeatIndices.length > 0) {
       // Delete in reverse order to avoid index shifting issues
       const sortedIndices = problematicBeatIndices.sort((a, b) => b - a);
       console.log(`Deleting beats in reverse order: [${sortedIndices.join(", ")}]`);
-      
+
       for (const beatIndex of sortedIndices) {
         const deleteButtonSelector = `[data-testid="delete-beat-${beatIndex}"]`;
         console.log(`Looking for delete button: ${deleteButtonSelector}`);
-        
+
         try {
           await page.waitForSelector(deleteButtonSelector, { timeout: 3000 });
           await page.click(deleteButtonSelector);
@@ -539,9 +539,9 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           console.log(`⚠️ Could not find or click delete button for beat ${beatIndex}`);
         }
       }
-      
+
       console.log("✓ Completed deletion of beats with local_voice.mp3");
-      
+
       // Wait for UI to update after deletions
       console.log("Waiting for UI to update after deletions...");
       await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));

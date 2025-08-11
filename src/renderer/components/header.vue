@@ -15,9 +15,15 @@
       <!-- Navigation -->
       <div class="flex items-center space-x-3">
         <!-- Status indicators -->
-        <div v-if="mulmoEventStore.generatingProjectCount > 0" class="flex items-center space-x-1" data-testid="generating-indicator">
+        <div
+          v-if="mulmoEventStore.generatingProjectCount > 0"
+          class="flex items-center space-x-1"
+          data-testid="generating-indicator"
+        >
           <Activity :size="16" class="text-green-500" />
-          <Badge variant="secondary" class="text-xs" data-testid="generating-count-badge"> {{ mulmoEventStore.generatingProjectCount }} generating </Badge>
+          <Badge variant="secondary" class="text-xs" data-testid="generating-count-badge">
+            {{ mulmoEventStore.generatingProjectCount }} generating
+          </Badge>
         </div>
 
         <!-- TODO: Add error indicator -->
