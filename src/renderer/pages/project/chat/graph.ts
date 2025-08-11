@@ -181,7 +181,6 @@ const graphMulmoScriptGeneratorAgentGraph = {
 const graphMulmoScriptGeneratorAgent = nestedAgentGenerator(graphMulmoScriptGeneratorAgentGraph, {
   resultNodeId: "result",
 });
-console.log(graphMulmoScriptGeneratorAgent);
 
 const graphMulmoScriptGeneratorAgentInfo: AgentFunctionInfo = {
   name: "graphMulmoScriptGeneratorAgent",
