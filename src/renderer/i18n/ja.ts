@@ -291,6 +291,7 @@ const lang = {
     },
     menu: {
       script: "編集",
+      product: "成果物",
       debugLog: "デバッグログ",
     },
     generate: {

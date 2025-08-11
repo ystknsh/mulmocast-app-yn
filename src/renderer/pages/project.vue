@@ -175,7 +175,7 @@
               <CardHeader>
                 <CardTitle class="flex items-center space-x-2">
                   <Play :size="20" />
-                  <span>Product</span>
+                  <span>{{ t("project.menu.product") }}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>

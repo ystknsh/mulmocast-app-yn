@@ -292,6 +292,7 @@ const lang = {
     },
     menu: {
       script: "Script",
+      product: "Product",
       debugLog: "Debug Logs",
     },
     generate: {
