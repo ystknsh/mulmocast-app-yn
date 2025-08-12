@@ -1,7 +1,7 @@
 import { type AgentFunctionInfo, type AgentFunction } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
 
-const mulmoScriptValidatorAgent: AgentFunction = ({ namedInputs }) => {
+const mulmoScriptValidatorAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg } = namedInputs;
   const { mulmoScript } = arg;
 
