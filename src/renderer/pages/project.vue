@@ -533,9 +533,9 @@ watch(
 // Copy debug logs to clipboard
 const copyDebugLogs = async () => {
   if (!debugLog.value || debugLog.value.length === 0) return;
-  
-  const logsText = debugLog.value.join('\n');
-  
+
+  const logsText = debugLog.value.join("\n");
+
   try {
     await navigator.clipboard.writeText(logsText);
     notifySuccess(t("settings.notifications.copiedToClipboard"));
