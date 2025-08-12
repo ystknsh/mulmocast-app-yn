@@ -1,9 +1,5 @@
-import { nestedAgentGenerator } from "@graphai/vanilla/lib/graph_agents/nested_agent";
-
-import { type GraphData, type AgentFunctionInfo, graphDataLatestVersion } from "graphai";
-import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
-
-// chat
+import { type GraphData, graphDataLatestVersion } from "graphai";
+import { mulmoScriptSchema } from "mulmocast/browser";
 
 // just chat
 export const graphChat: GraphData = {
@@ -56,7 +52,7 @@ export const graphChatWithSearch: GraphData = {
   },
 };
 
-const graphGenerateMulmoScriptInternal: GraphData = {
+export const graphGenerateMulmoScriptInternal: GraphData = {
   version: graphDataLatestVersion,
   loop: {
     while: ":continue",
@@ -142,78 +138,3 @@ export const graphGenerateMulmoScript: GraphData = {
     },
   },
 };
-
-// by agent
-const graphMulmoScriptGeneratorAgentGraph = {
-  version: graphDataLatestVersion,
-  nodes: {
-    data: {},
-    mulmoScript: {
-      agent: "nestedAgent",
-      inputs: {
-        messages: ":data.messages",
-        prompt: ":data.prompt",
-        llmAgent: ":data.llmAgent",
-      },
-      graph: graphGenerateMulmoScriptInternal,
-      output: {
-        data: ".validateSchema.data",
-        isValid: ".validateSchema.isValid",
-        // content: ".llm.text",
-      },
-    },
-    result: {
-      inputs: {
-        data: ":mulmoScript.data",
-        isValid: ":mulmoScript.isValid",
-      },
-      isResult: true,
-      agent: ({ data, isValid }: { data: MulmoScript; isValid: boolean }) => {
-        return {
-          data,
-          content: isValid ? "script accepted" : "failed",
-        };
-      },
-    },
-  },
-};
-
-const graphMulmoScriptGeneratorAgent = nestedAgentGenerator(graphMulmoScriptGeneratorAgentGraph, {
-  resultNodeId: "result",
-});
-
-const graphMulmoScriptGeneratorAgentInfo: AgentFunctionInfo = {
-  name: "graphMulmoScriptGeneratorAgent",
-  agent: graphMulmoScriptGeneratorAgent,
-  mock: graphMulmoScriptGeneratorAgent,
-  samples: [
-    {
-      params: {},
-      inputs: {},
-      result: {},
-    },
-  ],
-  tools: [
-    {
-      type: "function",
-      function: {
-        name: "graphMulmoScriptGeneratorAgent--generate",
-        description: "generate mulmo script json data from prompt messages",
-        parameters: {
-          type: "object",
-          properties: {},
-        },
-      },
-    },
-  ],
-  description: "generate mulmo script json data from prompt messages",
-  category: ["net"],
-  hasGraphData: true,
-  author: "Receptron team",
-  repository: "https://github.com/receptron/graphai-agents/tree/main/net/exa_agent",
-  source: "https://github.com/receptron/graphai-agents/tree/main/net/exa_agent/src/exa_agent.ts",
-  package: "@graphai/exa_agent",
-  license: "MIT",
-};
-
-export default graphMulmoScriptGeneratorAgentInfo;
