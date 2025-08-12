@@ -95,6 +95,7 @@ const lang = {
 
       // Chat actions
       clearChat: "チャットリセット",
+      copy: "コピー",
       copyScript: "チャットへコピー",
       createScript: "スクリプト作成",
 
@@ -238,6 +239,8 @@ const lang = {
       success: "設定を保存しました",
       error: "設定の保存に失敗しました",
       createSuccess: "Script created successfully 🎉",
+      copiedToClipboard: "クリップボードにコピーしました",
+      copyFailed: "クリップボードへのコピーに失敗しました",
     },
     languages: {
       title: "言語設定",
