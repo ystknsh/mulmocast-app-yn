@@ -490,6 +490,16 @@ const lang = {
       moderationPlaceholder: "ex) low, auto",
       images: "Images",
     },
+    audioParams: {
+      title: "Audio Parameters",
+      padding: "Padding",
+      introPadding: "Intro Padding",
+      closingPadding: "Closing Padding",
+      outroPadding: "Outro Padding",
+      bgmVolume: "BGM Volume",
+      audioVolume: "Audio Volume",
+      bgm: "Background Music",
+    },
   },
 
   modal: {
