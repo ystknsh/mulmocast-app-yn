@@ -490,6 +490,16 @@ const lang = {
       moderationPlaceholder: "例) 低、自動",
       images: "画像",
     },
+    audioParams: {
+      title: "オーディオ設定",
+      padding: "パディング",
+      introPadding: "イントロ パディング",
+      closingPadding: "クロージング パディング",
+      outroPadding: "アウトロ パディング",
+      bgmVolume: "BGM音量",
+      audioVolume: "オーディオ音量",
+      bgm: "バックグラウンドミュージック",
+    },
   },
 
   modal: {
