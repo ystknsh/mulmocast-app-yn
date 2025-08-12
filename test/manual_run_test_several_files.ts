@@ -311,10 +311,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
       if (jsonData.beats && Array.isArray(jsonData.beats)) {
         jsonData.beats.forEach((beat: unknown, index: number) => {
-          if (!beat || typeof beat !== 'object') return; // Skip null/undefined/non-object beats
+          if (!beat || typeof beat !== "object") return; // Skip null/undefined/non-object beats
 
           const beatObj = beat as Record<string, unknown>;
-          
+
           // Check various possible locations for audio reference
           const audioSources = [
             (beatObj.audio as Record<string, unknown>)?.source?.path,
