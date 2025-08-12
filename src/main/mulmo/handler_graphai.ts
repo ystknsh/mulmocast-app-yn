@@ -95,6 +95,7 @@ export const graphaiPuppeteerAgent = async (params: { url: string }) => {
     return {
       data,
       content: data.textContent,
+      hasNext: true,
     };
   } catch (e: unknown) {
     console.log(JSON.stringify({ ok: false, url, error: String(e?.message || e) }));
