@@ -95,6 +95,7 @@ const lang = {
 
       // Chat actions
       clearChat: "Clear chat",
+      copy: "Copy",
       copyScript: "Copy script",
       createScript: "Create Script",
 
@@ -239,6 +240,8 @@ const lang = {
       success: "Settings saved",
       error: "Failed to save settings",
       createSuccess: "Script created successfully 🎉",
+      copiedToClipboard: "Copied to clipboard",
+      copyFailed: "Failed to copy to clipboard",
     },
     languages: {
       title: "Language Settings",
@@ -486,6 +489,16 @@ const lang = {
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
       images: "Images",
+    },
+    audioParams: {
+      title: "Audio Parameters",
+      padding: "Padding",
+      introPadding: "Intro Padding",
+      closingPadding: "Closing Padding",
+      outroPadding: "Outro Padding",
+      bgmVolume: "BGM Volume",
+      audioVolume: "Audio Volume",
+      bgm: "Background Music",
     },
   },
 

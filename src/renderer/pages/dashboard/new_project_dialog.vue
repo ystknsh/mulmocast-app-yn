@@ -8,10 +8,13 @@
         type="text"
         :placeholder="t('project.newProject.placeholder')"
         auto-focus
+        data-testid="project-title-input"
       />
       <div class="mt-4 flex justify-end space-x-3">
-        <Button @click="handleCancel" variant="ghost" :disabled="props.creating">{{ t("ui.actions.cancel") }}</Button>
-        <Button @click="handleCreate" :disabled="props.creating">
+        <Button @click="handleCancel" variant="ghost" :disabled="props.creating" data-testid="cancel-button">{{
+          t("ui.actions.cancel")
+        }}</Button>
+        <Button @click="handleCreate" :disabled="props.creating" data-testid="create-button">
           {{ props.creating ? t("ui.status.creating") : t("ui.actions.create") }}
         </Button>
       </div>

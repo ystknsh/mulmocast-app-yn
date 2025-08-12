@@ -15,6 +15,7 @@
           :disabled="
             mulmoEventStore.isArtifactGenerating[projectId] || !checkboxOptions.some((option) => options[option.key])
           "
+          data-testid="generate-contents-button"
         >
           <div class="mb-0 flex items-center justify-center gap-2">
             <Monitor :size="24" v-if="options.movie" />
