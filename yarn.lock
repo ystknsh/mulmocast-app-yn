@@ -5963,10 +5963,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.1.tgz#7073f93261681143e2a189f43c82925538c6c6c1"
-  integrity sha512-JV+Q096Giw543wt/AOX/tVntwIcTleXDCJydH28a755Zpko/3BE+lbm+nRZ9N7Xa+4FfgXH6lpOcC4ldsSYH1w==
+mulmocast@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.2.tgz#12ab5e8cb024bee48b479fcad2eaa74eda607865"
+  integrity sha512-IV9FDjyRxuF+Dl9QspuVz7rmHuU3HxMXK1UThlpogiTBE4Reyz8KhbsYc3rQpwW+xIZQTYxniqUUdyMKAFhxDg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.13.0"
@@ -8099,10 +8099,10 @@ vite-plugin-monaco-editor@^1.1.0:
   resolved "https://registry.yarnpkg.com/vite-plugin-monaco-editor/-/vite-plugin-monaco-editor-1.1.0.tgz#a6238c2e13d5e98dd54a1bc51f6f189325219de3"
   integrity sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==
 
-vite@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.1.tgz#a2c25f31742fd9f8b223d809df1ce3026e813fcf"
-  integrity sha512-yJ+Mp7OyV+4S+afWo+QyoL9jFWD11QFH0i5i7JypnfTcA1rmgxCbiA8WwAICDEtZ1Z1hzrVhN8R8rGTqkTY8ZQ==
+vite@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.2.tgz#62ffd8a915977ff387fbe7a731af1a650ec5006e"
+  integrity sha512-J0SQBPlQiEXAF7tajiH+rUooJPo0l8KQgyg4/aMunNtrOa7bwuZJsJbDWzeljqQpgftxuq5yNJxQ91O9ts29UQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.6"
