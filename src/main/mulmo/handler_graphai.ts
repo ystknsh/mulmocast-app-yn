@@ -34,7 +34,7 @@ export const graphaiPuppeteerAgent = async (params: { url: string }) => {
       content:
         (article?.title ?? "") +
         "\n" +
-        (article?.textContent)
+        (article?.textContent ?? "")
           .replace(/\r\n/g, "\n")
           .replace(/(\n[ \t]*){2,}/g, "\n")
           .trim(),

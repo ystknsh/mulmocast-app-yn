@@ -1,7 +1,6 @@
-import { GraphAIOnError, GraphAIDebug, GraphAISupressError } from "@graphai/agent_utils";
-import { AgentFunction, AgentFunctionInfo, DefaultConfigData } from "graphai";
+import { AgentFunction, AgentFunctionInfo } from "graphai";
 
-export const puppeteerAgent: AgentFunction = async ({ params, namedInputs, config }) => {
+export const puppeteerAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg } = {
     ...namedInputs,
   };
@@ -43,6 +42,7 @@ const puppeteerAgentInfo: AgentFunctionInfo = {
   ],
   description: "Puppeteer Agent",
   category: ["net"],
+  repository: "https://github.com/receptron/mulmocast-app",
   author: "Receptron team",
   license: "MIT",
 };
