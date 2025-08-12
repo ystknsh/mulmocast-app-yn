@@ -105,6 +105,7 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
+import puppeteerAgent from "../../agents/puppeteer_agent";
 // import toolsAgent from "../../agents/tools_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
@@ -179,6 +180,7 @@ const graphAIAgents = {
   groqAgent,
   validateSchemaAgent,
   exaToolsAgent,
+  puppeteerAgent,
   toolsAgent,
   mulmoScriptValidatorAgent,
 };
@@ -245,7 +247,7 @@ const run = async () => {
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
-      graphai.injectValue("tools", [...exaToolsAgent.tools, ...mulmoScriptValidatorAgent.tools]);
+      graphai.injectValue("tools", [...exaToolsAgent.tools, ...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools]);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
           messages: messages.map(filterMessage()),

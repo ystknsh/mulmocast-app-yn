@@ -6,6 +6,13 @@ import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 // https://vitejs.dev/config
 export default defineConfig({
   build: {
+    rollupOptions: {
+      external: [
+        "jsdom",
+        "puppeteer",
+        "puppeteer-core",
+      ]
+    },
     commonjsOptions: { transformMixedEsModules: true },
   },
   plugins: [

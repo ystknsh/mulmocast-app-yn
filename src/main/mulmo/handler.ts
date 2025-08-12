@@ -47,6 +47,9 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
 } from "./handler_contents";
+import {
+  graphaiPuppeteerAgent,
+} from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
@@ -502,6 +505,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoMultiLinguals(args[0], webContents);
       case "mulmoUpdateMultiLingual":
         return await mulmoUpdateMultiLingual(args[0], args[1], args[2]);
+      case "graphaiPuppeteerAgent":
+        return await graphaiPuppeteerAgent(args[0]);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
