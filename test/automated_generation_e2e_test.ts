@@ -298,14 +298,29 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
       console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
       const jsonData = JSON.parse(jsonContent);
-      const deleteTargetPath = "../../assets/audio/local_voice.mp3";
+      const deleteTargetFilename = "local_voice.mp3";
 
       if (jsonData.beats && Array.isArray(jsonData.beats)) {
         jsonData.beats.forEach((beat: unknown, index: number) => {
-          const beatStr = JSON.stringify(beat);
-          if (beatStr.includes(deleteTargetPath)) {
-            problematicBeatIndices.push(index);
-            console.log(`Found beat to delete at index ${index} with path: ${deleteTargetPath}`);
+          if (!beat || typeof beat !== "object") return; // Skip null/undefined/non-object beats
+
+          const beatObj = beat as Record<string, unknown>;
+          
+          // Check various possible locations for audio reference
+          const audioSources = [
+            ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
+            (beatObj.audio as Record<string, unknown>)?.path,
+            (beatObj.source as Record<string, unknown>)?.path,
+            beatObj.path,
+            beatObj.audio,
+          ].filter(Boolean);
+          
+          for (const source of audioSources) {
+            if (typeof source === "string" && source.endsWith(deleteTargetFilename)) {
+              problematicBeatIndices.push(index);
+              console.log(`Found beat to delete at index ${index} with path: ${source}`);
+              break; // Found match, no need to check other sources for this beat
+            }
           }
         });
       }
