@@ -18,7 +18,7 @@
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
         </template>
         <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button @click="playVideo" :disabled="!videoUrl">
+          <Button @click="playVideo" :disabled="!videoUrl" data-testid="play-video-button">
             <Pause v-if="isPlaying" :size="16" />
             <Play v-else :size="16" />
             {{ isPlaying ? t("project.productTabs.movie.pause") : t("project.productTabs.movie.play") }}

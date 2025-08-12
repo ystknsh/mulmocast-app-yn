@@ -1,34 +1,27 @@
-import * as playwright from "playwright-core";
-import { Browser, Page } from "playwright-core";
+import { spawn, ChildProcess } from "child_process";
+import playwright, { Browser, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
 
 // Configuration constants
 const CONFIG = {
+  PROCESS_KILL_TIMEOUT: 5000, // 5 seconds
+  APP_START_WAIT: 20000, // 20 seconds for CI environment
   CDP_RETRY_DELAY: 1000, // CDP connection retry delay (1 second)
-  CDP_MAX_ATTEMPTS: 30, // Maximum CDP connection attempts
+  CDP_MAX_ATTEMPTS: 50, // Maximum CDP connection attempts (longer for CI)
   TAB_SWITCH_DELAY: 500, // Tab switching delay
   INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
-  GENERATION_TIMEOUT: 300000, // 5 minutes for generation
-  PLAY_BUTTON_TIMEOUT: 10000, // 10 seconds to wait for play button
+  GENERATION_TIMEOUT: 600000, // 10 minutes for generation (longer for CI)
+  PLAY_BUTTON_TIMEOUT: 15000, // 15 seconds to wait for play button
 } as const;
 
 // Test JSON files to process
 const TEST_JSON_FILES = [
-  // "test_order.json",
-  // "test_beats.json",
   "test_no_audio.json",
   "test_no_audio_with_credit.json",
   "test_transition_no_audio.json",
   "test_slideout_left_no_audio.json",
-
-  // test_order.json --pdf_mode slide --pdf_size a4
-  // test_order.json --pdf_mode talk --pdf_size a4
-  // test_order.json --pdf_mode handout --pdf_size a4
-  // test_order_portrait.json --pdf_mode slide --pdf_size a4
-  // test_order_portrait.json --pdf_mode talk --pdf_size a4
-  // test_order_portrait.json --pdf_mode handout --pdf_size a4
 ];
 
 // Current test file being processed
@@ -56,24 +49,80 @@ async function readLocalJSON(filename: string): Promise<string> {
   }
 }
 
+// Function to terminate Electron process
+async function terminateElectronProcess(electronProcess: ChildProcess | null): Promise<void> {
+  if (!electronProcess || electronProcess.killed) {
+    return;
+  }
+
+  console.log("Terminating Electron app...");
+
+  return new Promise((resolve) => {
+    let resolved = false;
+
+    const cleanup = () => {
+      if (!resolved) {
+        resolved = true;
+        resolve();
+      }
+    };
+
+    // Process exit event listeners
+    electronProcess.once("exit", cleanup);
+    electronProcess.once("error", cleanup);
+
+    // Timeout setting
+    const __timeout = setTimeout(() => {
+      if (!resolved) {
+        console.log("Force killing process...");
+        try {
+          electronProcess.kill("SIGKILL");
+        } catch (killError: unknown) {
+          console.log(
+            "Process may have already exited:",
+            killError instanceof Error ? killError.message : String(killError),
+          );
+        }
+        cleanup();
+      }
+    }, CONFIG.PROCESS_KILL_TIMEOUT);
+
+    // Attempt graceful termination
+    try {
+      if (process.platform === "win32") {
+        electronProcess.kill("SIGTERM");
+      } else {
+        process.kill(-electronProcess.pid!, "SIGTERM");
+      }
+    } catch (termError: unknown) {
+      console.log("Failed to send SIGTERM:", termError instanceof Error ? termError.message : String(termError));
+      cleanup();
+    }
+  });
+}
+
 interface ProjectInfo {
   jsonFile: string;
   projectTitle: string;
   projectUrl?: string;
 }
 
+interface Resources {
+  electronProcess: ChildProcess | null;
+  browser: Browser | null;
+}
+
 async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   console.log("\n=== Waiting for all generations to complete ===");
 
   // Navigate to dashboard
-  const appUrl = process.env.APP_URL || "localhost:5173";
-  await page.goto(`http://${appUrl}/#/`);
+  await page.goto("http://localhost:5173/#/");
   await page.waitForLoadState("networkidle");
   console.log("✓ Navigated to dashboard");
 
   // Poll for generating count to become 0
-  const maxWaitTime = CONFIG.GENERATION_TIMEOUT * 10; // Allow more time for multiple projects
-  const checkInterval = 5000; // Check every 5 seconds
+  const maxWaitTime = CONFIG.GENERATION_TIMEOUT * 2; // Allow more time for multiple projects
+  const checkInterval = 10000; // Check every 10 seconds for CI
   let elapsed = 0;
 
   while (elapsed < maxWaitTime) {
@@ -106,7 +155,7 @@ async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   }
 
   // Wait a bit more to ensure UI is updated
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 }
 
 async function visitProjectsAndPlay(
@@ -115,7 +164,6 @@ async function visitProjectsAndPlay(
 ): Promise<{ played: number; failed: number; failedProjects: string[] }> {
   console.log("\n=== Visiting each project to play ===");
 
-  const appUrl = process.env.APP_URL || "localhost:5173";
   let playedCount = 0;
   let failedCount = 0;
   const failedProjects: string[] = [];
@@ -126,12 +174,12 @@ async function visitProjectsAndPlay(
 
     // First navigate to dashboard
     console.log("Navigating to dashboard first...");
-    await page.goto(`http://${appUrl}/#/`);
+    await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
     console.log("✓ On dashboard");
 
     // Wait a bit for dashboard to load
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Navigate to project
     console.log(`Navigating to project: ${project.projectUrl}`);
@@ -140,13 +188,13 @@ async function visitProjectsAndPlay(
     console.log("✓ Navigated to project page");
 
     // Wait for page to fully load
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Look for play button
     let playSuccessful = false;
     try {
       await page.waitForSelector('[data-testid="play-video-button"]', {
-        timeout: 5000,
+        timeout: CONFIG.PLAY_BUTTON_TIMEOUT,
       });
       const playButton = await page.$('[data-testid="play-video-button"]');
 
@@ -155,7 +203,7 @@ async function visitProjectsAndPlay(
         await playButton.click();
 
         // Wait a bit and check if video is actually playing
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Check for video element and its state
         const videoState = await page.evaluate(() => {
@@ -223,13 +271,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
   console.log(`[DEBUG] Projects created so far: ${projectsCreated.length}`);
 
   let projectTitle = "";
+  let problematicBeatIndices: number[] = [];
 
   try {
-    const appUrl = process.env.APP_URL || "localhost:5173";
-
     // Navigate to dashboard
     console.log("Navigating to dashboard...");
-    await page.goto(`http://${appUrl}/#/`);
+    await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
     console.log("✓ Dashboard loaded");
 
@@ -239,10 +286,40 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     await page.waitForSelector('[data-testid="project-title-input"]');
     console.log("✓ New project dialog opened");
 
+    // Read JSON from local node_modules and analyze
+    console.log("\n8. Reading test JSON from local node_modules...");
+    let jsonContent: string;
+
+    try {
+      jsonContent = await readLocalJSON(currentTestFile);
+
+      // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
+      console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
+      const jsonData = JSON.parse(jsonContent);
+      const deleteTargetPath = "../../assets/audio/local_voice.mp3";
+
+      if (jsonData.beats && Array.isArray(jsonData.beats)) {
+        jsonData.beats.forEach((beat: unknown, index: number) => {
+          const beatStr = JSON.stringify(beat);
+          if (beatStr.includes(deleteTargetPath)) {
+            problematicBeatIndices.push(index);
+            console.log(`Found beat to delete at index ${index} with path: ${deleteTargetPath}`);
+          }
+        });
+      }
+
+      console.log(
+        `Total beats to delete: ${problematicBeatIndices.length} at indices: [${problematicBeatIndices.join(", ")}]`,
+      );
+    } catch (error) {
+      console.error("Failed to read from local file:", error);
+      throw new Error(`Could not read ${currentTestFile} from node_modules`);
+    }
+
     // Parse JSON to get title for project name
     let baseTitle = "Test";
     try {
-      const testJson = JSON.parse(await readLocalJSON(currentTestFile));
+      const testJson = JSON.parse(jsonContent);
       if (testJson.title) {
         baseTitle = testJson.title;
       }
@@ -292,39 +369,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Wait for Monaco Editor to be ready
     console.log("\n7. Waiting for Monaco Editor...");
-    await page.waitForSelector(".monaco-editor", { timeout: 10000 });
+    await page.waitForSelector(".monaco-editor", { timeout: 15000 });
     console.log("✓ Monaco Editor loaded");
-
-    // Read JSON from local node_modules
-    console.log("\n8. Reading test JSON from local node_modules...");
-    let jsonContent: string;
-    let problematicBeatIndices: number[] = [];
-
-    try {
-      jsonContent = await readLocalJSON(currentTestFile);
-
-      // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
-      console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
-      const jsonData = JSON.parse(jsonContent);
-      const deleteTargetPath = "../../assets/audio/local_voice.mp3";
-
-      if (jsonData.beats && Array.isArray(jsonData.beats)) {
-        jsonData.beats.forEach((beat: unknown, index: number) => {
-          const beatStr = JSON.stringify(beat);
-          if (beatStr.includes(deleteTargetPath)) {
-            problematicBeatIndices.push(index);
-            console.log(`Found beat to delete at index ${index} with path: ${deleteTargetPath}`);
-          }
-        });
-      }
-
-      console.log(
-        `Total beats to delete: ${problematicBeatIndices.length} at indices: [${problematicBeatIndices.join(", ")}]`,
-      );
-    } catch (error) {
-      console.error("Failed to read from local file:", error);
-      throw new Error(`Could not read ${currentTestFile} from node_modules`);
-    }
 
     // Clear existing content and input test JSON
     console.log("\n9. Inputting test audio JSON...");
@@ -336,7 +382,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     await page.keyboard.press("Delete");
 
     // Wait a bit for editor to be ready
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Use page.evaluate to set the editor content directly
     await page.evaluate((json) => {
@@ -463,7 +509,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Wait for JSON validation and UI update
     console.log("\nWaiting for JSON validation and UI update...");
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
     console.log("✓ JSON processing time completed");
 
     // Navigate to Media tab to delete problematic beats
@@ -485,10 +531,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
         console.log(`Looking for delete button: ${deleteButtonSelector}`);
 
         try {
-          await page.waitForSelector(deleteButtonSelector, { timeout: 2000 });
+          await page.waitForSelector(deleteButtonSelector, { timeout: 3000 });
           await page.click(deleteButtonSelector);
           console.log(`✓ Deleted beat ${beatIndex} (UI: Beat ${beatIndex + 1}) with local_voice.mp3`);
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         } catch {
           console.log(`⚠️ Could not find or click delete button for beat ${beatIndex}`);
         }
@@ -518,42 +564,57 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("\n10. Generation started, moving to next file...");
 
     // Wait a bit to ensure generation has started
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     console.log("\n=== Project created and generation started ===");
     console.log(`Project "${projectTitle}" was created and generation was started.`);
   } catch (error: unknown) {
     console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
-  } finally {
-    // No need to close browser here, it's managed in main()
   }
 }
 
-// Main execution
-async function main(): Promise<void> {
-  console.log("Starting test in 3 seconds...");
-  console.log("Make sure the Electron app is running with: yarn start");
-  console.log("Environment variables:");
-  console.log(`  CDP_URL: ${process.env.CDP_URL || "http://localhost:9222/ (default)"}`);
-  console.log(`  APP_URL: ${process.env.APP_URL || "localhost:5173 (default)"}\n`);
-  console.log(`Testing with ${TEST_JSON_FILES.length} JSON files: ${TEST_JSON_FILES.join(", ")}`);
-
-  await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
-
-  const projectsCreated: ProjectInfo[] = [];
-  let browser: Browser | null = null;
-  let page: Page | null = null;
+async function runGenerationE2ETest(): Promise<void> {
+  // Initialize resources
+  const resources: Resources = {
+    electronProcess: null,
+    browser: null,
+  };
 
   try {
-    // Connect to browser once
-    console.log("\nConnecting to CDP...");
-    const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
+    console.log("=== MulmoCast Generation E2E Test ===");
+    console.log("1. Starting Electron app with yarn start...");
+
+    // Start Electron app with spawn (create process group)
+    // Note: Using yarn from PATH - ensure trusted environment in CI/CD
+    resources.electronProcess = spawn("yarn", ["start"], {
+      shell: true,
+      detached: process.platform !== "win32", // Don't use detached on Windows
+      env: {
+        ...process.env,
+        NODE_ENV: "development",
+        // Explicitly include common paths to reduce risk
+        PATH: process.env.PATH,
+      },
+    });
+
+    // Display app startup logs
+    resources.electronProcess.stdout?.on("data", (data: Buffer) => {
+      console.log(`[Electron]: ${data.toString().trim()}`);
+    });
+
+    resources.electronProcess.stderr?.on("data", (data: Buffer) => {
+      console.error(`[Electron Error]: ${data.toString().trim()}`);
+    });
+
+    // Poll for CDP connection availability
+    console.log("\n2. Waiting for CDP to be available...");
+    const cdpUrl = "http://localhost:9222/";
     let attempts = 0;
 
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
       try {
-        browser = await playwright.chromium.connectOverCDP(cdpUrl);
+        resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
         console.log("✓ Connected successfully via CDP");
         break;
       } catch (error: unknown) {
@@ -563,17 +624,20 @@ async function main(): Promise<void> {
             `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
           );
         }
+        if (attempts === 1) {
+          console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
+        }
         await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY));
       }
     }
 
     // Get page
-    const contexts = browser!.contexts();
-    const appUrl = process.env.APP_URL || "localhost:5173";
+    const contexts = resources.browser!.contexts();
+    let page: Page | null = null;
     for (const context of contexts) {
       const pages = context.pages();
       for (const p of pages) {
-        if (p.url().includes(appUrl)) {
+        if (p.url().includes("localhost:5173")) {
           page = p;
           break;
         }
@@ -584,6 +648,10 @@ async function main(): Promise<void> {
     if (!page) {
       throw new Error("Could not find application page");
     }
+
+    console.log("✓ Found application page");
+
+    const projectsCreated: ProjectInfo[] = [];
 
     // Create all projects and start generation
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
@@ -616,19 +684,52 @@ async function main(): Promise<void> {
       console.log("\n✗ Test FAILED - Some projects could not be played");
       console.log("Failed projects:");
       playResult.failedProjects.forEach((p) => console.log(`  - ${p}`));
-      process.exit(1);
+      throw new Error("Some projects failed to play");
     } else {
       console.log("\n✓ Test PASSED - All generations completed and played successfully!");
-      process.exit(0);
+    }
+
+    // Close application normally after test completion
+    console.log("\nClosing application window...");
+    try {
+      // Close Electron app window
+      await page.evaluate(() => {
+        (window as Window & { close: () => void }).close();
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for window to close
+    } catch (closeError: unknown) {
+      console.log(
+        "Failed to close window gracefully:",
+        closeError instanceof Error ? closeError.message : String(closeError),
+      );
     }
   } catch (error: unknown) {
-    console.error("Test execution failed:", error);
-    process.exit(1);
+    console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
+    throw error;
   } finally {
-    if (browser) {
-      await browser.close();
+    // Close browser connection
+    if (resources.browser) {
+      await resources.browser.close();
       console.log("\nBrowser connection closed.");
     }
+
+    // Terminate Electron process
+    await terminateElectronProcess(resources.electronProcess);
+  }
+}
+
+// Main execution
+async function main(): Promise<void> {
+  console.log("Starting Generation E2E test...");
+  console.log("This test will automatically start and stop the Electron app.\n");
+
+  try {
+    await runGenerationE2ETest();
+    console.log("\n✅ All tests passed!");
+    process.exit(0);
+  } catch (error: unknown) {
+    console.error("\n❌ Test failed:", error);
+    process.exit(1);
   }
 }
 
