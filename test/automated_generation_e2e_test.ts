@@ -635,12 +635,18 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Get page
     const contexts = resources.browser!.contexts();
+    console.log(`Found ${contexts.length} browser contexts`);
+    
     let page: Page | null = null;
     for (const context of contexts) {
       const pages = context.pages();
+      console.log(`Context has ${pages.length} pages:`);
       for (const p of pages) {
-        if (p.url().includes("localhost:5173")) {
+        const url = p.url();
+        console.log(`  - Page URL: ${url}`);
+        if (url.includes("localhost:5173") && !url.includes("devtools://")) {
           page = p;
+          console.log(`  ✓ Selected as application page: ${url}`);
           break;
         }
       }
