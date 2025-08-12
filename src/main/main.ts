@@ -10,10 +10,16 @@ import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 
 const isDev = process.env.NODE_ENV === "development";
+const isCI = process.env.CI === "true";
 
 // 開発環境でのみPlaywright用のデバッグポートを設定
 if (isDev) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222");
+}
+
+// CI環境でサンドボックスを無効化
+if (isCI || process.env.ELECTRON_DISABLE_SANDBOX === "1") {
+  app.commandLine.appendSwitch("no-sandbox");
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
