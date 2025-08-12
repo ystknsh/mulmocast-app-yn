@@ -317,7 +317,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
           // Check various possible locations for audio reference
           const audioSources = [
-            (beatObj.audio as Record<string, unknown>)?.source?.path,
+            ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
             (beatObj.audio as Record<string, unknown>)?.path,
             (beatObj.source as Record<string, unknown>)?.path,
             beatObj.path,

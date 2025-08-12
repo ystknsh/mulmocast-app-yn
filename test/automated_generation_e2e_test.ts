@@ -61,19 +61,8 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
   return new Promise((resolve) => {
     let resolved = false;
 
-    const cleanup = () => {
-      if (!resolved) {
-        resolved = true;
-        resolve();
-      }
-    };
-
-    // Process exit event listeners
-    electronProcess.once("exit", cleanup);
-    electronProcess.once("error", cleanup);
-
     // Timeout setting
-    const __timeout = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!resolved) {
         console.log("Force killing process...");
         try {
@@ -87,6 +76,18 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
         cleanup();
       }
     }, CONFIG.PROCESS_KILL_TIMEOUT);
+
+    const cleanup = () => {
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeoutId); // Clear timeout to prevent leaks
+        resolve();
+      }
+    };
+
+    // Process exit event listeners
+    electronProcess.once("exit", cleanup);
+    electronProcess.once("error", cleanup);
 
     // Attempt graceful termination
     try {
