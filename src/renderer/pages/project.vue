@@ -536,8 +536,8 @@ const copyDebugLogs = async () => {
 
   // Build logsText by mapping entries to strings, pretty-printing non-strings
   const logsText = debugLog.value
-    .map(item => {
-      if (typeof item === 'string') {
+    .map((item) => {
+      if (typeof item === "string") {
         return item;
       }
       // Pretty-print non-string entries
@@ -579,9 +579,9 @@ const copyDebugLogs = async () => {
       document.body.appendChild(textarea);
       textarea.focus();
       textarea.select();
-      
+
       copySucceeded = document.execCommand("copy");
-      
+
       document.body.removeChild(textarea);
     } catch (error) {
       console.error("document.execCommand('copy') failed:", error);
