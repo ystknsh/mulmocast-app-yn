@@ -188,7 +188,19 @@
               <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
                 <div class="rounded-lg bg-gray-50 p-4">
-                  <h3 class="mb-2 text-sm font-medium">{{ t("project.menu.debugLog") }}</h3>
+                  <div class="mb-2 flex items-center justify-between">
+                    <h3 class="text-sm font-medium">{{ t("project.menu.debugLog") }}</h3>
+                    <Button
+                      @click="copyDebugLogs"
+                      size="sm"
+                      variant="outline"
+                      :disabled="!debugLog || debugLog.length === 0"
+                      class="gap-2"
+                    >
+                      <Copy class="h-3 w-3" />
+                      {{ t("ui.actions.copy") }}
+                    </Button>
+                  </div>
                   <div class="h-40 overflow-y-auto rounded border bg-white p-2 font-mono text-xs" ref="logContainer">
                     <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
                       {{ entry }}
@@ -237,6 +249,7 @@ import {
   PanelLeftOpen,
   PanelRightClose,
   PanelRightOpen,
+  Copy,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
@@ -516,6 +529,20 @@ watch(
   },
   { deep: true },
 );
+
+// Copy debug logs to clipboard
+const copyDebugLogs = async () => {
+  if (!debugLog.value || debugLog.value.length === 0) return;
+  
+  const logsText = debugLog.value.join('\n');
+  
+  try {
+    await navigator.clipboard.writeText(logsText);
+    notifySuccess(t("settings.notifications.copiedToClipboard"));
+  } catch (error) {
+    console.error("Failed to copy debug logs:", error);
+  }
+};
 </script>
 
 <style scoped>
