@@ -15,6 +15,8 @@ const CONFIG = {
   INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
   GENERATION_TIMEOUT: 600000, // 10 minutes for generation (longer for CI)
   PLAY_BUTTON_TIMEOUT: 15000, // 15 seconds to wait for play button
+  VITE_SERVER_WAIT_MAX: 60000, // 60 seconds to wait for Vite dev server
+  VITE_SERVER_CHECK_INTERVAL: 2000, // Check every 2 seconds
 } as const;
 
 // Test JSON files to process
@@ -633,28 +635,42 @@ async function runGenerationE2ETest(): Promise<void> {
       }
     }
 
-    // Get page
-    const contexts = resources.browser!.contexts();
-    console.log(`Found ${contexts.length} browser contexts`);
-
+    // Wait for Vite dev server to start and app to load
+    console.log("\\n3. Waiting for Vite dev server to start...");
     let page: Page | null = null;
-    for (const context of contexts) {
-      const pages = context.pages();
-      console.log(`Context has ${pages.length} pages:`);
-      for (const p of pages) {
-        const url = p.url();
-        console.log(`  - Page URL: ${url}`);
-        if (url.includes("localhost:5173") && !url.includes("devtools://")) {
-          page = p;
-          console.log(`  ✓ Selected as application page: ${url}`);
-          break;
+    let waitTime = 0;
+    
+    while (waitTime < CONFIG.VITE_SERVER_WAIT_MAX) {
+      const contexts = resources.browser!.contexts();
+      console.log(`Found ${contexts.length} browser contexts`);
+      
+      for (const context of contexts) {
+        const pages = context.pages();
+        console.log(`Context has ${pages.length} pages:`);
+        for (const p of pages) {
+          const url = p.url();
+          console.log(`  - Page URL: ${url}`);
+          if (url.includes("localhost:5173") && !url.includes("devtools://")) {
+            page = p;
+            console.log(`  ✓ Selected as application page: ${url}`);
+            break;
+          }
         }
+        if (page) break;
       }
-      if (page) break;
+      
+      if (page) {
+        console.log("✓ Found application page with Vite dev server");
+        break;
+      }
+      
+      console.log(`Still waiting for Vite server... (${waitTime / 1000}s elapsed)`);
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.VITE_SERVER_CHECK_INTERVAL));
+      waitTime += CONFIG.VITE_SERVER_CHECK_INTERVAL;
     }
 
     if (!page) {
-      throw new Error("Could not find application page");
+      throw new Error(`Could not find application page after waiting ${CONFIG.VITE_SERVER_WAIT_MAX / 1000} seconds`);
     }
 
     console.log("✓ Found application page");
