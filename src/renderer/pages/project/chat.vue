@@ -264,8 +264,8 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
-    if (res?.llm?.data?.["mulmoScriptValidatorAgent--verify"]?.data?.isValid) {
-      const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--verify"]?.data ?? {};
+    if (res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data?.isValid) {
+      const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data ?? {};
       script.beats.map(setRandomBeatId);
       emit("update:updateMulmoScript", script);
     }
