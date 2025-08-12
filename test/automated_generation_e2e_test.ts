@@ -583,7 +583,9 @@ async function runGenerationE2ETest(): Promise<void> {
     console.log("1. Starting Electron app with yarn start...");
 
     // Start Electron app with electron-forge directly to avoid PATH and shell security warnings
-    const electronForgeBinPath = path.join(process.cwd(), "node_modules", ".bin", "electron-forge");
+    // Resolve cross-platform executable (Windows needs .cmd extension)
+    const electronForgeBinary = process.platform === "win32" ? "electron-forge.cmd" : "electron-forge";
+    const electronForgeBinPath = path.join(process.cwd(), "node_modules", ".bin", electronForgeBinary);
 
     resources.electronProcess = spawn(
       process.execPath, // Node.js executable path
