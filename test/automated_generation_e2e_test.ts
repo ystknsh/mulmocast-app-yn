@@ -585,18 +585,21 @@ async function runGenerationE2ETest(): Promise<void> {
     console.log("=== MulmoCast Generation E2E Test ===");
     console.log("1. Starting Electron app with yarn start...");
 
-    // Start Electron app with spawn (create process group)
-    // Note: Using yarn from PATH - ensure trusted environment in CI/CD
-    resources.electronProcess = spawn("yarn", ["start"], {
-      shell: true,
-      detached: process.platform !== "win32", // Don't use detached on Windows
-      env: {
-        ...process.env,
-        NODE_ENV: "development",
-        // Explicitly include common paths to reduce risk
-        PATH: process.env.PATH,
+    // Start Electron app with electron-forge directly to avoid PATH and shell security warnings
+    const electronForgeBinPath = path.join(process.cwd(), "node_modules", ".bin", "electron-forge");
+
+    resources.electronProcess = spawn(
+      process.execPath, // Node.js executable path
+      [electronForgeBinPath, "start"], // Arguments: [script path, "start"]
+      {
+        shell: false, // Avoid security warnings
+        detached: process.platform !== "win32", // Don't use detached on Windows
+        env: {
+          ...process.env,
+          NODE_ENV: "development",
+        },
       },
-    });
+    );
 
     // Display app startup logs
     resources.electronProcess.stdout?.on("data", (data: Buffer) => {
