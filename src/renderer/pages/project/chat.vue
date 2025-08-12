@@ -124,7 +124,7 @@ import { useStreamData } from "@/lib/stream";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
-import { useMulmoGlobalStore } from "@/store";
+import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
@@ -132,8 +132,11 @@ import ToolsMessage from "./chat/tools_message.vue";
 import { graphChat, graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
+import enLang from "../../i18n/en";
+
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
+const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
@@ -269,7 +272,13 @@ const run = async () => {
 const isCreatingScript = ref(false);
 
 const copyScript = async () => {
-  userInput.value = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
+  // console.log(mulmoScriptHistoryStore.currentMulmoScript.lang);
+
+  const lang = enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
+  const head = `Generate a ${lang} script for a presentation of the given topic and pass it to tool 'pushScript.'`;
+  // Generate a Japanese script for a presentation of the given topic and pass it to tool 'pushScript.'
+  const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
+  userInput.value = head + " " + template;
 };
 
 const noChatMessages = computed(() => messages.length === 0);
