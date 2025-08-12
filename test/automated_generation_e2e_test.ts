@@ -305,7 +305,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           if (!beat || typeof beat !== "object") return; // Skip null/undefined/non-object beats
 
           const beatObj = beat as Record<string, unknown>;
-          
+
           // Check various possible locations for audio reference
           const audioSources = [
             ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
@@ -314,7 +314,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
             beatObj.path,
             beatObj.audio,
           ].filter(Boolean);
-          
+
           for (const source of audioSources) {
             if (typeof source === "string" && source.endsWith(deleteTargetFilename)) {
               problematicBeatIndices.push(index);
@@ -636,7 +636,7 @@ async function runGenerationE2ETest(): Promise<void> {
     // Get page
     const contexts = resources.browser!.contexts();
     console.log(`Found ${contexts.length} browser contexts`);
-    
+
     let page: Page | null = null;
     for (const context of contexts) {
       const pages = context.pages();
