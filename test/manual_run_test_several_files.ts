@@ -3,7 +3,7 @@ import { Browser, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
-import * as monaco from "monaco-editor";
+import type * as monaco from "monaco-editor";
 
 // Configuration constants
 const CONFIG = {
@@ -307,14 +307,27 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       // Parse JSON to find problematic beats (only for deletion - local_voice.mp3)
       console.log("Analyzing JSON for beats to delete (local_voice.mp3)...");
       const jsonData = JSON.parse(jsonContent);
-      const deleteTargetPath = "../../assets/audio/local_voice.mp3";
+      const deleteTargetFilename = "local_voice.mp3";
 
       if (jsonData.beats && Array.isArray(jsonData.beats)) {
-        jsonData.beats.forEach((beat: unknown, index: number) => {
-          const beatStr = JSON.stringify(beat);
-          if (beatStr.includes(deleteTargetPath)) {
-            problematicBeatIndices.push(index);
-            console.log(`Found beat to delete at index ${index} with path: ${deleteTargetPath}`);
+        jsonData.beats.forEach((beat: any, index: number) => {
+          if (!beat) return; // Skip null/undefined beats
+          
+          // Check various possible locations for audio reference
+          const audioSources = [
+            beat.audio?.source?.path,
+            beat.audio?.path,
+            beat.source?.path,
+            beat.path,
+            beat.audio,
+          ].filter(Boolean);
+          
+          for (const source of audioSources) {
+            if (typeof source === 'string' && source.endsWith(deleteTargetFilename)) {
+              problematicBeatIndices.push(index);
+              console.log(`Found beat to delete at index ${index} with path: ${source}`);
+              break; // Found match, no need to check other sources for this beat
+            }
           }
         });
       }

@@ -3,7 +3,7 @@ import playwright, { Browser, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
-import * as monaco from "monaco-editor";
+import type * as monaco from "monaco-editor";
 
 // Configuration constants
 const CONFIG = {
