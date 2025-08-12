@@ -134,7 +134,7 @@ import { useMulmoGlobalStore } from "@/store";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
-import graphMulmoScriptGeneratorAgent, { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
+import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 const { t } = useI18n();
@@ -181,7 +181,6 @@ const graphAIAgents = {
   groqAgent,
   validateSchemaAgent,
   exaToolsAgent,
-  graphMulmoScriptGeneratorAgent,
   toolsAgent,
   mulmoScriptValidatorAgent,
 };
@@ -253,11 +252,6 @@ const run = async () => {
         exaToolsAgent: {
           messages: messages.map(filterMessage()),
         },
-        graphMulmoScriptGeneratorAgent: {
-          messages: messages.map(filterMessage()),
-          prompt: userInput.value,
-          llmAgent: llmAgent,
-        },
       });
     }
 
@@ -266,11 +260,6 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
-    if (res?.llm?.data?.["graphMulmoScriptGeneratorAgent--generate"]?.data) {
-      const script = res?.llm?.data?.["graphMulmoScriptGeneratorAgent--generate"]?.data;
-      script.beats.map(setRandomBeatId);
-      emit("update:updateMulmoScript", script);
-    }
     if (res?.llm?.data?.["mulmoScriptValidatorAgent--verify"]?.data?.isValid) {
       const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--verify"]?.data ?? {};
       script.beats.map(setRandomBeatId);
