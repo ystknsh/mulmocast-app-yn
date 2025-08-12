@@ -15,6 +15,7 @@ type DataChunk = {
 
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
+  const toolsData = ref<Record<string, unknown>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
   const outSideFunciton = (context: AgentFunctionContext, token: string | DataChunk) => {
@@ -26,7 +27,15 @@ export const useStreamData = () => {
         streamData.value[nodeId] = (streamData.value[nodeId] || "") + token.response.output[0].text;
       }
       if (token?.response?.output?.[0]?.type === "tool_calls") {
-        console.log(token?.response?.output?.[0]);
+        if (token?.response?.output?.[0]?.data?.[0]?.id) {
+          toolsData.value[nodeId] = token?.response?.output?.[0]?.data?.[0]?.function;
+        } else if (token?.response?.output?.[0]?.data?.[0]?.function?.arguments) {
+          toolsData.value[nodeId].arguments =
+            toolsData.value[nodeId].arguments + token?.response?.output?.[0]?.data?.[0].function.arguments;
+        }
+        if (toolsData.value[nodeId]) {
+          streamData.value[nodeId] = JSON.stringify(toolsData.value[nodeId], null, 2);
+        }
       }
     }
   };
@@ -34,6 +43,9 @@ export const useStreamData = () => {
   const resetStreamData = (nodeId: string) => {
     if (streamData.value[nodeId]) {
       streamData.value[nodeId] = "";
+    }
+    if (toolsData.value[nodeId]) {
+      toolsData.value[nodeId] = null;
     }
   };
 
