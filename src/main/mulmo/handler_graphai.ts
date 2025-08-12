@@ -14,15 +14,21 @@ type Article = {
 const NAV_TIMEOUT = 45_000;
 
 const normalize = (s: string) =>
-  s.replace(/\r\n/g, "\n").replace(/(\n|\t){2,}/g, "\n").replace(/\t{2,}/g, "\t").trim();
+  s
+    .replace(/\r\n/g, "\n")
+    .replace(/[\n\t]{2,}/g, "\n")
+    .replace(/\t{2,}/g, "\t")
+    .trim();
 
+/* global document */
 async function waitStable(page: puppeteer.Page, ms = 1200, step = 200) {
-  let last = -1, stable = 0;
+  let last = -1,
+    stable = 0;
   while (stable < ms) {
     const len = await page.evaluate(() => document.body?.innerText?.length || 0);
-    stable = (len === last) ? (stable + step) : 0;
+    stable = len === last ? stable + step : 0;
     last = len;
-    await new Promise(r => setTimeout(r, step));
+    await new Promise((r) => setTimeout(r, step));
   }
 }
 
@@ -34,7 +40,7 @@ async function fetchArticle(url: string): Promise<Article> {
   const page = await browser.newPage();
 
   await page.setUserAgent(
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
   );
   await page.setViewport({ width: 1366, height: 900 });
 
@@ -43,7 +49,7 @@ async function fetchArticle(url: string): Promise<Article> {
 
     await Promise.race([
       page.waitForSelector("article, main, [role=main], .article, .post", { timeout: 8000 }),
-      new Promise(r => setTimeout(r, 8000)),
+      new Promise((r) => setTimeout(r, 8000)),
     ]);
 
     await waitStable(page, 1200);
@@ -59,9 +65,7 @@ async function fetchArticle(url: string): Promise<Article> {
     let finalText = text;
     if (finalText.length < 100) {
       const raw = await page.evaluate(() => {
-        const el =
-          document.querySelector("article, main, [role=main], .article, .post") ||
-          document.body;
+        const el = document.querySelector("article, main, [role=main], .article, .post") || document.body;
         return el?.textContent || "";
       });
       finalText = normalize(raw);
@@ -92,7 +96,7 @@ export const graphaiPuppeteerAgent = async (params: { url: string }) => {
       data,
       content: data.textContent,
     };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log(JSON.stringify({ ok: false, url, error: String(e?.message || e) }));
     return {
       content: String(e?.message || e),
