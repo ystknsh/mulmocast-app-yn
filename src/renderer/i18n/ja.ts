@@ -240,6 +240,7 @@ const lang = {
       error: "設定の保存に失敗しました",
       createSuccess: "Script created successfully 🎉",
       copiedToClipboard: "クリップボードにコピーしました",
+      copyFailed: "クリップボードへのコピーに失敗しました",
     },
     languages: {
       title: "言語設定",

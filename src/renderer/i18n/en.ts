@@ -241,6 +241,7 @@ const lang = {
       error: "Failed to save settings",
       createSuccess: "Script created successfully 🎉",
       copiedToClipboard: "Copied to clipboard",
+      copyFailed: "Failed to copy to clipboard",
     },
     languages: {
       title: "Language Settings",
