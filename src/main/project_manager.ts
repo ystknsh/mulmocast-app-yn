@@ -61,6 +61,7 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
   try {
     return MulmoScriptMethods.validate(mulmo);
   } catch (__error) {
+    console.warn("Validation failed for mulmo script:", __error);
     return mulmo;
   }
 };

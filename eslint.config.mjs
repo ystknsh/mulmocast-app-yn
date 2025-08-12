@@ -60,12 +60,10 @@ const sonarjsRules = {
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
-  "sonarjs/no-ignored-exceptions": "warn",
   "sonarjs/no-os-command-from-path": "warn",
   "sonarjs/no-nested-functions": "warn",
   "sonarjs/no-small-switch": "warn",
   "sonarjs/slow-regex": "warn",
-  "sonarjs/no-nested-template-literals": "warn"
 };
 
 export default [

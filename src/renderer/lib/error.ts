@@ -6,7 +6,9 @@ const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
     .map((segment) => (typeof segment === "number" ? `[${segment}]` : `.${segment}`))
     .join("")
     .replace(/^\./, "");
-  return `The object at '${pathStr}' contains unrecognized key(s): ${keys.map((k) => `'${k}'`).join(", ")}.`;
+
+  const formattedKeys = keys.map((k) => `'${k}'`).join(", ");
+  return `The object at '${pathStr}' contains unrecognized key(s): ${formattedKeys}.`;
 };
 
 const invalidKeysError = (paths: (string | number)[], message: string) => {
