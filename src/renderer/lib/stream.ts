@@ -3,11 +3,21 @@ import { AgentFunctionContext, TransactionLog } from "graphai";
 import { ref } from "vue";
 import { streamAgentFilterGenerator } from "@graphai/stream_agent_filter";
 
+type DataChunk = {
+  response: {
+    output: {
+      type: string;
+      text?: string;
+      data?: unknown;
+    }[];
+  };
+};
+
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
-  const outSideFunciton = (context: AgentFunctionContext, token: string | object) => {
+  const outSideFunciton = (context: AgentFunctionContext, token: string | DataChunk) => {
     const { nodeId } = context.debugInfo;
     if (typeof token === "string") {
       streamData.value[nodeId] = (streamData.value[nodeId] || "") + token;
