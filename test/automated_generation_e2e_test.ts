@@ -639,11 +639,11 @@ async function runGenerationE2ETest(): Promise<void> {
     console.log("\\n3. Waiting for Vite dev server to start...");
     let page: Page | null = null;
     let waitTime = 0;
-    
+
     while (waitTime < CONFIG.VITE_SERVER_WAIT_MAX) {
       const contexts = resources.browser!.contexts();
       console.log(`Found ${contexts.length} browser contexts`);
-      
+
       for (const context of contexts) {
         const pages = context.pages();
         console.log(`Context has ${pages.length} pages:`);
@@ -658,12 +658,12 @@ async function runGenerationE2ETest(): Promise<void> {
         }
         if (page) break;
       }
-      
+
       if (page) {
         console.log("✓ Found application page with Vite dev server");
         break;
       }
-      
+
       console.log(`Still waiting for Vite server... (${waitTime / 1000}s elapsed)`);
       await new Promise((resolve) => setTimeout(resolve, CONFIG.VITE_SERVER_CHECK_INTERVAL));
       waitTime += CONFIG.VITE_SERVER_CHECK_INTERVAL;
