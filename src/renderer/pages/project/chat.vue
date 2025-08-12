@@ -247,7 +247,11 @@ const run = async () => {
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
-      graphai.injectValue("tools", [...exaToolsAgent.tools, ...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools]);
+      graphai.injectValue("tools", [
+        ...exaToolsAgent.tools,
+        ...mulmoScriptValidatorAgent.tools,
+        ...puppeteerAgent.tools,
+      ]);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
           messages: messages.map(filterMessage()),

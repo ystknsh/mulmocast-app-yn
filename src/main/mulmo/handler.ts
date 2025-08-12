@@ -47,9 +47,7 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
 } from "./handler_contents";
-import {
-  graphaiPuppeteerAgent,
-} from "./handler_graphai";
+import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
