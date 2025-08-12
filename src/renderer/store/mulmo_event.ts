@@ -74,10 +74,11 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
   });
 
   const isBeatGenerating = computed(() => {
-    return Object.keys(sessionState.value).reduce((tmp: Record<string, boolean>, projectId) => {
-      tmp[projectId] = Object.values(sessionState.value[projectId]["beat"]).some((sessionState) => {
-        return Object.values(sessionState).some((value) => value);
-      }, {});
+    return Object.entries(sessionState.value).reduce((tmp: Record<string, boolean>, [projectId, project]) => {
+      tmp[projectId] = Object.values(project["beat"]).some(
+        (sessionState) => Object.values(sessionState).some(Boolean),
+        {},
+      );
       return tmp;
     }, {});
   });
