@@ -14,6 +14,7 @@ const mulmoScriptValidatorAgent: AgentFunction = async ({ namedInputs }) => {
         isValid: true,
       },
       content: "script accepted",
+      hasNext: true,
     };
   } catch (error) {
     return {
@@ -22,6 +23,7 @@ const mulmoScriptValidatorAgent: AgentFunction = async ({ namedInputs }) => {
         isValid: false,
       },
       content: ["failed.", error instanceof Error ? error.message : String(error)].join("\n\n"),
+      hasNext: true,
     };
   }
 };
