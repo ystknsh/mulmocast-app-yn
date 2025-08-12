@@ -342,8 +342,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Use page.evaluate to set the editor content directly
     await page.evaluate((json) => {
       // Try to find Monaco editor instance and set its content
-      const windowWithMonaco = window as Window & { 
-        monaco?: typeof monaco 
+      const windowWithMonaco = window as Window & {
+        monaco?: typeof monaco;
       };
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
@@ -363,8 +363,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Fix problematic image paths by converting to URL
     console.log("\nFixing problematic image paths by converting to URLs...");
     await page.evaluate(() => {
-      const windowWithMonaco = window as Window & { 
-        monaco?: typeof monaco 
+      const windowWithMonaco = window as Window & {
+        monaco?: typeof monaco;
       };
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
@@ -414,8 +414,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     const timestamp = dayjs().format("YYYYMMDD_HHmmss");
     await page.evaluate(
       ([ts, fileName]: [string, string]) => {
-        const windowWithMonaco = window as Window & { 
-          monaco?: typeof monaco 
+        const windowWithMonaco = window as Window & {
+          monaco?: typeof monaco;
         };
         const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
         if (editor) {
