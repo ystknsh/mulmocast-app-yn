@@ -8,14 +8,19 @@ type DataChunk = {
     output: {
       type: string;
       text?: string;
-      data?: unknown;
+      data?: {
+        id: string;
+        function: {
+          arguments: string;
+        };
+      }[];
     }[];
   };
 };
 
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
-  const toolsData = ref<Record<string, unknown>>({});
+  const toolsData = ref<Record<string, Record<string, unknown>>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
   const outSideFunciton = (context: AgentFunctionContext, token: string | DataChunk) => {
