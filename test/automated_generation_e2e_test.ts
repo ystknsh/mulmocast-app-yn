@@ -353,11 +353,11 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Navigate to JSON tab
     console.log("\n6. Navigating to JSON tab...");
-    await page.click('[data-testid="tab-json"]');
+    await page.click('[data-testid="script-editor-tab-json"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
     // Verify JSON tab is active
-    const jsonTab = await page.$('[data-testid="tab-json"]');
+    const jsonTab = await page.$('[data-testid="script-editor-tab-json"]');
     if (jsonTab) {
       const isSelected = await jsonTab.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
       if (isSelected) {
@@ -514,7 +514,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Navigate to Media tab to delete problematic beats
     console.log("\n7. Navigating to Media tab to clean up problematic assets...");
-    await page.click('[data-testid="tab-media"]');
+    await page.click('[data-testid="script-editor-tab-media"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
     console.log("✓ Navigated to Media tab");
 
@@ -527,7 +527,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       console.log(`Deleting beats in reverse order: [${sortedIndices.join(", ")}]`);
 
       for (const beatIndex of sortedIndices) {
-        const deleteButtonSelector = `[data-testid="delete-beat-${beatIndex}"]`;
+        const deleteButtonSelector = `[data-testid="script-editor-media-tab-delete-beat-${beatIndex}"]`;
         console.log(`Looking for delete button: ${deleteButtonSelector}`);
 
         try {
