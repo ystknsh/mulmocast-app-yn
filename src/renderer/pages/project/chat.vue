@@ -40,7 +40,7 @@
     <!-- Chat input area - Slack-style design -->
     <div class="space-y-4">
       <!-- Message input field -->
-      <div class="chat-input-wrapper">
+      <div>
         <Label class="mb-2">
           {{ t("project.chat.enterMessage") }}
           <span class="text-gray-400">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
@@ -84,13 +84,8 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div>
-            <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mt-2 mr-2">
+            <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
-            </Button>
-            <Button size="sm" @click="createScript" :disabled="noChatMessages || noChatText || isRunning" class="mt-2">
-              {{ t(isCreatingScript ? "project.chat.creating" : "project.chat.createScript") }}
             </Button>
           </div>
         </div>
@@ -134,7 +129,7 @@ import { useMulmoGlobalStore } from "@/store";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
-import { graphChat, graphGenerateMulmoScript, graphChatWithSearch } from "./chat/graph";
+import { graphChat, graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 const { t } = useI18n();
@@ -275,40 +270,6 @@ const isCreatingScript = ref(false);
 
 const copyScript = async () => {
   userInput.value = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
-};
-
-const createScript = async () => {
-  if (isRunning.value) {
-    return;
-  }
-  isRunning.value = true;
-  try {
-    const config = await getGraphConfig();
-    const graphai = new GraphAI(graphGenerateMulmoScript, graphAIAgents, {
-      agentFilters,
-      config,
-    });
-    graphai.registerCallback(streamPlugin(streamNodes));
-    graphai.injectValue("messages", messages.map(filterMessage()));
-    graphai.injectValue("prompt", userInput.value);
-    graphai.injectValue("llmAgent", llmAgent);
-    const res = await graphai.run();
-
-    const script = res.mulmoScript.data;
-    script.beats.map(setRandomBeatId);
-    emit("update:updateMulmoScript", script);
-    emit("resetMediaFiles");
-    const newMessages = [
-      ...messages.map((message) => filterMessage(true)(message)),
-      { content: userInput.value, role: "user", time: Date.now() },
-      { content: JSON.stringify(script ?? {}, null, 2), role: "assistant", time: Date.now() },
-    ];
-    userInput.value = "";
-    emit("update:updateChatMessages", newMessages);
-  } catch (error) {
-    console.log(error);
-  }
-  isRunning.value = false;
 };
 
 const noChatMessages = computed(() => messages.length === 0);
