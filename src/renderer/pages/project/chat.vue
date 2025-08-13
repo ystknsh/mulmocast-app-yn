@@ -238,6 +238,8 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
+    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
+
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
@@ -254,7 +256,6 @@ const run = async () => {
         },
       });
     }
-    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
     graphai.injectValue("tools", tools);
 
     const res = await graphai.run();
