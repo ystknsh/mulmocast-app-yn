@@ -5,11 +5,7 @@
       <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <Button
-              @click="handleCreateProject"
-              class="flex items-center space-x-2"
-              data-testid="create-new-button"
-            >
+            <Button @click="handleCreateProject" class="flex items-center space-x-2" data-testid="create-new-button">
               <Plus class="h-5 w-5" />
               <span>{{ t("dashboard.createNew") }}</span>
             </Button>
