@@ -197,6 +197,7 @@
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
           :mulmoError="mulmoError"
+          :settingPresence="settingPresence"
         />
       </div>
     </TabsContent>
@@ -248,7 +249,7 @@ import TextEditor from "./script_editor/text_editor.vue";
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
-import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
+import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
 
@@ -296,9 +297,14 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   emit("update:scriptEditorActiveTab", tab);
 };
 
+const settingPresence = ref({});
 const mulmoMultiLinguals = ref([]);
 onMounted(async () => {
   mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+  const settings = await window.electronAPI.settings.get();
+  Object.keys(ENV_KEYS).forEach((envKey) => {
+    settingPresence.value[envKey] = !!(settings.APIKEY && settings.APIKEY[envKey]);
+  });
 });
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);

@@ -45,6 +45,7 @@
                 }}</SelectItem>
               </SelectContent>
             </Select>
+            <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="speaker?.provider || 'openai'" />
           </div>
 
           <div>
@@ -141,6 +142,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
+import SettingsAlert from "../settings_alert.vue";
+
 import { useI18n } from "vue-i18n";
 
 type SpeechParams = MulmoPresentationStyle["speechParams"];
@@ -157,6 +160,7 @@ const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provide
 const props = defineProps<{
   speechParams?: SpeechParams;
   mulmoError: string[];
+  settingPresence: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{

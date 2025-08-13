@@ -17,6 +17,11 @@
             </SelectItem>
           </SelectContent>
         </Select>
+        <SettingsAlert
+          class="mt-2"
+          :settingPresence="settingPresence"
+          :provider="movieParams?.provider || DEFAULT_VALUES.provider"
+        />
       </div>
       <div>
         <Label>{{ t("ui.common.model") }}</Label>
@@ -80,6 +85,7 @@ import { useI18n } from "vue-i18n";
 import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
+import SettingsAlert from "../settings_alert.vue";
 import { provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
@@ -102,6 +108,7 @@ const { t } = useI18n();
 const props = defineProps<{
   movieParams?: MovieParams;
   mulmoError: string[];
+  settingPresence: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{

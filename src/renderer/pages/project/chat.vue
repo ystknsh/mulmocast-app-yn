@@ -130,7 +130,7 @@ import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
-import { graphChat, graphChatWithSearch } from "./chat/graph";
+import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 import enLang from "../../i18n/en";
@@ -254,10 +254,7 @@ const run = async () => {
         },
       });
     }
-    const tools = [
-      ...mulmoScriptValidatorAgent.tools,
-      ...puppeteerAgent.tools,
-    ];
+    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
     graphai.injectValue("tools", tools);
 
     const res = await graphai.run();

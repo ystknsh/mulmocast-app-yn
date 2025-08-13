@@ -60,7 +60,6 @@ const sonarjsRules = {
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
-  "sonarjs/no-small-switch": "warn",
   "sonarjs/slow-regex": "warn",
 };
 
