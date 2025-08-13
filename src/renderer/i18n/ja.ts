@@ -190,7 +190,7 @@ const lang = {
     imagePrompt: "イメージプロンプト",
     moviePrompt: "動画プロンプト",
     htmlPrompt: "HTMLプロンプト",
-    defaultTitle: "[無題]",
+    defaultTitle: "(無題)",
   },
   llms: {
     openAIAgent: "OpenAI",
