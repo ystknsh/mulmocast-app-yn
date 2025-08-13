@@ -25,21 +25,17 @@ watch(selectedTheme, (newTheme) => {
 
 // Computed properties
 export const getCardPadding = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "p-3";
-    default:
-      return "p-6";
+  if (selectedTheme.value === "compact") {
+    return "p-3";
   }
+  return "p-6";
 });
 
 export const getHeaderSize = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "text-lg";
-    default:
-      return "text-2xl";
+  if (selectedTheme.value === "compact") {
+    return "text-lg";
   }
+  return "text-2xl";
 });
 
 export const getContainerSpacing = computed(() => {
