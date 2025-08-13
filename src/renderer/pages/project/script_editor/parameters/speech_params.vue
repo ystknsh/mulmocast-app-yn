@@ -142,7 +142,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
-import SettingsAlert from "../settingsAlert.vue";
+import SettingsAlert from "../settings_alert.vue";
 
 import { useI18n } from "vue-i18n";
 

@@ -85,7 +85,7 @@ import {
   type MulmoImageParamsImages,
 } from "mulmocast/browser";
 
-import SettingsAlert from "../settingsAlert.vue";
+import SettingsAlert from "../settings_alert.vue";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
