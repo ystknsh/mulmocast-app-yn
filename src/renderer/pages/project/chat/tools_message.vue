@@ -5,10 +5,10 @@
     </div>
     <div class="flex-1">
       <div class="mb-2 rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700" v-if="data && isOpen">
-        {{ data?.agent }}({{ data?.func }}){{ data?.arg }}
+        {{ data?.func }}({{ data?.arg }})
       </div>
       <div class="mb-2 rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700" v-if="data && !isOpen">
-        {{ data?.agent }}({{ data?.func }}){}
+        {{ data?.func }}()
       </div>
       <div
         v-if="!isOpen"
