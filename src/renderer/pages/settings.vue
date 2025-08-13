@@ -138,6 +138,10 @@
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <div v-if="alertLLM" class="text-red-600">
+                {{ t("llms.alert." + alertLLM) }}
+              </div>
+
               <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
             </div>
             <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
@@ -155,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
@@ -176,18 +180,22 @@ const { locale, t } = useI18n();
 const llms = [
   {
     id: "openAIAgent",
+    apiKey: "OPENAI_API_KEY",
   },
   {
     id: "ollamaAgent",
   },
   {
     id: "geminiAgent",
+    apiKey: "GEMINI_API_KEY",
   },
   {
     id: "anthropicAgent",
+    apiKey: "ANTHROPIC_API_KEY",
   },
   {
     id: "groqAgent",
+    apiKey: "GROQ_API_KEY",
   },
 ];
 
@@ -204,6 +212,14 @@ const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
 const selectedLLM = ref("openAIAgent");
+const alertLLM = computed(() => {
+  const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
+  if (llmKey && apiKeys[llmKey] === "") {
+    return llmKey;
+  }
+  return null;
+});
+
 const llmConfigs = reactive<Record<string, Record<string, string>>>({
   ollama: {
     url: "http://localhost:11434/v1",

@@ -254,10 +254,7 @@ const run = async () => {
         },
       });
     }
-    const tools = [
-      ...mulmoScriptValidatorAgent.tools,
-      ...puppeteerAgent.tools,
-    ];
+    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
     graphai.injectValue("tools", tools);
 
     const res = await graphai.run();

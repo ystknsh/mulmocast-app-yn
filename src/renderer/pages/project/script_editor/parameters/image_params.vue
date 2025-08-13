@@ -5,6 +5,7 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
+        { imageParams?.provider }}
         <Select
           :model-value="imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider"
           @update:model-value="handleProviderChange"
