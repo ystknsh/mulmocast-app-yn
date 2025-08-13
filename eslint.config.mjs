@@ -56,10 +56,10 @@ const baseLanguageOptions = {
 
 const sonarjsRules = {
   "sonarjs/no-commented-code": "off",
-  "sonarjs/todo-tag": "off",
   "sonarjs/cognitive-complexity": "off",
-  "sonarjs/no-nested-conditional": "off",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
+  "sonarjs/todo-tag": "warn",
+  "sonarjs/no-nested-conditional": "warn",
   "sonarjs/slow-regex": "warn",
 };
 
