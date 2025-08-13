@@ -238,7 +238,7 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
-    const graphai = new GraphAI(hasExa ? graphChatWithSearch : graphChat, graphAIAgents, {
+    const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
     });
@@ -247,17 +247,18 @@ const run = async () => {
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
-      graphai.injectValue("tools", [
-        ...exaToolsAgent.tools,
-        ...mulmoScriptValidatorAgent.tools,
-        ...puppeteerAgent.tools,
-      ]);
+      tools.push(...exaToolsAgent.tools);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
           messages: messages.map(filterMessage()),
         },
       });
     }
+    const tools = [
+      ...mulmoScriptValidatorAgent.tools,
+      ...puppeteerAgent.tools,
+    ];
+    graphai.injectValue("tools", tools);
 
     const res = await graphai.run();
     console.log(res);

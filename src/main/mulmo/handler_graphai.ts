@@ -17,13 +17,12 @@ const normalize = (s: string) =>
   s
     .replace(/\r\n/g, "\n")
     .replace(/[\n\t]{2,}/g, "\n")
-    .replace(/\t{2,}/g, "\t")
     .trim();
 
 /* global document */
 async function waitStable(page: puppeteer.Page, ms = 1200, step = 200) {
-  let last = -1,
-    stable = 0;
+  let last = -1;
+  let stable = 0;
   while (stable < ms) {
     const len = await page.evaluate(() => document.body?.innerText?.length || 0);
     stable = len === last ? stable + step : 0;
