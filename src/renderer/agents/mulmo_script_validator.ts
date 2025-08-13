@@ -1,6 +1,8 @@
 import { type AgentFunctionInfo, type AgentFunction } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
 
+const successMessage = "script accepted. It is ready to edit it in the script pane and generate various media from it in the generation pane"
+
 const mulmoScriptValidatorAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg } = namedInputs;
   const { mulmoScript } = arg;
@@ -13,7 +15,7 @@ const mulmoScriptValidatorAgent: AgentFunction = async ({ namedInputs }) => {
         script: parsed,
         isValid: true,
       },
-      content: "script accepted",
+      content: successMessage,
       hasNext: true,
     };
   } catch (error) {
