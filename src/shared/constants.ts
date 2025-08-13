@@ -83,7 +83,7 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
-const llms = [
+export const llms = [
   {
     id: "openAIAgent",
     apiKey: "OPENAI_API_KEY",
