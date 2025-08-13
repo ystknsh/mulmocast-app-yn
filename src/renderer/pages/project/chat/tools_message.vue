@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-start space-x-3">
     <div class="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-blue-100">
-      <Search :size="16" class="text-blue-600" @click="isOpen = !isOpen" />
+      <component :is="icon" :size="16" class="text-blue-600" @click="isOpen = !isOpen" />
     </div>
     <div class="flex-1">
       <div class="mb-2 rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700" v-if="data && isOpen">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from "lucide-vue-next";
+import { Search, ScrollText, Globe } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import dayjs from "dayjs";
 
@@ -47,5 +47,15 @@ const props = defineProps<{
 
 const isOpen = ref(false);
 
+
+const icon = (() => {
+  const table = {
+    exaToolsAgent: Search,
+    mulmoScriptValidatorAgent: ScrollText,
+    puppeteerAgent: Globe,
+  };
+  console.log(props.data.agent);
+  return table[props.data.agent] ?? Search;
+})()
 const formatedTime = computed(() => dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"));
 </script>
