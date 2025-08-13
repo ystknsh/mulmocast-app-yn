@@ -4,10 +4,16 @@
       <component :is="icon" :size="16" class="text-blue-600" @click="isOpen = !isOpen" />
     </div>
     <div class="flex-1">
-      <div class="max-w-md mb-2 rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700 whitespace-pre-wrap break-words" v-if="data && isOpen">
+      <div
+        class="mb-2 max-w-md rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold break-words whitespace-pre-wrap text-blue-700"
+        v-if="data && isOpen"
+      >
         {{ data?.func }}({{ argments }})
       </div>
-      <div class="max-w-md mb-2 rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700" v-if="data && !isOpen">
+      <div
+        class="mb-2 max-w-md rounded-lg bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700"
+        v-if="data && !isOpen"
+      >
         {{ data?.func }}({{ argments }})
       </div>
       <div
@@ -65,7 +71,6 @@ const argments = computed(() => {
     return text;
   }
   return text.slice(0, 30) + "...";
-
 });
 const formatedTime = computed(() => dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"));
 </script>
