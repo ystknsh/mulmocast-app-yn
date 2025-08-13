@@ -83,6 +83,33 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
+export const llms = [
+  {
+    id: "openAIAgent",
+    apiKey: "OPENAI_API_KEY",
+  },
+  {
+    id: "ollamaAgent",
+  },
+  {
+    id: "geminiAgent",
+    apiKey: "GEMINI_API_KEY",
+  },
+  {
+    id: "anthropicAgent",
+    apiKey: "ANTHROPIC_API_KEY",
+  },
+  {
+    id: "groqAgent",
+    apiKey: "GROQ_API_KEY",
+  },
+];
+
+export const LLM_OLLAMA_DEFAULT_CONFIG = {
+  url: "http://localhost:11434/v1",
+  model: "gpt-oss:20b",
+};
+
 export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
 
 export const VOICE_LISTS = {
@@ -282,6 +309,7 @@ export const LANGUAGES = [
 
 export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 
+export const defaultSpeechProvider = "openai";
 export const SPEECH_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 export const SPEECH_DEFAULT_LANGUAGE = "en";
 
@@ -308,3 +336,21 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   style: undefined,
   moderation: undefined,
 };
+
+export const AUDIO_PARAMS_DEFAULT_VALUES = {
+  padding: 0.3,
+  introPadding: 1.0,
+  closingPadding: 0.8,
+  outroPadding: 1.0,
+  bgmVolume: 0.2,
+  audioVolume: 1.0,
+} as const;
+
+export const PRESET_CANVAS_SIZE_DEFAULT_VALUE = "1024x1024";
+export const PRESET_CANVAS_SIZE = {
+  "1792x1024": { width: 1792, height: 1024 },
+  "1024x1792": { width: 1024, height: 1792 },
+  "1024x1024": { width: 1024, height: 1024 },
+  "1536x1024": { width: 1536, height: 1024 },
+  "1024x1536": { width: 1024, height: 1536 },
+} as const;

@@ -46,14 +46,7 @@ import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
-
-const PRESET_CANVAS_SIZE = {
-  "1792x1024": { width: 1792, height: 1024 },
-  "1024x1792": { width: 1024, height: 1792 },
-  "1024x1024": { width: 1024, height: 1024 },
-  "1536x1024": { width: 1536, height: 1024 },
-  "1024x1536": { width: 1024, height: 1536 },
-} as const;
+import { PRESET_CANVAS_SIZE_DEFAULT_VALUE, PRESET_CANVAS_SIZE } from "@/../shared/constants";
 
 const { t } = useI18n();
 
@@ -63,7 +56,7 @@ const props = defineProps<{
 }>();
 
 const showCustom = ref(false);
-const selectedPreset = ref<keyof typeof PRESET_CANVAS_SIZE | "custom">("1024x1024");
+const selectedPreset = ref<keyof typeof PRESET_CANVAS_SIZE | "custom">(PRESET_CANVAS_SIZE_DEFAULT_VALUE);
 
 const emit = defineEmits<{
   update: [value: { width: number; height: number }];
