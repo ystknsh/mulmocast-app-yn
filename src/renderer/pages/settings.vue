@@ -139,7 +139,7 @@
                 </SelectContent>
               </Select>
               <div v-if="alertLLM" class="text-red-600">
-                {{ t("llms.alert." + alertLLM) }}
+                {{ t("provider.alert." + alertLLM) }}
               </div>
 
               <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>

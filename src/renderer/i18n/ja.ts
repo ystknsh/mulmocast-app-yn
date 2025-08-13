@@ -552,6 +552,8 @@ const lang = {
       GEMINI_API_KEY: "設定画面でGEMINI API KEYを設定してください",
       REPLICATE_API_TOKEN: "設定画面でREPLICATE API TOKENを設定してください",
       ELEVENLABS_API_KEY: "設定画面でELEVENLABS API KEYを設定してください",
+      ANTHROPIC_API_KEY: "設定画面でANTHROPIC API KEYを設定してください",
+      GROQ_API_KEY: "設定画面でGROQ API KEYを設定してください",
     },
   },
   languages: {
