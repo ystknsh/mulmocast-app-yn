@@ -105,6 +105,7 @@ export const llms = [
   },
 ];
 
+export const LLM_DEFAULT_AGENT = "openAIAgent";
 export const LLM_OLLAMA_DEFAULT_CONFIG = {
   url: "http://localhost:11434/v1",
   model: "gpt-oss:20b",
