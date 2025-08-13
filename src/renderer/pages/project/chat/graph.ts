@@ -28,10 +28,14 @@ export const graphChatWithSearch: GraphData = {
   version: graphDataLatestVersion,
   nodes: {
     messages: {},
-    tools: {},
     prompt: {},
     llmAgent: {},
-    passthrough: {},
+    tools: {
+      value: [],
+    },
+    passthrough: {
+      value: {},
+    },
     llm: {
       isResult: true,
       agent: "toolsAgent",
