@@ -33,7 +33,7 @@
           <div>
             <Label>{{ t("ui.common.provider") }}</Label>
             <Select
-              :model-value="speaker.provider || 'openai'"
+              :model-value="speaker.provider || defaultSpeechProvider"
               @update:model-value="(value) => handleProviderChange(name, value)"
             >
               <SelectTrigger>
@@ -45,7 +45,7 @@
                 }}</SelectItem>
               </SelectContent>
             </Select>
-            <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="speaker?.provider || 'openai'" />
+            <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="speaker?.provider || defaultSpeechProvider" />
           </div>
 
           <div>
@@ -59,7 +59,7 @@
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
-                  v-for="voice in getVoiceList(speaker.provider || 'openai')"
+                  v-for="voice in getVoiceList(speaker.provider || defaultSpeechProvider)"
                   :key="voice.id"
                   :value="voice.id"
                 >
@@ -140,7 +140,7 @@ import { ref, computed, nextTick } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS } from "@/../shared/constants";
+import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import SettingsAlert from "../settings_alert.vue";
 
@@ -284,8 +284,6 @@ const validateKey = computed(() => {
   return validateKeyFunc(speechKey.value);
 });
 
-const defaultProvider = "openai";
-
 const handleAddSpeaker = () => {
   if (!validateKey.value) {
     return;
@@ -293,8 +291,8 @@ const handleAddSpeaker = () => {
   updateSpeakers({
     ...speakers.value,
     [speechKey.value]: {
-      provider: defaultProvider,
-      voiceId: DEFAULT_VOICE_IDS[defaultProvider],
+      provider: defaultSpeechProvider,
+      voiceId: DEFAULT_VOICE_IDS[defaultSpeechProvider],
       displayName: {
         [SPEECH_DEFAULT_LANGUAGE]: speechKey.value,
       },
@@ -305,10 +303,10 @@ const handleAddSpeaker = () => {
 
 const initializeSpeechParams = () => {
   updateSpeechParams({
-    provider: defaultProvider,
+    provider: defaultSpeechProvider,
     speakers: {
       Presenter: {
-        voiceId: DEFAULT_VOICE_IDS[defaultProvider],
+        voiceId: DEFAULT_VOICE_IDS[defaultSpeechProvider],
         displayName: {
           [SPEECH_DEFAULT_LANGUAGE]: "Presenter",
         },

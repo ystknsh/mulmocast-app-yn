@@ -282,6 +282,7 @@ export const LANGUAGES = [
 
 export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 
+export const defaultSpeechProvider = "openai";
 export const SPEECH_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 export const SPEECH_DEFAULT_LANGUAGE = "en";
 
