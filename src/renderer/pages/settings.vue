@@ -172,32 +172,10 @@ import Layout from "@/components/layout.vue";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { ENV_KEYS, languages, I18N_SUPPORTED_LANGUAGES } from "../../shared/constants";
+import { ENV_KEYS, languages, I18N_SUPPORTED_LANGUAGES, llms, LLM_OLLAMA_DEFAULT_CONFIG } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();
-
-const llms = [
-  {
-    id: "openAIAgent",
-    apiKey: "OPENAI_API_KEY",
-  },
-  {
-    id: "ollamaAgent",
-  },
-  {
-    id: "geminiAgent",
-    apiKey: "GEMINI_API_KEY",
-  },
-  {
-    id: "anthropicAgent",
-    apiKey: "ANTHROPIC_API_KEY",
-  },
-  {
-    id: "groqAgent",
-    apiKey: "GROQ_API_KEY",
-  },
-];
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
@@ -221,10 +199,7 @@ const alertLLM = computed(() => {
 });
 
 const llmConfigs = reactive<Record<string, Record<string, string>>>({
-  ollama: {
-    url: "http://localhost:11434/v1",
-    model: "gpt-oss:20b",
-  },
+  ollama: LLM_OLLAMA_DEFAULT_CONFIG,
 });
 
 // Initialize all keys

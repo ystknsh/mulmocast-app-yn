@@ -98,7 +98,6 @@ const emit = defineEmits<{
   update: [audioParams: AudioParams];
 }>();
 
-
 const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: number) => {
   const currentParams = props.audioParams || ({} as AudioParams);
   emit("update", {

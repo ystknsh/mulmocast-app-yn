@@ -45,7 +45,11 @@
                 }}</SelectItem>
               </SelectContent>
             </Select>
-            <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="speaker?.provider || defaultSpeechProvider" />
+            <SettingsAlert
+              class="mt-2"
+              :settingPresence="settingPresence"
+              :provider="speaker?.provider || defaultSpeechProvider"
+            />
           </div>
 
           <div>
