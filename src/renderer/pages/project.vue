@@ -179,9 +179,9 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MulmoViewer 
-                  v-if="project" 
-                  :project="project" 
+                <MulmoViewer
+                  v-if="project"
+                  :project="project"
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
                 />

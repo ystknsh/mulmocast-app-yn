@@ -103,9 +103,9 @@
           <DialogTitle>Mulmo Viewer</DialogTitle>
           <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>
         </div>
-        <MulmoViewer 
-          v-if="selectedProject" 
-          :project="selectedProject" 
+        <MulmoViewer
+          v-if="selectedProject"
+          :project="selectedProject"
           :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
           @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
         />
