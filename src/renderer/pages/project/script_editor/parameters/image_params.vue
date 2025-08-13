@@ -5,7 +5,6 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
-        { imageParams?.provider }}
         <Select
           :model-value="imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider"
           @update:model-value="handleProviderChange"
@@ -19,6 +18,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
+        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="imageParams?.provider" />
       </div>
       <div>
         <Label>{{ t("ui.common.model") }}</Label>
@@ -85,6 +85,8 @@ import {
   type MulmoImageParamsImages,
 } from "mulmocast/browser";
 
+import SettingsAlert from "../settingsAlert.vue";
+
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
 const { t } = useI18n();
@@ -107,6 +109,7 @@ const props = withDefaults(
     beat?: MulmoBeat;
     showTitle?: boolean;
     defaultStyle?: string;
+    settingPresence: Record<string, boolean>;
   }>(),
   { showTitle: true },
 );

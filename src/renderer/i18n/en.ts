@@ -545,6 +545,13 @@ const lang = {
     nijivoice: "Nijivoice",
     google: "Google",
     elevenlabs: "ElevenLabs",
+    alert: {
+      OPENAI_API_KEY: "You need setup OpenAI API KEY",
+      NIJIVOICE_API_KEY: "You need setup NIJIVOICE API KEY",
+      GEMINI_API_KEY: "You need setup GEMINI API KEY",
+      REPLICATE_API_TOKEN: "You need setup REPLICATE API TOKEN",
+      ELEVENLABS_API_KEY: "You need setup ELEVENLABS API KEY",
+    },
   },
   languages: {
     ja: "Japanese",

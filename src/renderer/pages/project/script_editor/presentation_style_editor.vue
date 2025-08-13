@@ -9,16 +9,19 @@
       :speech-params="presentationStyle?.speechParams"
       @update="(value) => updateParam('speechParams', value)"
       :mulmoError="mulmoError?.speechParams ?? []"
+      :settingPresence="settingPresence"
     />
     <ImageParams
       :image-params="presentationStyle?.imageParams"
       @update="(value) => updateParam('imageParams', value)"
       :mulmoError="mulmoError?.imageParams ?? []"
+      :settingPresence="settingPresence"
     />
     <MovieParams
       :movie-params="presentationStyle?.movieParams"
       @update="(value) => updateParam('movieParams', value)"
       :mulmoError="mulmoError?.movieParams ?? []"
+      :settingPresence="settingPresence"
     />
     <TextSlideParams
       :text-slide-params="presentationStyle?.textSlideParams"
@@ -53,6 +56,7 @@ import { MulmoError } from "../../../../../types";
 interface Props {
   presentationStyle?: Partial<MulmoPresentationStyle>;
   mulmoError: MulmoError | null;
+  settingPresence: Record<string, boolean>;
 }
 
 const props = defineProps<Props>();
