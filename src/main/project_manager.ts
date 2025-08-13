@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 
 import { Project, ProjectMetadata } from "../types";
-import { SCRIPT_EDITOR_TABS } from "../shared/constants";
+import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
 import { initMulmoScript } from "../shared/beat_data";
 
 const PROJECTS_DIR = "projects";
@@ -120,6 +120,7 @@ export const createProject = async (title: string, lang: string): Promise<Projec
       chatMessages: [],
       useCache: false,
       scriptEditorActiveTab: SCRIPT_EDITOR_TABS.TEXT,
+      mulmoViewerActiveTab: MULMO_VIEWER_TABS.MOVIE,
     };
 
     const newScript = mulmoScriptSchema.strip().safeParse(initMulmoScript(title, lang));

@@ -179,7 +179,12 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MulmoViewer v-if="project" :project="project" />
+                <MulmoViewer 
+                  v-if="project" 
+                  :project="project" 
+                  :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
+                  @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
+                />
               </CardContent>
             </Card>
 
@@ -289,7 +294,7 @@ import {
   gridLayoutClass,
 } from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
-import { type ScriptEditorTab } from "../../shared/constants";
+import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
 import { zodError2MulmoError } from "../lib/error";
 
@@ -355,6 +360,11 @@ const handleUpdateChatMessages = (messages: ChatMessage[]) => {
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   projectMetadata.value.scriptEditorActiveTab = tab;
+  saveProjectMetadata(projectMetadata.value);
+};
+
+const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
+  projectMetadata.value.mulmoViewerActiveTab = tab;
   saveProjectMetadata(projectMetadata.value);
 };
 

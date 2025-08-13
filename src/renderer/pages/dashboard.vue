@@ -103,7 +103,12 @@
           <DialogTitle>Mulmo Viewer</DialogTitle>
           <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>
         </div>
-        <MulmoViewer v-if="selectedProject" :project="selectedProject" />
+        <MulmoViewer 
+          v-if="selectedProject" 
+          :project="selectedProject" 
+          :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
+          @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
+        />
       </DialogContent>
     </Dialog>
   </Layout>
@@ -126,7 +131,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 import { projectApi, type Project } from "@/lib/project_api";
-import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
+import { SORT_BY, SORT_ORDER, VIEW_MODE, type MulmoViewerTab } from "../../shared/constants";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -225,6 +230,13 @@ const handleDeleteProject = async (project: Project) => {
 const handleViewProject = async (project: Project) => {
   selectedProject.value = project;
   isViewerOpen.value = true;
+};
+
+const handleUpdateMulmoViewerActiveTab = async (tab: MulmoViewerTab) => {
+  if (selectedProject.value) {
+    selectedProject.value.metadata.mulmoViewerActiveTab = tab;
+    await projectApi.saveProjectMetadata(selectedProject.value.metadata.id, selectedProject.value.metadata);
+  }
 };
 
 const updateSort = (value: string) => {
