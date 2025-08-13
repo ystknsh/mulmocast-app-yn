@@ -6,10 +6,7 @@
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <Button
-              @click="
-                showNewProjectDialog = true;
-                newProjectName = '';
-              "
+              @click="handleCreateProject"
               class="flex items-center space-x-2"
               data-testid="create-new-button"
             >
@@ -87,15 +84,6 @@
       </div>
     </div>
 
-    <!-- New Project Dialog -->
-    <NewProjectDialog
-      v-if="showNewProjectDialog"
-      v-model="newProjectName"
-      :creating="creating"
-      @create="handleCreateProject"
-      @cancel="handleCancelDialog"
-    />
-
     <!-- Viewer Dialog -->
     <Dialog v-model:open="isViewerOpen">
       <DialogContent class="max-h-[90vh] max-w-3xl">
@@ -119,7 +107,6 @@ import dayjs from "dayjs";
 import Layout from "@/components/layout.vue";
 import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
 import ProjectItems from "./dashboard/project_items.vue";
-import NewProjectDialog from "./dashboard/new_project_dialog.vue";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -135,9 +122,7 @@ const sortBy = ref<typeof SORT_BY.updatedAt | typeof SORT_BY.title>(SORT_BY.upda
 const sortOrder = ref<typeof SORT_ORDER.desc | typeof SORT_ORDER.asc>(SORT_ORDER.desc);
 const projects = ref<Project[]>([]);
 const loading = ref(true);
-const showNewProjectDialog = ref(false);
 const creating = ref(false);
-const newProjectName = ref("");
 const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
 const isViewerOpen = ref(false);
@@ -184,15 +169,13 @@ const sortedProjects = computed(() => {
 });
 
 const handleCreateProject = async () => {
-  const title = newProjectName.value.trim() || t("common.defaultTitle");
+  const title = t("common.defaultTitle");
   const settings = await window.electronAPI.settings.get();
 
   try {
     creating.value = true;
     const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en");
     // Close dialog and refresh project list
-    showNewProjectDialog.value = false;
-    newProjectName.value = "";
     await loadProjects();
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
@@ -202,12 +185,6 @@ const handleCreateProject = async () => {
   } finally {
     creating.value = false;
   }
-};
-
-const handleCancelDialog = () => {
-  showNewProjectDialog.value = false;
-  newProjectName.value = "";
-  creating.value = false;
 };
 
 const handleDeleteProject = async (project: Project) => {

@@ -190,7 +190,7 @@ const lang = {
     imagePrompt: "Image Prompt",
     moviePrompt: "Movie Prompt",
     htmlPrompt: "HTML Prompt",
-    defaultTitle: "[untitled]",
+    defaultTitle: "(untitled)",
   },
   llms: {
     openAIAgent: "OpenAI",

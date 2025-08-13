@@ -134,6 +134,7 @@ import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 import enLang from "../../i18n/en";
+import { LLM_OLLAMA_DEFAULT_CONFIG, LLM_DEFAULT_AGENT } from "../../../shared/constants";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -143,7 +144,7 @@ const { messages = [] } = defineProps<{
   messages: ChatMessage[];
 }>();
 
-const llmAgent = globalStore.settings.CHAT_LLM || "openAIAgent";
+const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
 
 const emit = defineEmits<{
   "update:updateMulmoScript": [value: MulmoScript];
@@ -219,8 +220,8 @@ const getGraphConfig = async () => {
       apiKey: anthropicApikey,
     },
     ollamaAgent: {
-      baseURL: ollama?.url ?? "http://localhost:11434/v1",
-      model: ollama?.model ?? "gpt-oss:20b",
+      baseURL: ollama?.url ?? LLM_OLLAMA_DEFAULT_CONFIG.url,
+      model: ollama?.model ?? LLM_OLLAMA_DEFAULT_CONFIG.model,
       apiKey: "not-needed",
     },
     exaToolsAgent: {
