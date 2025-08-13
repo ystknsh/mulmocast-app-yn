@@ -285,6 +285,15 @@ export const SCRIPT_EDITOR_TABS = {
 
 export type ScriptEditorTab = (typeof SCRIPT_EDITOR_TABS)[keyof typeof SCRIPT_EDITOR_TABS];
 
+export const MULMO_VIEWER_TABS = {
+  MOVIE: "movie",
+  PDF: "pdf",
+  PODCAST: "podcast",
+  SLIDE: "slide",
+} as const;
+
+export type MulmoViewerTab = (typeof MULMO_VIEWER_TABS)[keyof typeof MULMO_VIEWER_TABS];
+
 export const LANGUAGES = [
   { id: "en" },
   { id: "es" },
