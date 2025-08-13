@@ -309,3 +309,12 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   style: undefined,
   moderation: undefined,
 };
+
+export const AUDIO_PARAMS_DEFAULT_VALUES = {
+  padding: 0.3,
+  introPadding: 1.0,
+  closingPadding: 0.8,
+  outroPadding: 1.0,
+  bgmVolume: 0.2,
+  audioVolume: 1.0,
+} as const;
