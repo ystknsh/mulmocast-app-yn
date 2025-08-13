@@ -25,7 +25,7 @@
           @editUser="() => editUser(key)"
         />
       </div>
-      <UserMessage :message="userInput" v-if="userInput !== ''" />
+      <UserMessage :message="userInput" v-if="isRunning" />
       <BotMessage v-if="isStreaming['llm'] && streamData['llm']" :message="streamData['llm'] ?? ''" />
       <BotMessage
         v-if="isStreaming['llmCallWithTools'] && streamData['llmCallWithTools']"
