@@ -47,7 +47,6 @@ const props = defineProps<{
 
 const isOpen = ref(false);
 
-
 const icon = (() => {
   const table = {
     exaToolsAgent: Search,
@@ -56,6 +55,6 @@ const icon = (() => {
   };
   console.log(props.data.agent);
   return table[props.data.agent] ?? Search;
-})()
+})();
 const formatedTime = computed(() => dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"));
 </script>
