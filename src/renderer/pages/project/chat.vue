@@ -1,5 +1,9 @@
 <template>
   <div class="flex h-full flex-col space-y-4">
+    <SelectLanguage
+      :mulmoScript="mulmoScript"
+      @updateMulmoScript="(script) => emit('update:updateMulmoScript', script)"
+    />
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
@@ -130,6 +134,7 @@ import { setRandomBeatId } from "@/lib/beat_util.js";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
 import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 
+import SelectLanguage from "./select_language.vue";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
@@ -145,6 +150,7 @@ const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
+  mulmoScript: MulmoScript;
 }>();
 
 const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;

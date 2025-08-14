@@ -38,6 +38,7 @@
               </CardHeader>
               <CardContent class="flex flex-1 flex-col overflow-hidden" v-if="projectMetadata">
                 <Chat
+                  :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
