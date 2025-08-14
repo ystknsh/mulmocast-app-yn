@@ -276,7 +276,6 @@ const run = async () => {
     graphai.registerCallback((data) => {
       const { agentId, nodeId, state, result, namedInputs } = data;
       if (nodeId === "toolCallAgent" && state === "completed") {
-        const input = data["inputsData"].find((element) => element.arguments);
         liveToolsData.value = {
           content: result.content,
           data: {
