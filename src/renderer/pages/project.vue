@@ -86,7 +86,7 @@
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
                       <CardTitle class="flex cursor-pointer items-center space-x-2">
-                        <Code2 :size="20" />
+                        <ScrollText :size="20" />
                         <span>{{ t("project.menu.script") }}</span>
                       </CardTitle>
                     </CollapsibleTrigger>
@@ -242,7 +242,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
 import {
-  Code2,
+  ScrollText,
   Settings,
   Play,
   Undo,
