@@ -23,32 +23,6 @@ watch(selectedTheme, (newTheme) => {
   }
 });
 
-// Computed properties
-export const getCardPadding = computed(() => {
-  if (selectedTheme.value === "compact") {
-    return "p-3";
-  }
-  return "p-6";
-});
-
-export const getHeaderSize = computed(() => {
-  if (selectedTheme.value === "compact") {
-    return "text-lg";
-  }
-  return "text-2xl";
-});
-
-export const getContainerSpacing = computed(() => {
-  switch (selectedTheme.value) {
-    case "compact":
-      return "space-y-4";
-    case "timeline-focus":
-      return "space-y-8";
-    default:
-      return "space-y-6";
-  }
-});
-
 export const getTimelineFocusClass = computed(() => {
   if (selectedTheme.value === "timeline-focus") {
     return "hidden";

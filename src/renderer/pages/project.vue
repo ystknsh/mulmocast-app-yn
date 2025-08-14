@@ -1,12 +1,10 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div :class="`mx-auto max-w-[95%] ${getCardPadding} ${getContainerSpacing}`">
+      <div class="mx-auto max-w-[95%] space-y-6 p-6">
         <!-- Header Section -->
         <ProjectHeader
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
-          :selectedTheme="selectedTheme"
-          :getHeaderSize="getHeaderSize"
           :isDevelopment="isDevelopment"
           @openProjectFolder="openProjectFolder"
           @updateMulmoScript="handleUpdateScriptFromHeader"
@@ -22,25 +20,17 @@
             <Card
               :class="`flex h-full flex-col border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 ${getTimelineFocusClass}`"
             >
-              <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
+              <CardHeader class="flex-shrink-0">
                 <div class="flex items-center justify-between">
                   <div>
-                    <CardTitle
-                      :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-                    >
+                    <CardTitle class="flex items-center space-x-2 text-blue-700">
                       <Bot :size="20" />
                       <span>
-                        {{ t(selectedTheme === "beginner" ? "project.chat.title" : "project.chat.aiPoweredGuide") }}
+                        {{ t("project.chat.title") }}
                       </span>
                     </CardTitle>
-                    <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-                      {{
-                        t(
-                          selectedTheme === "beginner"
-                            ? "project.chat.beginnerDescription"
-                            : "project.chat.advancedDescription",
-                        )
-                      }}
+                    <p class="text-sm text-blue-600">
+                      {{ t("project.chat.beginnerDescription") }}
                     </p>
                   </div>
                   <Button variant="ghost" size="sm" @click="isLeftColumnOpen = false" class="hidden lg:inline-flex">
@@ -48,12 +38,8 @@
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent
-                :class="`flex flex-1 flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
-                v-if="projectMetadata"
-              >
+              <CardContent class="flex flex-1 flex-col overflow-hidden" v-if="projectMetadata">
                 <Chat
-                  :selectedTheme="selectedTheme"
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
@@ -284,10 +270,6 @@ import { bufferToUrl } from "@/lib/utils";
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../store";
 
 import {
-  selectedTheme,
-  getCardPadding,
-  getHeaderSize,
-  getContainerSpacing,
   getTimelineFocusClass,
   isLeftColumnOpen,
   isRightColumnOpen,
