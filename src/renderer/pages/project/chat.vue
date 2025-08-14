@@ -241,12 +241,16 @@ const run = async () => {
     const config = await getGraphConfig();
     const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
 
+    const postMessages =
+      messages.length === 0
+        ? [{ role: "system", content: `please reply using ${scriptLang.value} language` }]
+        : messages.map(filterMessage()); // TODO
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
-    graphai.injectValue("messages", messages.map(filterMessage()));
+    graphai.injectValue("messages", postMessages);
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
     if (hasExa) {
@@ -277,11 +281,12 @@ const run = async () => {
 
 const isCreatingScript = ref(false);
 
-const copyScript = async () => {
-  // console.log(mulmoScriptHistoryStore.currentMulmoScript.lang);
+const scriptLang = computed(() => {
+  return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
+});
 
-  const lang = enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
-  const head = `Generate a ${lang} script for a presentation of the given topic and pass it to tool 'pushScript.'`;
+const copyScript = async () => {
+  const head = `Generate a ${scriptLang.value} script for a presentation of the given topic and pass it to tool 'pushScript.'`;
   // Generate a Japanese script for a presentation of the given topic and pass it to tool 'pushScript.'
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
   userInput.value = head + " " + template;
