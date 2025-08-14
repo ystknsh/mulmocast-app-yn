@@ -378,6 +378,7 @@ const lang = {
       advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
       enterMessage: "メッセージを入力してください:",
       clearChat: "チャットリセット",
+      undoChat: "編集をやめる",
       createButtonDescription:
         "スクリプトを作成するには、テンプレートを選択して「チャットへコピー」「スクリプト作成」ボタンを押してください。",
       copyScript: "チャットへコピー",
