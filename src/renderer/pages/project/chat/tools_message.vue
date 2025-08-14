@@ -13,7 +13,14 @@
         {{ data?.func }}({{ argments }})
       </div>
       <div
-        v-if="!isOpen"
+        v-if="data?.isExecuting"
+        class="block max-w-md rounded-lg p-3 text-sm break-words whitespace-pre-wrap"
+        :class="[color.bodyBg, color.bodyText]"
+      >
+        <Loader2 class="h-5 w-5 animate-spin" />
+      </div>
+      <div
+        v-else-if="!isOpen"
         class="block max-w-md rounded-lg p-3 text-sm break-words whitespace-pre-wrap"
         :class="[color.bodyBg, color.bodyText]"
       >
@@ -35,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search, ScrollText, Globe } from "lucide-vue-next";
+import { Search, ScrollText, Globe, Loader2 } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import dayjs from "dayjs";
 
@@ -43,6 +50,7 @@ const props = defineProps<{
   message: string;
   time?: number;
   data?: {
+    isExecuting?: boolean;
     agent: string;
     func: string;
     arg: unknown;

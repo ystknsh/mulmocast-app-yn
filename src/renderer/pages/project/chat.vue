@@ -275,10 +275,11 @@ const run = async () => {
     // graphai.registerCallback(console.log);
     graphai.registerCallback((data) => {
       const { agentId, nodeId, state, result, namedInputs } = data;
-      if (nodeId === "toolCallAgent" && state === "completed") {
+      if (nodeId === "toolCallAgent" && (state === "completed" || state === "executing")) {
         liveToolsData.value = {
-          content: result.content,
+          content: result?.content,
           data: {
+            isExecuting: state === "executing",
             agent: agentId,
             arg: namedInputs.arguments,
             func: namedInputs.func,
