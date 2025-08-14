@@ -45,6 +45,12 @@
         v-if="isStreaming['toolsResponseLLM'] && streamData['toolsResponseLLM']"
         :message="streamData['toolsResponseLLM'] ?? ''"
       />
+      <div
+        v-if="isRunning"
+        class="block max-w-md rounded-lg bg-gray-100 p-3 text-xs break-words whitespace-pre-wrap text-gray-800"
+      >
+        {{ t("ui.actions.runningThing", { thing: currentRunningAgent }) }}
+      </div>
     </div>
 
     <!-- Chat input area - Slack-style design -->
@@ -174,7 +180,10 @@ const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
 
+// for running...
 const liveToolsData = ref<null | Record<string, unknown>>(null);
+const isRunning = ref(false);
+const currentRunningAgent = ref<string | null>(null);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -182,6 +191,7 @@ const agentFilters = [
     agent: streamAgentFilter,
   },
 ];
+// end of running
 const chatHistoryRef = useAutoScroll([streamData, userInput, messages]);
 
 const clearChat = () => {
@@ -210,8 +220,6 @@ const filterMessage = (setTime = false) => {
     return { extra, role, content, tool_calls, tool_call_id, name };
   };
 };
-
-const isRunning = ref(false);
 
 const getGraphConfig = async () => {
   const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
@@ -275,6 +283,9 @@ const run = async () => {
     // graphai.registerCallback(console.log);
     graphai.registerCallback((data) => {
       const { agentId, nodeId, state, result, namedInputs } = data;
+      if (state === "executing") {
+        currentRunningAgent.value = agentId;
+      }
       if (nodeId === "toolCallAgent" && (state === "completed" || state === "executing")) {
         liveToolsData.value = {
           content: result?.content,

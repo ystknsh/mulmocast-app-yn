@@ -66,6 +66,7 @@ const lang = {
       generateThing: "{thing}を生成",
       fetch: "取得",
       cancel: "キャンセル",
+      runningThing: "{thing}を実行中",
 
       // Media actions (placeholder pairs)
       play: "再生",
