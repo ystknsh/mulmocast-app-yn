@@ -67,9 +67,9 @@
 import { ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { RouterLink } from "vue-router";
-import { ArrowLeft, FolderOpen, Pencil, Languages } from "lucide-vue-next";
-import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
-import { INITIAL_DESCRIPTION, LANGUAGES } from "../../../shared/constants";
+import { ArrowLeft, FolderOpen, Pencil } from "lucide-vue-next";
+import { Button, Input } from "@/components/ui";
+import { INITIAL_DESCRIPTION } from "../../../shared/constants";
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
