@@ -51,19 +51,7 @@
         </div>
 
         <!-- Language Selection -->
-        <div class="mt-2 flex items-center gap-2">
-          <Languages :size="14" class="text-gray-500" />
-          <Select :model-value="currentLanguage" @update:model-value="handleLanguageChange">
-            <SelectTrigger class="h-6! w-30 border-gray-200 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem v-for="lang in LANGUAGES" :key="lang.id" :value="lang.id">
-                {{ t("languages." + lang.id) }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <div class="mt-2 flex items-center gap-2"></div>
       </div>
     </div>
     <div v-if="isDevelopment">
@@ -102,7 +90,6 @@ const isEditingDescription = ref(false);
 
 const displayTitle = ref(props.mulmoScript?.title || t("common.defaultTitle"));
 const displayDescription = ref(props.mulmoScript?.description || INITIAL_DESCRIPTION);
-const currentLanguage = ref(props.mulmoScript?.lang || "en");
 
 watch(
   () => props.mulmoScript?.title,
@@ -118,15 +105,6 @@ watch(
   (newDescription) => {
     if (newDescription && !isEditingDescription.value) {
       displayDescription.value = newDescription;
-    }
-  },
-);
-
-watch(
-  () => props.mulmoScript?.lang,
-  (newLang) => {
-    if (newLang) {
-      currentLanguage.value = newLang;
     }
   },
 );
@@ -174,10 +152,5 @@ const handleDescriptionEnter = (event: KeyboardEvent) => {
   event.preventDefault();
   saveDescription();
   (event.target as HTMLElement)?.blur();
-};
-
-const handleLanguageChange = (value: string) => {
-  currentLanguage.value = value;
-  saveChanges({ lang: value });
 };
 </script>
