@@ -19,8 +19,7 @@ const toolWorkFlowStep = {
       },
     },
     // case1. return just messages
-    justTextMessagesResult: {
-      unless: ":llmCallWithTools.tool.id",
+    copyMessage: {
       agent: "pushAgent",
       params: {
         arrayKey: "messages",
@@ -28,6 +27,13 @@ const toolWorkFlowStep = {
       inputs: {
         array: ":messages",
         items: [":userInput.message", ":llmCallWithTools.message"],
+      },
+    },
+    justTextMessagesResult: {
+      unless: ":llmCallWithTools.tool.id",
+      agent: "copyAgent",
+      inputs: {
+        messages: ":copyMessage.messages",
       },
     },
     // Call agents specified in the tools result
@@ -89,7 +95,7 @@ const toolWorkFlowStep = {
     toolsMessage: {
       agent: "pushAgent",
       inputs: {
-        array: [":userInput.message", ":llmCallWithTools.message"],
+        array: ":copyMessage.messages",
         items: ":llmToolAgentCallMap.toolsAgentResponseMessage",
       },
     },
@@ -102,9 +108,9 @@ const toolWorkFlowStep = {
       },
       graph: {
         nodes: {
-          hasNext: {
-            agent: (namedInputs: { array: { hasNext: boolean }[] }) => {
-              return namedInputs.array.some((ele) => ele.hasNext);
+          skipNext: {
+            agent: (namedInputs: { array: { skipNext: boolean }[] }) => {
+              return namedInputs.array.some((ele) => ele.skipNext);
             },
             inputs: {
               array: ":toolsAgentResponse",
@@ -112,7 +118,7 @@ const toolWorkFlowStep = {
           },
           // next llm flow
           toolsResponseLLM: {
-            if: ":hasNext",
+            unless: ":skipNext",
             agent: ":llmAgent",
             isResult: true,
             params: {
@@ -130,7 +136,7 @@ const toolWorkFlowStep = {
           },
           // no llm flow, just return tools response
           skipToolsResponseLLM: {
-            unless: ":hasNext",
+            if: ":skipNext",
             agent: "copyAgent",
             inputs: {
               array: ":toolsMessages",
