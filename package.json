@@ -87,7 +87,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "exa-js": "^1.8.27",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
-    "graphai": "^2.0.13",
+    "graphai": "^2.0.14",
     "jsdom": "^26.1.0",
     "lucide-vue-next": "^0.539.0",
     "marked": "^16.1.2",

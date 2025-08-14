@@ -4776,6 +4776,11 @@ graphai@^2.0.13:
   resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.13.tgz#f5ede953bf414b0ac5ce80b1c469dc434c60dffa"
   integrity sha512-jp0aK/smMsXP0COQcGjqobxZqN7xWvmpMG+JQXkhKmpQRX9+Ip3nVBVK32SEms8SChuXDzs9Of3bBKudDIRZTA==
 
+graphai@^2.0.14:
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.14.tgz#82080b63cd17cd3bbb75ea44b87724c0a02e842c"
+  integrity sha512-g2oxHfAw+l9sLJLHmBuq9zG30zSp1PNbbW+PjOg/TfdQbHKKeRooID4/oUzimLPo6SdjZB/VwvMFEd6BXSk6Zg==
+
 graphemer@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"

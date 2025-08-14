@@ -30,6 +30,12 @@
         />
       </div>
       <UserMessage :message="userInput" v-if="isRunning" />
+
+      <ToolsMessage
+        :message="liveToolsData.content ?? ''"
+        :data="liveToolsData?.data"
+        v-if="liveToolsData && isRunning"
+      />
       <BotMessage v-if="isStreaming['llm'] && streamData['llm']" :message="streamData['llm'] ?? ''" />
       <BotMessage
         v-if="isStreaming['llmCallWithTools'] && streamData['llmCallWithTools']"
@@ -150,7 +156,7 @@ const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
-  mulmoScript: MulmoScript;
+  mulmoScript?: MulmoScript;
 }>();
 
 const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
@@ -168,6 +174,7 @@ const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
 
+const liveToolsData = ref<null | Record<string, unknown>>(null);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -245,6 +252,7 @@ const run = async () => {
   if (isRunning.value) {
     return;
   }
+  liveToolsData.value = null;
   isRunning.value = true;
 
   try {
@@ -264,6 +272,21 @@ const run = async () => {
       config,
     });
     graphai.registerCallback(streamPlugin(streamNodes));
+    // graphai.registerCallback(console.log);
+    graphai.registerCallback((data) => {
+      const { agentId, nodeId, state, result, namedInputs } = data;
+      if (nodeId === "toolCallAgent" && state === "completed") {
+        const input = data["inputsData"].find((element) => element.arguments);
+        liveToolsData.value = {
+          content: result.content,
+          data: {
+            agent: agentId,
+            arg: namedInputs.arguments,
+            func: namedInputs.func,
+          },
+        };
+      }
+    });
     graphai.injectValue("messages", postMessages);
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
