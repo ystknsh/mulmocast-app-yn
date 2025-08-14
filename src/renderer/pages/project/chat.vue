@@ -281,8 +281,8 @@ const run = async () => {
           data: {
             isExecuting: state === "executing",
             agent: agentId,
-            arg: namedInputs.arguments,
-            func: namedInputs.func,
+            arg: namedInputs?.arguments,
+            func: namedInputs?.func,
           },
         };
       }
