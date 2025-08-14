@@ -5,16 +5,10 @@
     </div>
     <div class="flex-1">
       <div
-        class="mb-2 max-w-md rounded-lg px-2 py-1 text-xs font-semibold break-words whitespace-pre-wrap"
+        class="mb-2 max-w-md cursor-pointer rounded-lg px-2 py-1 text-xs font-semibold break-words whitespace-pre-wrap"
         :class="[color.bg, color.text]"
-        v-if="data && isOpen"
-      >
-        {{ data?.func }}({{ argments }})
-      </div>
-      <div
-        class="mb-2 max-w-md rounded-lg px-2 py-1 text-xs font-semibold"
-        :class="[color.bg, color.text]"
-        v-if="data && !isOpen"
+        @click="isOpen = !isOpen"
+        v-if="data"
       >
         {{ data?.func }}({{ argments }})
       </div>
