@@ -234,6 +234,7 @@ const getGraphConfig = async () => {
 };
 
 const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY && llmAgent === "openAIAgent";
+
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -244,10 +245,14 @@ const run = async () => {
     const config = await getGraphConfig();
     const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
 
-    const postMessages =
-      messages.length === 0
-        ? [{ role: "system", content: `please reply using ${scriptLang.value} language` }]
-        : messages.map(filterMessage());
+    const postMessages = [
+      {
+        role: "system",
+        content: `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`,
+      },
+      ...messages.map(filterMessage()).filter((message) => message.role !== "system"),
+    ];
+    console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
