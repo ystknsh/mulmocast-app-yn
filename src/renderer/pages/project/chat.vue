@@ -49,7 +49,7 @@
         v-if="isRunning"
         class="block max-w-md rounded-lg bg-gray-100 p-3 text-xs break-words whitespace-pre-wrap text-gray-800"
       >
-        {{ t("ui.actions.runningThing", { thing: currentRunningAgent }) }}
+        {{ t("ui.actions.runningThing", { thing: `${currentRunningAgent}/${currentRunningNode}` }) }}
       </div>
     </div>
 
@@ -184,6 +184,7 @@ const textareaRef = useTemplateRef("textareaRef");
 const liveToolsData = ref<null | Record<string, unknown>>(null);
 const isRunning = ref(false);
 const currentRunningAgent = ref<string | null>(null);
+const currentRunningNode = ref<string | null>(null);
 const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
 const agentFilters = [
   {
@@ -285,6 +286,7 @@ const run = async () => {
       const { agentId, nodeId, state, result, namedInputs } = data;
       if (state === "executing") {
         currentRunningAgent.value = agentId;
+        currentRunningNode.value = nodeId;
       }
       if (nodeId === "toolCallAgent" && (state === "completed" || state === "executing")) {
         liveToolsData.value = {
