@@ -62,6 +62,9 @@
       </div>
 
       <div>
+        <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
+          {{ t("project.chat.undoChat") }}
+        </Button>
         <Button @click="clearChat" variant="outline" size="xs"> {{ t("project.chat.clearChat") }} </Button>
       </div>
 
@@ -244,7 +247,7 @@ const run = async () => {
     const postMessages =
       messages.length === 0
         ? [{ role: "system", content: `please reply using ${scriptLang.value} language` }]
-        : messages.map(filterMessage()); // TODO
+        : messages.map(filterMessage());
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
@@ -305,12 +308,21 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
 };
 
+const messageHistory = ref([]); // For undo when editUser.
+
 const editUser = (index: number) => {
   textareaRef.value.focus();
   userInput.value = messages[index].content;
 
+  messageHistory.value = [...messages];
+
   const newMessages = [...messages];
   newMessages.length = index;
   emit("update:updateChatMessages", newMessages);
+};
+const undoMessages = () => {
+  userInput.value = "";
+  emit("update:updateChatMessages", [...messageHistory.value]);
+  messageHistory.value = [];
 };
 </script>
