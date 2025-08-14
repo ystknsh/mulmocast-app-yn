@@ -1,35 +1,5 @@
 import { ref, computed, watch } from "vue";
 
-export const selectedTheme = ref<"classic" | "compact" | "timeline-focus" | "beginner" | "developer-debug">("beginner");
-export const themeOptions = [
-  { value: "beginner", label: "Beginner Mode" },
-  { value: "classic", label: "Classic Layout" },
-  { value: "compact", label: "Compact View" },
-  { value: "timeline-focus", label: "Timeline Focus" },
-  { value: "developer-debug", label: "Developer Debug" },
-];
-
-export const isBeatsViewerOpen = ref(false);
-export const beatsViewMode = ref<"list" | "timeline">("list");
-
-// Theme change effect
-watch(selectedTheme, (newTheme) => {
-  if (newTheme === "beginner") {
-    isBeatsViewerOpen.value = true;
-    beatsViewMode.value = "timeline";
-  } else {
-    isBeatsViewerOpen.value = false;
-    beatsViewMode.value = "list";
-  }
-});
-
-export const getTimelineFocusClass = computed(() => {
-  if (selectedTheme.value === "timeline-focus") {
-    return "hidden";
-  }
-  return "";
-});
-
 // Column open/close states
 export const isLeftColumnOpen = ref(true); // Default: open
 export const isRightColumnOpen = ref(true); // Default: open
