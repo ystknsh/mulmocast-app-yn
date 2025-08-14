@@ -17,9 +17,7 @@
             class="h-full overflow-y-auto pr-2"
             :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
           >
-            <Card
-              :class="`flex h-full flex-col border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 ${getTimelineFocusClass}`"
-            >
+            <Card class="flex h-full flex-col border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
               <CardHeader class="flex-shrink-0">
                 <div class="flex items-center justify-between">
                   <div>
@@ -269,12 +267,7 @@ import { bufferToUrl } from "@/lib/utils";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useGraphAIDebugLogStore } from "../store";
 
-import {
-  getTimelineFocusClass,
-  isLeftColumnOpen,
-  isRightColumnOpen,
-  gridLayoutClass,
-} from "./project/composable/style";
+import { isLeftColumnOpen, isRightColumnOpen, gridLayoutClass } from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
