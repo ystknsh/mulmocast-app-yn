@@ -81,20 +81,18 @@ const toolsMessageStyles = {
   },
 };
 
-const icon = (() => {
-  return toolsMessageStyles[props.data.agent]?.icon ?? Search;
-})();
+const toolsMessageDefaultStyles = {
+  icon: Search,
+  color: {
+    text: "text-blue-600",
+    bg: "bg-blue-100",
+    bodyText: "text-blue-600",
+    bodyBg: "bg-blue-100",
+  },
+};
 
-const color = (() => {
-  return (
-    toolsMessageStyles[props.data.agent]?.color ?? {
-      text: "text-blue-600",
-      bg: "bg-blue-100",
-      bodyText: "text-blue-600",
-      bodyBg: "bg-blue-100",
-    }
-  );
-})();
+const icon = toolsMessageStyles[props.data.agent]?.icon ?? toolsMessageDefaultStyles.icon;
+const color = toolsMessageStyles[props.data.agent]?.color ?? toolsMessageDefaultStyles.color;
 
 const argments = computed(() => {
   if (!props.data?.arg) return "";
