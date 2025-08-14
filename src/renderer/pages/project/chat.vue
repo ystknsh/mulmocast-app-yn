@@ -106,8 +106,8 @@ import * as agents from "@graphai/vanilla";
 import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/llm_agents";
 import exaToolsAgent from "../../agents/exa_agent";
 import puppeteerAgent from "../../agents/puppeteer_agent";
-// import toolsAgent from "../../agents/tools_agent";
-import { toolsAgent } from "@graphai/tools_agent";
+import toolsAgent from "../../agents/tools_agent";
+// import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
