@@ -134,7 +134,7 @@ import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 import enLang from "../../i18n/en";
-import { LLM_OLLAMA_DEFAULT_CONFIG, LLM_DEFAULT_AGENT } from "../../../shared/constants";
+import { LLM_OLLAMA_DEFAULT_CONFIG, LLM_DEFAULT_AGENT, LLM_GROQ_DEFAULT_MODEL } from "../../../shared/constants";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -211,7 +211,7 @@ const getGraphConfig = async () => {
     },
     groqAgent: {
       apiKey: groqApikey,
-      model: "llama3-8b-8192",
+      model: LLM_GROQ_DEFAULT_MODEL,
     },
     geminiAgent: {
       apiKey: geminiApikey,

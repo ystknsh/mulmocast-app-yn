@@ -110,6 +110,7 @@ export const LLM_OLLAMA_DEFAULT_CONFIG = {
   url: "http://localhost:11434/v1",
   model: "gpt-oss:20b",
 };
+export const LLM_GROQ_DEFAULT_MODEL = "llama3-8b-819";
 
 export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
 
