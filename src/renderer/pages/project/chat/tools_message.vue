@@ -57,7 +57,7 @@ const props = defineProps<{
 
 const isOpen = ref(false);
 
-const styles = {
+const toolsMessageStyles = {
   exaToolsAgent: {
     icon: Search,
     color: {
@@ -88,14 +88,12 @@ const styles = {
 };
 
 const icon = (() => {
-  console.log(props.data.agent);
-  return styles[props.data.agent]?.icon ?? Search;
+  return toolsMessageStyles[props.data.agent]?.icon ?? Search;
 })();
 
 const color = (() => {
-  console.log(props.data.agent);
   return (
-    styles[props.data.agent]?.color ?? {
+    toolsMessageStyles[props.data.agent]?.color ?? {
       text: "text-blue-600",
       bg: "bg-blue-100",
       bodyText: "text-blue-600",
