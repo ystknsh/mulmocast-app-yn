@@ -84,10 +84,10 @@ const toolsMessageStyles = {
 const toolsMessageDefaultStyles = {
   icon: Search,
   color: {
-      text: "text-blue-600",
-      bg: "bg-blue-100",
-      bodyText: "text-blue-600",
-      bodyBg: "bg-blue-100",
+    text: "text-blue-600",
+    bg: "bg-blue-100",
+    bodyText: "text-blue-600",
+    bodyBg: "bg-blue-100",
   },
 };
 
