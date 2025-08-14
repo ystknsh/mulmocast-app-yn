@@ -1,4 +1,4 @@
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 
 // Column open/close states
 export const isLeftColumnOpen = ref(true); // Default: open
