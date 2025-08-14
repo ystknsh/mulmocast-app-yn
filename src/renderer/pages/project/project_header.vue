@@ -10,13 +10,13 @@
       <div>
         <!-- Title -->
         <div class="group relative flex items-center">
-          <h1 v-if="!isEditingTitle" :class="`font-bold ${getHeaderSize} cursor-pointer`" @click="startEditingTitle">
+          <h1 v-if="!isEditingTitle" class="cursor-pointer text-2xl font-bold" @click="startEditingTitle">
             {{ displayTitle }}
           </h1>
           <Input
             v-else
             v-model="displayTitle"
-            :class="`w-128 font-bold ${getHeaderSize}`"
+            class="w-128 text-2xl font-bold"
             @blur="saveTitle"
             @keydown.enter="handleTitleEnter"
             autoFocus
@@ -31,17 +31,13 @@
 
         <!-- Description -->
         <div class="group relative flex items-center">
-          <p
-            v-if="!isEditingDescription"
-            :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''} cursor-pointer`"
-            @click="startEditingDescription"
-          >
+          <p v-if="!isEditingDescription" class="cursor-pointer text-gray-600" @click="startEditingDescription">
             {{ displayDescription }}
           </p>
           <Input
             v-else
             v-model="displayDescription"
-            :class="`w-128 text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`"
+            class="`w-128 text-gray-600"
             @blur="saveDescription"
             @keydown.enter="handleDescriptionEnter"
             autoFocus
@@ -93,8 +89,6 @@ const { t } = useI18n();
 
 const props = defineProps<{
   mulmoScript?: MulmoScript | null;
-  selectedTheme: string;
-  getHeaderSize: string;
   isDevelopment: boolean;
 }>();
 
