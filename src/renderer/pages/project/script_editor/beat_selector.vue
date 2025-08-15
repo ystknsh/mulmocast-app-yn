@@ -10,11 +10,12 @@
         </SelectItem>
       </SelectContent>
     </Select>
-    <Button size="sm" @click="emitBeat"> {{ t("ui.actions." + buttonKey) }} </Button>
+    <Button size="sm" @click="emitBeat" :disabled="disableChange"> {{ t("ui.actions." + buttonKey) }} </Button>
     <slot />
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -23,13 +24,18 @@ import { useI18n } from "vue-i18n";
 
 interface Props {
   buttonKey: string;
+  currentBeatType?: string;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const { t } = useI18n();
 
 const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
+
+const disableChange = computed(() => {
+  return props.currentBeatType && props.currentBeatType === beatTemplate[selectedBeat.value].key;
+});
 
 const emitBeat = () => {
   const beat = { ...beatTemplate[selectedBeat.value].beat };
