@@ -35,10 +35,11 @@ const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
 
 onMounted(() => {
+
   if (props.currentBeatType) {
-    const current = beatTemplate.findIndex((beat) => beat.key === props.currentBeatType);
-    if (!isNull(current)) {
-      selectedBeat.value = current;
+    const index = beatTemplate.findIndex((beat) => beat.key === props.currentBeatType);
+    if (index !== -1) {
+      selectedBeat.value = index;
     }
   }
 });
