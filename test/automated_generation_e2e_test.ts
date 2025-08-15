@@ -276,22 +276,23 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
   let projectTitle = "";
   let problematicBeatIndices: number[] = [];
+  let step = 1;
 
   try {
     // Navigate to dashboard
-    console.log("Navigating to dashboard...");
+    console.log(`${step}. Navigating to dashboard...`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
-    console.log('\n2. Clicking "Create New" button...');
+    console.log(`\n${++step}. Clicking "Create New" button...`);
     await page.click('[data-testid="create-new-button"]');
     await page.waitForSelector('[data-testid="project-title"]');
     console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
-    console.log("\n8. Reading test JSON from local node_modules...");
+    console.log(`\n${++step}. Reading test JSON from local node_modules...`);
     let jsonContent: string;
 
     try {
@@ -348,7 +349,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Generate project title (based on JSON title + timestamp) for later use
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-    console.log(`\n3. Project created with auto-generated title`);
+    console.log(`\n${++step}. Project created with auto-generated title`);
     console.log("✓ Project page loaded");
 
     // Store project info immediately after creation
@@ -362,7 +363,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`[DEBUG] Project added to list. Total: ${projectsCreated.length}`);
 
     // Navigate to JSON tab
-    console.log("\n6. Navigating to JSON tab...");
+    console.log(`\n${++step}. Navigating to JSON tab...`);
     await page.click('[data-testid="script-editor-tab-json"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
@@ -378,12 +379,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Wait for Monaco Editor to be ready
-    console.log("\n7. Waiting for Monaco Editor...");
+    console.log(`\n${++step}. Waiting for Monaco Editor...`);
     await page.waitForSelector(".monaco-editor", { timeout: 15000 });
     console.log("✓ Monaco Editor loaded");
 
     // Clear existing content and input test JSON
-    console.log("\n9. Inputting test audio JSON...");
+    console.log(`\n${++step}. Inputting test audio JSON...`);
     // Focus on Monaco editor
     await page.click(".monaco-editor");
 
@@ -503,13 +504,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ JSON processing time completed");
 
     // Navigate to Media tab to delete problematic beats
-    console.log("\n7. Navigating to Media tab to clean up problematic assets...");
+    console.log(`\n${++step}. Navigating to Media tab to clean up problematic assets...`);
     await page.click('[data-testid="script-editor-tab-media"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
     console.log("✓ Navigated to Media tab");
 
     // Delete beats with local_voice.mp3 using pre-identified indices
-    console.log("\n8. Deleting beats with local_voice.mp3...");
+    console.log(`\n${++step}. Deleting beats with local_voice.mp3...`);
 
     if (problematicBeatIndices.length > 0) {
       // Delete in reverse order to avoid index shifting issues
@@ -540,7 +541,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Find and click the generate button in output settings section
-    console.log("\n10. Looking for generate button in output settings section...");
+    console.log(`\n${++step}. Looking for generate button in output settings section...`);
 
     // Use data-testid to find the generate button
     const generateButton = await page.$('[data-testid="generate-contents-button"]');
@@ -551,7 +552,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     await generateButton.click();
 
     // Start generation without waiting
-    console.log("\n10. Generation started, moving to next file...");
+    console.log(`\n${++step}. Generation started, moving to next file...`);
 
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 3000));
