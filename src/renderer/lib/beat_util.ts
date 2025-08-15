@@ -34,3 +34,16 @@ export const setRandomBeatId = (beat: MulmoBeat) => {
   }
   return beat;
 };
+
+export const getBeatType = (beat: MulmoBeat) => {
+  if (beat.image) {
+    if (beat.image.type === "image") {
+      return "mediaFile";
+    }
+    return beat.image.type;
+  }
+  if (beat.htmlPrompt) {
+    return "htmlPrompt";
+  }
+  return "imagePrompt";
+};
