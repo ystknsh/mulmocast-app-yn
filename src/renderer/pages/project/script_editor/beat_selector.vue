@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -32,6 +32,15 @@ const { t } = useI18n();
 
 const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
+
+onMounted(() => {
+  if (props.currentBeatType) {
+    const index = beatTemplate.findIndex((beat) => beat.key === props.currentBeatType);
+    if (index !== -1) {
+      selectedBeat.value = index;
+    }
+  }
+});
 
 const disableChange = computed(() => {
   return props.currentBeatType && props.currentBeatType === beatTemplate[selectedBeat.value].key;
