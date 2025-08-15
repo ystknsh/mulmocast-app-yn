@@ -9,12 +9,11 @@
         {{ t("beat.badge." + getBadge(beat)) }}</Badge
       >
       <div v-if="toggleTypeMode">
-        <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change">
+        <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
           <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("ui.actions.cancel") }} </Button>
         </BeatSelector>
       </div>
     </div>
-
     <p class="mb-2 text-sm text-gray-600">{{ beat.text }}</p>
 
     <div class="grid grid-cols-2 gap-4">
@@ -235,7 +234,7 @@ import BeatStyle from "./beat_style.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../store";
-import { getBadge, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
+import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
 type FileData = ArrayBuffer | string | null;
@@ -264,6 +263,10 @@ const modalSrc = ref("");
 const mediaUrl = ref("");
 
 const toggleTypeMode = ref(false);
+
+const beatType = computed(() => {
+  return getBeatType(props.beat);
+});
 
 const enableMovieGenerate = computed(() => {
   return !!props.beat.moviePrompt;
