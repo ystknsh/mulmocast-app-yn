@@ -10,7 +10,7 @@
       <div>
         <!-- Title -->
         <div class="group relative flex items-center">
-          <h1 v-if="!isEditingTitle" class="cursor-pointer text-2xl font-bold" @click="startEditingTitle">
+          <h1 v-if="!isEditingTitle" class="cursor-pointer text-2xl font-bold" @click="startEditingTitle" data-testid="project-title">
             {{ displayTitle }}
           </h1>
           <Input

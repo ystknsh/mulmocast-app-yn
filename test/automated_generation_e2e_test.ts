@@ -287,8 +287,8 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Click the create new button
     console.log('\n2. Clicking "Create New" button...');
     await page.click('[data-testid="create-new-button"]');
-    await page.waitForSelector('[data-testid="project-title-input"]');
-    console.log("✓ New project dialog opened");
+    await page.waitForSelector('[data-testid="project-title"]');
+    console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
     console.log("\n8. Reading test JSON from local node_modules...");
@@ -346,19 +346,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       console.log("Could not read title from JSON, using default");
     }
 
-    // Enter project title (based on JSON title + timestamp)
+    // Generate project title (based on JSON title + timestamp) for later use
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-    console.log(`\n3. Entering project title: ${projectTitle}`);
-    await page.fill('[data-testid="project-title-input"]', projectTitle);
-    console.log("✓ Project title entered");
-
-    // Click the Create button
-    console.log('\n4. Clicking "Create" button...');
-    await page.click('[data-testid="create-button"]');
-
-    // Wait for project page to load
-    await page.waitForSelector(`h1:has-text("${projectTitle}")`);
-    console.log("✓ Project created and page loaded");
+    console.log(`\n3. Project created with auto-generated title`);
+    console.log("✓ Project page loaded");
 
     // Store project info immediately after creation
     const projectUrl = page.url();
