@@ -1,4 +1,4 @@
-import { beatBadge, commonLanguages } from "./common";
+import { commonLanguages } from "./common";
 
 const lang = {
   message: {
@@ -391,7 +391,19 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
-    badge: beatBadge,
+    badge: {
+      mediaFile: "動画像ファイル",
+      htmlPrompt: "HTMLプロンプト",
+      imagePrompt: "画像プロンプト",
+      markdown: "Markdown",
+      textSlide: "テキストスライド",
+      chart: "Chart.js",
+      mermaid: "Mermaid",
+      html_tailwind: "Tailwind HTML",
+      image: "画像",
+      movie: "動画",
+      beat: "Beat",
+    },
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
