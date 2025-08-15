@@ -202,6 +202,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       @updateImageNames="updateImageNames"
+      v-if="beatType === 'imagePrompt'"
     />
 
     <div
