@@ -1,4 +1,4 @@
-import { commonLanguages, beatBadge } from "./common";
+import { commonLanguages } from "./common";
 
 const lang = {
   message: {
@@ -392,7 +392,19 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
-    badge: beatBadge,
+    badge: {
+      mediaFile: "Media File",
+      htmlPrompt: "HTML Prompt",
+      imagePrompt: "Image Prompt",
+      markdown: "Markdown",
+      textSlide: "Text Slide",
+      chart: "Chart",
+      mermaid: "Mermaid",
+      html_tailwind: "Tailwind Html",
+      image: "Image",
+      movie: "Movie",
+      beat: "Beat",
+    },
     // Beat speaker settings
     speaker: {
       selectSpeaker: "Select a speaker",
