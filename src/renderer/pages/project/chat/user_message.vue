@@ -4,7 +4,7 @@
       <User :size="16" class="text-white" />
     </div>
     <div class="flex-1 text-right">
-      <div class="inline-block max-w-md rounded-lg bg-blue-500 p-3 text-white break-words whitespace-pre-wrap">
+      <div class="inline-block max-w-md rounded-lg bg-blue-500 p-3 break-words whitespace-pre-wrap text-white">
         <p class="text-sm">{{ message }}</p>
       </div>
       <div class="mt-1 flex items-center justify-end space-x-1 text-xs text-gray-500">
