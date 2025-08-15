@@ -16,7 +16,6 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
-import { isNull } from "graphai";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -35,7 +34,6 @@ const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
 
 onMounted(() => {
-
   if (props.currentBeatType) {
     const index = beatTemplate.findIndex((beat) => beat.key === props.currentBeatType);
     if (index !== -1) {
