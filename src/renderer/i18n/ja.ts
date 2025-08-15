@@ -394,7 +394,7 @@ const lang = {
     badge: {
       mediaFile: "動画像ファイル",
       htmlPrompt: "HTMLプロンプト",
-      imagePrompt: "画像プロンプト",
+      imagePrompt: "イメージプロンプト",
       markdown: "Markdown",
       textSlide: "テキストスライド",
       chart: "Chart.js",
