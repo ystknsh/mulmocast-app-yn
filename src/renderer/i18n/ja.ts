@@ -55,6 +55,9 @@ const lang = {
 
       // Modal
       clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+
+      enable: "有効",
+      disable: "無効",
     },
 
     // Common actions (placeholder pairs)
@@ -191,6 +194,7 @@ const lang = {
     imagePrompt: "イメージプロンプト",
     moviePrompt: "動画プロンプト",
     htmlPrompt: "HTMLプロンプト",
+    lipSync: "リップシンク(声に合わせて口を動かす)",
     defaultTitle: "(無題)",
   },
   llms: {

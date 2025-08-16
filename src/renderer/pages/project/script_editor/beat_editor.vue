@@ -138,6 +138,7 @@
             <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
           </template>
         </div>
+        <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
             <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
@@ -177,7 +178,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="!beat.image && !beat.htmlPrompt">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
@@ -186,11 +187,12 @@
             :model-value="beat.moviePrompt"
             @update:model-value="(value) => update('moviePrompt', String(value))"
             class="mb-2 h-20 overflow-y-auto"
+            :disabled="beat.enableLipSync"
           />
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="!beat.image && !beat.htmlPrompt">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -200,8 +202,25 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
+          :disabled="beat.enableLipSync"
         />
       </div>
+
+      <!-- left: lipSync edit -->
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+        <!-- movie edit -->
+        <div>
+          <Label class="mb-1 block">{{ t("common.lipSync") }}: </Label>
+          <Checkbox
+            variant="ghost"
+            size="icon"
+            :modelValue="beat.enableLipSync"
+            @update:model-value="(value) => update('enableLipSync', value)"
+          />: {{ t(beat.enableLipSync ? "ui.common.enable" : "ui.common.disable") }}
+        </div>
+      </div>
+      <!-- right: lipSync preview -->
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">TODO</div>
     </div>
 
     <BeatStyle
@@ -234,7 +253,7 @@ import { z } from "zod";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
-import { Badge, Button, Label, Input, Textarea } from "@/components/ui";
+import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
 import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
