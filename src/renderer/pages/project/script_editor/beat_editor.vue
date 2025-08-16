@@ -284,10 +284,7 @@ const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
 });
 const disabledImageGenearte = computed(() => {
-  if (beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "") {
-    return true;
-  }
-  return false;
+  return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
 });
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
