@@ -111,6 +111,16 @@ interface ProjectInfo {
   projectUrl?: string;
 }
 
+interface ProjectResult {
+  jsonFile: string;
+  status: "success" | "failed";
+  failedStep?: string;
+  error?: string;
+  created: boolean;
+  generated: boolean;
+  played: boolean;
+}
+
 interface Resources {
   electronProcess: ChildProcess | null;
   browser: Browser | null;
@@ -276,22 +286,23 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
   let projectTitle = "";
   let problematicBeatIndices: number[] = [];
+  let step = 1;
 
   try {
     // Navigate to dashboard
-    console.log("Navigating to dashboard...");
+    console.log(`${step}. Navigating to dashboard...`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
-    console.log('\n2. Clicking "Create New" button...');
+    console.log(`\n${++step}. Clicking "Create New" button...`);
     await page.click('[data-testid="create-new-button"]');
-    await page.waitForSelector('[data-testid="project-title-input"]');
-    console.log("✓ New project dialog opened");
+    await page.waitForSelector('[data-testid="project-title"]');
+    console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
-    console.log("\n8. Reading test JSON from local node_modules...");
+    console.log(`\n${++step}. Reading test JSON from local node_modules...`);
     let jsonContent: string;
 
     try {
@@ -346,19 +357,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       console.log("Could not read title from JSON, using default");
     }
 
-    // Enter project title (based on JSON title + timestamp)
+    // Generate project title (based on JSON title + timestamp) for later use
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-    console.log(`\n3. Entering project title: ${projectTitle}`);
-    await page.fill('[data-testid="project-title-input"]', projectTitle);
-    console.log("✓ Project title entered");
-
-    // Click the Create button
-    console.log('\n4. Clicking "Create" button...');
-    await page.click('[data-testid="create-button"]');
-
-    // Wait for project page to load
-    await page.waitForSelector(`h1:has-text("${projectTitle}")`);
-    console.log("✓ Project created and page loaded");
+    console.log(`\n${++step}. Project created with auto-generated title`);
+    console.log("✓ Project page loaded");
 
     // Store project info immediately after creation
     const projectUrl = page.url();
@@ -371,7 +373,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`[DEBUG] Project added to list. Total: ${projectsCreated.length}`);
 
     // Navigate to JSON tab
-    console.log("\n6. Navigating to JSON tab...");
+    console.log(`\n${++step}. Navigating to JSON tab...`);
     await page.click('[data-testid="script-editor-tab-json"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
@@ -387,12 +389,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Wait for Monaco Editor to be ready
-    console.log("\n7. Waiting for Monaco Editor...");
+    console.log(`\n${++step}. Waiting for Monaco Editor...`);
     await page.waitForSelector(".monaco-editor", { timeout: 15000 });
     console.log("✓ Monaco Editor loaded");
 
     // Clear existing content and input test JSON
-    console.log("\n9. Inputting test audio JSON...");
+    console.log(`\n${++step}. Inputting test audio JSON...`);
     // Focus on Monaco editor
     await page.click(".monaco-editor");
 
@@ -512,13 +514,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ JSON processing time completed");
 
     // Navigate to Media tab to delete problematic beats
-    console.log("\n7. Navigating to Media tab to clean up problematic assets...");
+    console.log(`\n${++step}. Navigating to Media tab to clean up problematic assets...`);
     await page.click('[data-testid="script-editor-tab-media"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
     console.log("✓ Navigated to Media tab");
 
     // Delete beats with local_voice.mp3 using pre-identified indices
-    console.log("\n8. Deleting beats with local_voice.mp3...");
+    console.log(`\n${++step}. Deleting beats with local_voice.mp3...`);
 
     if (problematicBeatIndices.length > 0) {
       // Delete in reverse order to avoid index shifting issues
@@ -549,7 +551,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Find and click the generate button in output settings section
-    console.log("\n10. Looking for generate button in output settings section...");
+    console.log(`\n${++step}. Looking for generate button in output settings section...`);
 
     // Use data-testid to find the generate button
     const generateButton = await page.$('[data-testid="generate-contents-button"]');
@@ -560,7 +562,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     await generateButton.click();
 
     // Start generation without waiting
-    console.log("\n10. Generation started, moving to next file...");
+    console.log(`\n${++step}. Generation started, moving to next file...`);
 
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -676,6 +678,7 @@ async function runGenerationE2ETest(): Promise<void> {
     console.log("✓ Found application page");
 
     const projectsCreated: ProjectInfo[] = [];
+    const testResults: ProjectResult[] = [];
 
     // Create all projects and start generation
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
@@ -683,13 +686,28 @@ async function runGenerationE2ETest(): Promise<void> {
       const jsonFile = TEST_JSON_FILES[i];
       console.log(`\n\n===== Creating project ${i + 1}/${TEST_JSON_FILES.length} with ${jsonFile} =====\n`);
       currentTestFile = jsonFile;
+
+      const result: ProjectResult = {
+        jsonFile,
+        status: "success",
+        created: false,
+        generated: false,
+        played: false,
+      };
+
       try {
         await createProjectAndStartGeneration(projectsCreated, page);
         console.log(`✓ Project created and generation started for ${jsonFile}`);
+        result.created = true;
+        result.generated = true; // generation started successfully
       } catch (error: unknown) {
         console.error(`✗ Failed to create project for ${jsonFile}:`, error);
-        // Continue with next file even if one fails
+        result.status = "failed";
+        result.failedStep = "project_creation";
+        result.error = error instanceof Error ? error.message : String(error);
       }
+
+      testResults.push(result);
     }
     console.log(`\nTotal projects created: ${projectsCreated.length} out of ${TEST_JSON_FILES.length} files`);
 
@@ -699,16 +717,53 @@ async function runGenerationE2ETest(): Promise<void> {
     // Visit each project and play
     const playResult = await visitProjectsAndPlay(page, projectsCreated);
 
-    console.log(`\n\n===== Test Summary =====`);
-    console.log(`Total projects created: ${projectsCreated.length}`);
-    console.log(`Successfully played: ${playResult.played}`);
-    console.log(`Failed to play: ${playResult.failed}`);
+    // Update test results with play status
+    projectsCreated.forEach((project) => {
+      const result = testResults.find((r) => r.jsonFile === project.jsonFile);
+      if (result && result.created) {
+        const failedProject = playResult.failedProjects.find((fp) => fp.includes(project.jsonFile));
+        result.played = !failedProject;
+        if (!result.played) {
+          result.status = "failed";
+          result.failedStep = "playback";
+        }
+      }
+    });
 
-    if (playResult.failed > 0) {
-      console.log("\n✗ Test FAILED - Some projects could not be played");
-      console.log("Failed projects:");
-      playResult.failedProjects.forEach((p) => console.log(`  - ${p}`));
-      throw new Error("Some projects failed to play");
+    // Output detailed test results
+    console.log(`\n\n===== Detailed Test Results =====`);
+    console.log(`Total test files: ${testResults.length}`);
+
+    const successCount = testResults.filter((r) => r.status === "success").length;
+    const failedCount = testResults.filter((r) => r.status === "failed").length;
+
+    console.log(`✓ Success: ${successCount}`);
+    console.log(`✗ Failed: ${failedCount}`);
+
+    if (failedCount > 0) {
+      console.log("\n=== Failed Projects Details ===");
+      testResults
+        .filter((r) => r.status === "failed")
+        .forEach((result) => {
+          console.log(`\n${result.jsonFile}:`);
+          console.log(`  Failed at: ${result.failedStep}`);
+          console.log(`  Created: ${result.created ? "✓" : "✗"}`);
+          console.log(`  Generated: ${result.generated ? "✓" : "✗"}`);
+          console.log(`  Played: ${result.played ? "✓" : "✗"}`);
+          if (result.error) {
+            const errorMsg = result.error.length > 100 ? result.error.substring(0, 100) + "..." : result.error;
+            console.log(`  Error: ${errorMsg}`);
+          }
+        });
+    }
+
+    // Determine test pass/fail
+    if (successCount === 0) {
+      console.log("\n✗ Test FAILED - All projects failed");
+      throw new Error("All projects failed");
+    } else if (failedCount > 0) {
+      console.log(`\n✗ Test FAILED - ${failedCount} out of ${testResults.length} projects failed`);
+      throw new Error(`${failedCount} out of ${testResults.length} projects failed`);
     } else {
       console.log("\n✓ Test PASSED - All generations completed and played successfully!");
     }
