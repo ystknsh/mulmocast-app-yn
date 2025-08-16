@@ -220,7 +220,18 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">TODO</div>
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+        <BeatPreviewMovie
+          :beat="beat"
+          :index="index"
+          :isMovieGenerating="isMovieGenerating"
+          :enableMovieGenerate="enableLipSyncGenerate"
+          :movieFile="movieFile"
+          :toggleTypeMode="toggleTypeMode"
+          @openModal="openModal"
+          @generateMovie="generateImageOnlyMovie"
+        />
+      </div>
     </div>
 
     <BeatStyle
@@ -296,7 +307,11 @@ const beatType = computed(() => {
 });
 
 const enableMovieGenerate = computed(() => {
-  return !!props.beat.moviePrompt;
+  return !!props.beat.moviePrompt && !props.beat.enableLipSync;
+});
+const enableLipSyncGenerate = computed(() => {
+  return !!props.beat.enableLipSync;
+  // return !!props.beat.moviePrompt;
 });
 
 const isImageGenerating = computed(() => {
