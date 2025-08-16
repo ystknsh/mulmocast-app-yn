@@ -55,6 +55,9 @@ const lang = {
 
       // Modal
       clickOutsideToClose: "Click outside to close",
+
+      enable: "Enable",
+      disable: "Disable",
     },
 
     // Common actions (placeholder pairs)
@@ -191,6 +194,7 @@ const lang = {
     imagePrompt: "Image Prompt",
     moviePrompt: "Movie Prompt",
     htmlPrompt: "HTML Prompt",
+    lipSync: "LipSync",
     defaultTitle: "(untitled)",
   },
   llms: {

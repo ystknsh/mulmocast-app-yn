@@ -11,7 +11,7 @@
             size="icon"
             class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
             @click="generateMovie"
-            :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode"
+            :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode || disabled"
             :title="t('ui.actions.' + movieGenerateButtonTitle)"
           >
             <Loader2 v-if="isMovieGenerating" class="h-4 w-4 animate-spin" />
@@ -60,6 +60,7 @@ interface Props {
   isMovieGenerating: boolean;
   enableMovieGenerate: boolean;
   toggleTypeMode?: boolean;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();
