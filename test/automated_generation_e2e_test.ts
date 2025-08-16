@@ -113,7 +113,7 @@ interface ProjectInfo {
 
 interface ProjectResult {
   jsonFile: string;
-  status: 'success' | 'failed';
+  status: "success" | "failed";
   failedStep?: string;
   error?: string;
   created: boolean;
@@ -686,15 +686,15 @@ async function runGenerationE2ETest(): Promise<void> {
       const jsonFile = TEST_JSON_FILES[i];
       console.log(`\n\n===== Creating project ${i + 1}/${TEST_JSON_FILES.length} with ${jsonFile} =====\n`);
       currentTestFile = jsonFile;
-      
+
       const result: ProjectResult = {
         jsonFile,
-        status: 'success',
+        status: "success",
         created: false,
         generated: false,
         played: false,
       };
-      
+
       try {
         await createProjectAndStartGeneration(projectsCreated, page);
         console.log(`✓ Project created and generation started for ${jsonFile}`);
@@ -702,11 +702,11 @@ async function runGenerationE2ETest(): Promise<void> {
         result.generated = true; // generation started successfully
       } catch (error: unknown) {
         console.error(`✗ Failed to create project for ${jsonFile}:`, error);
-        result.status = 'failed';
-        result.failedStep = 'project_creation';
+        result.status = "failed";
+        result.failedStep = "project_creation";
         result.error = error instanceof Error ? error.message : String(error);
       }
-      
+
       testResults.push(result);
     }
     console.log(`\nTotal projects created: ${projectsCreated.length} out of ${TEST_JSON_FILES.length} files`);
@@ -719,13 +719,13 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Update test results with play status
     projectsCreated.forEach((project) => {
-      const result = testResults.find(r => r.jsonFile === project.jsonFile);
+      const result = testResults.find((r) => r.jsonFile === project.jsonFile);
       if (result && result.created) {
-        const failedProject = playResult.failedProjects.find(fp => fp.includes(project.jsonFile));
+        const failedProject = playResult.failedProjects.find((fp) => fp.includes(project.jsonFile));
         result.played = !failedProject;
         if (!result.played) {
-          result.status = 'failed';
-          result.failedStep = 'playback';
+          result.status = "failed";
+          result.failedStep = "playback";
         }
       }
     });
@@ -733,26 +733,28 @@ async function runGenerationE2ETest(): Promise<void> {
     // Output detailed test results
     console.log(`\n\n===== Detailed Test Results =====`);
     console.log(`Total test files: ${testResults.length}`);
-    
-    const successCount = testResults.filter(r => r.status === 'success').length;
-    const failedCount = testResults.filter(r => r.status === 'failed').length;
-    
+
+    const successCount = testResults.filter((r) => r.status === "success").length;
+    const failedCount = testResults.filter((r) => r.status === "failed").length;
+
     console.log(`✓ Success: ${successCount}`);
     console.log(`✗ Failed: ${failedCount}`);
-    
+
     if (failedCount > 0) {
-      console.log('\n=== Failed Projects Details ===');
-      testResults.filter(r => r.status === 'failed').forEach(result => {
-        console.log(`\n${result.jsonFile}:`);
-        console.log(`  Failed at: ${result.failedStep}`);
-        console.log(`  Created: ${result.created ? '✓' : '✗'}`);
-        console.log(`  Generated: ${result.generated ? '✓' : '✗'}`);
-        console.log(`  Played: ${result.played ? '✓' : '✗'}`);
-        if (result.error) {
-          const errorMsg = result.error.length > 100 ? result.error.substring(0, 100) + '...' : result.error;
-          console.log(`  Error: ${errorMsg}`);
-        }
-      });
+      console.log("\n=== Failed Projects Details ===");
+      testResults
+        .filter((r) => r.status === "failed")
+        .forEach((result) => {
+          console.log(`\n${result.jsonFile}:`);
+          console.log(`  Failed at: ${result.failedStep}`);
+          console.log(`  Created: ${result.created ? "✓" : "✗"}`);
+          console.log(`  Generated: ${result.generated ? "✓" : "✗"}`);
+          console.log(`  Played: ${result.played ? "✓" : "✗"}`);
+          if (result.error) {
+            const errorMsg = result.error.length > 100 ? result.error.substring(0, 100) + "..." : result.error;
+            console.log(`  Error: ${errorMsg}`);
+          }
+        });
     }
 
     // Determine test pass/fail
