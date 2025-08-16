@@ -449,7 +449,7 @@ const lang = {
     },
     imagePrompt: {
       promptField: "プロンプト",
-      placeholder: "画像を生成するためのプロンプトを入力してください。",
+      placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",
     },
     moviePrompt: {
       promptField: "プロンプト",

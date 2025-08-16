@@ -14,7 +14,7 @@
             size="icon"
             class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
             @click="generateImage"
-            :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode"
+            :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode || disabled"
             :title="t('ui.actions.' + imageGenerateButtonTitle)"
           >
             <Loader2 v-if="isImageGenerating || isHtmlGenerating" class="h-4 w-4 animate-spin" />
@@ -74,6 +74,7 @@ interface Props {
   isImageGenerating: boolean;
   isHtmlGenerating: boolean;
   toggleTypeMode?: boolean;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();

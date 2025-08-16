@@ -180,6 +180,7 @@
           :isHtmlGenerating="isHtmlGenerating"
           :imageFile="imageFile"
           :toggleTypeMode="toggleTypeMode"
+          :disabled="disabledImageGenearte"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
         />
@@ -282,7 +283,9 @@ const isMovieGenerating = computed(() => {
 const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
 });
-
+const disabledImageGenearte = computed(() => {
+  return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
+});
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
