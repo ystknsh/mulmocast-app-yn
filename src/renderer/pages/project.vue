@@ -36,7 +36,7 @@
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent class="flex flex-1 flex-col overflow-hidden" v-if="projectMetadata">
+              <CardContent class="-mt-6 flex flex-1 flex-col overflow-hidden" v-if="projectMetadata">
                 <Chat
                   :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
                   :messages="projectMetadata?.chatMessages"
