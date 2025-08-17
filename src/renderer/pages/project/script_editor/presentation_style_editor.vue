@@ -29,6 +29,7 @@
       :mulmoError="mulmoError?.textSlideParams ?? []"
     />
     <AudioParams
+      :projectId="projectId"
       :audio-params="presentationStyle?.audioParams"
       @update="(value) => updateParam('audioParams', value)"
       :mulmoError="mulmoError?.audioParams ?? []"
@@ -54,6 +55,7 @@ import CaptionParams from "./parameters/caption_params.vue";
 import { MulmoError } from "../../../../../types";
 
 interface Props {
+  projectId: string;
   presentationStyle?: Partial<MulmoPresentationStyle>;
   mulmoError: MulmoError | null;
   settingPresence: Record<string, boolean>;
