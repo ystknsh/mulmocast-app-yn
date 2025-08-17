@@ -6035,10 +6035,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.2.tgz#12ab5e8cb024bee48b479fcad2eaa74eda607865"
-  integrity sha512-IV9FDjyRxuF+Dl9QspuVz7rmHuU3HxMXK1UThlpogiTBE4Reyz8KhbsYc3rQpwW+xIZQTYxniqUUdyMKAFhxDg==
+mulmocast@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.3.tgz#1c10173e59573807f437bbf8344323f1f41a1340"
+  integrity sha512-tq1dpbaPS7x9uowAkIeGNg/x6DgpOA3VLKRPPiOMQ84yveJgNgVQ+Zu7Jxa/fX+UTHTIADKCpWqWp6Pbh5mkzQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.13.0"
