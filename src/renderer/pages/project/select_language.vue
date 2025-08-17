@@ -1,15 +1,17 @@
 <template>
-  <Languages :size="14" class="text-gray-500" />
-  <Select :model-value="currentLanguage" @update:model-value="handleLanguageChange">
-    <SelectTrigger class="h-6! w-30 border-gray-200 text-xs">
-      <SelectValue />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem v-for="lang in LANGUAGES" :key="lang.id" :value="lang.id">
-        {{ t("languages." + lang.id) }}
-      </SelectItem>
-    </SelectContent>
-  </Select>
+  <div class="flex items-center gap-1">
+    <Languages :size="14" class="text-gray-500" />
+    <Select :model-value="currentLanguage" @update:model-value="handleLanguageChange">
+      <SelectTrigger class="h-6! w-30 border-gray-200 text-xs">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="lang in LANGUAGES" :key="lang.id" :value="lang.id">
+          {{ t("languages." + lang.id) }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
 </template>
 
 <script setup lang="ts">
