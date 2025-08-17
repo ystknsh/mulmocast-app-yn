@@ -521,7 +521,6 @@ const lang = {
       noBgm: "なし",
       customAudio: "カスタムオーディオ",
       dropAudioHere: "オーディオファイルをここにドロップ",
-      audioUrlPlaceholder: "オーディオファイルのURLを入力",
       clickToReplace: "クリックして変更",
       clickToSelect: "またはクリックして選択",
     },

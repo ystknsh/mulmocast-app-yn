@@ -521,7 +521,6 @@ const lang = {
       noBgm: "None",
       customAudio: "Custom Audio",
       dropAudioHere: "Drop audio file here",
-      audioUrlPlaceholder: "Enter audio file URL",
       clickToReplace: "Click to replace",
       clickToSelect: "or click to select",
     },
