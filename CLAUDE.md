@@ -282,6 +282,18 @@ When the Electron app is running in development mode (`yarn start`), Playwright 
 - **Performance Monitoring**: Track page load times and resource usage
 - **Live DOM Inspection**: Take snapshots and screenshots of the current application state
 
+**Usage for Development:**
+```bash
+# 1. Start Electron app with CDP enabled
+yarn start
+
+# 2. Use Claude Code with Playwright MCP to:
+# - Take screenshots: mcp__electron-playwright__browser_take_screenshot
+# - Capture console messages: mcp__electron-playwright__browser_console_messages
+# - Take DOM snapshots: mcp__electron-playwright__browser_snapshot
+# - Monitor network: mcp__electron-playwright__browser_network_requests
+```
+
 **Benefits for Development:**
 - Debug issues without modifying source code
 - Monitor application behavior in real-time
