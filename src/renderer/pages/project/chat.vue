@@ -319,6 +319,7 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
+    /*
     if (newMessages.length > 2 && newMessages[newMessages.length - 2].role === "tool") {
       const toolsData = newMessages[newMessages.length - 2];
       if (toolsData?.extra?.agent === "mulmoScriptValidatorAgent" && toolsData?.extra?.data?.isValid) {
@@ -327,13 +328,12 @@ const run = async () => {
         emit("update:updateMulmoScript", script);
       }
     }
-    /*
+    */
     if (res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data?.isValid) {
       const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data ?? {};
       script.beats.map(setRandomBeatId);
       emit("update:updateMulmoScript", script);
     }
-    */
   } catch (error) {
     console.log(error);
   }
