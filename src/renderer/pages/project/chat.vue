@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col space-y-4">
+  <div class="flex h-full flex-col space-y-2">
     <SelectLanguage
       :mulmoScript="mulmoScript"
       @updateMulmoScript="(script) => emit('update:updateMulmoScript', script)"
