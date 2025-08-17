@@ -517,6 +517,8 @@ const lang = {
       bgmVolume: "BGM音量",
       audioVolume: "オーディオ音量",
       bgm: "バックグラウンドミュージック",
+      bgmSelect: "BGMを選択",
+      noBgm: "なし",
     },
   },
 

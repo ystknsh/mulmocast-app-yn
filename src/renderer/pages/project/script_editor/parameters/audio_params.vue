@@ -66,12 +66,21 @@
           />
         </div>
       </div>
-      <div v-if="audioParams?.bgm">
+      <div>
         <Label>{{ t("parameters.audioParams.bgm") }}</Label>
-        <div class="rounded border p-2 text-sm">
-          <span class="text-xs text-gray-500">{{ audioParams.bgm.kind }}:</span>
-          {{ (audioParams.bgm as any)[audioParams.bgm.kind] }}
-        </div>
+        <Select :model-value="currentBgmUrl" @update:model-value="handleBgmUpdate">
+          <SelectTrigger>
+            <SelectValue :placeholder="t('parameters.audioParams.bgmSelect')" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="__none__">
+              {{ t("parameters.audioParams.noBgm") }}
+            </SelectItem>
+            <SelectItem v-for="bgm in bgmAssets.bgms" :key="bgm.name" :value="bgm.url">
+              {{ bgm.title }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
@@ -80,8 +89,10 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { Card, Label, Input } from "@/components/ui";
+import { computed } from "vue";
+import { Card, Label, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
+import { bgmAssets } from "mulmocast/data";
 import MulmoError from "./mulmo_error.vue";
 import { AUDIO_PARAMS_DEFAULT_VALUES } from "@/../shared/constants";
 
@@ -105,5 +116,32 @@ const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: nu
     ...currentParams,
     [field]: value,
   });
+};
+
+const currentBgmUrl = computed(() => {
+  if (props.audioParams?.bgm && props.audioParams.bgm.kind === "url") {
+    return props.audioParams.bgm.url;
+  }
+  return "__none__";
+});
+
+const handleBgmUpdate = (bgmUrl: string) => {
+  const currentParams = props.audioParams || ({} as AudioParams);
+  if (bgmUrl === "__none__") {
+    const { bgm: __bgm, ...paramsWithoutBgm } = currentParams;
+    emit("update", {
+      ...AUDIO_PARAMS_DEFAULT_VALUES,
+      ...paramsWithoutBgm,
+    });
+  } else {
+    emit("update", {
+      ...AUDIO_PARAMS_DEFAULT_VALUES,
+      ...currentParams,
+      bgm: {
+        kind: "url",
+        url: bgmUrl,
+      },
+    });
+  }
 };
 </script>

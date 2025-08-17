@@ -517,6 +517,8 @@ const lang = {
       bgmVolume: "BGM Volume",
       audioVolume: "Audio Volume",
       bgm: "Background Music",
+      bgmSelect: "Select BGM",
+      noBgm: "None",
     },
   },
 
