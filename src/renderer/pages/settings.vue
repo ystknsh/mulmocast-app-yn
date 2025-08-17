@@ -148,8 +148,16 @@
               <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
               {{ t("settings.llmSettings.ollama.url") }}:
               <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
-              {{ t("settings.llmSettings.ollama.model") }}:
+              {{ t("settings.llmSettings.model") }}:
               <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
+            </div>
+            <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
+              {{ t("settings.llmSettings.model") }}:
+              <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
+            </div>
+            <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
+              {{ t("settings.llmSettings.model") }}:
+              <Input v-model="llmConfigs['anthropic']['model']" type="text" class="flex-1" />
             </div>
           </CardContent>
         </Card>
@@ -172,7 +180,15 @@ import Layout from "@/components/layout.vue";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { ENV_KEYS, languages, I18N_SUPPORTED_LANGUAGES, llms, LLM_OLLAMA_DEFAULT_CONFIG } from "../../shared/constants";
+import {
+  ENV_KEYS,
+  languages,
+  I18N_SUPPORTED_LANGUAGES,
+  llms,
+  LLM_OLLAMA_DEFAULT_CONFIG,
+  LLM_OPENAI_DEFAULT_CONFIG,
+  LLM_ANTHROPIC_DEFAULT_CONFIG,
+} from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
 
 const { locale, t } = useI18n();
@@ -198,8 +214,19 @@ const alertLLM = computed(() => {
   return null;
 });
 
-const llmConfigs = reactive<Record<string, Record<string, string>>>({
-  ollama: LLM_OLLAMA_DEFAULT_CONFIG,
+type LlmConfigOllama = { url: string; model: string };
+type LlmConfigOpenAI = { model: string };
+type LlmConfigAnthropic = { model: string };
+type LlmConfigs = {
+  ollama: LlmConfigOllama;
+  openai: LlmConfigOpenAI;
+  anthropic: LlmConfigAnthropic;
+};
+
+const llmConfigs = reactive<LlmConfigs>({
+  ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
+  openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
+  anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
 });
 
 // Initialize all keys
@@ -239,8 +266,14 @@ onMounted(async () => {
     if (settings.CHAT_LLM) {
       selectedLLM.value = settings.CHAT_LLM;
     }
-    if (settings.llmConfigs) {
+    if (settings?.llmConfigs?.ollama) {
       llmConfigs.ollama = settings.llmConfigs.ollama;
+    }
+    if (settings?.llmConfigs?.openai) {
+      llmConfigs.openai = settings.llmConfigs.openai;
+    }
+    if (settings?.llmConfigs?.anthropic) {
+      llmConfigs.anthropic = settings.llmConfigs.anthropic;
     }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
