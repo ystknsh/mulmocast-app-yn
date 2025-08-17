@@ -265,8 +265,8 @@ const lang = {
       ollama: {
         label: "Ollama Setting",
         url: "URL",
-        model: "Model",
       },
+      model: "Model",
     },
   },
   generating: "Generating...",
