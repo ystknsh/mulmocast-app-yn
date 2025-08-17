@@ -214,10 +214,19 @@ const alertLLM = computed(() => {
   return null;
 });
 
-const llmConfigs = reactive<Record<string, Record<string, string>>>({
-  ollama: LLM_OLLAMA_DEFAULT_CONFIG,
-  openai: LLM_OPENAI_DEFAULT_CONFIG,
-  anthropic: LLM_ANTHROPIC_DEFAULT_CONFIG,
+type LlmConfigOllama = { url: string; model: string };
+type LlmConfigOpenAI = { model: string };
+type LlmConfigAnthropic = { model: string };
+type LlmConfigs = {
+  ollama: LlmConfigOllama;
+  openai: LlmConfigOpenAI;
+  anthropic: LlmConfigAnthropic;
+};
+
+const llmConfigs = reactive<LlmConfigs>({
+  ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
+  openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
+  anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
 });
 
 // Initialize all keys
