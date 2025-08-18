@@ -9,9 +9,7 @@ const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
 const IMAGE_EXT = [".jpg", ".jpeg", ".png"];
 const MOVIE_EXT = [".mp4", ".mov", ".mpg"];
 
-const guessTypeByMime = (
-  mime: string,
-): "image" | "movie" | undefined => {
+const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
   if (IMAGE_MIME.includes(mime)) {
     return "image";
   }
