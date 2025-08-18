@@ -144,6 +144,12 @@ export default [
           math: "always",
         },
       ],
+      "@intlify/vue-i18n/no-raw-text": [
+        "warn",
+        {
+          ignorePattern: "[\\-():<>/]", 
+        },
+      ],
       ...sonarjsRules,
     },
     settings: {
