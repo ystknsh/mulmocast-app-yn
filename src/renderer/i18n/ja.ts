@@ -397,19 +397,23 @@ const lang = {
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },
     // Beat type structures (moved from beat.form.*)
-    image: {
-      badge: "画像",
+    mediaFile: {
+      badge: "動画像ファイル",
+      label: "画像または動画",
+      remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力するかファイルをアップロード",
     },
     textSlide: {
       badge: "テキストスライド",
+      label: "スライドコンテンツ",
       titleField: "タイトル",
       contentsField: "内容",
       placeholder: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
     },
     markdown: {
       badge: "Markdown",
+      label: "Markdownテキスト",
       contentsField: "内容",
       placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
     },
@@ -421,6 +425,7 @@ const lang = {
     },
     chart: {
       badge: "Chart.js",
+      label: "チャートJSON",
       titleField: "タイトル",
       chartDataField: "チャートデータ",
       placeholder:
@@ -428,17 +433,20 @@ const lang = {
     },
     mermaid: {
       badge: "Mermaid",
+      label: "Mermaidダイアグラム",
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
     },
     html_tailwind: {
       badge: "Tailwind HTML",
+      label: "HTML(Tailwind)",
       htmlField: "HTML",
       placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
     },
     reference: {
       badge: "Beat",
+      label: "参照",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
@@ -459,9 +467,6 @@ const lang = {
       badge: "画像参照",
       keyField: "画像参照キー",
       placeholder: "キー(英数字のみ)",
-    },
-    mediaFile: {
-      badge: "動画像ファイル",
     },
     movie: {
       badge: "動画",

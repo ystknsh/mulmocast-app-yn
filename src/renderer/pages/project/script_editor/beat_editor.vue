@@ -34,7 +34,7 @@
             </div>
             {{ t("common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.image.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+              <Input :placeholder="t('beat.mediaFile.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
                 :disabled="!fetchEnable"
               >

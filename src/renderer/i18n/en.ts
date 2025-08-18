@@ -398,19 +398,23 @@ const lang = {
       placeholder: "{language} input: {speaker}'s voice content",
     },
     // Beat type structures (moved from beat.form.*)
-    image: {
-      badge: "Image",
+    mediaFile: {
+      badge: "Media File",
+      label: "Image or Movie",
+      remoteLabel: "Remote Media",
       urlField: "URL",
       placeholder: "Enter image URL or upload file",
     },
     textSlide: {
       badge: "Text Slide",
+      label: "SlideContent",
       titleField: "Title",
       contentsField: "Contents",
       placeholder: "Slide Contents\nMarkdown bullets\n- one\n- two",
     },
     markdown: {
       badge: "Markdown",
+      label: "Markdown Text",
       contentsField: "Contents",
       placeholder: "Markdown Contents\n# Title\nWrite your content here.\n- Item 1\n- Item 2\n- Item 3",
     },
@@ -422,23 +426,27 @@ const lang = {
     },
     chart: {
       badge: "Chart",
+      label: "Chart JSON",
       titleField: "Title",
       chartDataField: "Chart Data",
       placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
     },
     mermaid: {
       badge: "Mermaid",
+      label: "Mermaid Diagram",
       titleField: "Title",
       codeField: "Code",
       placeholder: "Enter Mermaid diagram code.",
     },
     html_tailwind: {
       badge: "Tailwind Html",
+      label: "HTML(Tailwind)",
       htmlField: "HTML",
       placeholder: "Enter HTML with Tailwind CSS classes.",
     },
     reference: {
       badge: "Beat",
+      label: "Reference",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Enter beat ID to reference (e.g., beat_1)",
@@ -459,9 +467,6 @@ const lang = {
       badge: "Image Reference",
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
-    },
-    mediaFile: {
-      badge: "Media File",
     },
     movie: {
       badge: "Movie",
