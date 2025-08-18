@@ -150,6 +150,10 @@ export default [
       "import/resolver": {
         typescript: true,
       },
+      'vue-i18n': {
+        localeDir: ".i18n-cache/*.{json}",
+        messageSyntaxVersion: "^11.0.0",
+      },
     },
   },
   // TypeScript files in Renderer process
