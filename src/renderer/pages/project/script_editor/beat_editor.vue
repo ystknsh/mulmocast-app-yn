@@ -6,7 +6,7 @@
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
-        {{ t("beat.badge." + getBadge(beat)) }}</Badge
+        {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
         <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
@@ -22,7 +22,7 @@
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
-            <Label class="mb-1 block"> Image or Movie </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.label") }}</Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
@@ -30,22 +30,22 @@
               draggable="true"
               class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
-              {{ t("common.drophere") }}
+              {{ t("ui.common.drophere") }}
             </div>
-            {{ t("common.or") }}
+            {{ t("ui.common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.image.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+              <Input :placeholder="t('beat.mediaFile.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
                 :disabled="!fetchEnable"
               >
-                {{ t("common.fetch") }}
+                {{ t("ui.actions.fetch") }}
               </Button>
             </div>
           </template>
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
-            <Label class="mb-1 block"> Remote Media: </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.remoteLabel") }}</Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
@@ -53,7 +53,7 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
-            <Label class="mb-1 block"> SlideContent </Label>
+            <Label class="mb-1 block">{{ t("beat.textSlide.label") }}</Label>
             <Input
               :placeholder="t('ui.common.title')"
               :model-value="beat.image?.slide?.title"
@@ -70,7 +70,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Label class="mb-1 block"> Markdown Text </Label>
+            <Label class="mb-1 block">{{ t("beat.markdown.label") }}</Label>
             <Textarea
               :placeholder="t('beat.markdown.placeholder')"
               :model-value="
@@ -84,7 +84,7 @@
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <Label class="mb-1 block"> Chart JSON </Label>
+            <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
             <Textarea
               :placeholder="t('beat.chart.placeholder')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
@@ -102,7 +102,7 @@
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <Label class="mb-1 block"> Mermaid Diagram </Label>
+            <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
             <Textarea
               :placeholder="t('beat.mermaid.placeholder')"
               :model-value="beat?.image?.code?.text"
@@ -114,9 +114,9 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <Label class="mb-1 block"> HTML(Tailwind) </Label>
+            <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
-              :placeholder="t('beat.htmlTailwind.placeholder')"
+              :placeholder="t('beat.html_tailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
               class="font-mono"
@@ -125,9 +125,9 @@
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
-            <Label class="mb-1 block"> Reference </Label>
+            <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
             <Input
-              :placeholder="t('beat.reference.placeholder')"
+              :placeholder="t('beat.beat.placeholder')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
               type="text"
@@ -141,7 +141,7 @@
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
@@ -151,7 +151,7 @@
             />
           </template>
           <template v-else>
-            <Label class="mb-1 block">{{ t("common.imagePrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
@@ -181,7 +181,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
           <Textarea
             :placeholder="t('beat.moviePrompt.placeholder')"
             :model-value="beat.moviePrompt"
@@ -210,7 +210,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("common.lipSync") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.lipSync.label") }}: </Label>
           <Checkbox
             variant="ghost"
             size="icon"

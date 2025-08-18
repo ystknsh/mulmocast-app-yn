@@ -188,13 +188,6 @@ const lang = {
     },
   },
   common: {
-    drophere: "Drop file here",
-    or: "or",
-    fetch: "Fetch",
-    imagePrompt: "Image Prompt",
-    moviePrompt: "Movie Prompt",
-    htmlPrompt: "HTML Prompt",
-    lipSync: "LipSync",
     defaultTitle: "(untitled)",
   },
   llms: {
@@ -396,72 +389,91 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
-    badge: {
-      mediaFile: "Media File",
-      htmlPrompt: "HTML Prompt",
-      imagePrompt: "Image Prompt",
-      markdown: "Markdown",
-      textSlide: "Text Slide",
-      chart: "Chart",
-      mermaid: "Mermaid",
-      html_tailwind: "Tailwind Html",
-      image: "Image",
-      movie: "Movie",
-      beat: "Beat",
-    },
     // Beat speaker settings
     speaker: {
       selectSpeaker: "Select a speaker",
       placeholder: "{language} input: {speaker}'s voice content",
     },
     // Beat type structures (moved from beat.form.*)
-    image: {
+    mediaFile: {
+      badge: "Media File",
+      label: "Image or Movie file",
+      remoteLabel: "Remote Media",
       urlField: "URL",
       placeholder: "Enter image URL or upload file",
     },
     textSlide: {
+      badge: "Text Slide",
+      label: "Slide: Text",
       titleField: "Title",
       contentsField: "Contents",
       placeholder: "Slide Contents\nMarkdown bullets\n- one\n- two",
     },
     markdown: {
+      badge: "Markdown",
+      label: "Slide: Markdown",
       contentsField: "Contents",
       placeholder: "Markdown Contents\n# Title\nWrite your content here.\n- Item 1\n- Item 2\n- Item 3",
     },
     htmlPrompt: {
+      badge: "HTML Prompt",
+      label: "HTML Prompt",
       promptField: "Prompt",
       placeholder: "Enter HTML prompt to generate custom slide content.",
     },
     chart: {
+      badge: "Chart",
+      label: "Slide: Graph - Chart JSON",
       titleField: "Title",
       chartDataField: "Chart Data",
       placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
     },
     mermaid: {
+      badge: "Mermaid",
+      label: "Slide: Diagram - Mermaid",
       titleField: "Title",
       codeField: "Code",
       placeholder: "Enter Mermaid diagram code.",
     },
-    htmlTailwind: {
+    html_tailwind: {
+      badge: "Tailwind Html",
+      label: "Slide: HTML(Tailwind)",
       htmlField: "HTML",
       placeholder: "Enter HTML with Tailwind CSS classes.",
     },
-    reference: {
+    beat: {
+      badge: "Beat",
+      label: "Reference Image",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Enter beat ID to reference (e.g., beat_1)",
+      placeholderUrl: "Enter image URL",
     },
     imagePrompt: {
+      badge: "Image Prompt",
+      label: "Image Prompt",
       promptField: "Prompt",
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
     moviePrompt: {
+      badge: "Movie Prompt",
+      label: "Movie Prompt",
       promptField: "Prompt",
       placeholder: "Blank won't work, space will.",
     },
     imageReference: {
+      badge: "Image Reference",
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
+    },
+    image: {
+      badge: "Image",
+    },
+    movie: {
+      badge: "Movie",
+    },
+    lipSync: {
+      label: "LipSync",
     },
   },
 
