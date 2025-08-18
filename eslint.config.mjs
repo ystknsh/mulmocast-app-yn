@@ -62,7 +62,7 @@ const sonarjsRules = {
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
   "sonarjs/todo-tag": "warn",
-  "sonarjs/no-nested-conditional": "warn",
+  "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
 };
 
