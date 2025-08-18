@@ -395,14 +395,14 @@ const lang = {
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
-      badge: "動画像ファイル",
-      label: "画像または動画",
+      badge: "Media File",
+      label: "画像または動画ファイル",
       remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力するかファイルをアップロード",
     },
     textSlide: {
-      badge: "テキストスライド",
+      badge: "Text Slide",
       label: "スライドコンテンツ",
       titleField: "タイトル",
       contentsField: "内容",
@@ -415,18 +415,18 @@ const lang = {
       placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
     },
     htmlPrompt: {
-      badge: "HTMLプロンプト",
-      label: "HTMLプロンプト",
+      badge: "HTML Prompt",
+      label: "HTML生成プロンプト",
       promptField: "プロンプト",
       placeholder: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
     },
     chart: {
-      badge: "Chart.js",
-      label: "チャートJSON",
+      badge: "Chart",
+      label: "グラフ描画 (Chart JSON)",
       titleField: "タイトル",
       chartDataField: "チャートデータ",
       placeholder:
-        "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+        "グラフ描画データをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
     },
     mermaid: {
       badge: "Mermaid",
@@ -450,7 +450,7 @@ const lang = {
       placeholderUrl: "画像URLを入力してください",
     },
     imagePrompt: {
-      badge: "イメージプロンプト",
+      badge: "Image Prompt",
       label: "画像生成プロンプト",
       promptField: "プロンプト",
       placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",

@@ -397,14 +397,14 @@ const lang = {
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
-      label: "Image or Movie",
+      label: "Image or Movie file",
       remoteLabel: "Remote Media",
       urlField: "URL",
       placeholder: "Enter image URL or upload file",
     },
     textSlide: {
       badge: "Text Slide",
-      label: "SlideContent",
+      label: "Slide Content",
       titleField: "Title",
       contentsField: "Contents",
       placeholder: "Slide Contents\nMarkdown bullets\n- one\n- two",
