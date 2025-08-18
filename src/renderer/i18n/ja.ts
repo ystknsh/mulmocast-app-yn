@@ -321,7 +321,7 @@ const lang = {
       media: {
         tabLabel: "Media",
         mode: "Media モード",
-        modeDescription: "Beatごとのイメージや動画の編集とプレビュー",
+        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
       },
       style: {
         tabLabel: "Style",
