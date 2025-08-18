@@ -69,9 +69,9 @@
     "vue-tsc": "^3.0.5"
   },
   "dependencies": {
-    "@graphai/llm_agents": "^2.0.7",
+    "@graphai/llm_agents": "^2.0.8",
     "@graphai/stream_agent_filter": "^2.0.2",
-    "@graphai/vanilla": "^2.0.10",
+    "@graphai/vanilla": "^2.0.12",
     "@monaco-editor/loader": "^1.5.0",
     "@mozilla/readability": "^0.6.0",
     "@receptron/event_agent_generator": "^0.0.6",
@@ -90,7 +90,7 @@
     "graphai": "^2.0.14",
     "jsdom": "^26.1.0",
     "lucide-vue-next": "^0.539.0",
-    "marked": "^16.1.2",
+    "marked": "^16.2.0",
     "monaco-editor": "^0.52.2",
     "monaco-yaml": "^5.4.0",
     "mulmocast": "^1.2.2",
