@@ -59,11 +59,6 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
       sessionState.value[projectId]["artifact"][sessionType] = inSession;
     }
     if (kind === "beat") {
-      console.log("--------------------------------");
-      console.log(data);
-      console.log(sessionType);
-      console.log(sessionState.value[projectId]["beat"][sessionType]);
-      console.log("--------------------------------");
       sessionState.value[projectId]["beat"][sessionType][data.id] = inSession;
     }
     if (kind === "beatGenerate") {
