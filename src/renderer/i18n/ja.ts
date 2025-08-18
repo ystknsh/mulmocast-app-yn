@@ -191,8 +191,8 @@ const lang = {
     drophere: "画像をここにドロップ",
     or: "もしくは",
     fetch: "取得",
-    imagePrompt: "イメージプロンプト",
-    moviePrompt: "動画プロンプト",
+    imagePrompt: "画像生成プロンプト",
+    moviePrompt: "動画生成プロンプト",
     htmlPrompt: "HTMLプロンプト",
     lipSync: "リップシンク(声に合わせて口を動かす)",
     defaultTitle: "(無題)",
@@ -395,19 +395,6 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
-    badge: {
-      mediaFile: "動画像ファイル",
-      htmlPrompt: "HTMLプロンプト",
-      imagePrompt: "イメージプロンプト",
-      markdown: "Markdown",
-      textSlide: "テキストスライド",
-      chart: "Chart.js",
-      mermaid: "Mermaid",
-      html_tailwind: "Tailwind HTML",
-      image: "画像",
-      movie: "動画",
-      beat: "Beat",
-    },
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
@@ -415,53 +402,73 @@ const lang = {
     },
     // Beat type structures (moved from beat.form.*)
     image: {
+      badge: "画像",
       urlField: "URL",
       placeholder: "画像URLを入力するかファイルをアップロード",
     },
-    textSlide: {
+    text_slide: {
+      badge: "テキストスライド",
       titleField: "タイトル",
       contentsField: "内容",
       placeholder: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
     },
     markdown: {
+      badge: "Markdown",
       contentsField: "内容",
       placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
     },
     htmlPrompt: {
+      badge: "HTMLプロンプト",
       promptField: "プロンプト",
       placeholder: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
     },
     chart: {
+      badge: "Chart.js",
       titleField: "タイトル",
       chartDataField: "チャートデータ",
       placeholder:
         "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
     },
     mermaid: {
+      badge: "Mermaid",
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
     },
-    htmlTailwind: {
+    html_tailwind: {
+      badge: "Tailwind HTML",
       htmlField: "HTML",
       placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
     },
     reference: {
+      badge: "Beat",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
     },
     imagePrompt: {
+      badge: "イメージプロンプト",
       promptField: "プロンプト",
       placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",
     },
     moviePrompt: {
+      badge: "動画",
       promptField: "プロンプト",
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
     imageReference: {
+      badge: "画像参照",
       keyField: "画像参照キー",
       placeholder: "キー(英数字のみ)",
+    },
+    mediaFile: {
+      badge: "動画像ファイル",
+    },
+    movie: {
+      badge: "動画",
+    },
+    beat: {
+      badge: "Beat",
     },
   },
 

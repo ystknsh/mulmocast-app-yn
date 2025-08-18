@@ -6,7 +6,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="(template, k) in beatTemplate" :key="k" :value="k">
-          {{ t("beat.badge." + template.key) }}
+          {{ t("beat." + template.key + ".badge") }}
         </SelectItem>
       </SelectContent>
     </Select>

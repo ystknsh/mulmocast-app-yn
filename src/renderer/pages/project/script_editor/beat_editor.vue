@@ -6,7 +6,7 @@
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
-        {{ t("beat.badge." + getBadge(beat)) }}</Badge
+        {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
         <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
