@@ -456,7 +456,7 @@ const lang = {
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
     moviePrompt: {
-      badge: "Movie",
+      badge: "Movie Prompt",
       label: "Movie Prompt",
       promptField: "Prompt",
       placeholder: "Blank won't work, space will.",

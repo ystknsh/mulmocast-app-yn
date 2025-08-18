@@ -456,21 +456,21 @@ const lang = {
       placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",
     },
     moviePrompt: {
-      badge: "動画",
+      badge: "Movie Prompt",
       label: "動画生成プロンプト",
       promptField: "プロンプト",
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
     imageReference: {
-      badge: "画像参照",
+      badge: "Image Reference",
       keyField: "画像参照キー",
       placeholder: "キー(英数字のみ)",
     },
     image: {
-      badge: "画像",
+      badge: "Image",
     },
     movie: {
-      badge: "動画",
+      badge: "Movie",
     },
     lipSync: {
       label: "リップシンク(声に合わせて口を動かす)",
