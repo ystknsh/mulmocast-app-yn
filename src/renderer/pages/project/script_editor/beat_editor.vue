@@ -30,15 +30,15 @@
               draggable="true"
               class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
-              {{ t("common.drophere") }}
+              {{ t("ui.common.drophere") }}
             </div>
-            {{ t("common.or") }}
+            {{ t("ui.common.or") }}
             <div class="flex">
               <Input :placeholder="t('beat.mediaFile.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
                 :disabled="!fetchEnable"
               >
-                {{ t("common.fetch") }}
+                {{ t("ui.actions.fetch") }}
               </Button>
             </div>
           </template>

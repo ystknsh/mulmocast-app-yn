@@ -188,9 +188,6 @@ const lang = {
     },
   },
   common: {
-    drophere: "Drop file here",
-    or: "or",
-    fetch: "Fetch",
     defaultTitle: "(untitled)",
   },
   llms: {
@@ -446,10 +443,11 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Reference",
+      label: "Reference Image",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Enter beat ID to reference (e.g., beat_1)",
+      placeholderUrl: "Enter image URL",
     },
     imagePrompt: {
       badge: "Image Prompt",

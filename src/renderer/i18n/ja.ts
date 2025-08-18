@@ -188,9 +188,6 @@ const lang = {
     },
   },
   common: {
-    drophere: "画像をここにドロップ",
-    or: "もしくは",
-    fetch: "取得",
     defaultTitle: "(無題)",
   },
   llms: {
@@ -446,10 +443,11 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "参照",
+      label: "参照画像",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
+      placeholderUrl: "画像URLを入力してください",
     },
     imagePrompt: {
       badge: "イメージプロンプト",
