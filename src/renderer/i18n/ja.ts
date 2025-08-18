@@ -403,14 +403,14 @@ const lang = {
     },
     textSlide: {
       badge: "Text Slide",
-      label: "スライドコンテンツ",
+      label: "スライド: テキスト",
       titleField: "タイトル",
       contentsField: "内容",
       placeholder: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
     },
     markdown: {
       badge: "Markdown",
-      label: "Markdownテキスト",
+      label: "スライド: Markdown",
       contentsField: "内容",
       placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
     },
@@ -422,7 +422,7 @@ const lang = {
     },
     chart: {
       badge: "Chart",
-      label: "グラフ描画 (Chart JSON)",
+      label: "スライド: グラフ - Chart JSON",
       titleField: "タイトル",
       chartDataField: "チャートデータ",
       placeholder:
@@ -430,14 +430,14 @@ const lang = {
     },
     mermaid: {
       badge: "Mermaid",
-      label: "Mermaidダイアグラム",
+      label: "スライド: 描画 - Mermaid",
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
     },
     html_tailwind: {
       badge: "Tailwind HTML",
-      label: "HTML(Tailwind)",
+      label: "スライド: HTML(Tailwind)",
       htmlField: "HTML",
       placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
     },
