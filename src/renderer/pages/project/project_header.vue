@@ -97,7 +97,7 @@ const emit = defineEmits<{
 const isEditingTitle = ref(false);
 const isEditingDescription = ref(false);
 
-const displayTitle = ref(props.mulmoScript?.title || t("common.defaultTitle"));
+const displayTitle = ref(props.mulmoScript?.title || t("project.newProject.defaultTitle"));
 const displayDescription = ref(props.mulmoScript?.description || INITIAL_DESCRIPTION);
 
 watch(

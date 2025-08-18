@@ -24,7 +24,7 @@
         <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
         <template v-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
-          {{ t("generating") }}
+          {{ t("ui.status.generating") }}
         </template>
         <!-- image pewview -->
         <template v-else-if="imageFile">

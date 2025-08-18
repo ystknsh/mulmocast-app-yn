@@ -7,6 +7,7 @@ const lang = {
   // UI common vocabulary (reuse-focused)
   ui: {
     common: {
+      applicationName: "MulmoCast",
       // Navigation
       back: "戻る",
 
@@ -185,10 +186,8 @@ const lang = {
       tooLong: "長すぎます",
       mustBeNumber: "数値である必要があります",
       mustBeUrl: "有効なURLである必要があります",
+      unsupportedType: "{type}は未対応のタイプです",
     },
-  },
-  common: {
-    defaultTitle: "(無題)",
   },
   llms: {
     openAIAgent: "OpenAI",
@@ -261,9 +260,6 @@ const lang = {
       model: "モデル",
     },
   },
-  generating: "生成中...",
-  generate: "生成",
-  update: "更新",
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
@@ -285,6 +281,7 @@ const lang = {
     newProject: {
       title: "新規プロジェクト作成",
       placeholder: "プロジェクトタイトルを入力",
+      defaultTitle: "(無題)",
     },
     header: {
       back: "戻る",
@@ -306,19 +303,35 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
-      menu: {
-        textMode: "Text モード",
-        textModeDescription: "話者と会話や字幕へ編集ができます",
-        yamlMode: "YAML モード",
-        yamlModeDescription: "MulmoScript を直接編集します",
-        jsonMode: "JSON モード",
-        jsonModeDescription: "MulmoScript を直接編集します",
-        mediaMode: "Media モード",
-        mediaModeDescription: "Beatごとのイメージや動画の編集とプレビュー",
-        styleMode: "Style",
-        styleModeDescription: "音声/動画/画像/字幕などの設定",
-        referenceMode: "参照",
-        referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
+      text: {
+        tabLabel: "Text",
+        mode: "Text モード",
+        modeDescription: "話者と会話や字幕へ編集ができます",
+      },
+      yaml: {
+        tabLabel: "YAML",
+        mode: "YAML モード",
+        modeDescription: "MulmoScript を直接編集します",
+      },
+      json: {
+        tabLabel: "JSON",
+        mode: "JSON モード",
+        modeDescription: "MulmoScript を直接編集します",
+      },
+      media: {
+        tabLabel: "Media",
+        mode: "Media モード",
+        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
+      },
+      style: {
+        tabLabel: "Style",
+        mode: "Style",
+        modeDescription: "音声/動画/画像/字幕などの設定",
+      },
+      reference: {
+        tabLabel: "参照",
+        mode: "参照",
+        modeDescription: "キャラクターの一貫性のための参照イメージ",
       },
       validationStatus: "検証ステータス",
     },

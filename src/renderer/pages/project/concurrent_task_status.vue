@@ -40,6 +40,6 @@ const message = computed(() => {
   if (ret.length === 0) {
     return "";
   }
-  return `${t("generating")} ${ret.join(", ")}...`;
+  return t("ui.status.generatingThing", { thing: ret.join(", ") });
 });
 </script>

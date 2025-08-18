@@ -11,7 +11,7 @@
             <img
               :src="mediaUri(projectThumbnails[project.metadata.id])"
               class="h-full w-full object-contain"
-              :alt="project?.script?.title || t('common.defaultTitle')"
+              :alt="project?.script?.title || t('project.newProject.defaultTitle')"
             />
           </template>
           <template v-else>
@@ -31,7 +31,7 @@
 
         <!-- Title -->
         <h3 class="title truncate">
-          {{ project?.script?.title || t("common.defaultTitle") }}
+          {{ project?.script?.title || t("project.newProject.defaultTitle") }}
         </h3>
 
         <!-- Info -->
@@ -46,7 +46,7 @@
             class="inline-flex items-center space-x-1 rounded bg-blue-100 px-2 py-1"
           >
             <Loader2 class="h-3 w-3 animate-spin text-blue-500" />
-            <span class="text-xs font-medium text-blue-600">{{ t("generating") }}</span>
+            <span class="text-xs font-medium text-blue-600">{{ t("ui.status.generating") }}</span>
           </div>
         </div>
 

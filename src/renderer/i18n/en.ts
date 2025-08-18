@@ -7,6 +7,7 @@ const lang = {
   // UI common vocabulary (reuse-focused)
   ui: {
     common: {
+      applicationName: "MulmoCast",
       // Navigation
       back: "Back",
 
@@ -185,10 +186,8 @@ const lang = {
       tooLong: "Too long",
       mustBeNumber: "Must be a number",
       mustBeUrl: "Must be a valid URL",
+      unsupportedType: "Unsupported type: {type}",
     },
-  },
-  common: {
-    defaultTitle: "(untitled)",
   },
   llms: {
     openAIAgent: "OpenAI",
@@ -262,9 +261,6 @@ const lang = {
       model: "Model",
     },
   },
-  generating: "Generating...",
-  generate: "Generate",
-  update: "Update",
   dashboard: {
     createNew: "Create New",
     project: "No projects | 1 project | {count} projects",
@@ -286,6 +282,7 @@ const lang = {
     newProject: {
       title: "Create New Project",
       placeholder: "Enter project title",
+      defaultTitle: "(untitled)",
     },
     header: {
       back: "Back",
@@ -307,19 +304,35 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
-      menu: {
-        textMode: "Text Mode",
-        textModeDescription: "Speaker and dialogue editing only",
-        yamlMode: "YAML Mode",
-        yamlModeDescription: "Complete MulmoScript editing",
-        jsonMode: "JSON Mode",
-        jsonModeDescription: "Complete MulmoScript editing",
-        mediaMode: "Media Mode",
-        mediaModeDescription: "Beat-by-beat media editing and preview",
-        styleMode: "Style",
-        styleModeDescription: "Presentation style editing",
-        referenceMode: "Reference",
-        referenceModeDescription: "Reference image for character consistency",
+      text: {
+        tabLabel: "Text",
+        mode: "Text Mode",
+        modeDescription: "Speaker and dialogue editing only",
+      },
+      yaml: {
+        tabLabel: "YAML",
+        mode: "YAML Mode",
+        modeDescription: "Complete MulmoScript editing",
+      },
+      json: {
+        tabLabel: "JSON",
+        mode: "JSON Mode",
+        modeDescription: "Complete MulmoScript editing",
+      },
+      media: {
+        tabLabel: "Media",
+        mode: "Media Mode",
+        modeDescription: "Beat-by-beat media editing and preview",
+      },
+      style: {
+        tabLabel: "Style",
+        mode: "Style",
+        modeDescription: "Presentation style editing",
+      },
+      reference: {
+        tabLabel: "Ref",
+        mode: "Reference",
+        modeDescription: "Reference image for character consistency",
       },
       validationStatus: "Validation Status",
     },
