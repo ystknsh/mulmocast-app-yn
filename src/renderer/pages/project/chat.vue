@@ -266,7 +266,7 @@ const getGraphConfig = async () => {
   };
 };
 
-const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY && llmAgent === "openAIAgent";
+const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY && (llmAgent === "openAIAgent" || llmAgent === "anthropicAgent");
 
 const run = async () => {
   if (isRunning.value) {
