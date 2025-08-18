@@ -1,12 +1,24 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
     <TabsList class="grid w-full grid-cols-6">
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{ t('project.scriptEditor.text.tabLabel') }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{ t('project.scriptEditor.yaml.tabLabel') }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{ t('project.scriptEditor.json.tabLabel') }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{ t('project.scriptEditor.media.tabLabel') }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{ t('project.scriptEditor.style.tabLabel') }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{ t('project.scriptEditor.reference.tabLabel') }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
+        t("project.scriptEditor.text.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{
+        t("project.scriptEditor.yaml.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
+        t("project.scriptEditor.json.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
+        t("project.scriptEditor.media.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
+        t("project.scriptEditor.style.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
+        t("project.scriptEditor.reference.tabLabel")
+      }}</TabsTrigger>
     </TabsList>
 
     <div
