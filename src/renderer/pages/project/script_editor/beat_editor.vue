@@ -127,7 +127,7 @@
           <template v-else-if="beat.image.type === 'beat'">
             <Label class="mb-1 block"> Reference </Label>
             <Input
-              :placeholder="t('beat.reference.placeholder')"
+              :placeholder="t('beat.beat.placeholder')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
               type="text"

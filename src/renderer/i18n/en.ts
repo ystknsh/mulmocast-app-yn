@@ -444,7 +444,7 @@ const lang = {
       htmlField: "HTML",
       placeholder: "Enter HTML with Tailwind CSS classes.",
     },
-    reference: {
+    beat: {
       badge: "Beat",
       label: "Reference",
       idField: "Beat ID",
@@ -468,11 +468,11 @@ const lang = {
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
     },
+    image: {
+      badge: "Image",
+    },
     movie: {
       badge: "Movie",
-    },
-    beat: {
-      badge: "Beat",
     },
     lipSync: {
       label: "LipSync",

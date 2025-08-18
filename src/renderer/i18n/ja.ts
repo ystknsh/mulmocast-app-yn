@@ -444,7 +444,7 @@ const lang = {
       htmlField: "HTML",
       placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
     },
-    reference: {
+    beat: {
       badge: "Beat",
       label: "参照",
       idField: "ビートID",
@@ -468,11 +468,11 @@ const lang = {
       keyField: "画像参照キー",
       placeholder: "キー(英数字のみ)",
     },
+    image: {
+      badge: "画像",
+    },
     movie: {
       badge: "動画",
-    },
-    beat: {
-      badge: "Beat",
     },
     lipSync: {
       label: "リップシンク(声に合わせて口を動かす)",
