@@ -287,7 +287,12 @@ const run = async () => {
         role: "system",
         content: `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`,
       },
-      ...messages.map(filterMessage()).filter((message) => message.role !== "system"),
+      ...messages
+        .map(filterMessage())
+        .filter((message) => message.role !== "system")
+        .filter((message) => {
+          return message.content !== "";
+        }),
     ];
     console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
