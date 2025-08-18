@@ -188,9 +188,6 @@ const lang = {
       mustBeUrl: "有効なURLである必要があります",
     },
   },
-  common: {
-    defaultTitle: "(無題)",
-  },
   llms: {
     openAIAgent: "OpenAI",
     ollamaAgent: "Ollama",
@@ -286,6 +283,7 @@ const lang = {
     newProject: {
       title: "新規プロジェクト作成",
       placeholder: "プロジェクトタイトルを入力",
+      defaultTitle: "(無題)",
     },
     header: {
       back: "戻る",

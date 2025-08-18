@@ -188,9 +188,6 @@ const lang = {
       mustBeUrl: "Must be a valid URL",
     },
   },
-  common: {
-    defaultTitle: "(untitled)",
-  },
   llms: {
     openAIAgent: "OpenAI",
     ollamaAgent: "Ollama",
@@ -287,6 +284,7 @@ const lang = {
     newProject: {
       title: "Create New Project",
       placeholder: "Enter project title",
+      defaultTitle: "(untitled)",
     },
     header: {
       back: "Back",
