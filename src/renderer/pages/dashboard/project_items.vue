@@ -30,7 +30,7 @@
         </div>
 
         <!-- Title -->
-        <h3 class="title">
+        <h3 class="title truncate">
           {{ project?.script?.title || t("common.defaultTitle") }}
         </h3>
 

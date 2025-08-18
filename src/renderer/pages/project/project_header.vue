@@ -12,7 +12,7 @@
         <div class="group relative flex items-center">
           <h1
             v-if="!isEditingTitle"
-            class="cursor-pointer text-2xl font-bold"
+            class="max-w-128 cursor-pointer truncate text-2xl font-bold"
             @click="startEditingTitle"
             data-testid="project-title"
           >
@@ -36,7 +36,11 @@
 
         <!-- Description -->
         <div class="group relative flex items-center">
-          <p v-if="!isEditingDescription" class="cursor-pointer text-gray-600" @click="startEditingDescription">
+          <p
+            v-if="!isEditingDescription"
+            class="max-w-128 cursor-pointer truncate text-gray-600"
+            @click="startEditingDescription"
+          >
             {{ displayDescription }}
           </p>
           <Input
