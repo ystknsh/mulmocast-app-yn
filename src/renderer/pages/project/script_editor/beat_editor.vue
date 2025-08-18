@@ -2,7 +2,7 @@
   <div>
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
-        <span class="text-base">Beat: {{ index + 1 }}</span>
+        <span class="text-base">{{ t('ui.common.beat') }}  {{ index + 1 }}</span>
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
