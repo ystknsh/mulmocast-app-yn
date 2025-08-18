@@ -22,7 +22,7 @@
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
-            <Label class="mb-1 block"> Image or Movie </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.label") }}</Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
@@ -45,7 +45,7 @@
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
-            <Label class="mb-1 block"> Remote Media: </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.remoteLabel") }}</Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
@@ -53,7 +53,7 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
-            <Label class="mb-1 block"> SlideContent </Label>
+            <Label class="mb-1 block">{{ t("beat.textSlide.label") }}</Label>
             <Input
               :placeholder="t('ui.common.title')"
               :model-value="beat.image?.slide?.title"
@@ -70,7 +70,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Label class="mb-1 block"> Markdown Text </Label>
+            <Label class="mb-1 block">{{ t("beat.markdown.label") }}</Label>
             <Textarea
               :placeholder="t('beat.markdown.placeholder')"
               :model-value="
@@ -84,7 +84,7 @@
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <Label class="mb-1 block"> Chart JSON </Label>
+            <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
             <Textarea
               :placeholder="t('beat.chart.placeholder')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
@@ -102,7 +102,7 @@
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <Label class="mb-1 block"> Mermaid Diagram </Label>
+            <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
             <Textarea
               :placeholder="t('beat.mermaid.placeholder')"
               :model-value="beat?.image?.code?.text"
@@ -114,7 +114,7 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <Label class="mb-1 block"> HTML(Tailwind) </Label>
+            <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
               :placeholder="t('beat.html_tailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
@@ -125,7 +125,7 @@
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
-            <Label class="mb-1 block"> Reference </Label>
+            <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
             <Input
               :placeholder="t('beat.beat.placeholder')"
               :model-value="beat.image.id"
