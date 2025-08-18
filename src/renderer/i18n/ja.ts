@@ -191,10 +191,6 @@ const lang = {
     drophere: "画像をここにドロップ",
     or: "もしくは",
     fetch: "取得",
-    imagePrompt: "画像生成プロンプト",
-    moviePrompt: "動画生成プロンプト",
-    htmlPrompt: "HTMLプロンプト",
-    lipSync: "リップシンク(声に合わせて口を動かす)",
     defaultTitle: "(無題)",
   },
   llms: {
@@ -419,6 +415,7 @@ const lang = {
     },
     htmlPrompt: {
       badge: "HTMLプロンプト",
+      label: "HTMLプロンプト",
       promptField: "プロンプト",
       placeholder: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
     },
@@ -448,11 +445,13 @@ const lang = {
     },
     imagePrompt: {
       badge: "イメージプロンプト",
+      label: "画像生成プロンプト",
       promptField: "プロンプト",
       placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",
     },
     moviePrompt: {
       badge: "動画",
+      label: "動画生成プロンプト",
       promptField: "プロンプト",
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
@@ -469,6 +468,9 @@ const lang = {
     },
     beat: {
       badge: "Beat",
+    },
+    lipSync: {
+      label: "リップシンク(声に合わせて口を動かす)",
     },
   },
 

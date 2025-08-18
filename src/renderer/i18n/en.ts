@@ -191,10 +191,6 @@ const lang = {
     drophere: "Drop file here",
     or: "or",
     fetch: "Fetch",
-    imagePrompt: "Image Prompt",
-    moviePrompt: "Movie Prompt",
-    htmlPrompt: "HTML Prompt",
-    lipSync: "LipSync",
     defaultTitle: "(untitled)",
   },
   llms: {
@@ -420,6 +416,7 @@ const lang = {
     },
     htmlPrompt: {
       badge: "HTML Prompt",
+      label: "HTML Prompt",
       promptField: "Prompt",
       placeholder: "Enter HTML prompt to generate custom slide content.",
     },
@@ -448,11 +445,13 @@ const lang = {
     },
     imagePrompt: {
       badge: "Image Prompt",
+      label: "Image Prompt",
       promptField: "Prompt",
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
     moviePrompt: {
       badge: "Movie",
+      label: "Movie Prompt",
       promptField: "Prompt",
       placeholder: "Blank won't work, space will.",
     },
@@ -469,6 +468,9 @@ const lang = {
     },
     beat: {
       badge: "Beat",
+    },
+    lipSync: {
+      label: "LipSync",
     },
   },
 

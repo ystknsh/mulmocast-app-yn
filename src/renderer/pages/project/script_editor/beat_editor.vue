@@ -141,7 +141,7 @@
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
@@ -151,7 +151,7 @@
             />
           </template>
           <template v-else>
-            <Label class="mb-1 block">{{ t("common.imagePrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
@@ -181,7 +181,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
           <Textarea
             :placeholder="t('beat.moviePrompt.placeholder')"
             :model-value="beat.moviePrompt"
@@ -210,7 +210,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("common.lipSync") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.lipSync.label") }}: </Label>
           <Checkbox
             variant="ghost"
             size="icon"

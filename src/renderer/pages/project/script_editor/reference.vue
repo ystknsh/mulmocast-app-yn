@@ -7,7 +7,7 @@
         <div>
           {{ t("ui.common.key") }} : {{ imageKey }}
           <template v-if="images[imageKey].type === 'imagePrompt'">
-            <Label class="mb-1 block">{{ t("common.imagePrompt") }} : </Label>
+            <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }} : </Label>
 
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
