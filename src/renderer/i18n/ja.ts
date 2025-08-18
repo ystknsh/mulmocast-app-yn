@@ -7,6 +7,7 @@ const lang = {
   // UI common vocabulary (reuse-focused)
   ui: {
     common: {
+      applicationName: "MulmoCast",
       // Navigation
       back: "戻る",
 
