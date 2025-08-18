@@ -260,9 +260,6 @@ const lang = {
       model: "Model",
     },
   },
-  generating: "Generating...",
-  generate: "Generate",
-  update: "Update",
   dashboard: {
     createNew: "Create New",
     project: "No projects | 1 project | {count} projects",
