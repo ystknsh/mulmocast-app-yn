@@ -10,6 +10,9 @@ import globals from "globals";
 import checkFile from "eslint-plugin-check-file";
 import sonarjs from "eslint-plugin-sonarjs";
 
+import vueI18n from '@intlify/eslint-plugin-vue-i18n'
+
+
 // Common base rules configuration
 const baseRules = {
   "prettier/prettier": "error",
@@ -66,6 +69,7 @@ const sonarjsRules = {
 export default [
   js.configs.recommended,
   sonarjs.configs.recommended,
+  ...vueI18n.configs.recommended,
   {
     ignores: [
       "node_modules/**",
