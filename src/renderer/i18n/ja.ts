@@ -406,7 +406,7 @@ const lang = {
       urlField: "URL",
       placeholder: "画像URLを入力するかファイルをアップロード",
     },
-    text_slide: {
+    textSlide: {
       badge: "テキストスライド",
       titleField: "タイトル",
       contentsField: "内容",

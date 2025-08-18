@@ -407,7 +407,7 @@ const lang = {
       urlField: "URL",
       placeholder: "Enter image URL or upload file",
     },
-    text_slide: {
+    textSlide: {
       badge: "Text Slide",
       titleField: "Title",
       contentsField: "Contents",

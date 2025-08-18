@@ -116,7 +116,7 @@
           <template v-else-if="beat.image.type === 'html_tailwind'">
             <Label class="mb-1 block"> HTML(Tailwind) </Label>
             <Textarea
-              :placeholder="t('beat.htmlTailwind.placeholder')"
+              :placeholder="t('beat.html_tailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
               class="font-mono"
