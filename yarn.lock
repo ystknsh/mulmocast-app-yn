@@ -1349,14 +1349,14 @@
     "@inquirer/input" "^4.2.1"
 
 "@graphai/llm_agents@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.8.tgz#fe7ec1d33704a0e27f8ce9e21154029f9e40e6f6"
-  integrity sha512-rcnQYdoveiJpZ+MP0/RLwD6SIwpk3ICaTheZOCzKY+VlWBhY/qX3tIFuAPFvwHq/LXqNPvBQtqDhkV4IGzs3Ag==
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.9.tgz#09799882d9356e07c34a3b37c054d346bcf49629"
+  integrity sha512-URoLm38YzupRwCUR/dB01kCc2qVU6GQ6Y+e2dkS3WRxUJ4BujZJzcsbUTslGVZLLAusD0mMLOUilLtoIBsb0gg==
   dependencies:
     "@graphai/anthropic_agent" "^2.0.10"
     "@graphai/gemini_agent" "^2.0.1"
     "@graphai/groq_agent" "^2.0.2"
-    "@graphai/openai_agent" "^2.0.4"
+    "@graphai/openai_agent" "^2.0.5"
     "@graphai/openai_fetch_agent" "^1.0.0"
     "@graphai/replicate_agent" "^2.0.0"
     "@graphai/tools_agent" "^1.0.4"
@@ -1366,12 +1366,12 @@
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-2.0.3.tgz#abdb91d606c2ca304aeeacc67e33255a543c4488"
   integrity sha512-ardK9+E/I2jUQKjOXJ+IaVPW5tAN1Yk8LhjUf/PYm7DmeLdcsq4/TMLo7PbHlvwgOymd66OFe8CGjZ0epvN3+w==
 
-"@graphai/openai_agent@^2.0.3", "@graphai/openai_agent@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.4.tgz#c9c9e02ca85e5b67125174e83837cb3207e9c673"
-  integrity sha512-0P2LUIF00yikKQFxPhxHRgpKxBG4sFXUHY4Z0+tyw/3rAdW8sdYeUgMawGxLGaH/VLBXP1mpg8OuVbqFiBYobw==
+"@graphai/openai_agent@^2.0.3", "@graphai/openai_agent@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.5.tgz#8d149ab41b53245a7892fb253ddec33060091fe6"
+  integrity sha512-CLsW1zAAPQTp0ky2RspnrYQCT9gAaZvfpy1WO7FIZA8edy8VX34VDBptqvp4y8NFtK8mRC+LQ2krWpLcGHfrNg==
   dependencies:
-    "@graphai/llm_utils" "^2.0.1"
+    "@graphai/llm_utils" "^2.0.3"
     openai "^5.12.2"
 
 "@graphai/openai_fetch_agent@^1.0.0":
