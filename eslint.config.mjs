@@ -147,7 +147,7 @@ export default [
       "@intlify/vue-i18n/no-raw-text": [
         "warn",
         {
-          ignorePattern: "[\\-():<>/]", 
+          ignorePattern: "[\\-():<>/.]", 
         },
       ],
       ...sonarjsRules,
