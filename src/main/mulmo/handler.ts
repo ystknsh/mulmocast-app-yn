@@ -22,11 +22,9 @@ import { app, WebContents } from "electron";
 import path from "path";
 import fs from "fs";
 
-import { getProjectPath } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 
 import { createMulmoScript } from "./scripting";
-import { fetchAndSave } from "./fetch_url";
 import { mulmoActionRunner, mulmoGenerateImage, mulmoGenerateAudio, mulmoReferenceImage } from "./handler_generator";
 import {
   mulmoAudioFiles,
@@ -37,6 +35,8 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
 } from "./handler_contents";
+import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
+import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -126,96 +126,6 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
   }
   const buffer = fs.readFileSync(fileName);
   return buffer.buffer;
-};
-
-export const mulmoReferenceImageUpload = async (
-  projectId: string,
-  dirKey: string,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const dirPath = "upload_reference_image";
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
-};
-export const mulmoImageUpload = async (
-  projectId: string,
-  index: number,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const dirPath = "upload_image";
-  const dirKey = String(index);
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
-};
-
-const __mulmoImageUpload = async (
-  projectId: string,
-  dirPath: string,
-  dirKey: string,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const projectPath = getProjectPath(projectId);
-  const dir = path.resolve(projectPath, dirPath, dirKey);
-  fs.mkdirSync(dir, { recursive: true });
-  const filename = `${Date.now()}.${extension}`;
-  fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
-
-  return path.join(dirPath, dirKey, filename);
-};
-export const mulmoImageFetchURL = async (projectId: string, index: number, url: string, webContents: WebContents) => {
-  const dirPath = "fetch_image";
-  const dirKey = String(index);
-  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
-};
-
-export const mulmoReferenceImageFetchURL = async (
-  projectId: string,
-  dirKey: string,
-  url: string,
-  webContents: WebContents,
-) => {
-  const dirPath = "fetch_ref_image";
-  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
-};
-
-const __mulmoImageFetchURL = async (
-  projectId: string,
-  dirPath: string,
-  dirKey: string,
-  url: string,
-  webContents: WebContents,
-) => {
-  try {
-    const projectPath = getProjectPath(projectId);
-    const dir = path.resolve(projectPath, dirPath, dirKey);
-
-    const res = await fetchAndSave(url, dir);
-
-    if (res.result) {
-      return {
-        result: true,
-        imageType: res.imageType,
-        path: path.join(dirPath, dirKey, res.filename),
-      };
-    }
-    if (res.error) {
-      webContents.send("progress-update", {
-        projectId,
-        type: "error",
-        data: res.error,
-      });
-    }
-  } catch (error) {
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-  }
-  return {
-    result: false,
-  };
 };
 
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
