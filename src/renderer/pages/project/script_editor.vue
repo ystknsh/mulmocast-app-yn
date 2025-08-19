@@ -167,6 +167,7 @@
                   :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
                   :imageFile="imageFiles[index]"
                   :movieFile="movieFiles[index]"
+                  :lipSyncFiles="lipSyncFiles[index]"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   @update="update"
                   @generateImage="generateImage"
@@ -273,6 +274,7 @@ interface Props {
   imageFiles: (string | null)[];
   movieFiles: (string | null)[];
   audioFiles: (string | null)[];
+  lipSyncFiles: (string | null)[];
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
