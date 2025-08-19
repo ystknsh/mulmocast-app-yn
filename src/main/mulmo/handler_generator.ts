@@ -111,8 +111,9 @@ export const mulmoGenerateImage = async (
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
-
+    
     const beat = context.studio.script.beats[index];
+    const { id } = beat;
     const forceImage = target === "image";
     const forceMovie = target === "movie";
     if (forceImage) {
@@ -138,6 +139,7 @@ export const mulmoGenerateImage = async (
             sessionType: "image",
             inSession: true,
             index,
+            id,
           },
         });
       }
@@ -150,6 +152,7 @@ export const mulmoGenerateImage = async (
             sessionType: "image",
             inSession: false,
             index,
+            id,
           },
         });
       }
