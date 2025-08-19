@@ -229,7 +229,7 @@
           :movieFile="movieFile"
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
-          @generateMovie="generateImageOnlyMovie"
+          @generateMovie="generateLipSyncMovie"
         />
       </div>
     </div>
@@ -410,6 +410,11 @@ const generateImageOnlyImage = () => {
 };
 const generateImageOnlyMovie = () => {
   emit("generateImage", props.index, "movie");
+};
+
+const generateLipSyncMovie = async () => {
+  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, props.index);
+  emit("generateImage", props.index, "lipSync");
 };
 
 const update = (path: string, value: unknown) => {
