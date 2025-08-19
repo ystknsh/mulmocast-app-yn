@@ -35,7 +35,10 @@ const beatAudio = (context: MulmoStudioContext) => {
 export const mulmoAudioFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
-    return context.studio.script.beats.map(beatAudio(context));
+    return context.studio.script.beats.reduce((tmp, beat) => {
+      tmp[beat.id] = beatAudio(context)(beat);
+      return tmp;
+    }, {});
   } catch (error) {
     console.log(error);
     return [];
@@ -57,7 +60,13 @@ export const mulmoImageFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    return Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
+    const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
+    return context.studio.script.beats.reduce((tmp, beat, index) => {
+      if (beat.id) {
+        tmp[beat.id] = dataSet[index];
+      }
+      return tmp;
+    }, {});
   } catch (error) {
     console.log(error);
     return [];

@@ -4,13 +4,13 @@ import { MulmoProgressLog } from "../../types";
 import type { SessionType, BeatSessionType, SessionProgressEvent } from "mulmocast";
 
 type SessionStateEntry = Record<SessionType, boolean>;
-type BeatSessionStateEntry = Record<BeatSessionType, Record<number, boolean>>;
+type BeatSessionStateEntry = Record<BeatSessionType, Record<string, boolean>>;
 type SessionState = Record<
   string,
   { beat: BeatSessionStateEntry; artifact: SessionStateEntry; beatGenerate: BeatSessionStateEntry }
 >;
 
-type AppSessionProgressEvent = { kind: "beatGenerate"; sessionType: "image"; index: number; inSession: boolean };
+type AppSessionProgressEvent = { kind: "beatGenerate"; sessionType: "image"; id: string; inSession: boolean };
 
 export const useMulmoEventStore = defineStore("mulmoEvent", () => {
   const mulmoEvent = ref<Record<string, SessionProgressEvent | AppSessionProgressEvent>>({});
@@ -59,10 +59,10 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
       sessionState.value[projectId]["artifact"][sessionType] = inSession;
     }
     if (kind === "beat") {
-      sessionState.value[projectId]["beat"][sessionType][data.index] = inSession;
+      sessionState.value[projectId]["beat"][sessionType][data.id] = inSession;
     }
     if (kind === "beatGenerate") {
-      sessionState.value[projectId]["beatGenerate"][sessionType][data.index] = inSession;
+      sessionState.value[projectId]["beatGenerate"][sessionType][data.id] = inSession;
     }
   };
 

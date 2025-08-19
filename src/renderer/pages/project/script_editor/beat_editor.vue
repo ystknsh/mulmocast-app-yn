@@ -312,20 +312,22 @@ const enableMovieGenerate = computed(() => {
 });
 const enableLipSyncGenerate = computed(() => {
   return !!props.beat.enableLipSync;
-  // return !!props.beat.moviePrompt;
+});
+const beatId = computed(() => {
+  return props.beat.id;
 });
 
 const isImageGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[beatId.value] ?? false;
 });
 const isMovieGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[beatId.value] ?? false;
 });
 const isLipSyncGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"]?.[beatId.value] ?? false;
 });
 const isHtmlGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[beatId.value] ?? false;
 });
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";

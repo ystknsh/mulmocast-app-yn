@@ -57,7 +57,7 @@
                 <TextEditor
                   :index="index"
                   :beat="beat"
-                  :audioFile="audioFiles[index]"
+                  :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
                   :lang="mulmoValue.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
@@ -165,9 +165,9 @@
                   :mulmoScript="mulmoValue"
                   :index="index"
                   :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-                  :imageFile="imageFiles[index]"
-                  :movieFile="movieFiles[index]"
-                  :lipSyncFiles="lipSyncFiles[index]"
+                  :imageFile="imageFiles[beat.id]"
+                  :movieFile="movieFiles[beat.id]"
+                  :lipSyncFiles="lipSyncFiles[beat.id]"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   @update="update"
                   @generateImage="generateImage"
@@ -271,10 +271,10 @@ const { t } = useI18n();
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
-  imageFiles: (string | null)[];
-  movieFiles: (string | null)[];
-  audioFiles: (string | null)[];
-  lipSyncFiles: (string | null)[];
+  imageFiles: Record<string, string | null>;
+  movieFiles: Record<string, string | null>;
+  audioFiles: Record<string, string | null>;
+  lipSyncFiles: Record<string, string | null>;
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }
