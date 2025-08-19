@@ -154,10 +154,55 @@
             <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
               {{ t("settings.llmSettings.model") }}:
               <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
+              <Select v-model="llmConfigs['openai']['model']">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
+                    {{ model }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
+              {{ t("settings.llmSettings.model") }}:
+              <Select v-model="llmConfigs['gemini']['model']">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
+                    {{ model }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
               {{ t("settings.llmSettings.model") }}:
-              <Input v-model="llmConfigs['anthropic']['model']" type="text" class="flex-1" />
+              <Select v-model="llmConfigs['anthropic']['model']">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
+                    {{ model }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
+              {{ t("settings.llmSettings.model") }}:
+              <Select v-model="llmConfigs['groq']['model']">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
+                    {{ model }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -171,6 +216,7 @@ import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue"
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
+import { provider2LLMAgent } from "mulmocast/browser";
 
 import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -188,6 +234,8 @@ import {
   LLM_OLLAMA_DEFAULT_CONFIG,
   LLM_OPENAI_DEFAULT_CONFIG,
   LLM_ANTHROPIC_DEFAULT_CONFIG,
+  LLM_GROQ_DEFAULT_CONFIG,
+  LLM_GEMINI_DEFAULT_CONFIG,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
 
@@ -216,17 +264,24 @@ const alertLLM = computed(() => {
 
 type LlmConfigOllama = { url: string; model: string };
 type LlmConfigOpenAI = { model: string };
+type LlmConfigGemini = { model: string };
 type LlmConfigAnthropic = { model: string };
+type LlmConfigGroq = { model: string };
+
 type LlmConfigs = {
   ollama: LlmConfigOllama;
   openai: LlmConfigOpenAI;
+  gemini: LlmConfigGemini;
   anthropic: LlmConfigAnthropic;
+  groq: LlmConfigGroq;
 };
 
 const llmConfigs = reactive<LlmConfigs>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
   openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
   anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
+  groq: { ...LLM_GROQ_DEFAULT_CONFIG },
+  gemini: { ...LLM_GEMINI_DEFAULT_CONFIG },
 });
 
 // Initialize all keys
