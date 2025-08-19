@@ -57,7 +57,7 @@
                 <TextEditor
                   :index="index"
                   :beat="beat"
-                  :audioFile="audioFiles[index]"
+                  :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
                   :lang="mulmoValue.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
@@ -273,7 +273,7 @@ interface Props {
   isValidScriptData: boolean;
   imageFiles: (string | null)[];
   movieFiles: (string | null)[];
-  audioFiles: (string | null)[];
+  audioFiles: Record<string, string | null>;
   lipSyncFiles: (string | null)[];
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;

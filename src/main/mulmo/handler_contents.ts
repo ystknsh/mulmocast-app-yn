@@ -35,7 +35,10 @@ const beatAudio = (context: MulmoStudioContext) => {
 export const mulmoAudioFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
-    return context.studio.script.beats.map(beatAudio(context));
+    return context.studio.script.beats.reduce((tmp, beat) => {
+      tmp[beat.id] = beatAudio(context)(beat)
+      return tmp;
+    }, {});
   } catch (error) {
     console.log(error);
     return [];
