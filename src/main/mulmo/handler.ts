@@ -5,12 +5,9 @@ import {
   pdfFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  generateBeatImage,
-  generateBeatAudio,
   translateBeat,
   setFfmpegPath,
   setFfprobePath,
-  generateReferenceImage,
   getImageRefs,
   MulmoStudioContextMethods,
   getMultiLingual,
@@ -18,7 +15,6 @@ import {
   mulmoStudioMultiLingualFileSchema,
   currentMulmoScriptVersion,
   hashSHA256,
-  type MulmoImagePromptMedia,
   type MultiLingualTexts,
 } from "mulmocast";
 import { GraphAILogger } from "graphai";
@@ -31,7 +27,7 @@ import { loadSettings } from "../settings_manager";
 
 import { createMulmoScript } from "./scripting";
 import { fetchAndSave } from "./fetch_url";
-import { mulmoActionRunner } from "./handler_generator";
+import { mulmoActionRunner, mulmoGenerateImage, mulmoGenerateAudio, mulmoReferenceImage } from "./handler_generator";
 import {
   mulmoAudioFiles,
   mulmoAudioFile,
@@ -56,103 +52,6 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
-
-export const mulmoGenerateImage = async (
-  projectId: string,
-  index: number,
-  target: string,
-  webContents: WebContents,
-) => {
-  const settings = await loadSettings();
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  addSessionProgressCallback(mulmoCallback);
-  try {
-    const context = await getContext(projectId);
-
-    const beat = context.studio.script.beats[index];
-    const forceImage = target === "image";
-    const forceMovie = target === "movie";
-    if (forceImage) {
-      beat.moviePrompt = "";
-    }
-    if (target === "all") {
-      context.force = true;
-    }
-    if ((target === "movie" || target === "all") && !beat.moviePrompt) {
-      beat.moviePrompt = " ";
-    }
-    const graphaiCallbacks = ({ nodeId, state }) => {
-      if (nodeId === "preprocessor" && state === "executing") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: true,
-            index,
-          },
-        });
-      }
-      if (nodeId === "output" && state === "completed") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: false,
-            index,
-          },
-        });
-      }
-    };
-
-    await generateBeatImage({
-      index,
-      context,
-      settings: settings.APIKEY ?? {},
-      forceImage,
-      forceMovie,
-      callbacks: [graphaiCallbacks],
-    });
-    removeSessionProgressCallback(mulmoCallback);
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return {
-      result: false,
-      error,
-    };
-  }
-};
-
-export const mulmoGenerateAudio = async (projectId: string, index: number, webContents: WebContents) => {
-  const settings = await loadSettings();
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  try {
-    addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
-    // context.force = true;
-    await generateBeatAudio(index, context, settings.APIKEY ?? {});
-    removeSessionProgressCallback(mulmoCallback);
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return {
-      result: false,
-      error,
-    };
-  }
-};
 
 export const mulmoTranslateBeat = async (
   projectId: string,
@@ -193,40 +92,6 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
     const images = await getImageRefs(context);
     removeSessionProgressCallback(mulmoCallback);
     return images;
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return null;
-  }
-};
-
-// generate image by prompt
-export const mulmoReferenceImage = async (
-  projectId: string,
-  index: number,
-  key: string,
-  image: MulmoImagePromptMedia,
-  webContents: WebContents,
-) => {
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  try {
-    addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
-    const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
-    fs.mkdirSync(imageProjectDirPath, { recursive: true });
-    const returnImage = await generateReferenceImage({
-      context,
-      index,
-      key,
-      image,
-      force: true,
-    });
-    removeSessionProgressCallback(mulmoCallback);
-    return returnImage;
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
     webContents.send("progress-update", {

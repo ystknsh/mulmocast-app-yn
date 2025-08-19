@@ -7,10 +7,16 @@ import {
   movie,
   pdf,
   captions,
+  generateBeatImage,
+  generateBeatAudio,
+  generateReferenceImage,
   addSessionProgressCallback,
   removeSessionProgressCallback,
+  MulmoStudioContextMethods,
+  type MulmoImagePromptMedia,
 } from "mulmocast";
 import { z } from "zod";
+import fs from "fs";
 import { loadSettings } from "../settings_manager";
 
 export const mulmoActionRunner = async (projectId: string, actionName: string | string[], webContents: WebContents) => {
@@ -85,5 +91,136 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       result: false,
       error,
     };
+  }
+};
+
+export const mulmoGenerateImage = async (
+  projectId: string,
+  index: number,
+  target: string,
+  webContents: WebContents,
+) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  addSessionProgressCallback(mulmoCallback);
+  try {
+    const context = await getContext(projectId);
+
+    const beat = context.studio.script.beats[index];
+    const forceImage = target === "image";
+    const forceMovie = target === "movie";
+    if (forceImage) {
+      beat.moviePrompt = "";
+    }
+    if (target === "all") {
+      context.force = true;
+    }
+    if ((target === "movie" || target === "all") && !beat.moviePrompt) {
+      beat.moviePrompt = " ";
+    }
+    const graphaiCallbacks = ({ nodeId, state }) => {
+      if (nodeId === "preprocessor" && state === "executing") {
+        webContents.send("progress-update", {
+          projectId,
+          type: "mulmo",
+          data: {
+            kind: "beatGenerate",
+            sessionType: "image",
+            inSession: true,
+            index,
+          },
+        });
+      }
+      if (nodeId === "output" && state === "completed") {
+        webContents.send("progress-update", {
+          projectId,
+          type: "mulmo",
+          data: {
+            kind: "beatGenerate",
+            sessionType: "image",
+            inSession: false,
+            index,
+          },
+        });
+      }
+    };
+
+    await generateBeatImage({
+      index,
+      context,
+      settings: settings.APIKEY ?? {},
+      forceImage,
+      forceMovie,
+      callbacks: [graphaiCallbacks],
+    });
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+export const mulmoGenerateAudio = async (projectId: string, index: number, webContents: WebContents) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    // context.force = true;
+    await generateBeatAudio(index, context, settings.APIKEY ?? {});
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+// generate image by prompt
+export const mulmoReferenceImage = async (
+  projectId: string,
+  index: number,
+  key: string,
+  image: MulmoImagePromptMedia,
+  webContents: WebContents,
+) => {
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
+    fs.mkdirSync(imageProjectDirPath, { recursive: true });
+    const returnImage = await generateReferenceImage({
+      context,
+      index,
+      key,
+      image,
+      force: true,
+    });
+    removeSessionProgressCallback(mulmoCallback);
+    return returnImage;
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return null;
   }
 };
