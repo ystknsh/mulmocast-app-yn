@@ -7,7 +7,7 @@ export const getContext = async (projectId: string): Promise<MulmoStudioContext 
   const projectPath = getProjectPath(projectId);
 
   const argv = {
-    v: true,
+    // v: true,
     b: projectPath,
     o: path.join(projectPath, "output"),
     file: SCRIPT_FILE_NAME,
