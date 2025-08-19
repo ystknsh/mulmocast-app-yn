@@ -5,40 +5,40 @@ const toolWorkFlowStep = {
   version: 0.5,
   nodes: {
     passthrough: { value: {} },
+    llmAgent: {},
+    llmModel: { value: "" },
+    stream: { value: true },
     llmCallWithTools: {
       agent: ":llmAgent",
       isResult: true,
       params: {
         forWeb: true,
-        dataStream: true,
       },
       inputs: {
         messages: ":messages",
         prompt: ":userInput.text",
         tools: ":tools",
+        params: {
+          model: ":llmModel",
+          dataStream: ":stream",
+        },
       },
     },
     // case1. return just messages
-    copyMessage: {
+    justTextMessagesResult: {
+      unless: ":llmCallWithTools.tool.id",
       agent: "pushAgent",
       params: {
         arrayKey: "messages",
       },
       inputs: {
         array: ":messages",
-        items: [":userInput.message", ":llmCallWithTools.message"],
-      },
-    },
-    justTextMessagesResult: {
-      unless: ":llmCallWithTools.tool.id",
-      agent: "copyAgent",
-      inputs: {
-        messages: ":copyMessage.messages",
+        items: [{ role: "user", content: ":userInput.text" }, ":llmCallWithTools.message"],
       },
     },
     // Call agents specified in the tools result
     llmToolAgentCallMap: {
-      if: ":llmCallWithTools.tool_calls",
+      if: ":llmCallWithTools.tool.id",
       agent: "mapAgent",
       inputs: {
         rows: ":llmCallWithTools.tool_calls",
@@ -79,7 +79,6 @@ const toolWorkFlowStep = {
             inputs: {
               role: "tool",
               tool_call_id: ":llmToolCall.id",
-              name: ":llmToolCall.name",
               content: ":toolCallAgent.content",
               extra: {
                 agent: ":llmToolCall.name.split(--).$0",
@@ -91,68 +90,37 @@ const toolWorkFlowStep = {
         },
       },
     },
-    // tools response if hasNext in response.
     toolsMessage: {
       agent: "pushAgent",
       inputs: {
-        array: ":copyMessage.messages",
+        array: [{ role: "user", content: ":userInput.text" }, ":llmCallWithTools.message"],
         items: ":llmToolAgentCallMap.toolsAgentResponseMessage",
       },
     },
-    toLLMToolCallAgentResponse: {
-      agent: "nestedAgent",
-      inputs: {
-        llmAgent: ":llmAgent",
-        toolsAgentResponse: ":llmToolAgentCallMap.toolCallAgent",
-        toolsMessages: ":toolsMessage.array",
+    // next llm flow
+    toolsResponseLLM: {
+      agent: ":llmAgent",
+      isResult: true,
+      params: {
+        forWeb: true,
       },
-      graph: {
-        nodes: {
-          skipNext: {
-            agent: (namedInputs: { array: { skipNext: boolean }[] }) => {
-              return namedInputs.array.some((ele) => ele.skipNext);
-            },
-            inputs: {
-              array: ":toolsAgentResponse",
-            },
-          },
-          // next llm flow
-          toolsResponseLLM: {
-            unless: ":skipNext",
-            agent: ":llmAgent",
-            isResult: true,
-            params: {
-              forWeb: true,
-              dataStream: true,
-            },
-            inputs: { messages: ":toolsMessages" },
-          },
-          toolsResponseMessages: {
-            agent: "pushAgent",
-            inputs: {
-              array: ":toolsMessages",
-              item: ":toolsResponseLLM.message",
-            },
-          },
-          // no llm flow, just return tools response
-          skipToolsResponseLLM: {
-            if: ":skipNext",
-            agent: "copyAgent",
-            inputs: {
-              array: ":toolsMessages",
-            },
-          },
-          choiceToolsResponseMessages: {
-            isResult: true,
-            agent: "arrayFindFirstExistsAgent",
-            anyInput: true,
-            inputs: {
-              array: [":toolsResponseMessages.array", ":skipToolsResponseLLM.array"],
-            },
-          },
+      inputs: {
+        messages: ":toolsMessage.array",
+        params: {
+          model: ":llmModel",
+          dataStream: ":stream",
         },
       },
     },
+    toolsResponseMessages: {
+      isResult: true,
+      agent: "pushAgent",
+      inputs: {
+        array: ":toolsMessage.array",
+        item: ":toolsResponseLLM.message",
+      },
+    },
+    // finally merge data
     mergedData: {
       inputs: {
         data: ":llmToolAgentCallMap.toolCallAgent",
@@ -174,7 +142,7 @@ const toolWorkFlowStep = {
       },
       inputs: {
         array: ":messages",
-        items: ":toLLMToolCallAgentResponse.choiceToolsResponseMessages",
+        items: ":toolsResponseMessages.array",
         data: ":mergedData",
       },
     },

@@ -42,7 +42,6 @@ export const exaToolsAgent: AgentFunction<
     })();
 
     return {
-      hasNext: true,
       content: JSON.stringify(
         basicResults.results.map((item) => {
           return {
