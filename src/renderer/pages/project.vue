@@ -401,9 +401,9 @@ const generateImage = async (index: number, target: string) => {
 };
 
 const audioFiles = ref<Record<string, string | null>>({});
-const imageFiles = ref<(string | null)[]>([]);
-const movieFiles = ref<(string | null)[]>([]);
-const lipSyncFiles = ref<(string | null)[]>([]);
+const imageFiles = ref<Record<string, string | null>>({});
+const movieFiles = ref<Record<string, string | null>>({});
+const lipSyncFiles = ref<Record<string, string | null>>({});
 
 const resetMediaFiles = () => {
   audioFiles.value = {};
@@ -422,7 +422,7 @@ const positionUp = (index: number) => {
 };
 
 const addBeat = (index: number) => {
-/*
+  /*
   imageFiles.value = arrayInsertAfter<string | null>(imageFiles.value, index, null);
   movieFiles.value = arrayInsertAfter<string | null>(movieFiles.value, index, null);
   audioFiles.value = arrayInsertAfter<string | null>(audioFiles.value, index, null);
@@ -450,32 +450,24 @@ const downloadAudioFiles = async () => {
 };
 
 const test = () => {
-  const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex((beat) => beat.id === "2e26f53e-70f5-4b8d-a04d-c1402b5e2cf9");
-
+  const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex(
+    (beat) => beat.id === "2e26f53e-70f5-4b8d-a04d-c1402b5e2cf9",
+  );
 };
 
 const downloadImageFiles = async () => {
-  const res = (await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value)) as {
-    imageData?: Buffer;
-    movieData?: Buffer;
-  }[];
-  imageFiles.value = res.map((data) => {
-    if (data && data.imageData) {
-      return bufferToUrl(data.imageData, "image/png");
+  const res = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
+  Object.keys(res).forEach((id) => {
+    const data = res[id];
+    if (data.imageData) {
+      imageFiles.value[id] = bufferToUrl(data.imageData, "image/png");
     }
-    return "";
-  });
-  movieFiles.value = res.map((data) => {
-    if (data && data.movieData) {
-      return bufferToUrl(data.movieData, "video/mp4");
+    if (data.movieData) {
+      movieFiles.value[id] = bufferToUrl(data.movieData, "video/mp4");
     }
-    return "";
-  });
-  lipSyncFiles.value = res.map((data) => {
-    if (data && data.lipSyncData) {
-      return bufferToUrl(data.lipSyncData, "video/mp4");
+    if (data.lipSyncData) {
+      lipSyncFiles.value[id] = bufferToUrl(data.lipSyncData, "video/mp4");
     }
-    return "";
   });
 };
 
@@ -496,11 +488,7 @@ watch(
     }
 
     // beats
-    if (
-      mulmoEvent?.kind === "beatGenerate" &&
-      ["image"].includes(mulmoEvent.sessionType) &&
-      !mulmoEvent.inSession
-    ) {
+    if (mulmoEvent?.kind === "beatGenerate" && ["image"].includes(mulmoEvent.sessionType) && !mulmoEvent.inSession) {
       const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex((beat) => beat.id === mulmoEvent.id);
       if (index === -1) {
         return;
@@ -526,11 +514,7 @@ watch(
       if (index === -1) {
         return;
       }
-      const res = (await window.electronAPI.mulmoHandler(
-        "mulmoAudioFile",
-        projectId.value,
-        index,
-      )) as Buffer;
+      const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, index)) as Buffer;
       if (res) {
         audioFiles.value[mulmoEvent.id] = bufferToUrl(res, "audio/mp3");
       }
