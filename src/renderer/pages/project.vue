@@ -356,7 +356,6 @@ watch(
     if (oldVal === null) {
       return;
     }
-    console.log("🙏saveMulmoScript");
     saveMulmoScript(mulmoScriptHistoryStore.currentMulmoScript);
   },
   { deep: true },
@@ -371,7 +370,6 @@ const mulmoError = computed<MulmoError>(() => {
 });
 
 const formatAndPushHistoryMulmoScript = () => {
-  console.log("🙏formatAndPushHistoryMulmoScript");
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);

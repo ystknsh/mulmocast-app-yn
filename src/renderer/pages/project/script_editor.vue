@@ -207,6 +207,7 @@
           {{ t("project.scriptEditor.style.mode") }} - {{ t("project.scriptEditor.style.modeDescription") }}
         </p>
         <PresentationStyleEditor
+          :projectId="projectId"
           :presentationStyle="mulmoValue"
           @update:presentationStyle="updatePresentationStyle"
           :mulmoError="mulmoError"
