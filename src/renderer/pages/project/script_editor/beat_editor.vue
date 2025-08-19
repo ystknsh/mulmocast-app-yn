@@ -209,7 +209,7 @@
       <!-- left: lipSync edit -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
-        <div class="flex">
+        <div class="mb-2 flex gap-2">
           <Checkbox
             variant="ghost"
             size="icon"
