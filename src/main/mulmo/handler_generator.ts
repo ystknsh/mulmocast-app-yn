@@ -14,6 +14,7 @@ import {
   addSessionProgressCallback,
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
+  type MulmoStudioContext,
   type MulmoImagePromptMedia,
 } from "mulmocast";
 import { z } from "zod";
