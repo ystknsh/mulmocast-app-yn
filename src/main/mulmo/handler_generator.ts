@@ -111,7 +111,7 @@ export const mulmoGenerateImage = async (
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId);
-    
+
     const beat = context.studio.script.beats[index];
     const { id } = beat;
     const forceImage = target === "image";

@@ -121,9 +121,6 @@
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @generateImage="generateImage"
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                    @positionUp="positionUp"
-                    @addBeat="addBeat"
-                    @deleteBeat="deleteBeat"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
                     @saveMulmo="saveMulmo"
@@ -262,7 +259,6 @@ import ProjectHeader from "./project/project_header.vue";
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
 
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
-import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 import { bufferToUrl } from "@/lib/utils";
@@ -412,32 +408,6 @@ const resetMediaFiles = () => {
   lipSyncFiles.value = {};
 };
 
-const positionUp = (index: number) => {
-  /*
-  imageFiles.value = arrayPositionUp<string | null>(imageFiles.value, index);
-  movieFiles.value = arrayPositionUp<string | null>(movieFiles.value, index);
-  audioFiles.value = arrayPositionUp<string | null>(audioFiles.value, index);
-  lipSyncFiles.value = arrayPositionUp<string | null>(lipSyncFiles.value, index);
-  */
-};
-
-const addBeat = (index: number) => {
-  /*
-  imageFiles.value = arrayInsertAfter<string | null>(imageFiles.value, index, null);
-  movieFiles.value = arrayInsertAfter<string | null>(movieFiles.value, index, null);
-  audioFiles.value = arrayInsertAfter<string | null>(audioFiles.value, index, null);
-  lipSyncFiles.value = arrayInsertAfter<string | null>(lipSyncFiles.value, index, null);
-  */
-};
-const deleteBeat = (index: number) => {
-  /*
-  imageFiles.value = arrayRemoveAt<string | null>(imageFiles.value, index);
-  movieFiles.value = arrayRemoveAt<string | null>(movieFiles.value, index);
-  audioFiles.value = arrayRemoveAt<string | null>(audioFiles.value, index);
-  lipSyncFiles.value = arrayRemoveAt<string | null>(lipSyncFiles.value, index);
-  */
-};
-
 const downloadAudioFiles = async () => {
   console.log("audioFiles");
   const res = (await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value)) as Buffer[];
@@ -447,12 +417,6 @@ const downloadAudioFiles = async () => {
     }
     return tmp;
   }, {});
-};
-
-const test = () => {
-  const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex(
-    (beat) => beat.id === "2e26f53e-70f5-4b8d-a04d-c1402b5e2cf9",
-  );
 };
 
 const downloadImageFiles = async () => {

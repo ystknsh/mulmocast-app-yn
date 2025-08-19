@@ -313,7 +313,7 @@ const enableMovieGenerate = computed(() => {
 const enableLipSyncGenerate = computed(() => {
   return !!props.beat.enableLipSync;
 });
-const beatId =  computed(() => {
+const beatId = computed(() => {
   return props.beat.id;
 });
 
