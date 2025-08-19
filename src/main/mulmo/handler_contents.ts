@@ -95,6 +95,10 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
         const buffer = fs.readFileSync(res.movieFile);
         res.movieData = buffer.buffer;
       }
+      if (res.lipSyncFile && fs.existsSync(res.lipSyncFile)) {
+        const buffer = fs.readFileSync(res.lipSyncFile);
+        res.lipSyncData = buffer.buffer;
+      }
       return res;
     } catch (e) {
       console.log(e);

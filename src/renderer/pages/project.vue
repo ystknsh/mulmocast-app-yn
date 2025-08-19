@@ -114,6 +114,7 @@
                     :imageFiles="imageFiles"
                     :movieFiles="movieFiles"
                     :audioFiles="audioFiles"
+                    :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                     :isValidScriptData="isValidScriptData"
@@ -402,28 +403,33 @@ const generateImage = async (index: number, target: string) => {
 const audioFiles = ref<(string | null)[]>([]);
 const imageFiles = ref<(string | null)[]>([]);
 const movieFiles = ref<(string | null)[]>([]);
+const lipSyncFiles = ref<(string | null)[]>([]);
 
 const resetMediaFiles = () => {
   audioFiles.value = [];
   imageFiles.value = [];
   movieFiles.value = [];
+  lipSyncFiles.value = [];
 };
 
 const positionUp = (index: number) => {
   imageFiles.value = arrayPositionUp<string | null>(imageFiles.value, index);
   movieFiles.value = arrayPositionUp<string | null>(movieFiles.value, index);
   audioFiles.value = arrayPositionUp<string | null>(audioFiles.value, index);
+  lipSyncFiles.value = arrayPositionUp<string | null>(lipSyncFiles.value, index);
 };
 
 const addBeat = (index: number) => {
   imageFiles.value = arrayInsertAfter<string | null>(imageFiles.value, index, null);
   movieFiles.value = arrayInsertAfter<string | null>(movieFiles.value, index, null);
   audioFiles.value = arrayInsertAfter<string | null>(audioFiles.value, index, null);
+  lipSyncFiles.value = arrayInsertAfter<string | null>(lipSyncFiles.value, index, null);
 };
 const deleteBeat = (index: number) => {
   imageFiles.value = arrayRemoveAt<string | null>(imageFiles.value, index);
   movieFiles.value = arrayRemoveAt<string | null>(movieFiles.value, index);
   audioFiles.value = arrayRemoveAt<string | null>(audioFiles.value, index);
+  lipSyncFiles.value = arrayRemoveAt<string | null>(lipSyncFiles.value, index);
 };
 
 const downloadAudioFiles = async () => {
@@ -451,6 +457,12 @@ const downloadImageFiles = async () => {
   movieFiles.value = res.map((data) => {
     if (data && data.movieData) {
       return bufferToUrl(data.movieData, "video/mp4");
+    }
+    return "";
+  });
+  lipSyncFiles.value = res.map((data) => {
+    if (data && data.lipSyncData) {
+      return bufferToUrl(data.lipSyncData, "video/mp4");
     }
     return "";
   });

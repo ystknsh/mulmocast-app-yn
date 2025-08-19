@@ -226,7 +226,7 @@
           :index="index"
           :isMovieGenerating="isMovieGenerating"
           :enableMovieGenerate="enableLipSyncGenerate"
-          :movieFile="movieFile"
+          :movieFile="lipSyncFiles"
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateLipSyncMovie"
@@ -283,6 +283,7 @@ interface Props {
   index: number;
   imageFile: FileData;
   movieFile: FileData;
+  lipSyncFiles: FileData;
   isEnd: boolean;
   mulmoError: string[];
 }
