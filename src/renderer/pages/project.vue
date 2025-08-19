@@ -496,12 +496,16 @@ watch(
         projectId.value,
         mulmoEvent.index,
       );
-      if (data && data.imageData) {
+      if (data?.imageData) {
         imageFiles.value[mulmoEvent.index] = bufferToUrl(data.imageData, "image/png");
       }
-      if (data && data.movieData) {
+      if (data?.movieData) {
         movieFiles.value[mulmoEvent.index] = bufferToUrl(data.movieData, "video/mp4");
       }
+      if (data?.lipSyncData) {
+        lipSyncFiles.value[mulmoEvent.index] = bufferToUrl(data.lipSyncData, "video/mp4");
+      }
+      return "";
     }
     if (mulmoEvent && mulmoEvent.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
       const res = (await window.electronAPI.mulmoHandler(

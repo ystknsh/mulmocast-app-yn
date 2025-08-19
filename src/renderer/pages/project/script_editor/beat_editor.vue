@@ -224,7 +224,7 @@
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
-          :isMovieGenerating="isMovieGenerating"
+          :isMovieGenerating="isLipSyncGenerating"
           :enableMovieGenerate="enableLipSyncGenerate"
           :movieFile="lipSyncFiles"
           :toggleTypeMode="toggleTypeMode"
@@ -320,6 +320,9 @@ const isImageGenerating = computed(() => {
 });
 const isMovieGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index] ?? false;
+});
+const isLipSyncGenerating = computed(() => {
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"]?.[props.index] ?? false;
 });
 const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
