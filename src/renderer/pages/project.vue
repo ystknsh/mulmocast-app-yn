@@ -451,8 +451,8 @@ watch(
 
     // beats
     if (mulmoEvent?.kind === "beatGenerate" && ["image"].includes(mulmoEvent.sessionType) && !mulmoEvent.inSession) {
-      const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex((beat) => beat.id === mulmoEvent.id);
-      if (index === -1) {
+      const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
+      if (index === -1 || index === undefined) {
         return;
       }
       const data: { imageData?: Buffer; movieData?: Buffer } = await window.electronAPI.mulmoHandler(
@@ -472,8 +472,8 @@ watch(
       return "";
     }
     if (mulmoEvent?.kind === "beat" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
-      const index = mulmoScriptHistoryStore.currentMulmoScript.beats.findIndex((beat) => beat.id === mulmoEvent.id);
-      if (index === -1) {
+      const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
+      if (index === -1 || index === undefined) {
         return;
       }
       const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, index)) as Buffer;
