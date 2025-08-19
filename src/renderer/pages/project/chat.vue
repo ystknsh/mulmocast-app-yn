@@ -367,7 +367,7 @@ const scriptLang = computed(() => {
 });
 
 const copyScript = async () => {
-  const head = `Generate a ${scriptLang.value} script for a presentation of the given topic and pass it to tool 'pushScript.'`;
+  const head = `Generate a ${scriptLang.value} presentation script for this topic or story and pass it to tool 'pushScript.'`;
   // Generate a Japanese script for a presentation of the given topic and pass it to tool 'pushScript.'
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
   userInput.value = head + " " + template;
