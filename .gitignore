@@ -93,3 +93,6 @@ out/
 
 # emacs
 *~
+
+# i18n
+.i18n-cache/
