@@ -67,6 +67,7 @@ const lang = {
       create: "作成",
       update: "更新",
       generate: "生成",
+      generating: "生成中",
       generateThing: "{thing}を生成",
       fetch: "取得",
       cancel: "キャンセル",

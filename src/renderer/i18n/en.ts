@@ -67,6 +67,7 @@ const lang = {
       create: "Create",
       update: "Update",
       generate: "Generate",
+      generating: "Generating",
       generateThing: "Generate {thing}",
       fetch: "Fetch",
       cancel: "Cancel",
