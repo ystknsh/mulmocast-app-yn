@@ -10,9 +10,11 @@ import {
   generateBeatImage,
   generateBeatAudio,
   generateReferenceImage,
+  getBeatAudioPath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
+  type MulmoStudioContext,
   type MulmoImagePromptMedia,
 } from "mulmocast";
 import { z } from "zod";
@@ -94,6 +96,11 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
   }
 };
 
+const beatAudioPath = (context: MulmoStudioContext, beat) => {
+  const { text } = beat;
+  return getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
+};
+
 export const mulmoGenerateImage = async (
   projectId: string,
   index: number,
@@ -117,6 +124,10 @@ export const mulmoGenerateImage = async (
     }
     if ((target === "movie" || target === "all") && !beat.moviePrompt) {
       beat.moviePrompt = " ";
+    }
+    if (target === "lipSync") {
+      beat.moviePrompt = "";
+      context.studio.beats[index].audioFile = beatAudioPath(context, beat);
     }
     const graphaiCallbacks = ({ nodeId, state }) => {
       if (nodeId === "preprocessor" && state === "executing") {

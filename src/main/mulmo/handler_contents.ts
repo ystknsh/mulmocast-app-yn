@@ -15,7 +15,6 @@ import fs from "fs";
 import { getContext } from "./handler_common";
 
 // audio
-
 const beatAudio = (context: MulmoStudioContext) => {
   return (beat) => {
     try {
