@@ -170,7 +170,7 @@ const sortedProjects = computed(() => {
 });
 
 const handleCreateProject = async () => {
-  const title = t("common.defaultTitle");
+  const title = t("project.newProject.defaultTitle");
   const settings = await window.electronAPI.settings.get();
 
   try {

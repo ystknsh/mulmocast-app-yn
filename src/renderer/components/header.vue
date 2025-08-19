@@ -8,7 +8,7 @@
         <h1
           class="cursor-pointer text-2xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
         >
-          MulmoCast
+          {{ t("ui.common.applicationName") }}
         </h1>
       </RouterLink>
 

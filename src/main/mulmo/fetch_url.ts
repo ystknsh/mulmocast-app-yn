@@ -9,11 +9,26 @@ const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
 const IMAGE_EXT = [".jpg", ".jpeg", ".png"];
 const MOVIE_EXT = [".mp4", ".mov", ".mpg"];
 
-const guessTypeByMime = (mime: string): "image" | "movie" | undefined =>
-  IMAGE_MIME.includes(mime) ? "image" : MOVIE_MIME.includes(mime) ? "movie" : undefined;
+const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
+  if (IMAGE_MIME.includes(mime)) {
+    return "image";
+  }
+  if (MOVIE_MIME.includes(mime)) {
+    return "movie";
+  }
+  return undefined;
+};
 
-const guessTypeByExt = (ext: string): "image" | "movie" | undefined =>
-  IMAGE_EXT.includes(ext.toLowerCase()) ? "image" : MOVIE_EXT.includes(ext.toLowerCase()) ? "movie" : undefined;
+const guessTypeByExt = (ext: string): "image" | "movie" | undefined => {
+  const lowered = ext.toLowerCase();
+  if (IMAGE_EXT.includes(lowered)) {
+    return "image";
+  }
+  if (MOVIE_EXT.includes(lowered)) {
+    return "movie";
+  }
+  return undefined;
+};
 
 const getHash = (str: string): string => createHash("sha256").update(str).digest("hex");
 
@@ -47,19 +62,14 @@ export const fetchAndSave = async (
         result: false,
       };
     }
-    const ext =
-      extFromUrl ||
-      (mime === "image/jpeg"
-        ? ".jpg"
-        : mime === "image/png"
-          ? ".png"
-          : mime === "video/mp4"
-            ? ".mp4"
-            : mime === "video/quicktime"
-              ? ".mov"
-              : mime === "video/mpeg"
-                ? ".mpg"
-                : "");
+    const mimeExtMap: Record<string, string> = {
+      "image/jpeg": ".jpg",
+      "image/png": ".png",
+      "video/mp4": ".mp4",
+      "video/quicktime": ".mov",
+      "video/mpeg": ".mpg",
+    };
+    const ext = extFromUrl || mimeExtMap[mime] || "";
 
     if (!ext) {
       console.log("no ext");

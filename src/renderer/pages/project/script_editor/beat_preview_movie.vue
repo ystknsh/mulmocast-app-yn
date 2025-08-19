@@ -19,7 +19,7 @@
           </Button>
         </template>
         <template v-if="isMovieGenerating">
-          <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("generating") }}</template
+          <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("ui.status.generating") }}</template
         >
         <div class="relative cursor-pointer transition-opacity hover:opacity-80" v-else-if="movieFile">
           <video

@@ -7,6 +7,7 @@ const lang = {
   // UI common vocabulary (reuse-focused)
   ui: {
     common: {
+      applicationName: "MulmoCast",
       // Navigation
       back: "戻る",
 
@@ -66,6 +67,7 @@ const lang = {
       create: "作成",
       update: "更新",
       generate: "生成",
+      generating: "生成中",
       generateThing: "{thing}を生成",
       fetch: "取得",
       cancel: "キャンセル",
@@ -185,17 +187,8 @@ const lang = {
       tooLong: "長すぎます",
       mustBeNumber: "数値である必要があります",
       mustBeUrl: "有効なURLである必要があります",
+      unsupportedType: "{type}は未対応のタイプです",
     },
-  },
-  common: {
-    drophere: "画像をここにドロップ",
-    or: "もしくは",
-    fetch: "取得",
-    imagePrompt: "イメージプロンプト",
-    moviePrompt: "動画プロンプト",
-    htmlPrompt: "HTMLプロンプト",
-    lipSync: "リップシンク(声に合わせて口を動かす)",
-    defaultTitle: "(無題)",
   },
   llms: {
     openAIAgent: "OpenAI",
@@ -264,13 +257,10 @@ const lang = {
       ollama: {
         label: "Ollama設定",
         url: "URL",
-        model: "モデル",
       },
+      model: "モデル",
     },
   },
-  generating: "生成中...",
-  generate: "生成",
-  update: "更新",
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
@@ -292,6 +282,7 @@ const lang = {
     newProject: {
       title: "新規プロジェクト作成",
       placeholder: "プロジェクトタイトルを入力",
+      defaultTitle: "(無題)",
     },
     header: {
       back: "戻る",
@@ -313,19 +304,35 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
-      menu: {
-        textMode: "Text モード",
-        textModeDescription: "話者と会話や字幕へ編集ができます",
-        yamlMode: "YAML モード",
-        yamlModeDescription: "MulmoScript を直接編集します",
-        jsonMode: "JSON モード",
-        jsonModeDescription: "MulmoScript を直接編集します",
-        mediaMode: "Media モード",
-        mediaModeDescription: "Beatごとのイメージや動画の編集とプレビュー",
-        styleMode: "Style",
-        styleModeDescription: "音声/動画/画像/字幕などの設定",
-        referenceMode: "参照",
-        referenceModeDescription: "キャラクターの一貫性のための参照イメージ",
+      text: {
+        tabLabel: "Text",
+        mode: "Text モード",
+        modeDescription: "話者と会話や字幕へ編集ができます",
+      },
+      yaml: {
+        tabLabel: "YAML",
+        mode: "YAML モード",
+        modeDescription: "MulmoScript を直接編集します",
+      },
+      json: {
+        tabLabel: "JSON",
+        mode: "JSON モード",
+        modeDescription: "MulmoScript を直接編集します",
+      },
+      media: {
+        tabLabel: "Media",
+        mode: "Media モード",
+        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
+      },
+      style: {
+        tabLabel: "Style",
+        mode: "Style",
+        modeDescription: "音声/動画/画像/字幕などの設定",
+      },
+      reference: {
+        tabLabel: "参照",
+        mode: "参照",
+        modeDescription: "キャラクターの一貫性のための参照イメージ",
       },
       validationStatus: "検証ステータス",
     },
@@ -395,73 +402,92 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
-    badge: {
-      mediaFile: "動画像ファイル",
-      htmlPrompt: "HTMLプロンプト",
-      imagePrompt: "イメージプロンプト",
-      markdown: "Markdown",
-      textSlide: "テキストスライド",
-      chart: "Chart.js",
-      mermaid: "Mermaid",
-      html_tailwind: "Tailwind HTML",
-      image: "画像",
-      movie: "動画",
-      beat: "Beat",
-    },
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },
     // Beat type structures (moved from beat.form.*)
-    image: {
+    mediaFile: {
+      badge: "Media File",
+      label: "画像または動画ファイル",
+      remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力するかファイルをアップロード",
     },
     textSlide: {
+      badge: "Text Slide",
+      label: "スライド: テキスト",
       titleField: "タイトル",
       contentsField: "内容",
       placeholder: "スライドの内容\nMarkdown形式の箇条書き\n- 項目1\n- 項目2",
     },
     markdown: {
+      badge: "Markdown",
+      label: "スライド: Markdown",
       contentsField: "内容",
       placeholder: "Markdownの内容\n# タイトル\nここに内容を記入してください。\n- 項目1\n- 項目2\n- 項目3",
     },
     htmlPrompt: {
+      badge: "HTML Prompt",
+      label: "HTML生成プロンプト",
       promptField: "プロンプト",
       placeholder: "カスタムスライドコンテンツを生成するためのHTMLプロンプトを入力してください。",
     },
     chart: {
+      badge: "Chart",
+      label: "スライド: グラフ - Chart JSON",
       titleField: "タイトル",
       chartDataField: "チャートデータ",
       placeholder:
-        "チャートデータをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+        "グラフ描画データをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
     },
     mermaid: {
+      badge: "Mermaid",
+      label: "スライド: 描画 - Mermaid",
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
     },
-    htmlTailwind: {
+    html_tailwind: {
+      badge: "Tailwind HTML",
+      label: "スライド: HTML(Tailwind)",
       htmlField: "HTML",
       placeholder: "Tailwind CSSクラスを使用したHTMLを入力してください。",
     },
-    reference: {
+    beat: {
+      badge: "Beat",
+      label: "参照画像",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
+      placeholderUrl: "画像URLを入力してください",
     },
     imagePrompt: {
+      badge: "Image Prompt",
+      label: "画像生成プロンプト",
       promptField: "プロンプト",
       placeholder: "画像を生成するためのプロンプトを入力してください。空の場合はテキストが使われます。",
     },
     moviePrompt: {
+      badge: "Movie Prompt",
+      label: "動画生成プロンプト",
       promptField: "プロンプト",
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
     imageReference: {
+      badge: "Image Reference",
       keyField: "画像参照キー",
       placeholder: "キー(英数字のみ)",
+    },
+    image: {
+      badge: "Image",
+    },
+    movie: {
+      badge: "Movie",
+    },
+    lipSync: {
+      label: "リップシンク(声に合わせて口を動かす)",
     },
   },
 

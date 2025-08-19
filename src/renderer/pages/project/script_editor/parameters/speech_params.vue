@@ -14,7 +14,7 @@
               <Input v-model="updateSpeakerId" :invalid="!validUpdateKey" /><Button
                 @click="handleUpdateSpeakerId"
                 :disabled="!validUpdateKey"
-                >{{ t("update") }}</Button
+                >{{ t("ui.actions.update") }}</Button
               >
             </div>
             <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>

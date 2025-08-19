@@ -19,7 +19,6 @@ const normalize = (s: string) =>
     .replace(/[\n\t]{2,}/g, "\n")
     .trim();
 
-/* global document */
 async function waitStable(page: puppeteer.Page, ms = 1200, step = 200) {
   let last = -1;
   let stable = 0;

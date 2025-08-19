@@ -10,6 +10,9 @@ import globals from "globals";
 import checkFile from "eslint-plugin-check-file";
 import sonarjs from "eslint-plugin-sonarjs";
 
+import vueI18n from '@intlify/eslint-plugin-vue-i18n'
+
+
 // Common base rules configuration
 const baseRules = {
   "prettier/prettier": "error",
@@ -59,13 +62,14 @@ const sonarjsRules = {
   "sonarjs/cognitive-complexity": "off",
   "sonarjs/no-unused-vars": "off", // duplicate base rule
   "sonarjs/todo-tag": "warn",
-  "sonarjs/no-nested-conditional": "warn",
+  "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
 };
 
 export default [
   js.configs.recommended,
   sonarjs.configs.recommended,
+  ...vueI18n.configs.recommended,
   {
     ignores: [
       "node_modules/**",
@@ -76,6 +80,7 @@ export default [
       "*.min.js",
       "coverage/**",
       "src/renderer/components/ui/**",
+      "src/renderer/tsconfig.json",
     ],
   },
   // Node.js environment configuration (Main & Preload)
@@ -140,11 +145,21 @@ export default [
           math: "always",
         },
       ],
+      "@intlify/vue-i18n/no-raw-text": [
+        "warn",
+        {
+          ignorePattern: "[\\-():<>/.]", 
+        },
+      ],
       ...sonarjsRules,
     },
     settings: {
       "import/resolver": {
         typescript: true,
+      },
+      'vue-i18n': {
+        localeDir: ".i18n-cache/*.{json}",
+        messageSyntaxVersion: "^11.0.0",
       },
     },
   },

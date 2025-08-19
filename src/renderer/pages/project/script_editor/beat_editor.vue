@@ -2,11 +2,11 @@
   <div>
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
-        <span class="text-base">Beat: {{ index + 1 }}</span>
+        <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
-        {{ t("beat.badge." + getBadge(beat)) }}</Badge
+        {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
         <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
@@ -22,7 +22,7 @@
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
-            <Label class="mb-1 block"> Image or Movie </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.label") }}</Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
               @dragover.prevent
@@ -30,22 +30,22 @@
               draggable="true"
               class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
             >
-              {{ t("common.drophere") }}
+              {{ t("ui.common.drophere") }}
             </div>
-            {{ t("common.or") }}
+            {{ t("ui.common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.image.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
+              <Input :placeholder="t('beat.mediaFile.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
                 @click="submitUrlImage"
                 :disabled="!fetchEnable"
               >
-                {{ t("common.fetch") }}
+                {{ t("ui.actions.fetch") }}
               </Button>
             </div>
           </template>
 
           <!-- image/movie: URL or  path -->
           <template v-else-if="isMediaBeat(beat)">
-            <Label class="mb-1 block"> Remote Media: </Label>
+            <Label class="mb-1 block">{{ t("beat.mediaFile.remoteLabel") }}</Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
               {{ beat.image.source.url }}
             </div>
@@ -53,7 +53,7 @@
 
           <!-- textSlide: title & bullets -->
           <template v-else-if="beat.image.type === 'textSlide'">
-            <Label class="mb-1 block"> SlideContent </Label>
+            <Label class="mb-1 block">{{ t("beat.textSlide.label") }}</Label>
             <Input
               :placeholder="t('ui.common.title')"
               :model-value="beat.image?.slide?.title"
@@ -70,7 +70,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Label class="mb-1 block"> Markdown Text </Label>
+            <Label class="mb-1 block">{{ t("beat.markdown.label") }}</Label>
             <Textarea
               :placeholder="t('beat.markdown.placeholder')"
               :model-value="
@@ -84,7 +84,7 @@
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <Label class="mb-1 block"> Chart JSON </Label>
+            <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
             <Textarea
               :placeholder="t('beat.chart.placeholder')"
               :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
@@ -102,7 +102,7 @@
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <Label class="mb-1 block"> Mermaid Diagram </Label>
+            <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
             <Textarea
               :placeholder="t('beat.mermaid.placeholder')"
               :model-value="beat?.image?.code?.text"
@@ -114,9 +114,9 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <Label class="mb-1 block"> HTML(Tailwind) </Label>
+            <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
-              :placeholder="t('beat.htmlTailwind.placeholder')"
+              :placeholder="t('beat.html_tailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
               class="font-mono"
@@ -125,9 +125,9 @@
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
-            <Label class="mb-1 block"> Reference </Label>
+            <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
             <Input
-              :placeholder="t('beat.reference.placeholder')"
+              :placeholder="t('beat.beat.placeholder')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
               type="text"
@@ -135,13 +135,13 @@
           </template>
           <!-- Other -->
           <template v-else>
-            <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+            <div class="text-sm text-red-500">{{ t("ui.validation.unsupportedType", { type: beat.image.type }) }}</div>
           </template>
         </div>
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="mb-1 block">{{ t("common.htmlPrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
@@ -151,7 +151,7 @@
             />
           </template>
           <template v-else>
-            <Label class="mb-1 block">{{ t("common.imagePrompt") }}: </Label>
+            <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
@@ -181,7 +181,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("common.moviePrompt") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
           <Textarea
             :placeholder="t('beat.moviePrompt.placeholder')"
             :model-value="beat.moviePrompt"
@@ -209,14 +209,14 @@
       <!-- left: lipSync edit -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
-        <div>
-          <Label class="mb-1 block">{{ t("common.lipSync") }}: </Label>
+        <div class="mb-2 flex gap-2">
           <Checkbox
             variant="ghost"
             size="icon"
             :modelValue="beat.enableLipSync"
             @update:model-value="(value) => update('enableLipSync', value)"
-          />: {{ t(beat.enableLipSync ? "ui.common.enable" : "ui.common.disable") }}
+          />
+          <Label class="mb-2 block">{{ t("beat.lipSync.label") }}: </Label>
         </div>
       </div>
       <!-- right: lipSync preview -->
@@ -224,12 +224,12 @@
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
-          :isMovieGenerating="isMovieGenerating"
+          :isMovieGenerating="isLipSyncGenerating"
           :enableMovieGenerate="enableLipSyncGenerate"
-          :movieFile="movieFile"
+          :movieFile="lipSyncFiles"
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
-          @generateMovie="generateImageOnlyMovie"
+          @generateMovie="generateLipSyncMovie"
         />
       </div>
     </div>
@@ -283,6 +283,7 @@ interface Props {
   index: number;
   imageFile: FileData;
   movieFile: FileData;
+  lipSyncFiles: FileData;
   isEnd: boolean;
   mulmoError: string[];
 }
@@ -311,17 +312,22 @@ const enableMovieGenerate = computed(() => {
 });
 const enableLipSyncGenerate = computed(() => {
   return !!props.beat.enableLipSync;
-  // return !!props.beat.moviePrompt;
+});
+const beatId = computed(() => {
+  return props.beat.id;
 });
 
 const isImageGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[beatId.value] ?? false;
 });
 const isMovieGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[beatId.value] ?? false;
+});
+const isLipSyncGenerating = computed(() => {
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"]?.[beatId.value] ?? false;
 });
 const isHtmlGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[props.index] ?? false;
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[beatId.value] ?? false;
 });
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
@@ -410,6 +416,11 @@ const generateImageOnlyImage = () => {
 };
 const generateImageOnlyMovie = () => {
   emit("generateImage", props.index, "movie");
+};
+
+const generateLipSyncMovie = async () => {
+  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, props.index);
+  emit("generateImage", props.index, "lipSync");
 };
 
 const update = (path: string, value: unknown) => {

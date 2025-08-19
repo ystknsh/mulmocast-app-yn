@@ -1,12 +1,24 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
     <TabsList class="grid w-full grid-cols-6">
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">Text</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">YAML</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">JSON</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">Media</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">Style</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">Ref</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
+        t("project.scriptEditor.text.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{
+        t("project.scriptEditor.yaml.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
+        t("project.scriptEditor.json.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
+        t("project.scriptEditor.media.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
+        t("project.scriptEditor.style.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
+        t("project.scriptEditor.reference.tabLabel")
+      }}</TabsTrigger>
     </TabsList>
 
     <div
@@ -23,7 +35,7 @@
         class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.textMode") }} - {{ t("project.scriptEditor.menu.textModeDescription") }}
+          {{ t("project.scriptEditor.text.mode") }} - {{ t("project.scriptEditor.text.modeDescription") }}
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
@@ -45,7 +57,7 @@
                 <TextEditor
                   :index="index"
                   :beat="beat"
-                  :audioFile="audioFiles[index]"
+                  :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
                   :lang="mulmoValue.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
@@ -89,7 +101,7 @@
         ]"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.yamlMode") }} - {{ t("project.scriptEditor.menu.yamlModeDescription") }}
+          {{ t("project.scriptEditor.yaml.mode") }} - {{ t("project.scriptEditor.yaml.modeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
@@ -111,7 +123,7 @@
         ]"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.jsonMode") }} - {{ t("project.scriptEditor.menu.jsonModeDescription") }}
+          {{ t("project.scriptEditor.json.mode") }} - {{ t("project.scriptEditor.json.modeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
@@ -128,7 +140,7 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.mediaMode") }} - {{ t("project.scriptEditor.menu.mediaModeDescription") }}
+          {{ t("project.scriptEditor.media.mode") }} - {{ t("project.scriptEditor.media.modeDescription") }}
         </p>
 
         <div class="mx-auto space-y-2">
@@ -153,8 +165,9 @@
                   :mulmoScript="mulmoValue"
                   :index="index"
                   :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-                  :imageFile="imageFiles[index]"
-                  :movieFile="movieFiles[index]"
+                  :imageFile="imageFiles[beat.id]"
+                  :movieFile="movieFiles[beat.id]"
+                  :lipSyncFiles="lipSyncFiles[beat.id]"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   @update="update"
                   @generateImage="generateImage"
@@ -191,7 +204,7 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.styleMode") }} - {{ t("project.scriptEditor.menu.styleModeDescription") }}
+          {{ t("project.scriptEditor.style.mode") }} - {{ t("project.scriptEditor.style.modeDescription") }}
         </p>
         <PresentationStyleEditor
           :projectId="projectId"
@@ -205,8 +218,8 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.referenceMode") }} -
-          {{ t("project.scriptEditor.menu.referenceModeDescription") }}
+          {{ t("project.scriptEditor.reference.mode") }} -
+          {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
         <Reference
           :projectId="projectId"
@@ -259,9 +272,10 @@ const { t } = useI18n();
 interface Props {
   mulmoValue: MulmoScript;
   isValidScriptData: boolean;
-  imageFiles: (string | null)[];
-  movieFiles: (string | null)[];
-  audioFiles: (string | null)[];
+  imageFiles: Record<string, string | null>;
+  movieFiles: Record<string, string | null>;
+  audioFiles: Record<string, string | null>;
+  lipSyncFiles: Record<string, string | null>;
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
 }

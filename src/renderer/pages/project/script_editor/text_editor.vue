@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between font-bold text-gray-700">
-    <span>Beat {{ index + 1 }}</span>
-    <Badge variant="outline">{{ t("beat.badge." + getBadge(beat)) }}</Badge>
+    <span>{{ t("ui.common.beat") }} {{ index + 1 }}</span>
+    <Badge variant="outline">{{ t("beat." + getBadge(beat) + ".badge") }}</Badge>
   </div>
   <div>
     <Label>{{ t("ui.common.speaker") }}</Label>

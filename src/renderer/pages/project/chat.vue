@@ -154,7 +154,13 @@ import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 
 import enLang from "../../i18n/en";
-import { LLM_OLLAMA_DEFAULT_CONFIG, LLM_DEFAULT_AGENT, LLM_GROQ_DEFAULT_MODEL } from "../../../shared/constants";
+import {
+  LLM_OLLAMA_DEFAULT_CONFIG,
+  LLM_OPENAI_DEFAULT_CONFIG,
+  LLM_ANTHROPIC_DEFAULT_CONFIG,
+  LLM_DEFAULT_AGENT,
+  LLM_GROQ_DEFAULT_MODEL,
+} from "../../../shared/constants";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -223,16 +229,20 @@ const filterMessage = (setTime = false) => {
 };
 
 const getGraphConfig = async () => {
-  const ollama = globalStore.settings?.llmConfigs?.ollama ?? {};
+  const ollamaConfig = globalStore.settings?.llmConfigs?.ollama ?? {};
+  const anthropicConfig = globalStore.settings?.llmConfigs?.anthropic ?? {};
+  const openaiConfig = globalStore.settings?.llmConfigs?.openai ?? {};
   const openaiApikey = globalStore.settings?.APIKEY?.OPENAI_API_KEY;
   const groqApikey = globalStore.settings?.APIKEY?.GROQ_API_KEY;
   const anthropicApikey = globalStore.settings?.APIKEY?.ANTHROPIC_API_KEY;
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY;
 
+  console.log(openaiConfig, openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model);
   return {
     openAIAgent: {
       apiKey: openaiApikey,
+      model: openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model,
     },
     groqAgent: {
       apiKey: groqApikey,
@@ -243,10 +253,11 @@ const getGraphConfig = async () => {
     },
     anthropicAgent: {
       apiKey: anthropicApikey,
+      model: anthropicConfig?.model ?? LLM_ANTHROPIC_DEFAULT_CONFIG.model,
     },
     ollamaAgent: {
-      baseURL: ollama?.url ?? LLM_OLLAMA_DEFAULT_CONFIG.url,
-      model: ollama?.model ?? LLM_OLLAMA_DEFAULT_CONFIG.model,
+      baseURL: ollamaConfig?.url ?? LLM_OLLAMA_DEFAULT_CONFIG.url,
+      model: ollamaConfig?.model ?? LLM_OLLAMA_DEFAULT_CONFIG.model,
       apiKey: "not-needed",
     },
     exaToolsAgent: {
@@ -255,7 +266,8 @@ const getGraphConfig = async () => {
   };
 };
 
-const hasExa = !!globalStore.settings?.APIKEY?.EXA_API_KEY && llmAgent === "openAIAgent";
+const hasExa =
+  !!globalStore.settings?.APIKEY?.EXA_API_KEY && (llmAgent === "openAIAgent" || llmAgent === "anthropicAgent");
 
 const run = async () => {
   if (isRunning.value) {
@@ -266,6 +278,8 @@ const run = async () => {
 
   try {
     const config = await getGraphConfig();
+    const llmModel = config[llmAgent]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
+
     const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
 
     const postMessages = [
@@ -273,7 +287,12 @@ const run = async () => {
         role: "system",
         content: `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`,
       },
-      ...messages.map(filterMessage()).filter((message) => message.role !== "system"),
+      ...messages
+        .map(filterMessage())
+        .filter((message) => message.role !== "system")
+        .filter((message) => {
+          return message.content !== "";
+        }),
     ];
     console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
@@ -303,6 +322,7 @@ const run = async () => {
     graphai.injectValue("messages", postMessages);
     graphai.injectValue("prompt", userInput.value);
     graphai.injectValue("llmAgent", llmAgent);
+    graphai.injectValue("llmModel", llmModel);
     if (hasExa) {
       tools.push(...exaToolsAgent.tools);
       graphai.injectValue("passthrough", {
@@ -319,6 +339,7 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
+    /*
     if (newMessages.length > 2 && newMessages[newMessages.length - 2].role === "tool") {
       const toolsData = newMessages[newMessages.length - 2];
       if (toolsData?.extra?.agent === "mulmoScriptValidatorAgent" && toolsData?.extra?.data?.isValid) {
@@ -327,13 +348,12 @@ const run = async () => {
         emit("update:updateMulmoScript", script);
       }
     }
-    /*
+    */
     if (res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data?.isValid) {
       const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data ?? {};
       script.beats.map(setRandomBeatId);
       emit("update:updateMulmoScript", script);
     }
-    */
   } catch (error) {
     console.log(error);
   }

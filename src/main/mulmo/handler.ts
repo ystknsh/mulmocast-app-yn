@@ -1,21 +1,13 @@
 import {
-  images,
-  audio,
-  movie,
-  pdf,
-  captions,
   updateNpmRoot,
   getAudioArtifactFilePath,
   movieFilePath,
   pdfFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  generateBeatImage,
-  generateBeatAudio,
   translateBeat,
   setFfmpegPath,
   setFfprobePath,
-  generateReferenceImage,
   getImageRefs,
   MulmoStudioContextMethods,
   getMultiLingual,
@@ -23,21 +15,17 @@ import {
   mulmoStudioMultiLingualFileSchema,
   currentMulmoScriptVersion,
   hashSHA256,
-  type MulmoImagePromptMedia,
   type MultiLingualTexts,
 } from "mulmocast";
-import type { TransactionLog } from "graphai";
 import { GraphAILogger } from "graphai";
-import { z } from "zod";
 import { app, WebContents } from "electron";
 import path from "path";
 import fs from "fs";
 
-import { getProjectPath } from "../project_manager";
 import { loadSettings } from "../settings_manager";
 
 import { createMulmoScript } from "./scripting";
-import { fetchAndSave } from "./fetch_url";
+import { mulmoActionRunner, mulmoGenerateImage, mulmoGenerateAudio, mulmoReferenceImage } from "./handler_generator";
 import {
   mulmoAudioFiles,
   mulmoAudioFile,
@@ -47,6 +35,9 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
 } from "./handler_contents";
+import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
+import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
+import { mulmoAudioBgmUpload } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -62,103 +53,6 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
-
-export const mulmoGenerateImage = async (
-  projectId: string,
-  index: number,
-  target: string,
-  webContents: WebContents,
-) => {
-  const settings = await loadSettings();
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  addSessionProgressCallback(mulmoCallback);
-  try {
-    const context = await getContext(projectId);
-
-    const beat = context.studio.script.beats[index];
-    const forceImage = target === "image";
-    const forceMovie = target === "movie";
-    if (forceImage) {
-      beat.moviePrompt = "";
-    }
-    if (target === "all") {
-      context.force = true;
-    }
-    if ((target === "movie" || target === "all") && !beat.moviePrompt) {
-      beat.moviePrompt = " ";
-    }
-    const graphaiCallbacks = ({ nodeId, state }) => {
-      if (nodeId === "preprocessor" && state === "executing") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: true,
-            index,
-          },
-        });
-      }
-      if (nodeId === "output" && state === "completed") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: false,
-            index,
-          },
-        });
-      }
-    };
-
-    await generateBeatImage({
-      index,
-      context,
-      settings: settings.APIKEY ?? {},
-      forceImage,
-      forceMovie,
-      callbacks: [graphaiCallbacks],
-    });
-    removeSessionProgressCallback(mulmoCallback);
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return {
-      result: false,
-      error,
-    };
-  }
-};
-
-export const mulmoGenerateAudio = async (projectId: string, index: number, webContents: WebContents) => {
-  const settings = await loadSettings();
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  try {
-    addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
-    // context.force = true;
-    await generateBeatAudio(index, context, settings.APIKEY ?? {});
-    removeSessionProgressCallback(mulmoCallback);
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return {
-      result: false,
-      error,
-    };
-  }
-};
 
 export const mulmoTranslateBeat = async (
   projectId: string,
@@ -210,114 +104,6 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   }
 };
 
-// generate image by prompt
-export const mulmoReferenceImage = async (
-  projectId: string,
-  index: number,
-  key: string,
-  image: MulmoImagePromptMedia,
-  webContents: WebContents,
-) => {
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  try {
-    addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
-    const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
-    fs.mkdirSync(imageProjectDirPath, { recursive: true });
-    const returnImage = await generateReferenceImage({
-      context,
-      index,
-      key,
-      image,
-      force: true,
-    });
-    removeSessionProgressCallback(mulmoCallback);
-    return returnImage;
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return null;
-  }
-};
-
-export const mulmoActionRunner = async (projectId: string, actionName: string | string[], webContents: WebContents) => {
-  const settings = await loadSettings();
-  try {
-    const context = await getContext(projectId);
-    const graphAICallbacks = [
-      (log: TransactionLog) => {
-        if (webContents) {
-          webContents.send("progress-update", {
-            projectId,
-            type: "graphai",
-            data: log,
-          });
-        }
-      },
-    ];
-    const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-    addSessionProgressCallback(mulmoCallback);
-
-    const hasMatchingAction = (actions: string[], targets: string[]) =>
-      actions.some((action) => targets.includes(action));
-
-    const actionNames = Array.isArray(actionName) ? actionName : [actionName];
-    const enables = {
-      audio: hasMatchingAction(["audio", "movie"], actionNames),
-      image: hasMatchingAction(["image", "movie", "pdf", "pdfSlide", "pdfHandout"], actionNames),
-      movie: hasMatchingAction(["movie"], actionNames),
-      pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
-      pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
-    };
-    const audioContext = enables.audio ? await audio(context, settings.APIKEY ?? {}, graphAICallbacks) : context;
-    const imageContext = enables.image
-      ? await images(audioContext, settings.APIKEY ?? {}, graphAICallbacks)
-      : audioContext;
-    if (enables.movie) {
-      const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
-      await movie(captioncontext);
-    }
-    if (enables.pdfSlide) {
-      // sizes = ["letter", "a4"];
-      await pdf(imageContext, "slide", "a4");
-    }
-    if (enables.pdfHandout) {
-      await pdf(imageContext, "handout", "a4");
-    }
-    removeSessionProgressCallback(mulmoCallback);
-
-    return {
-      result: true,
-    };
-  } catch (error) {
-    console.log(error);
-    if (error instanceof z.ZodError) {
-      if (error.issues) {
-        error.issues.map((e) => {
-          webContents.send("progress-update", {
-            projectId,
-            type: "zod_error",
-            data: e,
-          });
-        });
-      }
-    } else {
-      webContents.send("progress-update", {
-        projectId,
-        type: "error",
-        data: error,
-      });
-    }
-    return {
-      result: false,
-      error,
-    };
-  }
-};
 // TODO pdf
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
@@ -341,110 +127,6 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
   }
   const buffer = fs.readFileSync(fileName);
   return buffer.buffer;
-};
-
-export const mulmoReferenceImageUpload = async (
-  projectId: string,
-  dirKey: string,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const dirPath = "upload_reference_image";
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
-};
-export const mulmoImageUpload = async (
-  projectId: string,
-  index: number,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const dirPath = "upload_image";
-  const dirKey = String(index);
-  return __mulmoImageUpload(projectId, dirPath, dirKey, bufferArray, extension);
-};
-
-export const mulmoAudioBgmUpload = async (projectId: string, filename: string, bufferArray: Uint8Array) => {
-  const dirPath = "upload_audio_bgm";
-
-  const projectPath = getProjectPath(projectId);
-  const dir = path.resolve(projectPath, dirPath);
-  fs.mkdirSync(dir, { recursive: true });
-
-  const filePath = path.join(dir, filename);
-  fs.writeFileSync(filePath, Buffer.from(bufferArray));
-
-  return path.join(dirPath, filename);
-};
-
-const __mulmoImageUpload = async (
-  projectId: string,
-  dirPath: string,
-  dirKey: string,
-  bufferArray: Uint8Array,
-  extension: string,
-) => {
-  const projectPath = getProjectPath(projectId);
-  const dir = path.resolve(projectPath, dirPath, dirKey);
-  fs.mkdirSync(dir, { recursive: true });
-  const filename = `${Date.now()}.${extension}`;
-  fs.writeFileSync(path.join(dir, filename), Buffer.from(bufferArray));
-
-  const resultPath = path.join(dirPath, dirKey, filename);
-  return resultPath;
-};
-export const mulmoImageFetchURL = async (projectId: string, index: number, url: string, webContents: WebContents) => {
-  const dirPath = "fetch_image";
-  const dirKey = String(index);
-  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
-};
-
-export const mulmoReferenceImageFetchURL = async (
-  projectId: string,
-  dirKey: string,
-  url: string,
-  webContents: WebContents,
-) => {
-  const dirPath = "fetch_ref_image";
-  return await __mulmoImageFetchURL(projectId, dirPath, dirKey, url, webContents);
-};
-
-const __mulmoImageFetchURL = async (
-  projectId: string,
-  dirPath: string,
-  dirKey: string,
-  url: string,
-  webContents: WebContents,
-) => {
-  try {
-    const projectPath = getProjectPath(projectId);
-    const dir = path.resolve(projectPath, dirPath, dirKey);
-
-    const res = await fetchAndSave(url, dir);
-
-    if (res.result) {
-      return {
-        result: true,
-        imageType: res.imageType,
-        path: path.join(dirPath, dirKey, res.filename),
-      };
-    }
-    if (res.error) {
-      webContents.send("progress-update", {
-        projectId,
-        type: "error",
-        data: res.error,
-      });
-    }
-  } catch (error) {
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-  }
-  return {
-    result: false,
-  };
 };
 
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
@@ -505,12 +187,12 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoImageUpload(args[0], args[1], args[2], args[3]);
       case "mulmoReferenceImageUpload":
         return await mulmoReferenceImageUpload(args[0], args[1], args[2], args[3]);
-      case "mulmoAudioBgmUpload":
-        return await mulmoAudioBgmUpload(args[0], args[1], args[2]);
       case "mulmoImageFetchURL":
         return await mulmoImageFetchURL(args[0], args[1], args[2], webContents);
       case "mulmoReferenceImageFetchURL":
         return await mulmoReferenceImageFetchURL(args[0], args[1], args[2], webContents);
+      case "mulmoAudioBgmUpload":
+        return await mulmoAudioBgmUpload(args[0], args[1], args[2]);
       case "mulmoReferenceImage":
         return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
       case "mulmoReferenceImages":
