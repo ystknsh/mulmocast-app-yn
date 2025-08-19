@@ -209,14 +209,14 @@
       <!-- left: lipSync edit -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
-        <div>
-          <Label class="mb-1 block">{{ t("beat.lipSync.label") }}: </Label>
+        <div class="flex">
           <Checkbox
             variant="ghost"
             size="icon"
             :modelValue="beat.enableLipSync"
             @update:model-value="(value) => update('enableLipSync', value)"
-          />: {{ t(beat.enableLipSync ? "ui.common.enable" : "ui.common.disable") }}
+          />
+          <Label class="mb-2 block">{{ t("beat.lipSync.label") }}: </Label>
         </div>
       </div>
       <!-- right: lipSync preview -->
