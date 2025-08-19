@@ -167,7 +167,6 @@ const initializeCustomAudioDisplay = () => {
   if (props.audioParams?.bgm) {
     if (props.audioParams.bgm.kind === "path") {
       const path = props.audioParams.bgm.path;
-      console.log("path", path);
       if (typeof path === "string") {
         customAudioFileName.value = path.split("/").pop() || path;
       }
