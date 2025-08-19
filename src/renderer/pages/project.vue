@@ -490,7 +490,6 @@ watch(
     }
     console.log(mulmoEvent);
   },
-  { immediate: true },
 );
 
 const debugLog = computed(() => graphAIDebugStore.graphaiDebugLog[projectId.value]);
