@@ -50,10 +50,9 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
-    const audioContext = enables.audio ? await audio(context, settings.APIKEY ?? {}, graphAICallbacks) : context;
-    const imageContext = enables.image
-      ? await images(audioContext, settings.APIKEY ?? {}, graphAICallbacks)
-      : audioContext;
+    const args = { settings: settings.APIKEY ?? {}, callbacks: graphAICallbacks };
+    const audioContext = enables.audio ? await audio(context, args) : context;
+    const imageContext = enables.image ? await images(audioContext, args) : audioContext;
     if (enables.movie) {
       const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
       await movie(captioncontext);
@@ -159,10 +158,12 @@ export const mulmoGenerateImage = async (
     await generateBeatImage({
       index,
       context,
-      settings: settings.APIKEY ?? {},
-      forceImage,
-      forceMovie,
-      callbacks: [graphaiCallbacks],
+      args: {
+        settings: settings.APIKEY ?? {},
+        forceImage,
+        forceMovie,
+        callbacks: [graphaiCallbacks],
+      },
     });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -186,7 +187,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
     // context.force = true;
-    await generateBeatAudio(index, context, settings.APIKEY ?? {});
+    await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
