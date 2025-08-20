@@ -40,8 +40,9 @@ function logStep(stepRef: { value: number }, message: string): void {
 function findProblematicBeats(jsonData: unknown, targetFilename: string): number[] {
   const problematicIndices: number[] = [];
 
-  if (jsonData.beats && Array.isArray(jsonData.beats)) {
-    jsonData.beats.forEach((beat: unknown, index: number) => {
+  const data = jsonData as Record<string, unknown>;
+  if (data.beats && Array.isArray(data.beats)) {
+    data.beats.forEach((beat: unknown, index: number) => {
       if (!beat || typeof beat !== "object") return;
 
       const beatObj = beat as Record<string, unknown>;
@@ -102,7 +103,8 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
   const foundProblematicBeats = findProblematicBeats(jsonData, "local_voice.mp3");
 
   // Generate project title
-  const baseTitle = jsonData.title || "Test";
+  const data = jsonData as Record<string, unknown>;
+  const baseTitle = (data.title as string) || "Test";
   const projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
 
   console.log(`✓ Project setup completed: ${projectTitle}`);
@@ -158,8 +160,9 @@ async function setupJsonContent(
       // Helper function to convert problematic image paths to URLs
       function convertImagePathsToUrls(jsonData: unknown): boolean {
         let hasChanges = false;
-        if (jsonData.beats && Array.isArray(jsonData.beats)) {
-          jsonData.beats.forEach((beat: unknown) => {
+        const data = jsonData as Record<string, unknown>;
+        if (data.beats && Array.isArray(data.beats)) {
+          data.beats.forEach((beat: unknown) => {
             const beatObj = beat as Record<string, unknown>;
             const image = beatObj.image as Record<string, unknown>;
             const source = image?.source as Record<string, unknown>;
@@ -177,11 +180,12 @@ async function setupJsonContent(
 
       // Helper function to add timestamp to JSON title
       function addTimestampToJsonTitle(jsonData: unknown, timestamp: string, fileName: string): void {
+        const data = jsonData as Record<string, unknown>;
         const fileBaseName = fileName.replace(".json", "");
-        if (!jsonData.title) {
-          jsonData.title = `${timestamp} Test (${fileBaseName})`;
+        if (!data.title) {
+          data.title = `${timestamp} Test (${fileBaseName})`;
         } else {
-          jsonData.title = `${timestamp} ${jsonData.title} (${fileBaseName})`;
+          data.title = `${timestamp} ${data.title} (${fileBaseName})`;
         }
       }
 
@@ -191,7 +195,7 @@ async function setupJsonContent(
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
         const content = editor.getValue();
-        const jsonData = JSON.parse(content);
+        const jsonData = JSON.parse(content) as Record<string, unknown>;
 
         // Apply transformations using helper functions
         convertImagePathsToUrls(jsonData);
