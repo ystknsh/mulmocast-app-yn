@@ -295,13 +295,11 @@ const route = useRoute();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   if (!props.isValidScriptData) {
     return;
   }
-  lastTab.value = tab;
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
