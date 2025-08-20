@@ -24,6 +24,7 @@ const CONFIG = {
   DELETE_BUTTON_TIMEOUT_MS: 3000, // Timeout for delete button
   GENERATION_CLICK_TIMEOUT_MS: 5000, // Timeout for generation button click
   GENERATION_START_DELAY_MS: 3000, // Wait after generation starts
+  IPC_PROCESSING_DELAY_MS: 500, // Wait for IPC message processing in CI
   PAGE_EVALUATION_DELAY_MS: 1000, // Wait between page evaluations
   POLLING_INTERVAL_MS: 2000, // General polling interval
   APP_STABILIZATION_DELAY_MS: 5000, // Wait for app to stabilize
@@ -242,13 +243,20 @@ async function cleanupProblematicBeats(
 async function executeGeneration(page: Page, step: { value: number }): Promise<void> {
   logStep(step, `Starting generation...`);
   await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
+  console.log("[DEBUG] About to click generate button");
   await page.locator('[data-testid="generate-contents-button"]').click({
     timeout: CONFIG.GENERATION_CLICK_TIMEOUT_MS,
     noWaitAfter: true,
   });
+  console.log("[DEBUG] Button clicked, waiting for IPC message processing...");
+  
+  // Wait for IPC message to be processed in CI environment
+  await sleep(CONFIG.IPC_PROCESSING_DELAY_MS);
+  console.log("[DEBUG] IPC wait completed, waiting 3 seconds...");
 
   // Wait a bit to ensure generation has started
   await sleep(CONFIG.GENERATION_START_DELAY_MS);
+  console.log("[DEBUG] executeGeneration completed");
 }
 
 // Phase 5: Wait for generation to complete
