@@ -421,8 +421,6 @@ const TEST_JSON_FILES = [
   "test_slideout_left_no_audio.json",
 ];
 
-// Current test file being processed
-let currentTestFile = "";
 
 // Function to read JSON from local node_modules
 async function readLocalJSON(filename: string): Promise<string> {
