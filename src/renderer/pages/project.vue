@@ -319,35 +319,32 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
 };
 
-const saveProjectMetadata = async (projectMetadata: ProjectMetadata) => {
-  await projectApi.saveProjectMetadata(projectId.value, {
-    ...projectMetadata,
-    updatedAt: dayjs().toISOString(),
-  });
+const saveProjectMetadata = async () => {
+  projectMetadata.value.updatedAt = dayjs().toISOString();
+  await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
 };
 
 const saveProjectMetadataDebounced = useDebounceFn(saveProjectMetadata, 1000);
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   projectMetadata.value.chatMessages = messages;
-  saveProjectMetadataDebounced(projectMetadata.value);
+  saveProjectMetadataDebounced();
 };
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   projectMetadata.value.scriptEditorActiveTab = tab;
-  saveProjectMetadata(projectMetadata.value);
+  saveProjectMetadata();
 };
 
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   projectMetadata.value.mulmoViewerActiveTab = tab;
-  saveProjectMetadata(projectMetadata.value);
+  saveProjectMetadata();
 };
 
 const saveMulmoScript = async () => {
   console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
-  projectMetadata.value.updatedAt = dayjs().toISOString();
-  await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
+  await saveProjectMetadata();
 };
 const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
 
