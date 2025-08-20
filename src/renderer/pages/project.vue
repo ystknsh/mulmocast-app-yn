@@ -118,6 +118,7 @@
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="isValidScriptData"
                     @updateMulmoScript="handleUpdateMulmoScript"
+                    @updateMulmoScriptAndPushToHistory="handleUpdateMulmoScriptAndPushHistory"
                     @generateImage="generateImage"
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
@@ -311,8 +312,13 @@ onUnmounted(() => {
 });
 
 const handleUpdateMulmoScriptWithNotify = (script: MulmoScript) => {
-  mulmoScriptHistoryStore.updateMulmoScript(script);
+  handleUpdateMulmoScriptAndPushHistory(script);
   notifySuccess(t("settings.notifications.createSuccess"));
+};
+
+const handleUpdateMulmoScriptAndPushHistory = (script: MulmoScript) => {
+  mulmoScriptHistoryStore.updateMulmoScript(script);
+  formatAndPushHistoryMulmoScript();
 };
 
 const handleUpdateMulmoScript = (script: MulmoScript) => {
