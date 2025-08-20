@@ -51,20 +51,32 @@ jobs:
 
   content-generation-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: 'yarn'
-      
-      - run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - run: npx playwright install-deps && npx playwright install chromium
       - run: yarn package
-      - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_generation_e2e_test.ts
+      - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
         env:
           CI: true
           NODE_ENV: test
           ELECTRON_DISABLE_SANDBOX: 1
+      
+      - name: Upload test screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-screenshots
+          path: |
+            playback-failure-*.png
+            test-failure-*.png
+          retention-days: 30

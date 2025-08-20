@@ -14,7 +14,7 @@ const CONFIG = {
   TAB_SWITCH_DELAY: 500, // Tab switching delay
   INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
   GENERATION_TIMEOUT: 600000, // 10 minutes for generation (longer for CI)
-  PLAY_BUTTON_TIMEOUT: 15000, // 15 seconds to wait for play button
+  BUTTON_TIMEOUT: 15000, // 15 seconds to wait for buttons (play, generate, etc.)
   VITE_SERVER_WAIT_MAX: 60000, // 60 seconds to wait for Vite dev server
   VITE_SERVER_CHECK_INTERVAL: 2000, // Check every 2 seconds
 } as const;
@@ -128,10 +128,16 @@ interface Resources {
 
 async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   console.log("\n=== Waiting for all generations to complete ===");
+  console.log(`[DEBUG] Current URL before navigation: ${page.url()}`);
 
   // Navigate to dashboard
+  console.log(`[DEBUG] Navigating to dashboard...`);
   await page.goto("http://localhost:5173/#/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
+  // Wait for dashboard to be ready
+  await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+  console.log(`[DEBUG] After navigation URL: ${page.url()}`);
+  console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
   console.log("✓ Navigated to dashboard");
 
   // Poll for generating count to become 0
@@ -177,6 +183,7 @@ async function visitProjectsAndPlay(
   projects: ProjectInfo[],
 ): Promise<{ played: number; failed: number; failedProjects: string[] }> {
   console.log("\n=== Visiting each project to play ===");
+  console.log(`[DEBUG] Total projects to visit: ${projects.length}`);
 
   let playedCount = 0;
   let failedCount = 0;
@@ -185,53 +192,118 @@ async function visitProjectsAndPlay(
   for (let i = 0; i < projects.length; i++) {
     const project = projects[i];
     console.log(`\nVisiting project ${i + 1}/${projects.length}: ${project.projectTitle}`);
+    console.log(`[DEBUG] Project URL: ${project.projectUrl}`);
 
     // First navigate to dashboard
     console.log("Navigating to dashboard first...");
+    console.log(`[DEBUG] Current URL before dashboard nav: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
+    console.log(`[DEBUG] Dashboard URL: ${page.url()}`);
     console.log("✓ On dashboard");
 
     // Wait a bit for dashboard to load
+    console.log(`[DEBUG] Waiting 2000ms for dashboard to stabilize...`);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Navigate to project
     console.log(`Navigating to project: ${project.projectUrl}`);
     await page.goto(project.projectUrl!);
     await page.waitForLoadState("networkidle");
+    console.log(`[DEBUG] Project page URL: ${page.url()}`);
+    console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
     console.log("✓ Navigated to project page");
 
-    // Wait for page to fully load
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // Wait longer for page to fully load in CI
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // Check what elements are available on the page
+    const pageElements = await page.evaluate(() => {
+      const playBtn = document.querySelector('[data-testid="play-video-button"]');
+      const video = document.querySelector("video");
+      const allTestIds = Array.from(document.querySelectorAll("[data-testid]")).map((el) =>
+        el.getAttribute("data-testid"),
+      );
+
+      return {
+        hasPlayButton: !!playBtn,
+        hasVideo: !!video,
+        availableTestIds: allTestIds,
+        pageTitle: document.title,
+        url: window.location.href,
+      };
+    });
+
+    console.log(`[DEBUG] Page elements check:`, JSON.stringify(pageElements, null, 2));
 
     // Look for play button
     let playSuccessful = false;
     try {
+      console.log(`[DEBUG] Waiting for play button with timeout ${CONFIG.BUTTON_TIMEOUT}ms...`);
       await page.waitForSelector('[data-testid="play-video-button"]', {
-        timeout: CONFIG.PLAY_BUTTON_TIMEOUT,
+        timeout: CONFIG.BUTTON_TIMEOUT,
       });
       const playButton = await page.$('[data-testid="play-video-button"]');
+      console.log(`[DEBUG] Play button found: ${!!playButton}`);
 
       if (playButton) {
+        // Check button state before clicking
+        const buttonState = await page.evaluate(() => {
+          const btn = document.querySelector('[data-testid="play-video-button"]');
+          if (!btn) return null;
+          const rect = btn.getBoundingClientRect();
+          return {
+            visible: rect.width > 0 && rect.height > 0,
+            disabled: (btn as HTMLButtonElement).disabled,
+            text: btn.textContent?.trim(),
+            classList: Array.from(btn.classList),
+          };
+        });
+        console.log(`[DEBUG] Button state before click:`, JSON.stringify(buttonState));
+
         console.log("✓ Found play button, clicking...");
         await playButton.click();
+        console.log(`[DEBUG] Play button clicked`);
 
         // Wait a bit and check if video is actually playing
+        console.log(`[DEBUG] Waiting 2000ms for video to load...`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Check for video element and its state
         const videoState = await page.evaluate(() => {
           const video = document.querySelector("video");
-          if (!video) return { found: false };
+          if (!video) {
+            console.log("[DEBUG] No video element found in DOM");
+            return { found: false };
+          }
+
+          const sources = Array.from(video.querySelectorAll("source")).map((s) => ({
+            src: s.src,
+            type: s.type,
+          }));
+
           return {
             found: true,
+            src: video.src,
+            sources: sources,
             hasSource: !!video.src || video.children.length > 0,
             readyState: video.readyState,
-            error: video.error?.message || null,
+            networkState: video.networkState,
+            error: video.error
+              ? {
+                  code: video.error.code,
+                  message: video.error.message,
+                }
+              : null,
             paused: video.paused,
             duration: video.duration,
+            currentTime: video.currentTime,
+            videoWidth: video.videoWidth,
+            videoHeight: video.videoHeight,
           };
         });
+
+        console.log(`[DEBUG] Video state after click:`, JSON.stringify(videoState, null, 2));
 
         if (videoState.found && videoState.hasSource && !videoState.error && videoState.readyState >= 2) {
           console.log("✓ Playback started successfully");
@@ -249,23 +321,36 @@ async function visitProjectsAndPlay(
             console.log("  Reason: Video element not found");
           } else if (!videoState.hasSource) {
             console.log("  Reason: No video source");
+            console.log(`  Video src: ${videoState.src}`);
+            console.log(`  Video sources: ${JSON.stringify(videoState.sources)}`);
           } else if (videoState.error) {
-            console.log(`  Reason: Video error - ${videoState.error}`);
+            console.log(`  Reason: Video error - Code: ${videoState.error.code}, Message: ${videoState.error.message}`);
           } else if (videoState.readyState < 2) {
-            console.log(`  Reason: Video not ready (readyState=${videoState.readyState})`);
+            console.log(
+              `  Reason: Video not ready (readyState=${videoState.readyState}, networkState=${videoState.networkState})`,
+            );
           }
         }
       } else {
-        console.log("✗ Play button not found");
+        console.log("✗ Play button not found after waitForSelector");
       }
-    } catch {
-      console.log("✗ Could not find play button for this project");
+    } catch (error) {
+      console.log(`✗ Error while looking for play button: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     if (!playSuccessful) {
       failedCount++;
       failedProjects.push(`${project.projectTitle} (${project.jsonFile})`);
       console.log(`✗ Failed to play: ${project.projectTitle}`);
+
+      // Take screenshot for debugging failed playback
+      try {
+        const screenshotPath = `playback-failure-${project.jsonFile.replace(".json", "")}-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+        console.log(`[DEBUG] Screenshot saved: ${screenshotPath}`);
+      } catch (screenshotError) {
+        console.log(`[DEBUG] Failed to take screenshot:`, screenshotError);
+      }
     }
   }
 
@@ -283,6 +368,8 @@ async function visitProjectsAndPlay(
 async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], page: Page): Promise<void> {
   console.log(`[DEBUG] Starting createProjectAndStartGeneration for: ${currentTestFile}`);
   console.log(`[DEBUG] Projects created so far: ${projectsCreated.length}`);
+  console.log(`[DEBUG] Current page URL: ${page.url()}`);
+  console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
 
   let projectTitle = "";
   let problematicBeatIndices: number[] = [];
@@ -291,14 +378,44 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
   try {
     // Navigate to dashboard
     console.log(`${step}. Navigating to dashboard...`);
+    console.log(`[DEBUG] Before navigation - URL: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for dashboard to be ready by checking for the create button
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    console.log(`[DEBUG] After navigation - URL: ${page.url()}`);
+    console.log(`[DEBUG] Page title: ${await page.title()}`);
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
     console.log(`\n${++step}. Clicking "Create New" button...`);
+    console.log(`[DEBUG] Looking for button with selector: [data-testid="create-new-button"]`);
+
+    // Check if button exists and its state
+    const buttonExists = await page.$('[data-testid="create-new-button"]');
+    console.log(`[DEBUG] Button exists: ${!!buttonExists}`);
+
+    if (buttonExists) {
+      const buttonInfo = await page.evaluate(() => {
+        const btn = document.querySelector('[data-testid="create-new-button"]');
+        if (!btn) return null;
+        const rect = btn.getBoundingClientRect();
+        return {
+          visible: rect.width > 0 && rect.height > 0,
+          disabled: (btn as HTMLButtonElement).disabled,
+          text: btn.textContent,
+          tagName: btn.tagName,
+          className: btn.className,
+          position: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+        };
+      });
+      console.log(`[DEBUG] Button info:`, JSON.stringify(buttonInfo, null, 2));
+    }
+
     await page.click('[data-testid="create-new-button"]');
+    console.log(`[DEBUG] Button clicked, waiting for navigation...`);
     await page.waitForSelector('[data-testid="project-title"]');
+    console.log(`[DEBUG] New page URL: ${page.url()}`);
     console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
@@ -374,13 +491,20 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Navigate to JSON tab
     console.log(`\n${++step}. Navigating to JSON tab...`);
+    console.log(`[DEBUG] Looking for JSON tab selector: [data-testid="script-editor-tab-json"]`);
+
+    const tabExists = await page.$('[data-testid="script-editor-tab-json"]');
+    console.log(`[DEBUG] JSON tab exists: ${!!tabExists}`);
+
     await page.click('[data-testid="script-editor-tab-json"]');
+    console.log(`[DEBUG] JSON tab clicked, waiting ${CONFIG.TAB_SWITCH_DELAY}ms...`);
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
     // Verify JSON tab is active
     const jsonTab = await page.$('[data-testid="script-editor-tab-json"]');
     if (jsonTab) {
       const isSelected = await jsonTab.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
+      console.log(`[DEBUG] JSON tab aria-selected: ${isSelected}`);
       if (isSelected) {
         console.log("✓ JSON tab is now active");
       } else {
@@ -554,12 +678,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`\n${++step}. Looking for generate button in output settings section...`);
 
     // Use data-testid to find the generate button
-    const generateButton = await page.$('[data-testid="generate-contents-button"]');
-    if (!generateButton) {
-      throw new Error("Generate Contents button not found");
-    }
+    await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Found generate button");
-    await generateButton.click();
+    await page.locator('[data-testid="generate-contents-button"]').click({
+      timeout: 5000,
+      noWaitAfter: true, // これでナビゲーション待機をスキップ
+    });
 
     // Start generation without waiting
     console.log(`\n${++step}. Generation started, moving to next file...`);
@@ -567,8 +691,17 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
+    // Navigate back to dashboard after starting generation
+    console.log(`\n${++step}. Clicking dashboard button to return...`);
+    await page.waitForSelector('[data-testid="dashboard-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.click('[data-testid="dashboard-button"]');
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for dashboard to be ready
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    console.log("✓ Returned to dashboard");
+
     console.log("\n=== Project created and generation started ===");
-    console.log(`Project "${projectTitle}" was created and generation was started.`);
+    console.log(`Project "${projectTitle}" was created and generation started.`);
   } catch (error: unknown) {
     console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
@@ -676,6 +809,12 @@ async function runGenerationE2ETest(): Promise<void> {
     }
 
     console.log("✓ Found application page");
+    console.log(`[DEBUG] Initial page URL: ${page.url()}`);
+    console.log(`[DEBUG] Page readyState: ${await page.evaluate(() => document.readyState)}`);
+
+    // Wait for initial page load
+    console.log("[DEBUG] Waiting for initial page to fully load...");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const projectsCreated: ProjectInfo[] = [];
     const testResults: ProjectResult[] = [];
