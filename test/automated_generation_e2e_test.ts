@@ -314,11 +314,11 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Click the create new button
     console.log(`\n${++step}. Clicking "Create New" button...`);
     console.log(`[DEBUG] Looking for button with selector: [data-testid="create-new-button"]`);
-    
+
     // Check if button exists and its state
     const buttonExists = await page.$('[data-testid="create-new-button"]');
     console.log(`[DEBUG] Button exists: ${!!buttonExists}`);
-    
+
     if (buttonExists) {
       const buttonInfo = await page.evaluate(() => {
         const btn = document.querySelector('[data-testid="create-new-button"]');
@@ -330,12 +330,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
           text: btn.textContent,
           tagName: btn.tagName,
           className: btn.className,
-          position: { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+          position: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
         };
       });
       console.log(`[DEBUG] Button info:`, JSON.stringify(buttonInfo, null, 2));
     }
-    
+
     await page.click('[data-testid="create-new-button"]');
     console.log(`[DEBUG] Button clicked, waiting for navigation...`);
     await page.waitForSelector('[data-testid="project-title"]');
@@ -416,10 +416,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Navigate to JSON tab
     console.log(`\n${++step}. Navigating to JSON tab...`);
     console.log(`[DEBUG] Looking for JSON tab selector: [data-testid="script-editor-tab-json"]`);
-    
+
     const tabExists = await page.$('[data-testid="script-editor-tab-json"]');
     console.log(`[DEBUG] JSON tab exists: ${!!tabExists}`);
-    
+
     await page.click('[data-testid="script-editor-tab-json"]');
     console.log(`[DEBUG] JSON tab clicked, waiting ${CONFIG.TAB_SWITCH_DELAY}ms...`);
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
