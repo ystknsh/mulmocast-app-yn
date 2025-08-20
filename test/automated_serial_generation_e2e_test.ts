@@ -20,6 +20,12 @@ const CONFIG = {
   PLAY_WAIT: 3000, // 3 seconds to wait during playback for serial test
 } as const;
 
+// Helper function for logging with step increment
+function logStep(stepRef: { value: number }, message: string): void {
+  stepRef.value = stepRef.value + 1;
+  console.log(`\n${stepRef.value}. ${message}`);
+}
+
 // Test JSON files to process
 const TEST_JSON_FILES = [
   "test_no_audio.json",
@@ -374,11 +380,11 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
   let projectTitle = "";
   let problematicBeatIndices: number[] = [];
-  let step = 1;
+  const step = { value: 1 };
 
   try {
     // Navigate to dashboard
-    console.log(`${step}. Navigating to dashboard...`);
+    console.log(`${step.value}. Navigating to dashboard...`);
     console.log(`[DEBUG] Before navigation - URL: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("domcontentloaded");
@@ -389,7 +395,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
-    console.log(`\n${++step}. Clicking "Create New" button...`);
+    logStep(step, `Clicking "Create New" button...`);
     console.log(`[DEBUG] Looking for button with selector: [data-testid="create-new-button"]`);
 
     // Check if button exists and its state
@@ -420,7 +426,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
-    console.log(`\n${++step}. Reading test JSON from local node_modules...`);
+    logStep(step, `Reading test JSON from local node_modules...`);
     let jsonContent: string;
 
     try {
@@ -477,7 +483,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Generate project title (based on JSON title + timestamp) for later use
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-    console.log(`\n${++step}. Project created with auto-generated title`);
+    logStep(step, `Project created with auto-generated title`);
     console.log("✓ Project page loaded");
 
     // Store project info immediately after creation
@@ -491,7 +497,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`[DEBUG] Project added to list. Total: ${projectsCreated.length}`);
 
     // Navigate to JSON tab
-    console.log(`\n${++step}. Navigating to JSON tab...`);
+    logStep(step, `Navigating to JSON tab...`);
     console.log(`[DEBUG] Looking for JSON tab selector: [data-testid="script-editor-tab-json"]`);
 
     const tabExists = await page.$('[data-testid="script-editor-tab-json"]');
@@ -514,12 +520,12 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Wait for Monaco Editor to be ready
-    console.log(`\n${++step}. Waiting for Monaco Editor...`);
+    logStep(step, `Waiting for Monaco Editor...`);
     await page.waitForSelector(".monaco-editor", { timeout: 15000 });
     console.log("✓ Monaco Editor loaded");
 
     // Clear existing content and input test JSON
-    console.log(`\n${++step}. Inputting test audio JSON...`);
+    logStep(step, `Inputting test audio JSON...`);
     // Focus on Monaco editor
     await page.click(".monaco-editor");
 
@@ -639,13 +645,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ JSON processing time completed");
 
     // Navigate to Media tab to delete problematic beats
-    console.log(`\n${++step}. Navigating to Media tab to clean up problematic assets...`);
+    logStep(step, `Navigating to Media tab to clean up problematic assets...`);
     await page.click('[data-testid="script-editor-tab-media"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
     console.log("✓ Navigated to Media tab");
 
     // Delete beats with local_voice.mp3 using pre-identified indices
-    console.log(`\n${++step}. Deleting beats with local_voice.mp3...`);
+    logStep(step, `Deleting beats with local_voice.mp3...`);
 
     if (problematicBeatIndices.length > 0) {
       // Delete in reverse order to avoid index shifting issues
@@ -676,7 +682,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     }
 
     // Find and click the generate button in output settings section
-    console.log(`\n${++step}. Looking for generate button in output settings section...`);
+    logStep(step, `Looking for generate button in output settings section...`);
 
     // Use data-testid to find the generate button
     await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
@@ -687,13 +693,13 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     });
 
     // Start generation without waiting
-    console.log(`\n${++step}. Generation started, moving to next file...`);
+    logStep(step, `Generation started, moving to next file...`);
 
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Navigate back to dashboard after starting generation
-    console.log(`\n${++step}. Clicking dashboard button to return...`);
+    logStep(step, `Clicking dashboard button to return...`);
     await page.waitForSelector('[data-testid="dashboard-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     await page.click('[data-testid="dashboard-button"]');
     await page.waitForLoadState("domcontentloaded");
@@ -725,27 +731,27 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
   let projectTitle = "";
   let projectUrl = "";
   let problematicBeatIndices: number[] = [];
-  let step = 1;
+  const step = { value: 1 };
 
   try {
     // ========== PART 1: Create project (from createProjectAndStartGeneration) ==========
 
     // Navigate to dashboard
-    console.log(`${step}. Navigating to dashboard...`);
+    console.log(`${step.value}. Navigating to dashboard...`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("domcontentloaded");
     await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
-    console.log(`\n${++step}. Clicking "Create New" button...`);
+    logStep(step, `Clicking "Create New" button...`);
     await page.click('[data-testid="create-new-button"]');
     await page.waitForSelector('[data-testid="project-title"]');
     projectUrl = page.url();
     console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules
-    console.log(`\n${++step}. Reading test JSON from local node_modules...`);
+    logStep(step, `Reading test JSON from local node_modules...`);
     const jsonContent = await readLocalJSON(currentTestFile);
 
     // Debug: Check JSON content
@@ -788,18 +794,18 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     result.created = true;
 
     // Navigate to JSON tab
-    console.log(`\n${++step}. Navigating to JSON tab...`);
+    logStep(step, `Navigating to JSON tab...`);
     await page.click('[data-testid="script-editor-tab-json"]');
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
     console.log("✓ JSON tab is active");
 
     // Wait for Monaco Editor
-    console.log(`\n${++step}. Waiting for Monaco Editor...`);
+    logStep(step, `Waiting for Monaco Editor...`);
     await page.waitForSelector(".monaco-editor", { timeout: 15000 });
     console.log("✓ Monaco Editor loaded");
 
     // Input JSON content
-    console.log(`\n${++step}. Inputting test JSON...`);
+    logStep(step, `Inputting test JSON...`);
     await page.click(".monaco-editor");
     await page.keyboard.press("Meta+A");
     await page.keyboard.press("Delete");
@@ -856,7 +862,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Delete problematic beats in Media tab
     if (problematicBeatIndices.length > 0) {
-      console.log(`\n${++step}. Navigating to Media tab to clean up...`);
+      logStep(step, `Navigating to Media tab to clean up...`);
       await page.click('[data-testid="script-editor-tab-media"]');
       await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
