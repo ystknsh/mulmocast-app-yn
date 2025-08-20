@@ -18,6 +18,7 @@
         @update="(value) => updateParam(value)"
         @updateImageNames="updateImageNames"
         :mulmoError="[]"
+        :settingPresence="{}"
       />
     </CollapsibleContent>
   </Collapsible>
