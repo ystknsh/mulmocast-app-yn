@@ -63,7 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
-                  @saveMulmoScript="saveMulmoScript"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -172,6 +172,7 @@
                   @update="update"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -283,24 +284,22 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits([
   "updateMulmoScript",
+  "updateMulmoScriptAndPushToHistory",
+  "formatAndPushHistoryMulmoScript",
   "update:isValidScriptData",
   "generateImage",
-  "formatAndPushHistoryMulmoScript",
   "update:scriptEditorActiveTab",
-  "saveMulmoScript",
 ]);
 
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   if (!props.isValidScriptData) {
     return;
   }
-  lastTab.value = tab;
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
@@ -401,7 +400,7 @@ const generateImage = (index: number, target: string) => {
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoScript.beats.length) {
     const newBeats = arrayRemoveAt(props.mulmoScript.beats, index);
-    emit("updateMulmoScript", {
+    emit("updateMulmoScriptAndPushToHistory", {
       ...props.mulmoScript,
       beats: newBeats,
     });
@@ -410,7 +409,7 @@ const deleteBeat = (index: number) => {
 const positionUp = (index: number) => {
   if (index <= 0 || index >= props.mulmoScript.beats.length) return;
   const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoScript.beats, index);
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     beats: newBeats,
   });
@@ -419,7 +418,7 @@ const positionUp = (index: number) => {
 const changeBeat = (beat: MulmoBeat, index: number) => {
   const newBeats = [...props.mulmoScript.beats];
   newBeats[index] = beat;
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     beats: newBeats,
   });
@@ -427,7 +426,7 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 
 const addBeat = (beat: MulmoBeat, index: number) => {
   const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     beats: newBeats,
   });
@@ -456,7 +455,7 @@ const updateImage = (imageKey: string, prompt: string) => {
     images: updatedImages,
   };
 
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
@@ -479,16 +478,10 @@ const updateImagePath = (imageKey: string, path: string) => {
     images: updatedImages,
   };
 
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmoScript");
-  emit("formatAndPushHistoryMulmoScript");
-};
-
-const saveMulmoScript = () => {
-  emit("saveMulmoScript");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
@@ -502,11 +495,10 @@ const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImageP
     images: updatedImages,
   };
 
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-  emit("formatAndPushHistoryMulmoScript");
 };
 
 const deleteReferenceImage = (imageKey: string) => {
@@ -518,10 +510,15 @@ const deleteReferenceImage = (imageKey: string) => {
     images: updatedImages,
   };
 
-  emit("updateMulmoScript", {
+  emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-  emit("formatAndPushHistoryMulmoScript");
+};
+
+const justSaveAndPushToHistory = () => {
+  emit("updateMulmoScriptAndPushToHistory", {
+    ...props.mulmoScript,
+  });
 };
 </script>
