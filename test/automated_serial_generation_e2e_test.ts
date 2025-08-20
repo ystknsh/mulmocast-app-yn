@@ -262,8 +262,8 @@ async function executeGeneration(page: Page, step: { value: number }): Promise<v
 // Phase 5: Wait for generation to complete
 async function waitForGenerationComplete(page: Page): Promise<void> {
   console.log("\n--- Waiting for generation to complete ---");
-  
-  // Skip checking if button becomes disabled - in CI environment, 
+
+  // Skip checking if button becomes disabled - in CI environment,
   // generation might complete before we can check the intermediate state.
   // Instead, directly wait for generation to complete.
   console.log("Waiting for generation to complete (generate button + play button enabled)...");
