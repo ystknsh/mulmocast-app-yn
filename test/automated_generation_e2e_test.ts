@@ -133,7 +133,9 @@ async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   // Navigate to dashboard
   console.log(`[DEBUG] Navigating to dashboard...`);
   await page.goto("http://localhost:5173/#/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
+  // Wait for dashboard to be ready
+  await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
   console.log(`[DEBUG] After navigation URL: ${page.url()}`);
   console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
   console.log("✓ Navigated to dashboard");
@@ -378,7 +380,9 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`${step}. Navigating to dashboard...`);
     console.log(`[DEBUG] Before navigation - URL: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for dashboard to be ready by checking for the create button
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log(`[DEBUG] After navigation - URL: ${page.url()}`);
     console.log(`[DEBUG] Page title: ${await page.title()}`);
     console.log("✓ Dashboard loaded");
@@ -691,7 +695,9 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`\n${++step}. Clicking dashboard button to return...`);
     await page.waitForSelector('[data-testid="dashboard-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     await page.click('[data-testid="dashboard-button"]');
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for dashboard to be ready
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Returned to dashboard");
 
     console.log("\n=== Project created and generation started ===");
