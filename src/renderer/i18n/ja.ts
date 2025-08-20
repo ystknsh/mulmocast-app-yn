@@ -402,6 +402,7 @@ const lang = {
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
+      text: "テキスト",
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },
     // Beat type structures (moved from beat.form.*)

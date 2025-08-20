@@ -403,6 +403,7 @@ const lang = {
     // Beat speaker settings
     speaker: {
       selectSpeaker: "Select a speaker",
+      text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
     },
     // Beat type structures (moved from beat.form.*)

@@ -17,7 +17,7 @@
     </Select>
   </div>
   <div>
-    <Label>{{ t("ui.tabs.text") }} ({{ t("languages." + lang) }})</Label>
+    <Label>{{ t("beat.speaker.text") }} ({{ t("languages." + lang) }})</Label>
     <Textarea
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
