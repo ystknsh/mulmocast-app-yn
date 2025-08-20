@@ -19,6 +19,15 @@ const CONFIG = {
   VITE_SERVER_WAIT_MAX_MS: 60000, // 60 seconds to wait for Vite dev server
   VITE_SERVER_CHECK_INTERVAL_MS: 2000, // Check every 2 seconds
   PLAY_WAIT_MS: 3000, // 3 seconds to wait during playback for serial test
+  MONACO_EDITOR_TIMEOUT_MS: 15000, // Monaco editor load timeout
+  EDITOR_STABILIZATION_DELAY_MS: 1000, // Wait for editor to stabilize
+  DELETE_BUTTON_TIMEOUT_MS: 3000, // Timeout for delete button
+  GENERATION_CLICK_TIMEOUT_MS: 5000, // Timeout for generation button click
+  GENERATION_START_DELAY_MS: 3000, // Wait after generation starts
+  PAGE_EVALUATION_DELAY_MS: 1000, // Wait between page evaluations
+  POLLING_INTERVAL_MS: 2000, // General polling interval
+  APP_STABILIZATION_DELAY_MS: 5000, // Wait for app to stabilize
+  WINDOW_CLOSE_DELAY_MS: 1000, // Wait for window to close
 } as const;
 
 // Helper function for logging with step increment
@@ -225,7 +234,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Wait for Monaco Editor
     logStep(step, `Waiting for Monaco Editor...`);
-    await page.waitForSelector(".monaco-editor", { timeout: 15000 });
+    await page.waitForSelector(".monaco-editor", { timeout: CONFIG.MONACO_EDITOR_TIMEOUT_MS });
     console.log("✓ Monaco Editor loaded");
 
     // Input JSON content
@@ -233,7 +242,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     await page.click(".monaco-editor");
     await page.keyboard.press("Meta+A");
     await page.keyboard.press("Delete");
-    await sleep(1000);
+    await sleep(CONFIG.EDITOR_STABILIZATION_DELAY_MS);
 
     await page.evaluate((json) => {
       const windowWithMonaco = window as Window & {
@@ -294,10 +303,10 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
       for (const beatIndex of sortedIndices) {
         const deleteButtonSelector = `[data-testid="script-editor-media-tab-delete-beat-${beatIndex}"]`;
         try {
-          await page.waitForSelector(deleteButtonSelector, { timeout: 3000 });
+          await page.waitForSelector(deleteButtonSelector, { timeout: CONFIG.DELETE_BUTTON_TIMEOUT_MS });
           await page.click(deleteButtonSelector);
           console.log(`✓ Deleted beat ${beatIndex}`);
-          await sleep(1000);
+          await sleep(CONFIG.PAGE_EVALUATION_DELAY_MS);
         } catch {
           console.log(`⚠️ Could not delete beat ${beatIndex}`);
         }
@@ -309,12 +318,12 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     logStep(step, `Starting generation...`);
     await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     await page.locator('[data-testid="generate-contents-button"]').click({
-      timeout: 5000,
+      timeout: CONFIG.GENERATION_CLICK_TIMEOUT_MS,
       noWaitAfter: true,
     });
 
     // Wait a bit to ensure generation has started
-    await sleep(3000);
+    await sleep(CONFIG.GENERATION_START_DELAY_MS);
 
     // ========== PART 2: Wait for generation to complete ==========
     console.log("\n--- Waiting for generation to complete ---");
@@ -361,7 +370,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         );
       }
 
-      await sleep(1000);
+      await sleep(CONFIG.PAGE_EVALUATION_DELAY_MS);
       waitAttempts++;
     }
 
@@ -422,7 +431,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         throw new Error(`Generation did not complete after ${maxGenerationWait} seconds`);
       }
 
-      await sleep(2000); // Check every 2 seconds
+      await sleep(CONFIG.POLLING_INTERVAL_MS); // Check every 2 seconds
       generationWaitTime += 2;
     }
 
@@ -637,7 +646,7 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Wait for initial page load
     console.log("[DEBUG] Waiting for initial page to fully load...");
-    await sleep(5000);
+    await sleep(CONFIG.APP_STABILIZATION_DELAY_MS);
 
     const testResults: ProjectResult[] = [];
 
@@ -663,7 +672,7 @@ async function runGenerationE2ETest(): Promise<void> {
       // Small delay between tests
       if (i < TEST_JSON_FILES.length - 1) {
         console.log("\n⏳ Brief pause before next test...");
-        await sleep(2000);
+        await sleep(CONFIG.POLLING_INTERVAL_MS);
       }
     }
 
@@ -736,7 +745,7 @@ async function runGenerationE2ETest(): Promise<void> {
       await page.evaluate(() => {
         (window as Window & { close: () => void }).close();
       });
-      await sleep(1000); // Wait for window to close
+      await sleep(CONFIG.WINDOW_CLOSE_DELAY_MS); // Wait for window to close
     } catch (closeError: unknown) {
       console.log(
         "Failed to close window gracefully:",
