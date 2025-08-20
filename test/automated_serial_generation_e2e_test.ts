@@ -36,6 +36,36 @@ function logStep(stepRef: { value: number }, message: string): void {
   console.log(`\n${stepRef.value}. ${message}`);
 }
 
+
+// Helper function to find beats with problematic audio files
+function findProblematicBeats(jsonData: any, targetFilename: string): number[] {
+  const problematicIndices: number[] = [];
+
+  if (jsonData.beats && Array.isArray(jsonData.beats)) {
+    jsonData.beats.forEach((beat: unknown, index: number) => {
+      if (!beat || typeof beat !== "object") return;
+      
+      const beatObj = beat as Record<string, unknown>;
+      const audioSources = [
+        ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
+        (beatObj.audio as Record<string, unknown>)?.path,
+        (beatObj.source as Record<string, unknown>)?.path,
+        beatObj.path,
+        beatObj.audio,
+      ].filter(Boolean);
+
+      for (const source of audioSources) {
+        if (typeof source === "string" && source.endsWith(targetFilename)) {
+          problematicIndices.push(index);
+          break;
+        }
+      }
+    });
+  }
+
+  return problematicIndices;
+}
+
 // Test JSON files to process
 const TEST_JSON_FILES = [
   "test_no_audio.json",
@@ -201,22 +231,8 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Parse JSON to find problematic beats
     const jsonData = JSON.parse(jsonContent);
-    if (jsonData.beats && Array.isArray(jsonData.beats)) {
-      jsonData.beats.forEach((beat: unknown, index: number) => {
-        if (!beat || typeof beat !== "object") return;
-        const beatObj = beat as Record<string, unknown>;
-        const audioSources = [
-          ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
-          (beatObj.audio as Record<string, unknown>)?.path,
-        ].filter(Boolean);
-        for (const source of audioSources) {
-          if (typeof source === "string" && source.endsWith("local_voice.mp3")) {
-            problematicBeatIndices.push(index);
-            break;
-          }
-        }
-      });
-    }
+    const foundProblematicBeats = findProblematicBeats(jsonData, "local_voice.mp3");
+    problematicBeatIndices.push(...foundProblematicBeats);
 
     // Generate project title
     const baseTitle = jsonData.title || "Test";
@@ -257,15 +273,9 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Fix problematic paths and add title
     await page.evaluate(
       ([ts, fileName]: [string, string]) => {
-        const windowWithMonaco = window as Window & {
-          monaco?: typeof monaco;
-        };
-        const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
-        if (editor) {
-          const content = editor.getValue();
-          const jsonData = JSON.parse(content);
-
-          // Fix image paths
+        // Helper function to convert problematic image paths to URLs
+        function convertImagePathsToUrls(jsonData: any): boolean {
+          let hasChanges = false;
           if (jsonData.beats && Array.isArray(jsonData.beats)) {
             jsonData.beats.forEach((beat: unknown) => {
               const beatObj = beat as Record<string, unknown>;
@@ -276,13 +286,34 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
                 source.url =
                   "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/assets/images/mulmocast_credit.png";
                 delete source.path;
+                hasChanges = true;
               }
             });
           }
+          return hasChanges;
+        }
 
-          // Add title with timestamp
+        // Helper function to add timestamp to JSON title
+        function addTimestampToJsonTitle(jsonData: any, timestamp: string, fileName: string): void {
           const fileBaseName = fileName.replace(".json", "");
-          jsonData.title = `${ts} ${jsonData.title || "Test"} (${fileBaseName})`;
+          if (!jsonData.title) {
+            jsonData.title = `${timestamp} Test (${fileBaseName})`;
+          } else {
+            jsonData.title = `${timestamp} ${jsonData.title} (${fileBaseName})`;
+          }
+        }
+
+        const windowWithMonaco = window as Window & {
+          monaco?: typeof monaco;
+        };
+        const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
+        if (editor) {
+          const content = editor.getValue();
+          const jsonData = JSON.parse(content);
+
+          // Apply transformations using helper functions
+          convertImagePathsToUrls(jsonData);
+          addTimestampToJsonTitle(jsonData, ts, fileName);
 
           editor.setValue(JSON.stringify(jsonData, null, 2));
         }
