@@ -521,6 +521,5 @@ const deleteReferenceImage = (imageKey: string) => {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-
 };
 </script>
