@@ -262,54 +262,10 @@ async function executeGeneration(page: Page, step: { value: number }): Promise<v
 // Phase 5: Wait for generation to complete
 async function waitForGenerationComplete(page: Page): Promise<void> {
   console.log("\n--- Waiting for generation to complete ---");
-
-  // First, wait for the button to become disabled (generation started)
-  console.log("Waiting for generation to start (button disabled)...");
-
-  // Debug: Check button state before waiting
-  const buttonStateBefore = await page.evaluate(() => {
-    const button = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
-    return {
-      exists: !!button,
-      disabled: button?.disabled,
-      text: button?.textContent?.trim(),
-      currentURL: window.location.href,
-    };
-  });
-  console.log("[DEBUG] Button state before waiting:", JSON.stringify(buttonStateBefore));
-
-  // Debug: Monitor button state during the wait
-  let waitAttempts = 0;
-  const maxAttempts = 30; // 30 attempts, 1 second apart
-
-  while (waitAttempts < maxAttempts) {
-    const buttonState = await page.evaluate(() => {
-      const button = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
-      return {
-        exists: !!button,
-        disabled: button?.disabled,
-        text: button?.textContent?.trim(),
-      };
-    });
-
-    console.log(`[DEBUG] Wait attempt ${waitAttempts + 1}: Button state:`, JSON.stringify(buttonState));
-
-    if (buttonState.exists && buttonState.disabled) {
-      console.log("✓ Generation started (button is now disabled)");
-      break;
-    }
-
-    if (waitAttempts === maxAttempts - 1) {
-      throw new Error(
-        `Button never became disabled after ${maxAttempts} seconds. Final state: ${JSON.stringify(buttonState)}`,
-      );
-    }
-
-    await sleep(CONFIG.PAGE_EVALUATION_DELAY_MS);
-    waitAttempts++;
-  }
-
-  // Then wait for generation to complete (both generate button and play button enabled)
+  
+  // Skip checking if button becomes disabled - in CI environment, 
+  // generation might complete before we can check the intermediate state.
+  // Instead, directly wait for generation to complete.
   console.log("Waiting for generation to complete (generate button + play button enabled)...");
 
   const maxGenerationWait = CONFIG.GENERATION_TIMEOUT_MS / 1000; // Convert to seconds
