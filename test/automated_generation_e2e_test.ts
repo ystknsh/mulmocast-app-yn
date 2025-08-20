@@ -678,7 +678,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ Found generate button");
     await page.locator('[data-testid="generate-contents-button"]').click({
       timeout: 5000,
-      noWaitAfter: true  // これでナビゲーション待機をスキップ
+      noWaitAfter: true, // これでナビゲーション待機をスキップ
     });
 
     // Start generation without waiting
