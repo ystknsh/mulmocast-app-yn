@@ -53,7 +53,7 @@
           </div>
 
           <div>
-            <Label class="text-xs">Voice ID</Label>
+            <Label class="text-xs">{{ t("parameters.speechParams.voiceId") }}</Label>
             <Select
               :model-value="speaker.voiceId"
               @update:model-value="(value) => handleSpeakerVoiceChange(name, String(value))"
@@ -73,7 +73,7 @@
             </Select>
           </div>
           <div v-if="speaker.provider === 'nijivoice'">
-            <Label class="text-xs">Speed</Label>
+            <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
             <Input
               :model-value="speaker.speed || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
@@ -82,7 +82,7 @@
             />
           </div>
           <div v-if="speaker.provider === 'openai'">
-            <Label class="text-xs">instruction</Label>
+            <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
             <Input
               :model-value="speaker.instruction || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
@@ -127,14 +127,18 @@
       <div class="template-dropdown-container flex items-center gap-4">
         <Input v-model="speechKey" :invalid="!validateKey && speechKey !== ''" class="w-64" />
 
-        <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">Add Speaker</Button>
+        <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">{{
+          t("ui.actions.addThing", { thing: t("ui.common.speaker") })
+        }}</Button>
       </div>
       <div></div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
-      <p class="mb-2 text-sm text-gray-500">No speakers defined</p>
-      <Button variant="outline" size="sm" @click="initializeSpeechParams">Initialize Speech Parameters</Button>
+      <p class="mb-2 text-sm text-gray-500">{{ t("parameters.speechParams.noSpeakersDefined") }}</p>
+      <Button variant="outline" size="sm" @click="initializeSpeechParams">{{
+        t("parameters.speechParams.initializeSpeechParameters")
+      }}</Button>
     </div>
   </Card>
 </template>

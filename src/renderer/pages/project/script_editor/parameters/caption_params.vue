@@ -10,7 +10,7 @@
             <SelectValue placeholder="None" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">None</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.captionParams.noLanguage") }}</SelectItem>
             <SelectItem v-for="language in LANGUAGES" :key="language.id" :value="language.id">
               {{ t("languages." + language.id) }}
             </SelectItem>
