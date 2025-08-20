@@ -38,6 +38,7 @@
             :variant="isDashboardActive ? 'default' : 'ghost'"
             size="sm"
             class="relative transition-transform duration-200 hover:scale-105"
+            data-testid="dashboard-button"
           >
             <component :is="dashboardItem.icon" :size="16" class="mr-2" />
             {{ t("menu." + dashboardItem.key) }}
