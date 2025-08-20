@@ -63,7 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   :speakers="mulmoValue?.speechParams?.speakers ?? {}"
                   @update="update"
-                  @saveMulmo="saveMulmo"
+                  @saveMulmoScript="saveMulmoScript"
                 />
               </Card>
               <div
@@ -286,11 +286,8 @@ const emit = defineEmits([
   "update:isValidScriptData",
   "generateImage",
   "formatAndPushHistoryMulmoScript",
-  "addBeat",
-  "deleteBeat",
-  "positionUp",
   "update:scriptEditorActiveTab",
-  "saveMulmo",
+  "saveMulmoScript",
 ]);
 
 const route = useRoute();
@@ -412,7 +409,6 @@ const deleteBeat = (index: number) => {
       ...props.mulmoValue,
       beats: newBeats,
     });
-    emit("deleteBeat", index);
   }
 };
 const positionUp = (index: number) => {
@@ -422,7 +418,6 @@ const positionUp = (index: number) => {
     ...props.mulmoValue,
     beats: newBeats,
   });
-  emit("positionUp", index);
 };
 
 const changeBeat = (beat: MulmoBeat, index: number) => {
@@ -440,7 +435,6 @@ const addBeat = (beat: MulmoBeat, index: number) => {
     ...props.mulmoValue,
     beats: newBeats,
   });
-  emit("addBeat", index);
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
@@ -493,12 +487,12 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmo");
+  emit("saveMulmoScript");
   emit("formatAndPushHistoryMulmoScript");
 };
 
-const saveMulmo = () => {
-  emit("saveMulmo");
+const saveMulmoScript = () => {
+  emit("saveMulmoScript");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {

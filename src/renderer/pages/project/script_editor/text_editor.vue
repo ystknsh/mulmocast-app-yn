@@ -21,7 +21,7 @@
     <Textarea
       :model-value="beat.text"
       @update:model-value="(value) => update(index, 'text', String(value))"
-      @blur="saveMulmo"
+      @blur="saveMulmoScript"
       :placeholder="
         t('beat.speaker.placeholder', {
           speaker: beat?.speaker || t('ui.common.speaker'),
@@ -89,7 +89,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const emit = defineEmits(["update", "saveMulmo"]);
+const emit = defineEmits(["update", "saveMulmoScript"]);
 
 const supporLanguages = computed(() => {
   const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
@@ -104,8 +104,8 @@ const supporLanguages = computed(() => {
 const update = (index: number, path: string, value: unknown) => {
   emit("update", index, path, value);
 };
-const saveMulmo = () => {
-  emit("saveMulmo");
+const saveMulmoScript = () => {
+  emit("saveMulmoScript");
 };
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 

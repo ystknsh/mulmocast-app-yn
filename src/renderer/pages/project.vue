@@ -7,7 +7,7 @@
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
           :isDevelopment="isDevelopment"
           @openProjectFolder="openProjectFolder"
-          @updateMulmoScript="handleUpdateScriptFromHeader"
+          @updateMulmoScript="handleUpdateMulmoScript"
         />
 
         <!-- 3 Split Layout -->
@@ -41,7 +41,7 @@
                   :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
                   :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
-                  @update:updateMulmoScript="handleUpdateScript"
+                  @updateMulmoScript="handleUpdateMulmoScriptWithNotify"
                   @resetMediaFiles="resetMediaFiles"
                   class="flex h-full flex-col"
                 />
@@ -116,14 +116,14 @@
                     :audioFiles="audioFiles"
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
-                    @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                     :isValidScriptData="isValidScriptData"
-                    @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                    @updateMulmoScript="handleUpdateMulmoScript"
                     @generateImage="generateImage"
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                    @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
-                    @saveMulmo="saveMulmo"
+                    @saveMulmoScript="saveMulmoScript"
                   />
                 </CardContent>
               </Card>
@@ -310,25 +310,27 @@ onUnmounted(() => {
   mulmoScriptHistoryStore.resetMulmoScript();
 });
 
-const handleUpdateScript = (script: MulmoScript) => {
+const handleUpdateMulmoScriptWithNotify = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   notifySuccess(t("settings.notifications.createSuccess"));
 };
 
-const handleUpdateScriptFromHeader = (script: MulmoScript) => {
+const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
 };
 
-const saveProjectMetadata = useDebounceFn(async (projectMetadata: ProjectMetadata) => {
+const saveProjectMetadata = async (projectMetadata: ProjectMetadata) => {
   await projectApi.saveProjectMetadata(projectId.value, {
     ...projectMetadata,
     updatedAt: dayjs().toISOString(),
   });
-}, 1000);
+};
+
+const saveProjectMetadataDebounced = useDebounceFn(saveProjectMetadata, 1000);
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   projectMetadata.value.chatMessages = messages;
-  saveProjectMetadata(projectMetadata.value);
+  saveProjectMetadataDebounced(projectMetadata.value);
 };
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
@@ -341,13 +343,13 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   saveProjectMetadata(projectMetadata.value);
 };
 
-const saveMulmo = async () => {
+const saveMulmoScript = async () => {
   console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   projectMetadata.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
 };
-const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
+const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
 
 watch(
   () => mulmoScriptHistoryStore.currentMulmoScript,
@@ -356,7 +358,7 @@ watch(
     if (oldVal === null) {
       return;
     }
-    saveMulmoScript(mulmoScriptHistoryStore.currentMulmoScript);
+    saveMulmoScriptDebounced(mulmoScriptHistoryStore.currentMulmoScript);
   },
   { deep: true },
 );
@@ -386,7 +388,7 @@ const openProjectFolder = async () => {
 };
 
 const generateImage = async (index: number, target: string) => {
-  await saveMulmo();
+  await saveMulmoScript();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),
