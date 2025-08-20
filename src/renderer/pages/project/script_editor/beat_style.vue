@@ -18,6 +18,7 @@
         @update="(value) => updateParam(value)"
         @updateImageNames="updateImageNames"
         :mulmoError="[]"
+        :settingPresence="{}"
       />
     </CollapsibleContent>
   </Collapsible>
@@ -44,6 +45,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
   updateImageNames: [val: string[]];
+  justSaveAndPushToHistory: [];
 }>();
 
 const updateParam = (value: ImageParams | undefined) => {
@@ -65,5 +67,6 @@ const updateBeatImageParams = async (event) => {
     await nextTick();
     emit("updateImageNames", undefined);
   }
+  emit("justSaveAndPushToHistory")
 };
 </script>

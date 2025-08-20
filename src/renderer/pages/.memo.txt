@@ -1,0 +1,48 @@
+
+
+formatAndPushHistoryMulmoScript
+- chat
+  - script作成時
+
+- script edit
+  - beatの操作(追加、削除、移動、変更)
+- reference系image
+
+不足分
+ text/media/styleタブの更新時
+ 
+履歴に積まない
+ chatの会話
+ yaml/jsonの更新
+
+yaml/jsonはタブの切替時に履歴に積まれる
+  handleUpdateScriptEditorActiveTab
+
+
+// 保存のタイミング
+現状はwatchでdebouncedしている -> update時に保存に変更
+
+---
+mulmoScriptの更新
+1. project.vueのhandleUpdateMulmoScriptで、storeのcurrentMulmoScriptが更新される（履歴には積まれない)
+2. storeのcurrentMulmoScriptはwatchされて、差分があればsaveMulmoScriptDebouncedが呼ばれる
+3. saveMulmoScriptDebouncedは一定時間更新がなければsaveMulmoScriptが呼ばれる
+4. saveMulmoScriptはmulmoScriptとメタデータをnode経由でファイルに書き込む
+
+mulmoScriptの即時更新
+1 saveMulmoScriptを直接呼ぶ(currentMulmoScriptは更新しないので別途更新している前提)
+
+履歴更新
+1 formatAndPushHistoryMulmoScriptを呼ぶ
+2 mulmoパーサーをかけて、データに問題ないか確認。okなら次の方法で更新
+3 currentMulmoScriptを更新して、履歴をpush。最新にもcurrentMulmoScriptをコピー（なのでこの時点では履歴最新と１つ古いのは同じデータ）
+
+
+---
+saveMulmoScriptのときには、currentMulmoScriptは保存されない。保存される方が一貫性がある
+formatAndPushHistoryMulmoScriptはファイルに保存しない（が、mulmoScriptの更新のwatch経由でファイルに保存される)
+
+
+
+
+

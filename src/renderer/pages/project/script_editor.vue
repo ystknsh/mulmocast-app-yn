@@ -63,7 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
-                  @saveMulmoScript="saveMulmoScript"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -172,6 +172,7 @@
                   @update="update"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -283,25 +284,22 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits([
   "updateMulmoScript",
+  "updateMulmoScriptAndPushToHistory",
+  "formatAndPushHistoryMulmoScript",
   "update:isValidScriptData",
   "generateImage",
-  "formatAndPushHistoryMulmoScript",
   "update:scriptEditorActiveTab",
-  "saveMulmoScript",
-  "updateMulmoScriptAndPushToHistory",
 ]);
 
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   if (!props.isValidScriptData) {
     return;
   }
-  lastTab.value = tab;
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
@@ -484,11 +482,6 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmoScript");
-};
-
-const saveMulmoScript = () => {
-  emit("saveMulmoScript");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
@@ -520,6 +513,12 @@ const deleteReferenceImage = (imageKey: string) => {
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
+  });
+};
+
+const justSaveAndPushToHistory = () => {
+  emit("updateMulmoScriptAndPushToHistory", {
+    ...props.mulmoScript,
   });
 };
 </script>

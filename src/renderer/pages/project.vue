@@ -118,13 +118,12 @@
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="isValidScriptData"
                     @updateMulmoScript="handleUpdateMulmoScript"
-                    @updateMulmoScriptAndPushToHistory="handleUpdateMulmoScriptAndPushHistory"
+                    @updateMulmoScriptAndPushToHistory="handleUpdateMulmoScriptAndPushToHistory"
                     @generateImage="generateImage"
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
-                    @saveMulmoScript="saveMulmoScript"
                   />
                 </CardContent>
               </Card>
@@ -311,19 +310,35 @@ onUnmounted(() => {
   mulmoScriptHistoryStore.resetMulmoScript();
 });
 
+// mulmoScript
+// for only header
 const handleUpdateMulmoScriptWithNotify = (script: MulmoScript) => {
-  handleUpdateMulmoScriptAndPushHistory(script);
+  handleUpdateMulmoScriptAndPushToHistory(script);
   notifySuccess(t("settings.notifications.createSuccess"));
 };
-
-const handleUpdateMulmoScriptAndPushHistory = (script: MulmoScript) => {
+// Save to file and push to history
+const handleUpdateMulmoScriptAndPushToHistory = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   formatAndPushHistoryMulmoScript();
+  saveMulmoScript();
 };
 
+// Just update mulmoScript Data
 const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
+  saveMulmoScriptDebounced(script);
 };
+// internal use
+const saveMulmoScript = async () => {
+  console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
+  await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
+  projectMetadata.value.updatedAt = dayjs().toISOString();
+  await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
+};
+// internal use
+const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
+
+// end of mulmoScript
 
 const saveProjectMetadata = async () => {
   projectMetadata.value.updatedAt = dayjs().toISOString();
@@ -346,25 +361,6 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   projectMetadata.value.mulmoViewerActiveTab = tab;
   saveProjectMetadata();
 };
-
-const saveMulmoScript = async () => {
-  console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
-  await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
-  await saveProjectMetadata();
-};
-const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
-
-watch(
-  () => mulmoScriptHistoryStore.currentMulmoScript,
-  (newVal, oldVal) => {
-    // Skip saving when first watch
-    if (oldVal === null) {
-      return;
-    }
-    saveMulmoScriptDebounced(mulmoScriptHistoryStore.currentMulmoScript);
-  },
-  { deep: true },
-);
 
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
@@ -391,7 +387,7 @@ const openProjectFolder = async () => {
 };
 
 const generateImage = async (index: number, target: string) => {
-  await saveMulmoScript();
+  // await saveMulmoScript();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),

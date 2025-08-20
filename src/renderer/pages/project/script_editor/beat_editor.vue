@@ -34,10 +34,12 @@
             </div>
             {{ t("ui.common.or") }}
             <div class="flex">
-              <Input :placeholder="t('beat.mediaFile.placeholder')" v-model="mediaUrl" :invalid="!validateURL" /><Button
-                @click="submitUrlImage"
-                :disabled="!fetchEnable"
-              >
+              <Input
+                :placeholder="t('beat.mediaFile.placeholder')"
+                v-model="mediaUrl"
+                :invalid="!validateURL"
+                @blur="justSaveAndPushToHistory"
+              /><Button @click="submitUrlImage" :disabled="!fetchEnable">
                 {{ t("ui.actions.fetch") }}
               </Button>
             </div>
@@ -58,12 +60,14 @@
               :placeholder="t('ui.common.title')"
               :model-value="beat.image?.slide?.title"
               @update:model-value="(value) => update('image.slide.title', String(value))"
+              @blur="justSaveAndPushToHistory"
               class="mb-2"
             />
             <Textarea
               :placeholder="t('beat.textSlide.placeholder')"
               :model-value="beat.image?.slide?.bullets?.join('\n')"
               @update:model-value="(value) => update('image.slide.bullets', String(value).split('\n'))"
+              @blur="justSaveAndPushToHistory"
               rows="4"
             />
           </template>
@@ -77,6 +81,7 @@
                 Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
               "
               @update:model-value="(value) => update('image.markdown', String(value).split('\n'))"
+              @blur="justSaveAndPushToHistory"
               class="font-mono"
               rows="6"
             />
@@ -95,6 +100,7 @@
                   } catch (_) {}
                 }
               "
+              @blur="justSaveAndPushToHistory"
               class="font-mono"
               rows="8"
             />
@@ -107,6 +113,7 @@
               :placeholder="t('beat.mermaid.placeholder')"
               :model-value="beat?.image?.code?.text"
               @update:model-value="(value) => update('image.code.text', String(value))"
+              @blur="justSaveAndPushToHistory"
               class="font-mono"
               rows="6"
             />
@@ -119,6 +126,7 @@
               :placeholder="t('beat.html_tailwind.placeholder')"
               :model-value="Array.isArray(beat.image?.html) ? beat.image?.html?.join('\n') : beat.image?.html"
               @update:model-value="(value) => update('image.html', String(value).split('\n'))"
+              @blur="justSaveAndPushToHistory"
               class="font-mono"
               rows="10"
             />
@@ -130,6 +138,7 @@
               :placeholder="t('beat.beat.placeholder')"
               :model-value="beat.image.id"
               @update:model-value="(value) => update('image.id', String(value))"
+              @blur="justSaveAndPushToHistory"
               type="text"
             />
           </template>
@@ -146,6 +155,7 @@
               :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
               @update:model-value="(value) => update('htmlPrompt.prompt', String(value))"
+              @blur="justSaveAndPushToHistory"
               class="mt-2 font-mono"
               rows="6"
             />
@@ -156,6 +166,7 @@
               :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
               @update:model-value="(value) => update('imagePrompt', String(value))"
+              @blur="justSaveAndPushToHistory"
               class="my-2 h-20 overflow-y-auto"
             />
           </template>
@@ -186,6 +197,7 @@
             :placeholder="t('beat.moviePrompt.placeholder')"
             :model-value="beat.moviePrompt"
             @update:model-value="(value) => update('moviePrompt', String(value))"
+            @blur="justSaveAndPushToHistory"
             class="mb-2 h-20 overflow-y-auto"
             :disabled="beat.enableLipSync"
           />
@@ -239,6 +251,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       @updateImageNames="updateImageNames"
+      @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
     />
 
@@ -289,7 +302,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "changeBeat", "updateImageNames"]);
+const emit = defineEmits(["update", "generateImage", "changeBeat", "updateImageNames", "justSaveAndPushToHistory"]);
 
 const route = useRoute();
 const { t } = useI18n();
@@ -429,6 +442,9 @@ const update = (path: string, value: unknown) => {
 
 const updateImageNames = (value: string[]) => {
   emit("update", props.index, "imageNames", value);
+};
+const justSaveAndPushToHistory = () => {
+  emit("justSaveAndPushToHistory");
 };
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
