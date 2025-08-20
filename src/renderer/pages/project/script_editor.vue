@@ -63,7 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
-                  @saveMulmoScript="saveMulmoScript"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -283,12 +283,11 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits([
   "updateMulmoScript",
+  "updateMulmoScriptAndPushToHistory",
+  "formatAndPushHistoryMulmoScript",
   "update:isValidScriptData",
   "generateImage",
-  "formatAndPushHistoryMulmoScript",
   "update:scriptEditorActiveTab",
-  "saveMulmoScript",
-  "updateMulmoScriptAndPushToHistory",
 ]);
 
 const route = useRoute();
@@ -482,11 +481,6 @@ const updateImagePath = (imageKey: string, path: string) => {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
-  emit("saveMulmoScript");
-};
-
-const saveMulmoScript = () => {
-  emit("saveMulmoScript");
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
@@ -518,6 +512,12 @@ const deleteReferenceImage = (imageKey: string) => {
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
+  });
+};
+
+const justSaveAndPushToHistory = () => {
+  emit("updateMulmoScriptAndPushToHistory", {
+    ...props.mulmoScript,
   });
 };
 </script>
