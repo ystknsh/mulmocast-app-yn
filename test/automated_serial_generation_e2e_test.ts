@@ -126,6 +126,12 @@ interface ProjectResult {
   created: boolean;
   generated: boolean;
   played: boolean;
+  startTime?: number;
+  endTime?: number;
+  totalDurationMs?: number;
+  creationDurationMs?: number;
+  generationDurationMs?: number;
+  playbackDurationMs?: number;
 }
 
 interface Resources {
@@ -726,6 +732,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     created: false,
     generated: false,
     played: false,
+    startTime: Date.now(),
   };
 
   let projectTitle = "";
@@ -735,6 +742,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
   try {
     // ========== PART 1: Create project (from createProjectAndStartGeneration) ==========
+    const creationStartTime = Date.now();
 
     // Navigate to dashboard
     console.log(`${step.value}. Navigating to dashboard...`);
@@ -792,6 +800,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
     logStep(step, `Project created with title: ${projectTitle}`);
     result.created = true;
+    result.creationDurationMs = Date.now() - creationStartTime;
 
     // Navigate to JSON tab
     logStep(step, `Navigating to JSON tab...`);
@@ -881,6 +890,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     }
 
     // Click generate button
+    const generationStartTime = Date.now();
     logStep(step, `Starting generation...`);
     await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     await page.locator('[data-testid="generate-contents-button"]').click({
@@ -1003,8 +1013,10 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     console.log("✓ Generation completed");
     result.generated = true;
+    result.generationDurationMs = Date.now() - generationStartTime;
 
     // Step 3: Test playback
+    const playbackStartTime = Date.now();
     console.log("\n--- Testing playback ---");
 
     // Wait for movie play button to be available
@@ -1051,7 +1063,16 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     console.log("✓ Playback paused (play button reappeared)");
 
     result.played = true;
+    result.playbackDurationMs = Date.now() - playbackStartTime;
+    result.endTime = Date.now();
+    result.totalDurationMs = result.endTime - result.startTime!;
+    
     console.log(`\n✅ Serial test for ${jsonFile} completed successfully!`);
+    console.log(`📊 Test Duration Summary:`);
+    console.log(`  - Creation: ${(result.creationDurationMs! / 1000).toFixed(1)}s`);
+    console.log(`  - Generation: ${(result.generationDurationMs! / 1000).toFixed(1)}s`);
+    console.log(`  - Playback: ${(result.playbackDurationMs! / 1000).toFixed(1)}s`);
+    console.log(`  - Total: ${(result.totalDurationMs / 1000).toFixed(1)}s`);
   } catch (error: unknown) {
     console.error(`\n❌ Serial test for ${jsonFile} failed:`, error instanceof Error ? error.message : String(error));
     result.status = "failed";
@@ -1066,6 +1087,9 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     }
 
     result.error = error instanceof Error ? error.message : String(error);
+    result.endTime = Date.now();
+    result.totalDurationMs = result.endTime - result.startTime!;
+    console.log(`⏱️ Test failed after ${(result.totalDurationMs / 1000).toFixed(1)}s`);
 
     // Take screenshot on failure
     try {
@@ -1239,6 +1263,25 @@ async function runGenerationE2ETest(): Promise<void> {
 
     console.log(`✓ Success: ${successCount}`);
     console.log(`✗ Failed: ${failedCount}`);
+    
+    // Calculate and display timing statistics
+    const successfulTests = testResults.filter((r) => r.status === "success");
+    if (successfulTests.length > 0) {
+      console.log(`\n⏱️  Timing Statistics (successful tests only):`);
+      
+      const totalTime = successfulTests.reduce((sum, r) => sum + (r.totalDurationMs || 0), 0);
+      const avgTotal = totalTime / successfulTests.length;
+      
+      const avgCreation = successfulTests.reduce((sum, r) => sum + (r.creationDurationMs || 0), 0) / successfulTests.length;
+      const avgGeneration = successfulTests.reduce((sum, r) => sum + (r.generationDurationMs || 0), 0) / successfulTests.length;
+      const avgPlayback = successfulTests.reduce((sum, r) => sum + (r.playbackDurationMs || 0), 0) / successfulTests.length;
+      
+      console.log(`  Average per test: ${(avgTotal / 1000).toFixed(1)}s`);
+      console.log(`    - Creation: ${(avgCreation / 1000).toFixed(1)}s`);
+      console.log(`    - Generation: ${(avgGeneration / 1000).toFixed(1)}s`);
+      console.log(`    - Playback: ${(avgPlayback / 1000).toFixed(1)}s`);
+      console.log(`  Total test time: ${(totalTime / 1000).toFixed(1)}s`);
+    }
 
     if (failedCount > 0) {
       console.log("\n=== Failed Projects Details ===");
@@ -1250,6 +1293,9 @@ async function runGenerationE2ETest(): Promise<void> {
           console.log(`  Created: ${result.created ? "✓" : "✗"}`);
           console.log(`  Generated: ${result.generated ? "✓" : "✗"}`);
           console.log(`  Played: ${result.played ? "✓" : "✗"}`);
+          if (result.totalDurationMs) {
+            console.log(`  Duration: ${(result.totalDurationMs / 1000).toFixed(1)}s`);
+          }
           if (result.error) {
             const errorMsg = result.error.length > 100 ? result.error.substring(0, 100) + "..." : result.error;
             console.log(`  Error: ${errorMsg}`);
