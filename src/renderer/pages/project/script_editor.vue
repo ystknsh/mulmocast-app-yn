@@ -172,6 +172,7 @@
                   @update="update"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div

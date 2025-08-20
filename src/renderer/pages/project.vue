@@ -124,7 +124,6 @@
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
-                    @saveMulmoScript="saveMulmoScript"
                   />
                 </CardContent>
               </Card>
@@ -404,7 +403,7 @@ const openProjectFolder = async () => {
 };
 
 const generateImage = async (index: number, target: string) => {
-  await saveMulmoScript();
+  // await saveMulmoScript();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),
