@@ -37,7 +37,7 @@ import {
 } from "./handler_contents";
 import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
 import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
-import { mulmoAudioBgmUpload } from "./handler_audio_upload";
+import { mulmoAudioBgmUpload, mulmoAudioBgmGet } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
@@ -193,6 +193,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoReferenceImageFetchURL(args[0], args[1], args[2], webContents);
       case "mulmoAudioBgmUpload":
         return await mulmoAudioBgmUpload(args[0], args[1], args[2]);
+      case "mulmoAudioBgmGet":
+        return await mulmoAudioBgmGet(args[0], args[1]);
       case "mulmoReferenceImage":
         return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
       case "mulmoReferenceImages":
