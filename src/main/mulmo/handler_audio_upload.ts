@@ -14,3 +14,17 @@ export const mulmoAudioBgmUpload = async (projectId: string, filename: string, b
 
   return path.join(dirPath, filename);
 };
+
+export const mulmoAudioBgmGet = async (projectId: string, bgmPath: string) => {
+  const projectPath = getProjectPath(projectId);
+
+  const cleanPath = bgmPath.replace(/^\.\//, "");
+  const filePath = path.resolve(projectPath, cleanPath);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`BGM file not found: ${filePath}`);
+  }
+
+  const buffer = fs.readFileSync(filePath);
+  return buffer;
+};

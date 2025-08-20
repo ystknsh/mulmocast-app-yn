@@ -129,6 +129,11 @@
         />
       </div>
 
+      <!-- Audio Player -->
+      <div v-if="audioUrl" class="mt-3">
+        <audio :src="audioUrl" controls />
+      </div>
+
       <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
@@ -136,7 +141,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onUnmounted } from "vue";
 import { Music } from "lucide-vue-next";
 import { Card, Label, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
@@ -158,29 +163,54 @@ const emit = defineEmits<{
   update: [audioParams: AudioParams];
 }>();
 
-const customAudioFileName = ref("");
+const audioUrl = ref<string>("");
+const customAudioFileName = ref<string>("");
+const customAudioBlob = ref<Blob | null>(null);
 const isShowingCustom = ref(false);
-const fileInput = ref<HTMLInputElement>();
 const isUploading = ref(false);
+const fileInput = ref<HTMLInputElement>();
 
-const initializeCustomAudioDisplay = () => {
+const revokeAudioUrlIfExists = () => {
+  if (audioUrl.value && audioUrl.value.startsWith("blob:")) {
+    URL.revokeObjectURL(audioUrl.value);
+  }
+};
+
+const initializeCustomAudioDisplay = async () => {
   if (props.audioParams?.bgm) {
     if (props.audioParams.bgm.kind === "path") {
       const path = props.audioParams.bgm.path;
       if (typeof path === "string") {
         customAudioFileName.value = path.split("/").pop() || path;
+        try {
+          const audioData = await window.electronAPI.mulmoHandler("mulmoAudioBgmGet", props.projectId, path);
+          if (audioData) {
+            const blob = new Blob([new Uint8Array(audioData as ArrayBuffer)], { type: "audio/mpeg" });
+            customAudioBlob.value = blob;
+            revokeAudioUrlIfExists();
+            audioUrl.value = URL.createObjectURL(blob);
+          }
+        } catch (error) {
+          console.error("Failed to load custom BGM:", error);
+        }
       }
+    } else if (props.audioParams.bgm.kind === "url") {
+      audioUrl.value = props.audioParams.bgm.url;
     }
   }
 };
 
 watch(
   () => props.audioParams?.bgm,
-  () => {
-    initializeCustomAudioDisplay();
+  async () => {
+    await initializeCustomAudioDisplay();
   },
   { immediate: true },
 );
+
+onUnmounted(() => {
+  revokeAudioUrlIfExists();
+});
 
 const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: number) => {
   const currentParams = props.audioParams || ({} as AudioParams);
@@ -224,12 +254,15 @@ const handleBgmUpdate = (bgmUrl: string) => {
     const { bgm: __bgm, ...paramsWithoutBgm } = currentParams;
     customAudioFileName.value = "";
     isShowingCustom.value = false;
+    audioUrl.value = "";
+    revokeAudioUrlIfExists();
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
       ...paramsWithoutBgm,
     });
   } else if (bgmUrl === "__custom__") {
     isShowingCustom.value = true;
+    audioUrl.value = "";
     if (!customAudioFileName.value && !props.audioParams?.bgm) {
       const { bgm: __bgm, ...paramsWithoutBgm } = currentParams;
       emit("update", {
@@ -240,6 +273,8 @@ const handleBgmUpdate = (bgmUrl: string) => {
   } else {
     customAudioFileName.value = "";
     isShowingCustom.value = false;
+    audioUrl.value = bgmUrl;
+    revokeAudioUrlIfExists();
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
       ...currentParams,
@@ -279,6 +314,9 @@ const processAudioFile = async (file: File) => {
 
       const currentParams = props.audioParams || ({} as AudioParams);
       customAudioFileName.value = file.name;
+
+      revokeAudioUrlIfExists();
+      audioUrl.value = URL.createObjectURL(file);
 
       emit("update", {
         ...AUDIO_PARAMS_DEFAULT_VALUES,
