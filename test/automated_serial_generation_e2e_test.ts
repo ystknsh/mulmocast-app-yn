@@ -116,7 +116,12 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
 }
 
 // Phase 2: Setup JSON content in editor
-async function setupJsonContent(page: Page, jsonData: unknown, jsonFile: string, step: { value: number }): Promise<void> {
+async function setupJsonContent(
+  page: Page,
+  jsonData: unknown,
+  jsonFile: string,
+  step: { value: number },
+): Promise<void> {
   // Navigate to JSON tab
   logStep(step, `Navigating to JSON tab...`);
   await page.click('[data-testid="script-editor-tab-json"]');
