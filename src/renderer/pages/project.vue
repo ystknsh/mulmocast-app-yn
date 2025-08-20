@@ -364,20 +364,6 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   saveProjectMetadata(projectMetadata.value);
 };
 
-/*
-watch(
-  () => mulmoScriptHistoryStore.currentMulmoScript,
-  (newVal, oldVal) => {
-    // Skip saving when first watch
-    if (oldVal === null) {
-      return;
-    }
-    saveMulmoScriptDebounced(mulmoScriptHistoryStore.currentMulmoScript);
-  },
-  { deep: true },
-);
-*/
-
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
