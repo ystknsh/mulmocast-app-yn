@@ -52,16 +52,16 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats ?? []" :key="beat?.id ?? index" class="relative">
+            <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
               <Card class="gap-2 space-y-1 p-4">
                 <TextEditor
                   :index="index"
                   :beat="beat"
                   :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
-                  :lang="mulmoValue.lang"
+                  :lang="mulmoScript.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
-                  :speakers="mulmoValue?.speechParams?.speakers ?? {}"
+                  :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
                   @saveMulmoScript="saveMulmoScript"
                 />
@@ -75,7 +75,7 @@
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <ArrowDown
-                  v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                  v-if="(mulmoScript?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
@@ -158,13 +158,13 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="relative">
+            <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
               <Card class="p-4">
                 <BeatEditor
                   :beat="beat"
-                  :mulmoScript="mulmoValue"
+                  :mulmoScript="mulmoScript"
                   :index="index"
-                  :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
+                  :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
                   :imageFile="imageFiles[beat.id]"
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
@@ -183,7 +183,7 @@
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
                 <ArrowDown
-                  v-if="(mulmoValue?.beats ?? []).length !== index + 1"
+                  v-if="(mulmoScript?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
                   class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
                 />
@@ -208,7 +208,7 @@
         </p>
         <PresentationStyleEditor
           :projectId="projectId"
-          :presentationStyle="mulmoValue"
+          :presentationStyle="mulmoScript"
           @update:presentationStyle="updatePresentationStyle"
           :mulmoError="mulmoError"
           :settingPresence="settingPresence"
@@ -223,7 +223,7 @@
         </p>
         <Reference
           :projectId="projectId"
-          :images="props.mulmoValue?.imageParams?.images ?? {}"
+          :images="props.mulmoScript?.imageParams?.images ?? {}"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
           @addReferenceImage="addReferenceImage"
@@ -270,7 +270,7 @@ import { setRandomBeatId } from "@/lib/beat_util";
 const { t } = useI18n();
 
 interface Props {
-  mulmoValue: MulmoScript;
+  mulmoScript: MulmoScript;
   isValidScriptData: boolean;
   imageFiles: Record<string, string | null>;
   movieFiles: Record<string, string | null>;
@@ -295,10 +295,6 @@ const projectId = computed(() => route.params.id as string);
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 const lastTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-
-const safeBeats = computed(() => {
-  return props.mulmoValue?.beats ?? [];
-});
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   if (!props.isValidScriptData) {
@@ -334,7 +330,7 @@ const hasScriptError = computed(() => {
 });
 
 watch(
-  () => props.mulmoValue,
+  () => props.mulmoScript,
   (newVal) => {
     internalValue.value = { ...newVal };
     syncTextFromInternal();
@@ -387,11 +383,11 @@ const update = (index: number, path: string, value: unknown) => {
           ...obj,
           [keys[0]]: set(obj[keys[0]] as Record<string, unknown>, keys.slice(1), val),
         };
-  const newBeat = set(props.mulmoValue.beats[index], path.split("."), value);
-  const newBeats = [...props.mulmoValue.beats.slice(0, index), newBeat, ...props.mulmoValue.beats.slice(index + 1)];
+  const newBeat = set(props.mulmoScript.beats[index], path.split("."), value);
+  const newBeats = [...props.mulmoScript.beats.slice(0, index), newBeat, ...props.mulmoScript.beats.slice(index + 1)];
 
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     beats: newBeats,
   });
 };
@@ -403,49 +399,49 @@ const generateImage = (index: number, target: string) => {
 };
 
 const deleteBeat = (index: number) => {
-  if (index >= 0 && index < props.mulmoValue.beats.length) {
-    const newBeats = arrayRemoveAt(props.mulmoValue.beats, index);
+  if (index >= 0 && index < props.mulmoScript.beats.length) {
+    const newBeats = arrayRemoveAt(props.mulmoScript.beats, index);
     emit("updateMulmoScript", {
-      ...props.mulmoValue,
+      ...props.mulmoScript,
       beats: newBeats,
     });
   }
 };
 const positionUp = (index: number) => {
-  if (index <= 0 || index >= props.mulmoValue.beats.length) return;
-  const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoValue.beats, index);
+  if (index <= 0 || index >= props.mulmoScript.beats.length) return;
+  const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoScript.beats, index);
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     beats: newBeats,
   });
 };
 
 const changeBeat = (beat: MulmoBeat, index: number) => {
-  const newBeats = [...props.mulmoValue.beats];
+  const newBeats = [...props.mulmoScript.beats];
   newBeats[index] = beat;
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     beats: newBeats,
   });
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, setRandomBeatId(beat));
+  const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     beats: newBeats,
   });
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     ...removeEmptyValues(style),
   });
 };
 
 const updateImage = (imageKey: string, prompt: string) => {
-  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const currentImages = props.mulmoScript?.imageParams?.images ?? {};
 
   const updatedImages = {
     ...currentImages,
@@ -456,18 +452,18 @@ const updateImage = (imageKey: string, prompt: string) => {
   };
 
   const updatedImageParams = {
-    ...props.mulmoValue?.imageParams,
+    ...props.mulmoScript?.imageParams,
     images: updatedImages,
   };
 
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
 };
 
 const updateImagePath = (imageKey: string, path: string) => {
-  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const currentImages = props.mulmoScript?.imageParams?.images ?? {};
   const updatedImages = {
     ...currentImages,
     [imageKey]: {
@@ -479,12 +475,12 @@ const updateImagePath = (imageKey: string, path: string) => {
     },
   };
   const updatedImageParams = {
-    ...props.mulmoValue?.imageParams,
+    ...props.mulmoScript?.imageParams,
     images: updatedImages,
   };
 
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
   emit("saveMulmoScript");
@@ -496,34 +492,34 @@ const saveMulmoScript = () => {
 };
 
 const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImagePromptMedia) => {
-  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const currentImages = props.mulmoScript?.imageParams?.images ?? {};
   const updatedImages = {
     ...currentImages,
     [imageKey]: data,
   };
   const updatedImageParams = {
-    ...props.mulmoValue?.imageParams,
+    ...props.mulmoScript?.imageParams,
     images: updatedImages,
   };
 
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
   emit("formatAndPushHistoryMulmoScript");
 };
 
 const deleteReferenceImage = (imageKey: string) => {
-  const currentImages = props.mulmoValue?.imageParams?.images ?? {};
+  const currentImages = props.mulmoScript?.imageParams?.images ?? {};
   const { [imageKey]: __, ...updatedImages } = currentImages;
 
   const updatedImageParams = {
-    ...props.mulmoValue?.imageParams,
+    ...props.mulmoScript?.imageParams,
     images: updatedImages,
   };
 
   emit("updateMulmoScript", {
-    ...props.mulmoValue,
+    ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
   emit("formatAndPushHistoryMulmoScript");

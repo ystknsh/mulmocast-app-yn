@@ -110,7 +110,14 @@ interface Props {
 const { t } = useI18n();
 
 const props = defineProps<Props>();
-const emit = defineEmits(["updateImage", "updateImagePath", "addReferenceImage", "deleteReferenceImage"]);
+const emit = defineEmits([
+  "updateImage",
+  "updateImagePath",
+  "addReferenceImage",
+  "deleteReferenceImage",
+  "saveMulmo",
+  "formatAndPushHistoryMulmoScript",
+]);
 
 const imageRefs = ref<Record<string, string>>({});
 

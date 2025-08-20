@@ -59,7 +59,7 @@
       </div>
       <div v-if="images" class="my-2">
         <Label>{{ t("parameters.imageParams.images") }}</Label>
-        <div v-for="(imageKey, key) in Object.keys(images)" :key="imageKey">
+        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
           <Checkbox
             :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
             @update:modelValue="(val) => updateImageNames(imageKey, val)"

@@ -110,7 +110,7 @@
                 </CardHeader>
                 <CardContent class="h-full">
                   <ScriptEditor
-                    :mulmoValue="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
+                    :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
                     :imageFiles="imageFiles"
                     :movieFiles="movieFiles"
                     :audioFiles="audioFiles"

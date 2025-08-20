@@ -127,6 +127,7 @@ export default [
     },
     plugins: {
       ...basePlugins,
+      vue,
     },
     rules: {
       ...vue.configs["flat/recommended"].rules,
@@ -145,6 +146,15 @@ export default [
           math: "always",
         },
       ],
+      "vue/require-explicit-emits": "error",
+      "vue/valid-define-emits": "error",
+      "vue/define-emits-declaration": ["warn", "type-based"],
+      "vue/no-unused-refs": "error",
+      "vue/no-unused-vars": "error",
+
+      "vue/no-useless-v-bind": "error",
+      "vue/no-mutating-props": "error",
+
       "@intlify/vue-i18n/no-raw-text": [
         "warn",
         {
