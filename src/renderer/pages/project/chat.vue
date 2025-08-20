@@ -1,9 +1,6 @@
 <template>
   <div class="flex h-full flex-col space-y-2">
-    <SelectLanguage
-      :mulmoScript="mulmoScript"
-      @updateMulmoScript="(script) => emit('update:updateMulmoScript', script)"
-    />
+    <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
@@ -174,7 +171,7 @@ const { messages = [] } = defineProps<{
 const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
 
 const emit = defineEmits<{
-  "update:updateMulmoScript": [value: MulmoScript];
+  updateMulmoScript: [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
   resetMediaFiles: [];
 }>();
@@ -339,20 +336,10 @@ const run = async () => {
     const newMessages = [...res.llm.messages.map((message) => filterMessage(true)(message))];
     userInput.value = "";
     emit("update:updateChatMessages", newMessages);
-    /*
-    if (newMessages.length > 2 && newMessages[newMessages.length - 2].role === "tool") {
-      const toolsData = newMessages[newMessages.length - 2];
-      if (toolsData?.extra?.agent === "mulmoScriptValidatorAgent" && toolsData?.extra?.data?.isValid) {
-        const script = toolsData?.extra?.data?.script;
-        script.beats.map(setRandomBeatId);
-        emit("update:updateMulmoScript", script);
-      }
-    }
-    */
     if (res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data?.isValid) {
       const { script } = res?.llm?.data?.["mulmoScriptValidatorAgent--pushScript"]?.data ?? {};
       script.beats.map(setRandomBeatId);
-      emit("update:updateMulmoScript", script);
+      emit("updateMulmoScript", script);
     }
   } catch (error) {
     console.log(error);

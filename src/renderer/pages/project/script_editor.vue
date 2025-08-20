@@ -282,7 +282,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits([
-  "update:mulmoValue",
+  "updateMulmoScript",
   "update:isValidScriptData",
   "generateImage",
   "formatAndPushHistoryMulmoScript",
@@ -360,7 +360,7 @@ const onJsonInput = (value: string) => {
     const parsed = JSON.parse(value);
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
-    emit("update:mulmoValue", parsed);
+    emit("updateMulmoScript", parsed);
     emit("update:isValidScriptData", true);
   } catch (err) {
     console.log(err);
@@ -374,7 +374,7 @@ const onYamlInput = (value: string) => {
     const parsed = YAML.parse(value);
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
-    emit("update:mulmoValue", parsed);
+    emit("updateMulmoScript", parsed);
     emit("update:isValidScriptData", true);
   } catch (err) {
     console.log(err);
@@ -393,7 +393,7 @@ const update = (index: number, path: string, value: unknown) => {
   const newBeat = set(props.mulmoValue.beats[index], path.split("."), value);
   const newBeats = [...props.mulmoValue.beats.slice(0, index), newBeat, ...props.mulmoValue.beats.slice(index + 1)];
 
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     beats: newBeats,
   });
@@ -408,7 +408,7 @@ const generateImage = (index: number, target: string) => {
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoValue.beats.length) {
     const newBeats = arrayRemoveAt(props.mulmoValue.beats, index);
-    emit("update:mulmoValue", {
+    emit("updateMulmoScript", {
       ...props.mulmoValue,
       beats: newBeats,
     });
@@ -418,7 +418,7 @@ const deleteBeat = (index: number) => {
 const positionUp = (index: number) => {
   if (index <= 0 || index >= props.mulmoValue.beats.length) return;
   const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoValue.beats, index);
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     beats: newBeats,
   });
@@ -428,7 +428,7 @@ const positionUp = (index: number) => {
 const changeBeat = (beat: MulmoBeat, index: number) => {
   const newBeats = [...props.mulmoValue.beats];
   newBeats[index] = beat;
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     beats: newBeats,
   });
@@ -436,7 +436,7 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 
 const addBeat = (beat: MulmoBeat, index: number) => {
   const newBeats = arrayInsertAfter(props.mulmoValue.beats, index, setRandomBeatId(beat));
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     beats: newBeats,
   });
@@ -444,7 +444,7 @@ const addBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     ...removeEmptyValues(style),
   });
@@ -466,7 +466,7 @@ const updateImage = (imageKey: string, prompt: string) => {
     images: updatedImages,
   };
 
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
@@ -489,7 +489,7 @@ const updateImagePath = (imageKey: string, path: string) => {
     images: updatedImages,
   };
 
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
@@ -512,7 +512,7 @@ const addReferenceImage = (imageKey: string, data: MulmoImageMedia | MulmoImageP
     images: updatedImages,
   };
 
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
@@ -528,7 +528,7 @@ const deleteReferenceImage = (imageKey: string) => {
     images: updatedImages,
   };
 
-  emit("update:mulmoValue", {
+  emit("updateMulmoScript", {
     ...props.mulmoValue,
     imageParams: updatedImageParams,
   });
