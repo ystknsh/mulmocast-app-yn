@@ -679,7 +679,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
       throw new Error("Generate Contents button not found");
     }
     console.log("✓ Found generate button");
-    await generateButton.click();
+    generateButton.click();
 
     // Start generation without waiting
     console.log(`\n${++step}. Generation started, moving to next file...`);
