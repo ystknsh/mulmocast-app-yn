@@ -7,17 +7,17 @@ import type * as monaco from "monaco-editor";
 
 // Configuration constants
 const CONFIG = {
-  PROCESS_KILL_TIMEOUT: 5000, // 5 seconds
-  APP_START_WAIT: 20000, // 20 seconds for CI environment
-  CDP_RETRY_DELAY: 1000, // CDP connection retry delay (1 second)
+  PROCESS_KILL_TIMEOUT_MS: 5000, // 5 seconds
+  APP_START_WAIT_MS: 20000, // 20 seconds for CI environment
+  CDP_RETRY_DELAY_MS: 1000, // CDP connection retry delay (1 second)
   CDP_MAX_ATTEMPTS: 50, // Maximum CDP connection attempts (longer for CI)
-  TAB_SWITCH_DELAY: 500, // Tab switching delay
-  INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
-  GENERATION_TIMEOUT: 600000, // 10 minutes for generation (longer for CI)
-  BUTTON_TIMEOUT: 15000, // 15 seconds to wait for buttons (play, generate, etc.)
-  VITE_SERVER_WAIT_MAX: 60000, // 60 seconds to wait for Vite dev server
-  VITE_SERVER_CHECK_INTERVAL: 2000, // Check every 2 seconds
-  PLAY_WAIT: 3000, // 3 seconds to wait during playback for serial test
+  TAB_SWITCH_DELAY_MS: 500, // Tab switching delay
+  INITIAL_WAIT_MS: 3000, // Initial wait before test starts (3 seconds)
+  GENERATION_TIMEOUT_MS: 600000, // 10 minutes for generation (longer for CI)
+  BUTTON_TIMEOUT_MS: 15000, // 15 seconds to wait for buttons (play, generate, etc.)
+  VITE_SERVER_WAIT_MAX_MS: 60000, // 60 seconds to wait for Vite dev server
+  VITE_SERVER_CHECK_INTERVAL_MS: 2000, // Check every 2 seconds
+  PLAY_WAIT_MS: 3000, // 3 seconds to wait during playback for serial test
 } as const;
 
 // Helper function for logging with step increment
@@ -84,7 +84,7 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
         }
         cleanup();
       }
-    }, CONFIG.PROCESS_KILL_TIMEOUT);
+    }, CONFIG.PROCESS_KILL_TIMEOUT_MS);
 
     const cleanup = () => {
       if (!resolved) {
@@ -163,7 +163,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     console.log(`${step.value}. Navigating to dashboard...`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("domcontentloaded");
-    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
@@ -219,7 +219,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Navigate to JSON tab
     logStep(step, `Navigating to JSON tab...`);
     await page.click('[data-testid="script-editor-tab-json"]');
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY_MS));
     console.log("✓ JSON tab is active");
 
     // Wait for Monaco Editor
@@ -281,13 +281,13 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
       [dayjs().format("YYYYMMDD_HHmmss"), currentTestFile],
     );
 
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT_MS));
 
     // Delete problematic beats in Media tab
     if (problematicBeatIndices.length > 0) {
       logStep(step, `Navigating to Media tab to clean up...`);
       await page.click('[data-testid="script-editor-tab-media"]');
-      await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY_MS));
 
       const sortedIndices = problematicBeatIndices.sort((a, b) => b - a);
       for (const beatIndex of sortedIndices) {
@@ -306,7 +306,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Click generate button
     const generationStartTime = Date.now();
     logStep(step, `Starting generation...`);
-    await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     await page.locator('[data-testid="generate-contents-button"]').click({
       timeout: 5000,
       noWaitAfter: true,
@@ -367,7 +367,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Then wait for generation to complete (both generate button and play button enabled)
     console.log("Waiting for generation to complete (generate button + play button enabled)...");
 
-    const maxGenerationWait = CONFIG.GENERATION_TIMEOUT / 1000; // Convert to seconds
+    const maxGenerationWait = CONFIG.GENERATION_TIMEOUT_MS / 1000; // Convert to seconds
     let generationWaitTime = 0;
 
     while (generationWaitTime < maxGenerationWait) {
@@ -438,7 +438,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     const playButtonSelector = '[data-testid="movie-play-button"]';
     const pauseButtonSelector = '[data-testid="movie-pause-button"]';
 
-    await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT_MS });
 
     // Check if button is enabled
     await page.waitForFunction(
@@ -447,7 +447,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         return button && !button.disabled && button.getAttribute("aria-disabled") !== "true";
       },
       playButtonSelector,
-      { timeout: CONFIG.BUTTON_TIMEOUT },
+      { timeout: CONFIG.BUTTON_TIMEOUT_MS },
     );
     console.log("✓ Movie play button is available and enabled");
 
@@ -458,12 +458,12 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Wait for pause button to appear
     console.log("Waiting for pause button to appear...");
-    await page.waitForSelector(pauseButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector(pauseButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     console.log("✓ Playback started (pause button appeared)");
 
     // Wait 3 seconds during playback
-    console.log(`Waiting ${CONFIG.PLAY_WAIT}ms during playback...`);
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.PLAY_WAIT));
+    console.log(`Waiting ${CONFIG.PLAY_WAIT_MS}ms during playback...`);
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.PLAY_WAIT_MS));
     console.log("✓ Playback wait completed");
 
     // Click pause button
@@ -473,7 +473,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Wait for play button to appear again
     console.log("Waiting for play button to reappear...");
-    await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     console.log("✓ Playback paused (play button reappeared)");
 
     result.played = true;
@@ -520,7 +520,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
   try {
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("domcontentloaded");
-    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
     console.log("✓ Returned to dashboard");
   } catch (navError) {
     console.error("Failed to navigate back to dashboard:", navError);
@@ -588,7 +588,7 @@ async function runGenerationE2ETest(): Promise<void> {
         if (attempts === 1) {
           console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
         }
-        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY_MS));
       }
     }
 
@@ -597,7 +597,7 @@ async function runGenerationE2ETest(): Promise<void> {
     let page: Page | null = null;
     let waitTime = 0;
 
-    while (waitTime < CONFIG.VITE_SERVER_WAIT_MAX) {
+    while (waitTime < CONFIG.VITE_SERVER_WAIT_MAX_MS) {
       const contexts = resources.browser!.contexts();
       console.log(`Found ${contexts.length} browser contexts`);
 
@@ -622,12 +622,12 @@ async function runGenerationE2ETest(): Promise<void> {
       }
 
       console.log(`Still waiting for Vite server... (${waitTime / 1000}s elapsed)`);
-      await new Promise((resolve) => setTimeout(resolve, CONFIG.VITE_SERVER_CHECK_INTERVAL));
-      waitTime += CONFIG.VITE_SERVER_CHECK_INTERVAL;
+      await new Promise((resolve) => setTimeout(resolve, CONFIG.VITE_SERVER_CHECK_INTERVAL_MS));
+      waitTime += CONFIG.VITE_SERVER_CHECK_INTERVAL_MS;
     }
 
     if (!page) {
-      throw new Error(`Could not find application page after waiting ${CONFIG.VITE_SERVER_WAIT_MAX / 1000} seconds`);
+      throw new Error(`Could not find application page after waiting ${CONFIG.VITE_SERVER_WAIT_MAX_MS / 1000} seconds`);
     }
 
     console.log("✓ Found application page");
