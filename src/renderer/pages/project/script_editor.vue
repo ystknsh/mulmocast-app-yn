@@ -63,7 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
-                  @saveMulmoScript="updateMulmoScriptAndPushToHistory"
+                  @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
               <div
@@ -512,6 +512,12 @@ const deleteReferenceImage = (imageKey: string) => {
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
+  });
+};
+
+const justSaveAndPushToHistory = () => {
+  emit("updateMulmoScriptAndPushToHistory", {
+    ...props.mulmoScript,
   });
 };
 </script>
