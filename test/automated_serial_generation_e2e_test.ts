@@ -161,8 +161,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     startTime: Date.now(),
   };
 
-  let projectTitle = "";
-  let problematicBeatIndices: number[] = [];
+  const problematicBeatIndices: number[] = [];
   const step = { value: 1 };
 
   try {
@@ -221,7 +220,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Generate project title
     const baseTitle = jsonData.title || "Test";
-    projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
+    const projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
     logStep(step, `Project created with title: ${projectTitle}`);
     result.created = true;
     result.creationDurationMs = Date.now() - creationStartTime;
@@ -263,7 +262,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         };
         const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
         if (editor) {
-          let content = editor.getValue();
+          const content = editor.getValue();
           const jsonData = JSON.parse(content);
 
           // Fix image paths
