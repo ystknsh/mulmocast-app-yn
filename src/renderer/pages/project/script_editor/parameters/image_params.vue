@@ -42,6 +42,22 @@
         </Select>
       </div>
       <div>
+        <Label>{{ t("ui.common.quality") }}</Label>
+        <Select
+          :model-value="imageParams?.quality || IMAGE_PARAMS_DEFAULT_VALUES.quality"
+          @update:model-value="(value) => handleUpdate('quality', String(value))"
+        >
+          <SelectTrigger>
+            <SelectValue :placeholder="defaultQuality" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="quality in qualityOptions" :key="quality" :value="quality">
+              {{ quality }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
         <Label>{{ t("ui.common.style") }}</Label>
         <Input
           :model-value="imageParams?.style || IMAGE_PARAMS_DEFAULT_VALUES.style"
@@ -84,12 +100,15 @@ import {
   type Text2ImageProvider,
   type MulmoImageParamsImages,
 } from "mulmocast/browser";
+import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
 const { t } = useI18n();
+const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
+const defaultQuality = "auto";
 
 const PROVIDERS = Object.entries(provider2ImageAgent)
   .filter(([provider, __]) => {
