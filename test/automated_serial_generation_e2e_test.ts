@@ -37,7 +37,7 @@ function logStep(stepRef: { value: number }, message: string): void {
 }
 
 // Helper function to find beats with problematic audio files
-function findProblematicBeats(jsonData: any, targetFilename: string): number[] {
+function findProblematicBeats(jsonData: unknown, targetFilename: string): number[] {
   const problematicIndices: number[] = [];
 
   if (jsonData.beats && Array.isArray(jsonData.beats)) {
@@ -87,7 +87,7 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
   const jsonContent = await readLocalJSON(jsonFile);
   console.log(`[DEBUG] JSON file: ${jsonFile}`);
 
-  let jsonData: any;
+  let jsonData: unknown;
   try {
     jsonData = JSON.parse(jsonContent);
     console.log("✓ JSON parsed successfully");
@@ -116,7 +116,7 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
 }
 
 // Phase 2: Setup JSON content in editor
-async function setupJsonContent(page: Page, jsonData: any, jsonFile: string, step: { value: number }): Promise<void> {
+async function setupJsonContent(page: Page, jsonData: unknown, jsonFile: string, step: { value: number }): Promise<void> {
   // Navigate to JSON tab
   logStep(step, `Navigating to JSON tab...`);
   await page.click('[data-testid="script-editor-tab-json"]');
@@ -151,7 +151,7 @@ async function setupJsonContent(page: Page, jsonData: any, jsonFile: string, ste
   await page.evaluate(
     ([ts, fileName]: [string, string]) => {
       // Helper function to convert problematic image paths to URLs
-      function convertImagePathsToUrls(jsonData: any): boolean {
+      function convertImagePathsToUrls(jsonData: unknown): boolean {
         let hasChanges = false;
         if (jsonData.beats && Array.isArray(jsonData.beats)) {
           jsonData.beats.forEach((beat: unknown) => {
@@ -171,7 +171,7 @@ async function setupJsonContent(page: Page, jsonData: any, jsonFile: string, ste
       }
 
       // Helper function to add timestamp to JSON title
-      function addTimestampToJsonTitle(jsonData: any, timestamp: string, fileName: string): void {
+      function addTimestampToJsonTitle(jsonData: unknown, timestamp: string, fileName: string): void {
         const fileBaseName = fileName.replace(".json", "");
         if (!jsonData.title) {
           jsonData.title = `${timestamp} Test (${fileBaseName})`;
@@ -512,7 +512,7 @@ interface ProjectResult {
 
 interface ProjectSetupResult {
   projectTitle: string;
-  jsonData: any;
+  jsonData: unknown;
   problematicBeats: number[];
   creationDurationMs: number;
 }
