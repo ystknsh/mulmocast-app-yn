@@ -169,6 +169,7 @@
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
+                  :settingPresence="settingPresence"
                   @update="update"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
