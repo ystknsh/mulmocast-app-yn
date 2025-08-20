@@ -3,8 +3,8 @@
     <DialogOverlay class="bg-black/10" @click="isOpen = false" />
     <DialogContent class="max-w-3xl border-0 bg-transparent p-0 shadow-none">
       <div class="sr-only">
-        <DialogTitle>Media Preview</DialogTitle>
-        <DialogDescription>Click outside to close</DialogDescription>
+        <DialogTitle>{{ t("viewer.mediaPreview.modal.dialogTitle") }}</DialogTitle>
+        <DialogDescription>{{ t("viewer.mediaPreview.modal.dialogDescription") }}</DialogDescription>
       </div>
       <div class="flex h-full items-center justify-center" @click="isOpen = false">
         <img
@@ -29,7 +29,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { Dialog, DialogContent, DialogOverlay, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
+const { t } = useI18n();
 
 interface Props {
   open: boolean;

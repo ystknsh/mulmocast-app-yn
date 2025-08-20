@@ -54,9 +54,6 @@ const lang = {
       parameters: "パラメータ",
       example: "例)",
 
-      // Modal
-      clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
-
       enable: "有効",
       disable: "無効",
     },
@@ -552,8 +549,19 @@ const lang = {
     },
   },
 
-  modal: {
-    clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+  viewer: {
+    mediaPreview: {
+      modal: {
+        dialogTitle: "メディアプレビュー",
+        dialogDescription: "外側をクリックして閉じる",
+      }
+    },
+    mulmo: {
+      modal: {
+        dialogTitle: "Mulmo ビューアー",
+        dialogDescription: "外側をクリックして閉じる",
+      }
+    }
   },
   notify: {
     audio: {

@@ -54,9 +54,6 @@ const lang = {
       parameters: "Parameters",
       example: "ex)",
 
-      // Modal
-      clickOutsideToClose: "Click outside to close",
-
       enable: "Enable",
       disable: "Disable",
     },
@@ -552,8 +549,19 @@ const lang = {
     },
   },
 
-  modal: {
-    clickOutsideToClose: "Click outside to close",
+  viewer: {
+    mediaPreview: {
+      modal: {
+        dialogTitle: "Media Preview",
+        dialogDescription: "Click outside to close",
+      }
+    },
+    mulmo: {
+      modal: {
+        dialogTitle: "Mulmo Viewer",
+        dialogDescription: "Click outside to close",
+      }
+    }
   },
   notify: {
     audio: {

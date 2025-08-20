@@ -22,7 +22,7 @@
         >
           <Activity :size="16" class="text-green-500" />
           <Badge variant="secondary" class="text-xs" data-testid="generating-count-badge">
-            {{ mulmoEventStore.generatingProjectCount }} generating
+            {{ mulmoEventStore.generatingProjectCount }} {{ t("ui.actions.generating") }}
           </Badge>
         </div>
 
