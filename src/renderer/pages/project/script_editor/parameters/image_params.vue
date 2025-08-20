@@ -42,6 +42,26 @@
         </Select>
       </div>
       <div>
+        <Label>{{ t("ui.common.quality") }}</Label>
+        <Select
+          :model-value="imageParams?.quality || IMAGE_PARAMS_DEFAULT_VALUES.quality"
+          @update:model-value="(value) => handleUpdate('quality', String(value))"
+        >
+          <SelectTrigger>
+            <SelectValue :placeholder="'auto'" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem
+              v-for="quality in ['low', 'medium', 'high', 'auto']"
+              :key="quality"
+              :value="quality"
+            >
+              {{ quality }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
         <Label>{{ t("ui.common.style") }}</Label>
         <Input
           :model-value="imageParams?.style || IMAGE_PARAMS_DEFAULT_VALUES.style"
