@@ -128,10 +128,14 @@ interface Resources {
 
 async function waitForAllGenerationsToComplete(page: Page): Promise<void> {
   console.log("\n=== Waiting for all generations to complete ===");
+  console.log(`[DEBUG] Current URL before navigation: ${page.url()}`);
 
   // Navigate to dashboard
+  console.log(`[DEBUG] Navigating to dashboard...`);
   await page.goto("http://localhost:5173/#/");
   await page.waitForLoadState("networkidle");
+  console.log(`[DEBUG] After navigation URL: ${page.url()}`);
+  console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
   console.log("✓ Navigated to dashboard");
 
   // Poll for generating count to become 0
@@ -177,6 +181,7 @@ async function visitProjectsAndPlay(
   projects: ProjectInfo[],
 ): Promise<{ played: number; failed: number; failedProjects: string[] }> {
   console.log("\n=== Visiting each project to play ===");
+  console.log(`[DEBUG] Total projects to visit: ${projects.length}`);
 
   let playedCount = 0;
   let failedCount = 0;
@@ -185,20 +190,26 @@ async function visitProjectsAndPlay(
   for (let i = 0; i < projects.length; i++) {
     const project = projects[i];
     console.log(`\nVisiting project ${i + 1}/${projects.length}: ${project.projectTitle}`);
+    console.log(`[DEBUG] Project URL: ${project.projectUrl}`);
 
     // First navigate to dashboard
     console.log("Navigating to dashboard first...");
+    console.log(`[DEBUG] Current URL before dashboard nav: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
+    console.log(`[DEBUG] Dashboard URL: ${page.url()}`);
     console.log("✓ On dashboard");
 
     // Wait a bit for dashboard to load
+    console.log(`[DEBUG] Waiting 2000ms for dashboard to stabilize...`);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Navigate to project
     console.log(`Navigating to project: ${project.projectUrl}`);
     await page.goto(project.projectUrl!);
     await page.waitForLoadState("networkidle");
+    console.log(`[DEBUG] Project page URL: ${page.url()}`);
+    console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
     console.log("✓ Navigated to project page");
 
     // Wait for page to fully load
@@ -283,6 +294,8 @@ async function visitProjectsAndPlay(
 async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], page: Page): Promise<void> {
   console.log(`[DEBUG] Starting createProjectAndStartGeneration for: ${currentTestFile}`);
   console.log(`[DEBUG] Projects created so far: ${projectsCreated.length}`);
+  console.log(`[DEBUG] Current page URL: ${page.url()}`);
+  console.log(`[DEBUG] Page state: ${await page.evaluate(() => document.readyState)}`);
 
   let projectTitle = "";
   let problematicBeatIndices: number[] = [];
@@ -291,14 +304,42 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
   try {
     // Navigate to dashboard
     console.log(`${step}. Navigating to dashboard...`);
+    console.log(`[DEBUG] Before navigation - URL: ${page.url()}`);
     await page.goto("http://localhost:5173/#/");
     await page.waitForLoadState("networkidle");
+    console.log(`[DEBUG] After navigation - URL: ${page.url()}`);
+    console.log(`[DEBUG] Page title: ${await page.title()}`);
     console.log("✓ Dashboard loaded");
 
     // Click the create new button
     console.log(`\n${++step}. Clicking "Create New" button...`);
+    console.log(`[DEBUG] Looking for button with selector: [data-testid="create-new-button"]`);
+    
+    // Check if button exists and its state
+    const buttonExists = await page.$('[data-testid="create-new-button"]');
+    console.log(`[DEBUG] Button exists: ${!!buttonExists}`);
+    
+    if (buttonExists) {
+      const buttonInfo = await page.evaluate(() => {
+        const btn = document.querySelector('[data-testid="create-new-button"]');
+        if (!btn) return null;
+        const rect = btn.getBoundingClientRect();
+        return {
+          visible: rect.width > 0 && rect.height > 0,
+          disabled: (btn as HTMLButtonElement).disabled,
+          text: btn.textContent,
+          tagName: btn.tagName,
+          className: btn.className,
+          position: { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+        };
+      });
+      console.log(`[DEBUG] Button info:`, JSON.stringify(buttonInfo, null, 2));
+    }
+    
     await page.click('[data-testid="create-new-button"]');
+    console.log(`[DEBUG] Button clicked, waiting for navigation...`);
     await page.waitForSelector('[data-testid="project-title"]');
+    console.log(`[DEBUG] New page URL: ${page.url()}`);
     console.log("✓ Navigated to new project page");
 
     // Read JSON from local node_modules and analyze
@@ -374,13 +415,20 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 
     // Navigate to JSON tab
     console.log(`\n${++step}. Navigating to JSON tab...`);
+    console.log(`[DEBUG] Looking for JSON tab selector: [data-testid="script-editor-tab-json"]`);
+    
+    const tabExists = await page.$('[data-testid="script-editor-tab-json"]');
+    console.log(`[DEBUG] JSON tab exists: ${!!tabExists}`);
+    
     await page.click('[data-testid="script-editor-tab-json"]');
+    console.log(`[DEBUG] JSON tab clicked, waiting ${CONFIG.TAB_SWITCH_DELAY}ms...`);
     await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
 
     // Verify JSON tab is active
     const jsonTab = await page.$('[data-testid="script-editor-tab-json"]');
     if (jsonTab) {
       const isSelected = await jsonTab.evaluate((el: HTMLElement) => el.getAttribute("aria-selected") === "true");
+      console.log(`[DEBUG] JSON tab aria-selected: ${isSelected}`);
       if (isSelected) {
         console.log("✓ JSON tab is now active");
       } else {
@@ -676,6 +724,12 @@ async function runGenerationE2ETest(): Promise<void> {
     }
 
     console.log("✓ Found application page");
+    console.log(`[DEBUG] Initial page URL: ${page.url()}`);
+    console.log(`[DEBUG] Page readyState: ${await page.evaluate(() => document.readyState)}`);
+
+    // Wait for initial page load
+    console.log("[DEBUG] Waiting for initial page to fully load...");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const projectsCreated: ProjectInfo[] = [];
     const testResults: ProjectResult[] = [];
