@@ -676,7 +676,10 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Use data-testid to find the generate button
     await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Found generate button");
-    await page.locator('[data-testid="generate-contents-button"]').click();
+    await page.locator('[data-testid="generate-contents-button"]').click({
+      timeout: 5000,
+      noWaitAfter: true  // これでナビゲーション待機をスキップ
+    });
 
     // Start generation without waiting
     console.log(`\n${++step}. Generation started, moving to next file...`);
