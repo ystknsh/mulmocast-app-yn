@@ -36,7 +36,6 @@ function logStep(stepRef: { value: number }, message: string): void {
   console.log(`\n${stepRef.value}. ${message}`);
 }
 
-
 // Helper function to find beats with problematic audio files
 function findProblematicBeats(jsonData: any, targetFilename: string): number[] {
   const problematicIndices: number[] = [];
@@ -44,7 +43,7 @@ function findProblematicBeats(jsonData: any, targetFilename: string): number[] {
   if (jsonData.beats && Array.isArray(jsonData.beats)) {
     jsonData.beats.forEach((beat: unknown, index: number) => {
       if (!beat || typeof beat !== "object") return;
-      
+
       const beatObj = beat as Record<string, unknown>;
       const audioSources = [
         ((beatObj.audio as Record<string, unknown>)?.source as Record<string, unknown>)?.path,
@@ -69,7 +68,7 @@ function findProblematicBeats(jsonData: any, targetFilename: string): number[] {
 // Phase 1: Create project and prepare data
 async function createProject(page: Page, jsonFile: string, step: { value: number }): Promise<ProjectSetupResult> {
   const startTime = Date.now();
-  
+
   // Navigate to dashboard
   logStep(step, "Navigating to dashboard...");
   await page.goto("http://localhost:5173/#/");
@@ -94,23 +93,25 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
     console.log("✓ JSON parsed successfully");
   } catch (parseError: unknown) {
     console.error(`[DEBUG] JSON validation FAILED:`, parseError);
-    throw new Error(`Invalid JSON in ${jsonFile}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+    throw new Error(
+      `Invalid JSON in ${jsonFile}: ${parseError instanceof Error ? parseError.message : String(parseError)}`,
+    );
   }
 
   // Find problematic beats
   const foundProblematicBeats = findProblematicBeats(jsonData, "local_voice.mp3");
-  
+
   // Generate project title
   const baseTitle = jsonData.title || "Test";
   const projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-  
+
   console.log(`✓ Project setup completed: ${projectTitle}`);
-  
+
   return {
     projectTitle,
     jsonData,
     problematicBeats: foundProblematicBeats,
-    creationDurationMs: Date.now() - startTime
+    creationDurationMs: Date.now() - startTime,
   };
 }
 
@@ -201,7 +202,11 @@ async function setupJsonContent(page: Page, jsonData: any, jsonFile: string, ste
 }
 
 // Phase 3: Cleanup problematic beats
-async function cleanupProblematicBeats(page: Page, problematicBeatIndices: number[], step: { value: number }): Promise<void> {
+async function cleanupProblematicBeats(
+  page: Page,
+  problematicBeatIndices: number[],
+  step: { value: number },
+): Promise<void> {
   if (problematicBeatIndices.length === 0) {
     return;
   }
@@ -296,9 +301,7 @@ async function waitForGenerationComplete(page: Page): Promise<void> {
   while (generationWaitTime < maxGenerationWait) {
     try {
       const buttonsState = await page.evaluate(() => {
-        const generateButton = document.querySelector(
-          '[data-testid="generate-contents-button"]',
-        ) as HTMLButtonElement;
+        const generateButton = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
         const playButton = document.querySelector('[data-testid="movie-play-button"]') as HTMLButtonElement;
 
         return {
@@ -401,7 +404,7 @@ async function testVideoPlayback(page: Page): Promise<PlaybackResult> {
 
   return {
     playbackSuccess: true,
-    playbackDurationMs: Date.now() - playbackStartTime
+    playbackDurationMs: Date.now() - playbackStartTime,
   };
 }
 
@@ -491,7 +494,6 @@ async function terminateElectronProcess(electronProcess: ChildProcess | null): P
   });
 }
 
-
 interface ProjectResult {
   jsonFile: string;
   status: "success" | "failed";
@@ -524,9 +526,6 @@ interface Resources {
   electronProcess: ChildProcess | null;
   browser: Browser | null;
 }
-
-
-
 
 // Serial execution function for complete test flow (refactored with phase functions)
 async function executeSerialTestForProject(page: Page, jsonFile: string): Promise<ProjectResult> {
@@ -568,10 +567,10 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     const playbackResult = await testVideoPlayback(page);
     result.played = playbackResult.playbackSuccess;
     result.playbackDurationMs = playbackResult.playbackDurationMs;
-    
+
     result.endTime = Date.now();
     result.totalDurationMs = result.endTime - result.startTime!;
-    
+
     console.log(`\n✅ Serial test for ${jsonFile} completed successfully!`);
     console.log(`📊 Test Duration Summary:`);
     console.log(`  - Creation: ${(result.creationDurationMs! / 1000).toFixed(1)}s`);
@@ -768,19 +767,22 @@ async function runGenerationE2ETest(): Promise<void> {
 
     console.log(`✓ Success: ${successCount}`);
     console.log(`✗ Failed: ${failedCount}`);
-    
+
     // Calculate and display timing statistics
     const successfulTests = testResults.filter((r) => r.status === "success");
     if (successfulTests.length > 0) {
       console.log(`\n⏱️  Timing Statistics (successful tests only):`);
-      
+
       const totalTime = successfulTests.reduce((sum, r) => sum + (r.totalDurationMs || 0), 0);
       const avgTotal = totalTime / successfulTests.length;
-      
-      const avgCreation = successfulTests.reduce((sum, r) => sum + (r.creationDurationMs || 0), 0) / successfulTests.length;
-      const avgGeneration = successfulTests.reduce((sum, r) => sum + (r.generationDurationMs || 0), 0) / successfulTests.length;
-      const avgPlayback = successfulTests.reduce((sum, r) => sum + (r.playbackDurationMs || 0), 0) / successfulTests.length;
-      
+
+      const avgCreation =
+        successfulTests.reduce((sum, r) => sum + (r.creationDurationMs || 0), 0) / successfulTests.length;
+      const avgGeneration =
+        successfulTests.reduce((sum, r) => sum + (r.generationDurationMs || 0), 0) / successfulTests.length;
+      const avgPlayback =
+        successfulTests.reduce((sum, r) => sum + (r.playbackDurationMs || 0), 0) / successfulTests.length;
+
       console.log(`  Average per test: ${(avgTotal / 1000).toFixed(1)}s`);
       console.log(`    - Creation: ${(avgCreation / 1000).toFixed(1)}s`);
       console.log(`    - Generation: ${(avgGeneration / 1000).toFixed(1)}s`);
