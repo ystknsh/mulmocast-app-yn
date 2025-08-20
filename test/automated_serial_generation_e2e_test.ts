@@ -713,7 +713,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
 async function executeSerialTestForProject(page: Page, jsonFile: string): Promise<ProjectResult> {
   console.log(`\n===== Starting serial test for ${jsonFile} =====`);
   currentTestFile = jsonFile;
-  
+
   const result: ProjectResult = {
     jsonFile,
     status: "success",
@@ -729,7 +729,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
   try {
     // ========== PART 1: Create project (from createProjectAndStartGeneration) ==========
-    
+
     // Navigate to dashboard
     console.log(`${step}. Navigating to dashboard...`);
     await page.goto("http://localhost:5173/#/");
@@ -747,12 +747,12 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Read JSON from local node_modules
     console.log(`\n${++step}. Reading test JSON from local node_modules...`);
     const jsonContent = await readLocalJSON(currentTestFile);
-    
+
     // Debug: Check JSON content
     console.log(`[DEBUG] JSON file: ${currentTestFile}`);
     console.log(`[DEBUG] JSON content length: ${jsonContent.length}`);
     console.log(`[DEBUG] JSON content preview: ${jsonContent.substring(0, 200)}...`);
-    
+
     // Verify JSON is valid
     try {
       const parsedJson = JSON.parse(jsonContent);
@@ -817,36 +817,40 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     console.log("✓ Test JSON inputted");
 
     // Fix problematic paths and add title
-    await page.evaluate(([ts, fileName]: [string, string]) => {
-      const windowWithMonaco = window as Window & {
-        monaco?: typeof monaco;
-      };
-      const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
-      if (editor) {
-        let content = editor.getValue();
-        const jsonData = JSON.parse(content);
-        
-        // Fix image paths
-        if (jsonData.beats && Array.isArray(jsonData.beats)) {
-          jsonData.beats.forEach((beat: unknown) => {
-            const beatObj = beat as Record<string, unknown>;
-            const image = beatObj.image as Record<string, unknown>;
-            const source = image?.source as Record<string, unknown>;
-            if (source?.kind === "path" && source.path === "../../assets/images/mulmocast_credit.png") {
-              source.kind = "url";
-              source.url = "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/assets/images/mulmocast_credit.png";
-              delete source.path;
-            }
-          });
+    await page.evaluate(
+      ([ts, fileName]: [string, string]) => {
+        const windowWithMonaco = window as Window & {
+          monaco?: typeof monaco;
+        };
+        const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
+        if (editor) {
+          let content = editor.getValue();
+          const jsonData = JSON.parse(content);
+
+          // Fix image paths
+          if (jsonData.beats && Array.isArray(jsonData.beats)) {
+            jsonData.beats.forEach((beat: unknown) => {
+              const beatObj = beat as Record<string, unknown>;
+              const image = beatObj.image as Record<string, unknown>;
+              const source = image?.source as Record<string, unknown>;
+              if (source?.kind === "path" && source.path === "../../assets/images/mulmocast_credit.png") {
+                source.kind = "url";
+                source.url =
+                  "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/assets/images/mulmocast_credit.png";
+                delete source.path;
+              }
+            });
+          }
+
+          // Add title with timestamp
+          const fileBaseName = fileName.replace(".json", "");
+          jsonData.title = `${ts} ${jsonData.title || "Test"} (${fileBaseName})`;
+
+          editor.setValue(JSON.stringify(jsonData, null, 2));
         }
-        
-        // Add title with timestamp
-        const fileBaseName = fileName.replace(".json", "");
-        jsonData.title = `${ts} ${jsonData.title || "Test"} (${fileBaseName})`;
-        
-        editor.setValue(JSON.stringify(jsonData, null, 2));
-      }
-    }, [dayjs().format("YYYYMMDD_HHmmss"), currentTestFile]);
+      },
+      [dayjs().format("YYYYMMDD_HHmmss"), currentTestFile],
+    );
 
     await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT));
 
@@ -855,7 +859,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
       console.log(`\n${++step}. Navigating to Media tab to clean up...`);
       await page.click('[data-testid="script-editor-tab-media"]');
       await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY));
-      
+
       const sortedIndices = problematicBeatIndices.sort((a, b) => b - a);
       for (const beatIndex of sortedIndices) {
         const deleteButtonSelector = `[data-testid="script-editor-media-tab-delete-beat-${beatIndex}"]`;
@@ -883,10 +887,10 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // ========== PART 2: Wait for generation to complete ==========
     console.log("\n--- Waiting for generation to complete ---");
-    
+
     // First, wait for the button to become disabled (generation started)
     console.log("Waiting for generation to start (button disabled)...");
-    
+
     // Debug: Check button state before waiting
     const buttonStateBefore = await page.evaluate(() => {
       const button = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
@@ -894,15 +898,15 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         exists: !!button,
         disabled: button?.disabled,
         text: button?.textContent?.trim(),
-        currentURL: window.location.href
+        currentURL: window.location.href,
       };
     });
     console.log("[DEBUG] Button state before waiting:", JSON.stringify(buttonStateBefore));
-    
+
     // Debug: Monitor button state during the wait
     let waitAttempts = 0;
     const maxAttempts = 30; // 30 attempts, 1 second apart
-    
+
     while (waitAttempts < maxAttempts) {
       const buttonState = await page.evaluate(() => {
         const button = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
@@ -912,34 +916,38 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
           text: button?.textContent?.trim(),
         };
       });
-      
+
       console.log(`[DEBUG] Wait attempt ${waitAttempts + 1}: Button state:`, JSON.stringify(buttonState));
-      
+
       if (buttonState.exists && buttonState.disabled) {
         console.log("✓ Generation started (button is now disabled)");
         break;
       }
-      
+
       if (waitAttempts === maxAttempts - 1) {
-        throw new Error(`Button never became disabled after ${maxAttempts} seconds. Final state: ${JSON.stringify(buttonState)}`);
+        throw new Error(
+          `Button never became disabled after ${maxAttempts} seconds. Final state: ${JSON.stringify(buttonState)}`,
+        );
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       waitAttempts++;
     }
 
     // Then wait for generation to complete (both generate button and play button enabled)
     console.log("Waiting for generation to complete (generate button + play button enabled)...");
-    
+
     const maxGenerationWait = CONFIG.GENERATION_TIMEOUT / 1000; // Convert to seconds
     let generationWaitTime = 0;
-    
+
     while (generationWaitTime < maxGenerationWait) {
       try {
         const buttonsState = await page.evaluate(() => {
-          const generateButton = document.querySelector('[data-testid="generate-contents-button"]') as HTMLButtonElement;
+          const generateButton = document.querySelector(
+            '[data-testid="generate-contents-button"]',
+          ) as HTMLButtonElement;
           const playButton = document.querySelector('[data-testid="movie-play-button"]') as HTMLButtonElement;
-          
+
           return {
             generateButton: {
               exists: !!generateButton,
@@ -948,60 +956,67 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
             playButton: {
               exists: !!playButton,
               disabled: playButton?.disabled,
-            }
+            },
           };
         });
-        
+
         // Check if both buttons are enabled
         const generateEnabled = buttonsState.generateButton.exists && !buttonsState.generateButton.disabled;
         const playEnabled = buttonsState.playButton.exists && !buttonsState.playButton.disabled;
-        
+
         if (generateEnabled && playEnabled) {
           console.log("✓ Generation completed (both generate and play buttons are enabled)");
           break;
         }
-        
+
         // Log progress every 10 seconds
         if (generationWaitTime > 0 && generationWaitTime % 10 === 0) {
-          console.log(`Still waiting... Generate: ${generateEnabled ? 'enabled' : 'disabled'}, Play: ${playEnabled ? 'enabled' : 'disabled'} (${generationWaitTime}s elapsed)`);
+          console.log(
+            `Still waiting... Generate: ${generateEnabled ? "enabled" : "disabled"}, Play: ${playEnabled ? "enabled" : "disabled"} (${generationWaitTime}s elapsed)`,
+          );
         }
-        
       } catch (evaluationError) {
-        console.log(`[WARN] Page evaluation failed at ${generationWaitTime}s (${evaluationError?.message || 'unknown error'}), continuing...`);
+        console.log(
+          `[WARN] Page evaluation failed at ${generationWaitTime}s (${evaluationError?.message || "unknown error"}), continuing...`,
+        );
         // Continue polling - this is expected during generation transitions
-        
+
         // Still log progress during error periods every 10 seconds
         if (generationWaitTime > 0 && generationWaitTime % 10 === 0) {
           console.log(`Still waiting... (page evaluation failed, will retry) (${generationWaitTime}s elapsed)`);
         }
       }
-      
+
       if (generationWaitTime >= maxGenerationWait) {
         throw new Error(`Generation did not complete after ${maxGenerationWait} seconds`);
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Check every 2 seconds
+
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Check every 2 seconds
       generationWaitTime += 2;
     }
-    
+
     console.log("✓ Generation completed");
     result.generated = true;
 
     // Step 3: Test playback
     console.log("\n--- Testing playback ---");
-    
+
     // Wait for movie play button to be available
     console.log("Waiting for movie play button...");
     const playButtonSelector = '[data-testid="movie-play-button"]';
     const pauseButtonSelector = '[data-testid="movie-pause-button"]';
-    
+
     await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
-    
+
     // Check if button is enabled
-    await page.waitForFunction((selector) => {
-      const button = document.querySelector(selector) as HTMLButtonElement;
-      return button && !button.disabled && button.getAttribute('aria-disabled') !== 'true';
-    }, playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.waitForFunction(
+      (selector) => {
+        const button = document.querySelector(selector) as HTMLButtonElement;
+        return button && !button.disabled && button.getAttribute("aria-disabled") !== "true";
+      },
+      playButtonSelector,
+      { timeout: CONFIG.BUTTON_TIMEOUT },
+    );
     console.log("✓ Movie play button is available and enabled");
 
     // Click play button
@@ -1016,7 +1031,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Wait 3 seconds during playback
     console.log(`Waiting ${CONFIG.PLAY_WAIT}ms during playback...`);
-    await new Promise(resolve => setTimeout(resolve, CONFIG.PLAY_WAIT));
+    await new Promise((resolve) => setTimeout(resolve, CONFIG.PLAY_WAIT));
     console.log("✓ Playback wait completed");
 
     // Click pause button
@@ -1028,14 +1043,13 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     console.log("Waiting for play button to reappear...");
     await page.waitForSelector(playButtonSelector, { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Playback paused (play button reappeared)");
-    
+
     result.played = true;
     console.log(`\n✅ Serial test for ${jsonFile} completed successfully!`);
-    
   } catch (error: unknown) {
     console.error(`\n❌ Serial test for ${jsonFile} failed:`, error instanceof Error ? error.message : String(error));
     result.status = "failed";
-    
+
     // Determine at which step it failed
     if (!result.created) {
       result.failedStep = "project_creation";
@@ -1044,9 +1058,9 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     } else if (!result.played) {
       result.failedStep = "playback";
     }
-    
+
     result.error = error instanceof Error ? error.message : String(error);
-    
+
     // Take screenshot on failure
     try {
       const screenshotPath = `serial-test-failure-${jsonFile.replace(".json", "")}-${Date.now()}.png`;
@@ -1056,7 +1070,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
       console.error("Failed to take screenshot:", screenshotError);
     }
   }
-  
+
   // Navigate back to dashboard for next test
   console.log("\nNavigating back to dashboard...");
   try {
@@ -1067,7 +1081,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
   } catch (navError) {
     console.error("Failed to navigate back to dashboard:", navError);
   }
-  
+
   return result;
 }
 
@@ -1185,29 +1199,29 @@ async function runGenerationE2ETest(): Promise<void> {
     // Execute tests serially (one by one)
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
     console.log("=== Starting SERIAL execution (one project at a time) ===\n");
-    
+
     for (let i = 0; i < TEST_JSON_FILES.length; i++) {
       const jsonFile = TEST_JSON_FILES[i];
       console.log(`\n\n===== Processing ${i + 1}/${TEST_JSON_FILES.length}: ${jsonFile} =====\n`);
-      
+
       // Execute complete test flow for this project
       const result = await executeSerialTestForProject(page, jsonFile);
       testResults.push(result);
-      
+
       // Log progress
       if (result.status === "success") {
         console.log(`✅ ${jsonFile} completed successfully`);
       } else {
         console.log(`❌ ${jsonFile} failed at step: ${result.failedStep}`);
       }
-      
+
       // Small delay between tests
       if (i < TEST_JSON_FILES.length - 1) {
         console.log("\n⏳ Brief pause before next test...");
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     }
-    
+
     console.log(`\n=== Serial execution completed ===`);
 
     // Output detailed test results

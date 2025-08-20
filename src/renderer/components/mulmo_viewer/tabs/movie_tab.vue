@@ -18,21 +18,16 @@
           <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
         </template>
         <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button 
-            @click="playVideo" 
-            :disabled="!videoUrl" 
+          <Button
+            @click="playVideo"
+            :disabled="!videoUrl"
             :data-testid="isPlaying ? 'movie-pause-button' : 'movie-play-button'"
           >
             <Pause v-if="isPlaying" :size="16" />
             <Play v-else :size="16" />
             {{ isPlaying ? t("project.productTabs.movie.pause") : t("project.productTabs.movie.play") }}
           </Button>
-          <Button 
-            variant="outline" 
-            @click="downloadMp4" 
-            :disabled="!videoUrl"
-            data-testid="movie-download-button"
-          >
+          <Button variant="outline" @click="downloadMp4" :disabled="!videoUrl" data-testid="movie-download-button">
             <Video :size="16" class="mr-2" />
             {{ t("project.productTabs.movie.download") }}
           </Button>
