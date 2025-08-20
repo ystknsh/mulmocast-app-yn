@@ -249,7 +249,7 @@ async function executeGeneration(page: Page, step: { value: number }): Promise<v
     noWaitAfter: true,
   });
   console.log("[DEBUG] Button clicked, waiting for IPC message processing...");
-  
+
   // Wait for IPC message to be processed in CI environment
   await sleep(CONFIG.IPC_PROCESSING_DELAY_MS);
   console.log("[DEBUG] IPC wait completed, waiting 3 seconds...");
