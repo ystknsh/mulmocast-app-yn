@@ -123,7 +123,7 @@
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
-                    @saveMulmo="saveMulmoScript"
+                    @saveMulmoScript="saveMulmoScript"
                   />
                 </CardContent>
               </Card>
@@ -319,16 +319,18 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
 };
 
-const saveProjectMetadata = useDebounceFn(async (projectMetadata: ProjectMetadata) => {
+const saveProjectMetadata = async (projectMetadata: ProjectMetadata) => {
   await projectApi.saveProjectMetadata(projectId.value, {
     ...projectMetadata,
     updatedAt: dayjs().toISOString(),
   });
-}, 1000);
+};
+
+const saveProjectMetadataDebounced = useDebounceFn(saveProjectMetadata, 1000);
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   projectMetadata.value.chatMessages = messages;
-  saveProjectMetadata(projectMetadata.value);
+  saveProjectMetadataDebounced(projectMetadata.value);
 };
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {

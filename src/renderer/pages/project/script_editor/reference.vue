@@ -162,7 +162,7 @@ const submitUrlImage = async (imageKey: string) => {
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
       emit("updateImagePath", imageKey, "./" + res.path);
-      emit("saveMulmo");
+      emit("saveMulmo"); // TODO: not emited.
       emit("formatAndPushHistoryMulmoScript");
       mediaUrl.value = "";
       loadReference();
