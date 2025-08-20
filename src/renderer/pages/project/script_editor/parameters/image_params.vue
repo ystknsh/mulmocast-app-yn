@@ -51,7 +51,7 @@
             <SelectValue :placeholder="'auto'" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="quality in ['low', 'medium', 'high', 'auto']" :key="quality" :value="quality">
+            <SelectItem v-for="quality in qualityOptions" :key="quality" :value="quality">
               {{ quality }}
             </SelectItem>
           </SelectContent>
@@ -100,12 +100,14 @@ import {
   type Text2ImageProvider,
   type MulmoImageParamsImages,
 } from "mulmocast/browser";
+import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
 const { t } = useI18n();
+const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
 
 const PROVIDERS = Object.entries(provider2ImageAgent)
   .filter(([provider, __]) => {
