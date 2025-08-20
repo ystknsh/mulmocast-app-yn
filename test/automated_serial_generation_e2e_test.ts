@@ -421,7 +421,6 @@ const TEST_JSON_FILES = [
   "test_slideout_left_no_audio.json",
 ];
 
-
 // Function to read JSON from local node_modules
 async function readLocalJSON(filename: string): Promise<string> {
   console.log(`Reading JSON from local file: ${filename}`);
