@@ -51,11 +51,7 @@
             <SelectValue :placeholder="'auto'" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem
-              v-for="quality in ['low', 'medium', 'high', 'auto']"
-              :key="quality"
-              :value="quality"
-            >
+            <SelectItem v-for="quality in ['low', 'medium', 'high', 'auto']" :key="quality" :value="quality">
               {{ quality }}
             </SelectItem>
           </SelectContent>
