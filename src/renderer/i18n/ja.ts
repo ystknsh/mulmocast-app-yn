@@ -554,14 +554,14 @@ const lang = {
       modal: {
         dialogTitle: "メディアプレビュー",
         dialogDescription: "外側をクリックして閉じる",
-      }
+      },
     },
     mulmo: {
       modal: {
         dialogTitle: "Mulmo ビューアー",
         dialogDescription: "外側をクリックして閉じる",
-      }
-    }
+      },
+    },
   },
   notify: {
     audio: {
