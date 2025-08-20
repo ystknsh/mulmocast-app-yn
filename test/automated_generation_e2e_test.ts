@@ -214,22 +214,24 @@ async function visitProjectsAndPlay(
 
     // Wait longer for page to fully load in CI
     await new Promise((resolve) => setTimeout(resolve, 5000));
-    
+
     // Check what elements are available on the page
     const pageElements = await page.evaluate(() => {
       const playBtn = document.querySelector('[data-testid="play-video-button"]');
-      const video = document.querySelector('video');
-      const allTestIds = Array.from(document.querySelectorAll('[data-testid]')).map(el => el.getAttribute('data-testid'));
-      
+      const video = document.querySelector("video");
+      const allTestIds = Array.from(document.querySelectorAll("[data-testid]")).map((el) =>
+        el.getAttribute("data-testid"),
+      );
+
       return {
         hasPlayButton: !!playBtn,
         hasVideo: !!video,
         availableTestIds: allTestIds,
         pageTitle: document.title,
-        url: window.location.href
+        url: window.location.href,
       };
     });
-    
+
     console.log(`[DEBUG] Page elements check:`, JSON.stringify(pageElements, null, 2));
 
     // Look for play button
@@ -252,11 +254,11 @@ async function visitProjectsAndPlay(
             visible: rect.width > 0 && rect.height > 0,
             disabled: (btn as HTMLButtonElement).disabled,
             text: btn.textContent?.trim(),
-            classList: Array.from(btn.classList)
+            classList: Array.from(btn.classList),
           };
         });
         console.log(`[DEBUG] Button state before click:`, JSON.stringify(buttonState));
-        
+
         console.log("✓ Found play button, clicking...");
         await playButton.click();
         console.log(`[DEBUG] Play button clicked`);
@@ -269,15 +271,15 @@ async function visitProjectsAndPlay(
         const videoState = await page.evaluate(() => {
           const video = document.querySelector("video");
           if (!video) {
-            console.log('[DEBUG] No video element found in DOM');
+            console.log("[DEBUG] No video element found in DOM");
             return { found: false };
           }
-          
-          const sources = Array.from(video.querySelectorAll('source')).map(s => ({
+
+          const sources = Array.from(video.querySelectorAll("source")).map((s) => ({
             src: s.src,
-            type: s.type
+            type: s.type,
           }));
-          
+
           return {
             found: true,
             src: video.src,
@@ -285,18 +287,20 @@ async function visitProjectsAndPlay(
             hasSource: !!video.src || video.children.length > 0,
             readyState: video.readyState,
             networkState: video.networkState,
-            error: video.error ? {
-              code: video.error.code,
-              message: video.error.message
-            } : null,
+            error: video.error
+              ? {
+                  code: video.error.code,
+                  message: video.error.message,
+                }
+              : null,
             paused: video.paused,
             duration: video.duration,
             currentTime: video.currentTime,
             videoWidth: video.videoWidth,
-            videoHeight: video.videoHeight
+            videoHeight: video.videoHeight,
           };
         });
-        
+
         console.log(`[DEBUG] Video state after click:`, JSON.stringify(videoState, null, 2));
 
         if (videoState.found && videoState.hasSource && !videoState.error && videoState.readyState >= 2) {
@@ -320,7 +324,9 @@ async function visitProjectsAndPlay(
           } else if (videoState.error) {
             console.log(`  Reason: Video error - Code: ${videoState.error.code}, Message: ${videoState.error.message}`);
           } else if (videoState.readyState < 2) {
-            console.log(`  Reason: Video not ready (readyState=${videoState.readyState}, networkState=${videoState.networkState})`);
+            console.log(
+              `  Reason: Video not ready (readyState=${videoState.readyState}, networkState=${videoState.networkState})`,
+            );
           }
         }
       } else {
@@ -334,10 +340,10 @@ async function visitProjectsAndPlay(
       failedCount++;
       failedProjects.push(`${project.projectTitle} (${project.jsonFile})`);
       console.log(`✗ Failed to play: ${project.projectTitle}`);
-      
+
       // Take screenshot for debugging failed playback
       try {
-        const screenshotPath = `playback-failure-${project.jsonFile.replace('.json', '')}-${Date.now()}.png`;
+        const screenshotPath = `playback-failure-${project.jsonFile.replace(".json", "")}-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
         console.log(`[DEBUG] Screenshot saved: ${screenshotPath}`);
       } catch (screenshotError) {
