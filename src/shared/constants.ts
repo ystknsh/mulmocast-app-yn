@@ -1,4 +1,4 @@
-import { type MulmoImageParams } from "mulmocast/browser";
+import { type MulmoImageParams, provider2LLMAgent } from "mulmocast/browser";
 export { pdf_modes, languages } from "mulmocast/browser";
 
 // Define all valid feature keys as a readonly tuple
@@ -111,12 +111,19 @@ export const LLM_OLLAMA_DEFAULT_CONFIG = {
   model: "gpt-oss:20b",
 };
 export const LLM_OPENAI_DEFAULT_CONFIG = {
-  model: "gpt-4o",
+  model: provider2LLMAgent.openai.defaultModel,
 };
 export const LLM_ANTHROPIC_DEFAULT_CONFIG = {
-  model: "claude-3-7-sonnet-20250219",
+  model: provider2LLMAgent.anthropic.defaultModel,
 };
-export const LLM_GROQ_DEFAULT_MODEL = "llama3-8b-819";
+export const LLM_GEMINI_DEFAULT_CONFIG = {
+  model: provider2LLMAgent.gemini.defaultModel,
+};
+export const LLM_GROQ_DEFAULT_MODEL = provider2LLMAgent.groq.defaultModel;
+
+export const LLM_GROQ_DEFAULT_CONFIG = {
+  model: provider2LLMAgent.groq.defaultModel,
+};
 
 export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
 
