@@ -18,7 +18,7 @@
         @update="(value) => updateParam(value)"
         @updateImageNames="updateImageNames"
         :mulmoError="[]"
-        :settingPresence="{}"
+        :settingPresence="settingPresence"
       />
     </CollapsibleContent>
   </Collapsible>
@@ -38,6 +38,7 @@ const { t } = useI18n();
 interface Props {
   beat: MulmoBeat;
   imageParams: MulmoImageParams;
+  settingPresence: Record<string, boolean>;
 }
 
 const props = defineProps<Props>();

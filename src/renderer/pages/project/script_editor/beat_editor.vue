@@ -250,6 +250,7 @@
       :beat="beat"
       @update="update"
       :imageParams="mulmoScript.imageParams"
+      :settingPresence="settingPresence"
       @updateImageNames="updateImageNames"
       @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
@@ -299,6 +300,7 @@ interface Props {
   lipSyncFiles: FileData;
   isEnd: boolean;
   mulmoError: string[];
+  settingPresence: Record<string, boolean>;
 }
 
 const props = defineProps<Props>();
