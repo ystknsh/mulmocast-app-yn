@@ -67,6 +67,6 @@ const updateBeatImageParams = async (event) => {
     await nextTick();
     emit("updateImageNames", undefined);
   }
-  emit("justSaveAndPushToHistory")
+  emit("justSaveAndPushToHistory");
 };
 </script>
