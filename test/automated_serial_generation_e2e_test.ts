@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
 import type * as monaco from "monaco-editor";
+import { sleep } from "graphai";
 
 // Configuration constants
 const CONFIG = {
@@ -219,7 +220,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Navigate to JSON tab
     logStep(step, `Navigating to JSON tab...`);
     await page.click('[data-testid="script-editor-tab-json"]');
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY_MS));
+    await sleep(CONFIG.TAB_SWITCH_DELAY_MS);
     console.log("✓ JSON tab is active");
 
     // Wait for Monaco Editor
@@ -232,7 +233,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     await page.click(".monaco-editor");
     await page.keyboard.press("Meta+A");
     await page.keyboard.press("Delete");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await sleep(1000);
 
     await page.evaluate((json) => {
       const windowWithMonaco = window as Window & {
@@ -281,13 +282,13 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
       [dayjs().format("YYYYMMDD_HHmmss"), currentTestFile],
     );
 
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.INITIAL_WAIT_MS));
+    await sleep(CONFIG.INITIAL_WAIT_MS);
 
     // Delete problematic beats in Media tab
     if (problematicBeatIndices.length > 0) {
       logStep(step, `Navigating to Media tab to clean up...`);
       await page.click('[data-testid="script-editor-tab-media"]');
-      await new Promise((resolve) => setTimeout(resolve, CONFIG.TAB_SWITCH_DELAY_MS));
+      await sleep(CONFIG.TAB_SWITCH_DELAY_MS);
 
       const sortedIndices = problematicBeatIndices.sort((a, b) => b - a);
       for (const beatIndex of sortedIndices) {
@@ -296,7 +297,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
           await page.waitForSelector(deleteButtonSelector, { timeout: 3000 });
           await page.click(deleteButtonSelector);
           console.log(`✓ Deleted beat ${beatIndex}`);
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await sleep(1000);
         } catch {
           console.log(`⚠️ Could not delete beat ${beatIndex}`);
         }
@@ -313,7 +314,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     });
 
     // Wait a bit to ensure generation has started
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await sleep(3000);
 
     // ========== PART 2: Wait for generation to complete ==========
     console.log("\n--- Waiting for generation to complete ---");
@@ -360,7 +361,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         );
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await sleep(1000);
       waitAttempts++;
     }
 
@@ -421,7 +422,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
         throw new Error(`Generation did not complete after ${maxGenerationWait} seconds`);
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Check every 2 seconds
+      await sleep(2000); // Check every 2 seconds
       generationWaitTime += 2;
     }
 
@@ -463,7 +464,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
 
     // Wait 3 seconds during playback
     console.log(`Waiting ${CONFIG.PLAY_WAIT_MS}ms during playback...`);
-    await new Promise((resolve) => setTimeout(resolve, CONFIG.PLAY_WAIT_MS));
+    await sleep(CONFIG.PLAY_WAIT_MS);
     console.log("✓ Playback wait completed");
 
     // Click pause button
@@ -588,7 +589,7 @@ async function runGenerationE2ETest(): Promise<void> {
         if (attempts === 1) {
           console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
         }
-        await new Promise((resolve) => setTimeout(resolve, CONFIG.CDP_RETRY_DELAY_MS));
+        await sleep(CONFIG.CDP_RETRY_DELAY_MS);
       }
     }
 
@@ -622,7 +623,7 @@ async function runGenerationE2ETest(): Promise<void> {
       }
 
       console.log(`Still waiting for Vite server... (${waitTime / 1000}s elapsed)`);
-      await new Promise((resolve) => setTimeout(resolve, CONFIG.VITE_SERVER_CHECK_INTERVAL_MS));
+      await sleep(CONFIG.VITE_SERVER_CHECK_INTERVAL_MS);
       waitTime += CONFIG.VITE_SERVER_CHECK_INTERVAL_MS;
     }
 
@@ -636,7 +637,7 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Wait for initial page load
     console.log("[DEBUG] Waiting for initial page to fully load...");
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await sleep(5000);
 
     const testResults: ProjectResult[] = [];
 
@@ -662,7 +663,7 @@ async function runGenerationE2ETest(): Promise<void> {
       // Small delay between tests
       if (i < TEST_JSON_FILES.length - 1) {
         console.log("\n⏳ Brief pause before next test...");
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await sleep(2000);
       }
     }
 
@@ -735,7 +736,7 @@ async function runGenerationE2ETest(): Promise<void> {
       await page.evaluate(() => {
         (window as Window & { close: () => void }).close();
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for window to close
+      await sleep(1000); // Wait for window to close
     } catch (closeError: unknown) {
       console.log(
         "Failed to close window gracefully:",
