@@ -790,7 +790,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     // Generate project title
     const baseTitle = jsonData.title || "Test";
     projectTitle = `${baseTitle}_${dayjs().format("YYYYMMDD_HHmmss")}`;
-    console.log(`\n${++step}. Project created with title: ${projectTitle}`);
+    logStep(step, `Project created with title: ${projectTitle}`);
     result.created = true;
 
     // Navigate to JSON tab
@@ -881,7 +881,7 @@ async function executeSerialTestForProject(page: Page, jsonFile: string): Promis
     }
 
     // Click generate button
-    console.log(`\n${++step}. Starting generation...`);
+    logStep(step, `Starting generation...`);
     await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     await page.locator('[data-testid="generate-contents-button"]').click({
       timeout: 5000,
