@@ -14,7 +14,7 @@ const CONFIG = {
   TAB_SWITCH_DELAY: 500, // Tab switching delay
   INITIAL_WAIT: 3000, // Initial wait before test starts (3 seconds)
   GENERATION_TIMEOUT: 600000, // 10 minutes for generation (longer for CI)
-  PLAY_BUTTON_TIMEOUT: 15000, // 15 seconds to wait for play button
+  BUTTON_TIMEOUT: 15000, // 15 seconds to wait for buttons (play, generate, etc.)
   VITE_SERVER_WAIT_MAX: 60000, // 60 seconds to wait for Vite dev server
   VITE_SERVER_CHECK_INTERVAL: 2000, // Check every 2 seconds
 } as const;
@@ -237,9 +237,9 @@ async function visitProjectsAndPlay(
     // Look for play button
     let playSuccessful = false;
     try {
-      console.log(`[DEBUG] Waiting for play button with timeout ${CONFIG.PLAY_BUTTON_TIMEOUT}ms...`);
+      console.log(`[DEBUG] Waiting for play button with timeout ${CONFIG.BUTTON_TIMEOUT}ms...`);
       await page.waitForSelector('[data-testid="play-video-button"]', {
-        timeout: CONFIG.PLAY_BUTTON_TIMEOUT,
+        timeout: CONFIG.BUTTON_TIMEOUT,
       });
       const playButton = await page.$('[data-testid="play-video-button"]');
       console.log(`[DEBUG] Play button found: ${!!playButton}`);
@@ -674,12 +674,9 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log(`\n${++step}. Looking for generate button in output settings section...`);
 
     // Use data-testid to find the generate button
-    const generateButton = await page.$('[data-testid="generate-contents-button"]');
-    if (!generateButton) {
-      throw new Error("Generate Contents button not found");
-    }
+    await page.waitForSelector('[data-testid="generate-contents-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
     console.log("✓ Found generate button");
-    generateButton.click();
+    await page.locator('[data-testid="generate-contents-button"]').click();
 
     // Start generation without waiting
     console.log(`\n${++step}. Generation started, moving to next file...`);
