@@ -48,7 +48,7 @@
           @update:model-value="(value) => handleUpdate('quality', String(value))"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="'auto'" />
+            <SelectValue :placeholder="defaultQuality" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="quality in qualityOptions" :key="quality" :value="quality">
@@ -108,6 +108,7 @@ import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
 
 const { t } = useI18n();
 const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
+const defaultQuality = "auto";
 
 const PROVIDERS = Object.entries(provider2ImageAgent)
   .filter(([provider, __]) => {
