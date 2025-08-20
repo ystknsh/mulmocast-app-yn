@@ -340,8 +340,11 @@ const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
 
 // end of mulmoScript
 
-const saveProjectMetadata = async () => {
-  projectMetadata.value.updatedAt = dayjs().toISOString();
+const saveProjectMetadata = async (options: { updateTimestamp?: boolean } = {}) => {
+  const { updateTimestamp = true } = options;
+  if (updateTimestamp) {
+    projectMetadata.value.updatedAt = dayjs().toISOString();
+  }
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
 };
 
@@ -354,12 +357,12 @@ const handleUpdateChatMessages = (messages: ChatMessage[]) => {
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   projectMetadata.value.scriptEditorActiveTab = tab;
-  saveProjectMetadata();
+  saveProjectMetadata({ updateTimestamp: false });
 };
 
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   projectMetadata.value.mulmoViewerActiveTab = tab;
-  saveProjectMetadata();
+  saveProjectMetadata({ updateTimestamp: false });
 };
 
 const mulmoError = computed<MulmoError>(() => {
