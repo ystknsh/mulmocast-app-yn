@@ -251,6 +251,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       @updateImageNames="updateImageNames"
+      @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
     />
 
