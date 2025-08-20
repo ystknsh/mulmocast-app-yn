@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between">
     <div class="flex items-center space-x-4">
       <RouterLink to="/">
-        <Button variant="ghost" size="sm" data-testid="dashboard-button">
+        <Button variant="ghost" size="sm">
           <ArrowLeft :size="16" class="mr-2" />
           {{ t("project.header.back") }}
         </Button>
