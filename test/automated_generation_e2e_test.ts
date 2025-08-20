@@ -678,7 +678,7 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     console.log("✓ Found generate button");
     await page.locator('[data-testid="generate-contents-button"]').click({
       timeout: 5000,
-      noWaitAfter: true  // これでナビゲーション待機をスキップ
+      noWaitAfter: true, // これでナビゲーション待機をスキップ
     });
 
     // Start generation without waiting
@@ -687,8 +687,15 @@ async function createProjectAndStartGeneration(projectsCreated: ProjectInfo[], p
     // Wait a bit to ensure generation has started
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
+    // Navigate back to dashboard after starting generation
+    console.log(`\n${++step}. Clicking dashboard button to return...`);
+    await page.waitForSelector('[data-testid="dashboard-button"]', { timeout: CONFIG.BUTTON_TIMEOUT });
+    await page.click('[data-testid="dashboard-button"]');
+    await page.waitForLoadState("networkidle");
+    console.log("✓ Returned to dashboard");
+
     console.log("\n=== Project created and generation started ===");
-    console.log(`Project "${projectTitle}" was created and generation was started.`);
+    console.log(`Project "${projectTitle}" was created and generation started.`);
   } catch (error: unknown) {
     console.error("\n✗ Test failed:", error instanceof Error ? error.message : String(error));
     throw error;
