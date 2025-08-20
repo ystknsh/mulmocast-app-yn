@@ -166,16 +166,6 @@ const lang = {
       badge: "バッジ",
     },
 
-    // Tab related vocabulary
-    tabs: {
-      text: "テキスト",
-      yaml: "YAML",
-      json: "JSON",
-      media: "メディア",
-      style: "スタイル",
-      ref: "参照",
-    },
-
     // Validation messages
     validation: {
       required: "この項目は必須です",

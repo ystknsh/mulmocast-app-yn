@@ -166,16 +166,6 @@ const lang = {
       badge: "Badge",
     },
 
-    // Tab related vocabulary
-    tabs: {
-      text: "Text",
-      yaml: "YAML",
-      json: "JSON",
-      media: "Media",
-      style: "Style",
-      ref: "Ref",
-    },
-
     // Validation messages
     validation: {
       required: "This field is required",
