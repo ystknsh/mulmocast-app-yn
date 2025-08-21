@@ -185,6 +185,50 @@ const lang = {
     replicateAgent: "Replicate",
     groqAgent: "Groq",
   },
+  ai: {
+    agent: {
+      openAIAgent: "OpenAI",
+      ollamaAgent: "Ollama",
+      geminiAgent: "Gemini",
+      anthropicAgent: "Anthropic",
+      replicateAgent: "Replicate",
+      groqAgent: "Groq",
+    },
+    provider: {
+      openai: {
+        name: "OpenAI",
+      },
+      nijivoice: {
+        name: "Nijivoice",
+      },
+      google: {
+        name: "Google",
+      },
+      elevenlabs: {
+        name: "ElevenLabs",
+      },
+      alert: {
+        OPENAI_API_KEY: "You need setup OpenAI API KEY",
+        NIJIVOICE_API_KEY: "You need setup NIJIVOICE API KEY",
+        GEMINI_API_KEY: "You need setup GEMINI API KEY",
+        REPLICATE_API_TOKEN: "You need setup REPLICATE API TOKEN",
+        ELEVENLABS_API_KEY: "You need setup ELEVENLABS API KEY",
+        ANTHROPIC_API_KEY: "You need setup ANTHROPIC API KEY",
+        GROQ_API_KEY: "You need setup GROQ API KEY",
+      },
+    },
+    apiKeyName: {
+      OPENAI_API_KEY: "OpenAI API Key",
+      NIJIVOICE_API_KEY: "NijiVoice API Key",
+      TAVILY_API_KEY: "Tavily API Key",
+      ELEVENLABS_API_KEY:  "ElevenLabs API Key",
+      REPLICATE_API_TOKEN: "Replicate API Token",
+      GEMINI_API_KEY: "Gemini API Key",
+      ANTHROPIC_API_KEY: "Anthropic API Key",
+      GROQ_API_KEY: "GROQ API Key",
+      EXA_API_KEY: "EXA API Key",
+    },
+  },
   menu: {
     top: "Dashboard",
     settings: "Settings",

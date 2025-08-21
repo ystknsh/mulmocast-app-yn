@@ -185,6 +185,50 @@ const lang = {
     replicateAgent: "Replicate",
     groqAgent: "Groq",
   },
+  ai: {
+    agent: {
+      openAIAgent: "OpenAI",
+      ollamaAgent: "Ollama",
+      geminiAgent: "Gemini",
+      anthropicAgent: "Anthropic",
+      replicateAgent: "Replicate",
+      groqAgent: "Groq",
+      },
+    provider: {
+      openai: {
+        name: "OpenAI",
+      },
+      nijivoice: {
+        name: "Nijivoice",
+      },
+      google: {
+        name: "Google",
+      },
+      elevenlabs: {
+        name: "ElevenLabs",
+      },
+      alert: {
+        OPENAI_API_KEY: "設定画面でOpenAI API KEYを設定してください",
+        NIJIVOICE_API_KEY: "設定画面でNIJIVOICE API KEYを設定してください",
+        GEMINI_API_KEY: "設定画面でGEMINI API KEYを設定してください",
+        REPLICATE_API_TOKEN: "設定画面でREPLICATE API TOKENを設定してください",
+        ELEVENLABS_API_KEY: "設定画面でELEVENLABS API KEYを設定してください",
+        ANTHROPIC_API_KEY: "設定画面でANTHROPIC API KEYを設定してください",
+        GROQ_API_KEY: "設定画面でGROQ API KEYを設定してください",
+      },
+    },
+    apiKeyName: {
+      OPENAI_API_KEY: "OpenAI API Key",
+      NIJIVOICE_API_KEY: "NijiVoice API Key",
+      TAVILY_API_KEY: "Tavily API Key",
+      ELEVENLABS_API_KEY:  "ElevenLabs API Key",
+      REPLICATE_API_TOKEN: "Replicate API Token",
+      GEMINI_API_KEY: "Gemini API Key",
+      ANTHROPIC_API_KEY: "Anthropic API Key",
+      GROQ_API_KEY: "GROQ API Key",
+      EXA_API_KEY: "EXA API Key",
+    },
+  },
   menu: {
     top: "ホーム",
     settings: "設定",
@@ -596,6 +640,7 @@ const lang = {
       pdf: "PDF",
     },
   },
+
   provider: {
     openai: "OpenAI",
     nijivoice: "Nijivoice",
