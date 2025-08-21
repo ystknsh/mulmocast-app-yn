@@ -199,6 +199,9 @@ const lang = {
       elevenlabs: {
         name: "ElevenLabs",
       },
+      replicate: {
+        name: "Replicate",
+      },
       alertTemplate: "設定画面で{thing}を設定してください",
     },
     apiKeyName: {

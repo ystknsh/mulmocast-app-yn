@@ -199,6 +199,9 @@ const lang = {
       elevenlabs: {
         name: "ElevenLabs",
       },
+      replicate: {
+        name: "Replicate",
+      },
       alertTemplate: "You need to setup {thing}",
     },
     apiKeyName: {
