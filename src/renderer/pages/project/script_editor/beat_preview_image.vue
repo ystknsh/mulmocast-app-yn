@@ -21,7 +21,10 @@
             <Sparkles v-else class="h-4 w-4" />
           </Button>
         </template>
-        <template v-if="beat?.image?.type === 'beat'"> Reference<!-- Todo --> </template>
+        <template v-if="beat?.image?.type === 'beat'">
+          {{ t("project.scriptEditor.reference.mode")
+          }}<!-- Todo -->
+        </template>
         <template v-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
           {{ t("ui.status.generating") }}

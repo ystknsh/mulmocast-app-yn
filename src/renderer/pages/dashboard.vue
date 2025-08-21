@@ -84,8 +84,8 @@
     <Dialog v-model:open="isViewerOpen">
       <DialogContent class="max-h-[90vh] max-w-3xl">
         <div class="sr-only">
-          <DialogTitle>Mulmo Viewer</DialogTitle>
-          <DialogDescription>{{ t("modal.clickOutsideToClose") }}</DialogDescription>
+          <DialogTitle>{{ t("viewer.mulmo.modal.dialogTitle") }}</DialogTitle>
+          <DialogDescription>{{ t("viewer.mulmo.modal.dialogDescription") }}</DialogDescription>
         </div>
         <MulmoViewer
           v-if="selectedProject"

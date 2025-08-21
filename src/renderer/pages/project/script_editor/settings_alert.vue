@@ -1,6 +1,6 @@
 <template>
   <div v-if="providerAlert" class="text-red-600">
-    {{ t("provider.alert." + providerAlert) }}
+    {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + providerAlert) }) }}
   </div>
 </template>
 

@@ -54,9 +54,6 @@ const lang = {
       parameters: "Parameters",
       example: "ex)",
 
-      // Modal
-      clickOutsideToClose: "Click outside to close",
-
       enable: "Enable",
       disable: "Disable",
     },
@@ -169,16 +166,6 @@ const lang = {
       badge: "Badge",
     },
 
-    // Tab related vocabulary
-    tabs: {
-      text: "Text",
-      yaml: "YAML",
-      json: "JSON",
-      media: "Media",
-      style: "Style",
-      ref: "Ref",
-    },
-
     // Validation messages
     validation: {
       required: "This field is required",
@@ -190,13 +177,44 @@ const lang = {
       unsupportedType: "Unsupported type: {type}",
     },
   },
-  llms: {
-    openAIAgent: "OpenAI",
-    ollamaAgent: "Ollama",
-    geminiAgent: "Gemini",
-    anthropicAgent: "Anthropic",
-    replicateAgent: "Replicate",
-    groqAgent: "Groq",
+  ai: {
+    agent: {
+      openAIAgent: "OpenAI",
+      ollamaAgent: "Ollama",
+      geminiAgent: "Gemini",
+      anthropicAgent: "Anthropic",
+      replicateAgent: "Replicate",
+      groqAgent: "Groq",
+    },
+    provider: {
+      openai: {
+        name: "OpenAI",
+      },
+      nijivoice: {
+        name: "Nijivoice",
+      },
+      google: {
+        name: "Google",
+      },
+      elevenlabs: {
+        name: "ElevenLabs",
+      },
+      replicate: {
+        name: "Replicate",
+      },
+      alertTemplate: "You need to setup {thing}",
+    },
+    apiKeyName: {
+      OPENAI_API_KEY: "OpenAI API Key",
+      NIJIVOICE_API_KEY: "NijiVoice API Key",
+      TAVILY_API_KEY: "Tavily API Key",
+      ELEVENLABS_API_KEY: "ElevenLabs API Key",
+      REPLICATE_API_TOKEN: "Replicate API Token",
+      GEMINI_API_KEY: "Gemini API Key",
+      ANTHROPIC_API_KEY: "Anthropic API Key",
+      GROQ_API_KEY: "GROQ API Key",
+      EXA_API_KEY: "EXA API Key",
+    },
   },
   menu: {
     top: "Dashboard",
@@ -406,6 +424,7 @@ const lang = {
     // Beat speaker settings
     speaker: {
       selectSpeaker: "Select a speaker",
+      text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
     },
     // Beat type structures (moved from beat.form.*)
@@ -506,6 +525,11 @@ const lang = {
       title: "Speech Parameters",
       language: "Language",
       displayName: "Display Name",
+      voiceId: "Voice ID",
+      speed: "Speed",
+      instruction: "Instruction",
+      noSpeakersDefined: "No speakers defined",
+      initializeSpeechParameters: "Initialize Speech Parameters",
     },
     canvasSizeParams: {
       title: "Canvas Size",
@@ -518,6 +542,7 @@ const lang = {
       title: "Caption Parameters",
       language: "Language",
       languageDescription: "Caption language",
+      noLanguage: "None",
       styles: "Styles",
       stylesDescription: "Enter CSS styles (one per line)",
     },
@@ -552,8 +577,19 @@ const lang = {
     },
   },
 
-  modal: {
-    clickOutsideToClose: "Click outside to close",
+  viewer: {
+    mediaPreview: {
+      modal: {
+        dialogTitle: "Media Preview",
+        dialogDescription: "Click outside to close",
+      },
+    },
+    mulmo: {
+      modal: {
+        dialogTitle: "Mulmo Viewer",
+        dialogDescription: "Click outside to close",
+      },
+    },
   },
   notify: {
     audio: {
@@ -588,21 +624,6 @@ const lang = {
       video: "Video",
       image: "Image",
       pdf: "PDF",
-    },
-  },
-  provider: {
-    openai: "OpenAI",
-    nijivoice: "Nijivoice",
-    google: "Google",
-    elevenlabs: "ElevenLabs",
-    alert: {
-      OPENAI_API_KEY: "You need setup OpenAI API KEY",
-      NIJIVOICE_API_KEY: "You need setup NIJIVOICE API KEY",
-      GEMINI_API_KEY: "You need setup GEMINI API KEY",
-      REPLICATE_API_TOKEN: "You need setup REPLICATE API TOKEN",
-      ELEVENLABS_API_KEY: "You need setup ELEVENLABS API KEY",
-      ANTHROPIC_API_KEY: "You need setup ANTHROPIC API KEY",
-      GROQ_API_KEY: "You need setup GROQ API KE",
     },
   },
   languages: {

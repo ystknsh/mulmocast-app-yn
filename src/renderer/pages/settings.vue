@@ -53,7 +53,7 @@
               <CardContent class="space-y-4">
                 <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
                   <div class="flex items-center justify-between">
-                    <Label :for="envKey" class="text-base font-medium">{{ config.title }}</Label>
+                    <Label :for="envKey" class="text-base font-medium">{{ t("ai.apiKeyName." + envKey) }}</Label>
                     <a
                       v-if="config.url"
                       :href="config.url"
@@ -134,12 +134,12 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
-                    {{ t("llms." + llm.id) }}
+                    {{ t("ai.agent." + llm.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
               <div v-if="alertLLM" class="text-red-600">
-                {{ t("provider.alert." + alertLLM) }}
+                {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
               </div>
 
               <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>

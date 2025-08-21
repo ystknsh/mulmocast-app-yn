@@ -54,9 +54,6 @@ const lang = {
       parameters: "パラメータ",
       example: "例)",
 
-      // Modal
-      clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
-
       enable: "有効",
       disable: "無効",
     },
@@ -169,16 +166,6 @@ const lang = {
       badge: "バッジ",
     },
 
-    // Tab related vocabulary
-    tabs: {
-      text: "テキスト",
-      yaml: "YAML",
-      json: "JSON",
-      media: "メディア",
-      style: "スタイル",
-      ref: "参照",
-    },
-
     // Validation messages
     validation: {
       required: "この項目は必須です",
@@ -190,13 +177,44 @@ const lang = {
       unsupportedType: "{type}は未対応のタイプです",
     },
   },
-  llms: {
-    openAIAgent: "OpenAI",
-    ollamaAgent: "Ollama",
-    geminiAgent: "Gemini",
-    anthropicAgent: "Anthropic",
-    replicateAgent: "Replicate",
-    groqAgent: "Groq",
+  ai: {
+    agent: {
+      openAIAgent: "OpenAI",
+      ollamaAgent: "Ollama",
+      geminiAgent: "Gemini",
+      anthropicAgent: "Anthropic",
+      replicateAgent: "Replicate",
+      groqAgent: "Groq",
+    },
+    provider: {
+      openai: {
+        name: "OpenAI",
+      },
+      nijivoice: {
+        name: "Nijivoice",
+      },
+      google: {
+        name: "Google",
+      },
+      elevenlabs: {
+        name: "ElevenLabs",
+      },
+      replicate: {
+        name: "Replicate",
+      },
+      alertTemplate: "設定画面で{thing}を設定してください",
+    },
+    apiKeyName: {
+      OPENAI_API_KEY: "OpenAI API Key",
+      NIJIVOICE_API_KEY: "NijiVoice API Key",
+      TAVILY_API_KEY: "Tavily API Key",
+      ELEVENLABS_API_KEY: "ElevenLabs API Key",
+      REPLICATE_API_TOKEN: "Replicate API Token",
+      GEMINI_API_KEY: "Gemini API Key",
+      ANTHROPIC_API_KEY: "Anthropic API Key",
+      GROQ_API_KEY: "GROQ API Key",
+      EXA_API_KEY: "EXA API Key",
+    },
   },
   menu: {
     top: "ホーム",
@@ -405,6 +423,7 @@ const lang = {
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
+      text: "テキスト",
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },
     // Beat type structures (moved from beat.form.*)
@@ -506,6 +525,11 @@ const lang = {
       title: "音声設定",
       language: "言語",
       displayName: "表示名",
+      voiceId: "音声ID",
+      speed: "速度",
+      instruction: "指示",
+      noSpeakersDefined: "スピーカーが定義されていません",
+      initializeSpeechParameters: "音声パラメータを初期化",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",
@@ -518,6 +542,7 @@ const lang = {
       title: "字幕設定",
       language: "言語",
       languageDescription: "字幕の言語",
+      noLanguage: "なし",
       styles: "スタイル",
       stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
     },
@@ -552,8 +577,19 @@ const lang = {
     },
   },
 
-  modal: {
-    clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+  viewer: {
+    mediaPreview: {
+      modal: {
+        dialogTitle: "メディアプレビュー",
+        dialogDescription: "外側をクリックして閉じる",
+      },
+    },
+    mulmo: {
+      modal: {
+        dialogTitle: "Mulmo ビューアー",
+        dialogDescription: "外側をクリックして閉じる",
+      },
+    },
   },
   notify: {
     audio: {
@@ -589,21 +625,6 @@ const lang = {
       video: "動画",
       image: "画像",
       pdf: "PDF",
-    },
-  },
-  provider: {
-    openai: "OpenAI",
-    nijivoice: "Nijivoice",
-    google: "Google",
-    elevenlabs: "ElevenLabs",
-    alert: {
-      OPENAI_API_KEY: "設定画面でOpenAI API KEYを設定してください",
-      NIJIVOICE_API_KEY: "設定画面でNIJIVOICE API KEYを設定してください",
-      GEMINI_API_KEY: "設定画面でGEMINI API KEYを設定してください",
-      REPLICATE_API_TOKEN: "設定画面でREPLICATE API TOKENを設定してください",
-      ELEVENLABS_API_KEY: "設定画面でELEVENLABS API KEYを設定してください",
-      ANTHROPIC_API_KEY: "設定画面でANTHROPIC API KEYを設定してください",
-      GROQ_API_KEY: "設定画面でGROQ API KEYを設定してください",
     },
   },
   languages: {
