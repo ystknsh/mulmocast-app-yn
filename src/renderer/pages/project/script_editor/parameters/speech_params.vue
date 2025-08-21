@@ -41,7 +41,7 @@
               </SelectTrigger>
               <SelectContent>
                 <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
-                  t("provider." + provider)
+                  t("ai.provider." + provider + ".name")
                 }}</SelectItem>
               </SelectContent>
             </Select>

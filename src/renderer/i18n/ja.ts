@@ -199,15 +199,7 @@ const lang = {
       elevenlabs: {
         name: "ElevenLabs",
       },
-      alert: {
-        OPENAI_API_KEY: "設定画面でOpenAI API KEYを設定してください",
-        NIJIVOICE_API_KEY: "設定画面でNIJIVOICE API KEYを設定してください",
-        GEMINI_API_KEY: "設定画面でGEMINI API KEYを設定してください",
-        REPLICATE_API_TOKEN: "設定画面でREPLICATE API TOKENを設定してください",
-        ELEVENLABS_API_KEY: "設定画面でELEVENLABS API KEYを設定してください",
-        ANTHROPIC_API_KEY: "設定画面でANTHROPIC API KEYを設定してください",
-        GROQ_API_KEY: "設定画面でGROQ API KEYを設定してください",
-      },
+      alertTemplate: "設定画面で{thing}を設定してください",
     },
     apiKeyName: {
       OPENAI_API_KEY: "OpenAI API Key",
@@ -630,22 +622,6 @@ const lang = {
       video: "動画",
       image: "画像",
       pdf: "PDF",
-    },
-  },
-
-  provider: {
-    openai: "OpenAI",
-    nijivoice: "Nijivoice",
-    google: "Google",
-    elevenlabs: "ElevenLabs",
-    alert: {
-      OPENAI_API_KEY: "設定画面でOpenAI API KEYを設定してください",
-      NIJIVOICE_API_KEY: "設定画面でNIJIVOICE API KEYを設定してください",
-      GEMINI_API_KEY: "設定画面でGEMINI API KEYを設定してください",
-      REPLICATE_API_TOKEN: "設定画面でREPLICATE API TOKENを設定してください",
-      ELEVENLABS_API_KEY: "設定画面でELEVENLABS API KEYを設定してください",
-      ANTHROPIC_API_KEY: "設定画面でANTHROPIC API KEYを設定してください",
-      GROQ_API_KEY: "設定画面でGROQ API KEYを設定してください",
     },
   },
   languages: {

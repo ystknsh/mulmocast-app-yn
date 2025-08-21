@@ -199,15 +199,7 @@ const lang = {
       elevenlabs: {
         name: "ElevenLabs",
       },
-      alert: {
-        OPENAI_API_KEY: "You need setup OpenAI API KEY",
-        NIJIVOICE_API_KEY: "You need setup NIJIVOICE API KEY",
-        GEMINI_API_KEY: "You need setup GEMINI API KEY",
-        REPLICATE_API_TOKEN: "You need setup REPLICATE API TOKEN",
-        ELEVENLABS_API_KEY: "You need setup ELEVENLABS API KEY",
-        ANTHROPIC_API_KEY: "You need setup ANTHROPIC API KEY",
-        GROQ_API_KEY: "You need setup GROQ API KEY",
-      },
+      alertTemplate: "You need to setup {thing}",
     },
     apiKeyName: {
       OPENAI_API_KEY: "OpenAI API Key",
@@ -629,21 +621,6 @@ const lang = {
       video: "Video",
       image: "Image",
       pdf: "PDF",
-    },
-  },
-  provider: {
-    openai: "OpenAI",
-    nijivoice: "Nijivoice",
-    google: "Google",
-    elevenlabs: "ElevenLabs",
-    alert: {
-      OPENAI_API_KEY: "You need setup OpenAI API KEY",
-      NIJIVOICE_API_KEY: "You need setup NIJIVOICE API KEY",
-      GEMINI_API_KEY: "You need setup GEMINI API KEY",
-      REPLICATE_API_TOKEN: "You need setup REPLICATE API TOKEN",
-      ELEVENLABS_API_KEY: "You need setup ELEVENLABS API KEY",
-      ANTHROPIC_API_KEY: "You need setup ANTHROPIC API KEY",
-      GROQ_API_KEY: "You need setup GROQ API KE",
     },
   },
   languages: {
