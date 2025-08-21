@@ -177,14 +177,6 @@ const lang = {
       unsupportedType: "Unsupported type: {type}",
     },
   },
-  llms: {
-    openAIAgent: "OpenAI",
-    ollamaAgent: "Ollama",
-    geminiAgent: "Gemini",
-    anthropicAgent: "Anthropic",
-    replicateAgent: "Replicate",
-    groqAgent: "Groq",
-  },
   ai: {
     agent: {
       openAIAgent: "OpenAI",

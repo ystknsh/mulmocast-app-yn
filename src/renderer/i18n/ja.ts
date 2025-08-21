@@ -177,14 +177,6 @@ const lang = {
       unsupportedType: "{type}は未対応のタイプです",
     },
   },
-  llms: {
-    openAIAgent: "OpenAI",
-    ollamaAgent: "Ollama",
-    geminiAgent: "Gemini",
-    anthropicAgent: "Anthropic",
-    replicateAgent: "Replicate",
-    groqAgent: "Groq",
-  },
   ai: {
     agent: {
       openAIAgent: "OpenAI",

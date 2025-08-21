@@ -134,7 +134,7 @@
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
-                    {{ t("llms." + llm.id) }}
+                    {{ t("ai.agent." + llm.id) }}
                   </SelectItem>
                 </SelectContent>
               </Select>
