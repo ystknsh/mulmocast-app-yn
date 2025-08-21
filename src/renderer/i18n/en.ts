@@ -208,7 +208,7 @@ const lang = {
       OPENAI_API_KEY: "OpenAI API Key",
       NIJIVOICE_API_KEY: "NijiVoice API Key",
       TAVILY_API_KEY: "Tavily API Key",
-      ELEVENLABS_API_KEY:  "ElevenLabs API Key",
+      ELEVENLABS_API_KEY: "ElevenLabs API Key",
       REPLICATE_API_TOKEN: "Replicate API Token",
       GEMINI_API_KEY: "Gemini API Key",
       ANTHROPIC_API_KEY: "Anthropic API Key",
