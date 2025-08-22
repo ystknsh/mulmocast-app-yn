@@ -20,11 +20,19 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     isOpenSettingModal.value = !isOpenSettingModal.value;
   };
 
+  const mulmoViewerProjectId = ref<string | null>(null);
+  const setMulmoViewerProjectId = (projectId: string | null) => {
+    mulmoViewerProjectId.value = projectId;
+  };
+
   return {
     settings,
     updateSettings,
 
     isOpenSettingModal,
     toggleSettingModal,
+
+    mulmoViewerProjectId,
+    setMulmoViewerProjectId,
   };
 });

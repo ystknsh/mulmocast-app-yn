@@ -475,6 +475,9 @@ watch(
       if (mulmoEvent.sessionType === "audio") {
         downloadAudioFiles();
       }
+      if (mulmoEvent.sessionType === "pdf") {
+        // downloadAudioFiles();
+      }
     }
 
     // beats
