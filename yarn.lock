@@ -1294,10 +1294,10 @@
   dependencies:
     google-gax "^5.0.0"
 
-"@google/genai@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.13.0.tgz#1db0fdd1dff64bd5e93109df2abfe619a891dd70"
-  integrity sha512-BxilXzE8cJ0zt5/lXk6KwuBcIT9P2Lbi2WXhwWMbxf1RNeC68/8DmYQqMrzQP333CieRMdbDXs0eNCphLoScWg==
+"@google/genai@^1.15.0":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.15.0.tgz#0eab6dbc1a7c29a8a7b8c509b615524b48fce1cf"
+  integrity sha512-4CSW+hRTESWl3xVtde7pkQ3E+dDFhDq+m4ztmccRctZfx1gKy3v0M9STIMGk6Nq0s6O2uKMXupOZQ1JGorXVwQ==
   dependencies:
     google-auth-library "^9.14.2"
     ws "^8.18.0"
@@ -1348,46 +1348,46 @@
   dependencies:
     "@inquirer/input" "^4.2.1"
 
-"@graphai/llm_agents@^2.0.8":
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.9.tgz#09799882d9356e07c34a3b37c054d346bcf49629"
-  integrity sha512-URoLm38YzupRwCUR/dB01kCc2qVU6GQ6Y+e2dkS3WRxUJ4BujZJzcsbUTslGVZLLAusD0mMLOUilLtoIBsb0gg==
+"@graphai/llm_agents@^2.0.11":
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.11.tgz#d012ff5361c5dc17810650b2873789e06b4b447a"
+  integrity sha512-YlbHn57Syx18sJwpfbiZ68nxLihsXw0FsV5P20oZs7O7I8hesmJFNfdYpM/OuTHHxsdYk8qkkOZKVs+AR/StaQ==
   dependencies:
     "@graphai/anthropic_agent" "^2.0.10"
     "@graphai/gemini_agent" "^2.0.1"
     "@graphai/groq_agent" "^2.0.2"
-    "@graphai/openai_agent" "^2.0.5"
-    "@graphai/openai_fetch_agent" "^1.0.0"
-    "@graphai/replicate_agent" "^2.0.0"
+    "@graphai/openai_agent" "^2.0.7"
+    "@graphai/openai_fetch_agent" "^1.0.1"
+    "@graphai/replicate_agent" "^2.0.1"
     "@graphai/tools_agent" "^1.0.4"
 
-"@graphai/llm_utils@^2.0.0", "@graphai/llm_utils@^2.0.1", "@graphai/llm_utils@^2.0.3":
+"@graphai/llm_utils@^2.0.0", "@graphai/llm_utils@^2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-2.0.3.tgz#abdb91d606c2ca304aeeacc67e33255a543c4488"
   integrity sha512-ardK9+E/I2jUQKjOXJ+IaVPW5tAN1Yk8LhjUf/PYm7DmeLdcsq4/TMLo7PbHlvwgOymd66OFe8CGjZ0epvN3+w==
 
-"@graphai/openai_agent@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.5.tgz#8d149ab41b53245a7892fb253ddec33060091fe6"
-  integrity sha512-CLsW1zAAPQTp0ky2RspnrYQCT9gAaZvfpy1WO7FIZA8edy8VX34VDBptqvp4y8NFtK8mRC+LQ2krWpLcGHfrNg==
+"@graphai/openai_agent@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.7.tgz#95681965c5e34d6ca29871b99aaa9699567d88f3"
+  integrity sha512-Xh6FoxJpJDIBeLFiP9E5G03Bpoj0JjYFxletNtuiD+x0SvCZAIy1QAGd7ceEdq9UcWGbkbrLgzRs3kZ7dlDaAg==
   dependencies:
     "@graphai/llm_utils" "^2.0.3"
-    openai "^5.12.2"
+    openai "^5.15.0"
 
-"@graphai/openai_fetch_agent@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_fetch_agent/-/openai_fetch_agent-1.0.0.tgz#5c72e944447660bdd783f6b682358b37f36d7546"
-  integrity sha512-uStVLMjKBLOEwL03+1d8btU4S5eJL1QVQ4S160YO8xN8xKhAaoeFJdW82DoYd2n435Vx7mt4sGeTpK8Jx6B9Sg==
+"@graphai/openai_fetch_agent@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_fetch_agent/-/openai_fetch_agent-1.0.1.tgz#4eaea9e8916f031914815b01c436577bdc02818e"
+  integrity sha512-gso2SYB1AIn6/W/VOoVi4HmUPC+K8TWkj5cbAW2bm/0mG/PbxsatcNt6xJ9dbBly9eJXS71ivOiQH3MOypkJZQ==
   dependencies:
-    "@graphai/llm_utils" "^2.0.1"
+    "@graphai/llm_utils" "^2.0.3"
 
-"@graphai/replicate_agent@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@graphai/replicate_agent/-/replicate_agent-2.0.0.tgz#0e53f5d39ec8c4a006ca75b83d7492ce4d7a6598"
-  integrity sha512-6jEg1ZTAPaopA/Xnr2/gbeHP3jrxZP6B0S7P94DBZceA5OOs5CmAfVnG1Ikh3dltJP1HbAhOTdJpVl6hWN/4Yg==
+"@graphai/replicate_agent@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@graphai/replicate_agent/-/replicate_agent-2.0.1.tgz#4eee774955beafc9dd82e9866bfdee41b346a206"
+  integrity sha512-vPL+kcVdVA9aS5jRikbSGl0tZJyl+YhaF+/uuSirK44qWMDnr8Sa4pCtYox/Dy0Yhsv+9uF20Rx/2fP8WXLIOA==
   dependencies:
-    "@graphai/llm_utils" "^2.0.0"
-    replicate "^1.0.1"
+    "@graphai/llm_utils" "^2.0.3"
+    replicate "^1.1.0"
 
 "@graphai/stream_agent_filter@^2.0.2":
   version "2.0.2"
@@ -1697,10 +1697,10 @@
     semver "^7.5.3"
     tar "^7.4.0"
 
-"@modelcontextprotocol/sdk@^1.15.1":
-  version "1.15.1"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.15.1.tgz#30a235f91e144b62ef1810bc63679e423bac37ec"
-  integrity sha512-W/XlN9c528yYn+9MQkVjxiTPgPxoxt+oczfjHBDsJx0+59+O7B75Zhsp0B16Xbwbz8ANISDajh6+V7nIcPMc5w==
+"@modelcontextprotocol/sdk@^1.17.3":
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.17.3.tgz#cf92354220f0183d28179e96a9bf3a8f6d3211ae"
+  integrity sha512-JPwUKWSsbzx+DLFznf/QZ32Qa+ptfbUlHhRLrBQBAFu9iI1iYvizM4p+zhhRDceSsPutXp4z+R/HPVphlIiclg==
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"
@@ -2600,10 +2600,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@puppeteer/browsers@2.10.6":
-  version "2.10.6"
-  resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-2.10.6.tgz#0b1b5046ec4918a4fd4e4c9383153a80af288bd2"
-  integrity sha512-pHUn6ZRt39bP3698HFQlu2ZHCkS/lPcpv7fVQcGBSzNNygw171UXAKrCUhy+TEMw4lEttOKDgNpb04hwUAJeiQ==
+"@puppeteer/browsers@2.10.7":
+  version "2.10.7"
+  resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-2.10.7.tgz#a28f622b2da0ee131c9a576d25d8c4e31fc24135"
+  integrity sha512-wHWLkQWBjHtajZeqCB74nsa/X70KheyOhySYBRmVQDJiNj0zjZR/naPCvdWjMhcG1LmjaMV/9WtTo5mpe8qWLw==
   dependencies:
     debug "^4.4.1"
     extract-zip "^2.0.1"
@@ -3067,10 +3067,10 @@
   dependencies:
     pdfjs-dist "5.3.31"
 
-"@tavily/core@^0.5.9":
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/@tavily/core/-/core-0.5.9.tgz#6f59746688b41187512d2515892a4fbd441b38ff"
-  integrity sha512-NkKurKU/xBnjmvp5he6tQLk/6reaeoHXYPVWghGk0mRtkr3ttaPqUu+aIe2Ssa5rozPz9HpNUlRM3/xleCarRw==
+"@tavily/core@^0.5.11":
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/@tavily/core/-/core-0.5.11.tgz#62e1ab918a2d63f2aa616361840f52dea42a3e05"
+  integrity sha512-SHYjpWgeyHpJNZh8RZCUcRtb228ymLzNlVOqrfCql6vOlSiz8q3wy5VEVtfdN881pg6wHPLa2Rra3xVyPhuYuw==
   dependencies:
     axios "^1.7.7"
     https-proxy-agent "^7.0.6"
@@ -3624,6 +3624,17 @@
     estree-walker "^2.0.2"
     source-map-js "^1.2.1"
 
+"@vue/compiler-core@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.5.19.tgz#f141d35b61b55ce72c3cbb4dc9eeca3821d451aa"
+  integrity sha512-/afpyvlkrSNYbPo94Qu8GtIOWS+g5TRdOvs6XZNw6pWQQmj5pBgSZvEPOIZlqWq0YvoUhDDQaQ2TnzuJdOV4hA==
+  dependencies:
+    "@babel/parser" "^7.28.3"
+    "@vue/shared" "3.5.19"
+    entities "^4.5.0"
+    estree-walker "^2.0.2"
+    source-map-js "^1.2.1"
+
 "@vue/compiler-dom@3.5.16":
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.16.tgz#151d8390252975c0b1a773029220fdfcfaa2d743"
@@ -3639,6 +3650,14 @@
   dependencies:
     "@vue/compiler-core" "3.5.18"
     "@vue/shared" "3.5.18"
+
+"@vue/compiler-dom@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.19.tgz#fc57d9dca4987df67d6ce64dbddaac6d73f1a6ef"
+  integrity sha512-Drs6rPHQZx/pN9S6ml3Z3K/TWCIRPvzG2B/o5kFK9X0MNHt8/E+38tiRfojufrYBfA6FQUFB2qBBRXlcSXWtOA==
+  dependencies:
+    "@vue/compiler-core" "3.5.19"
+    "@vue/shared" "3.5.19"
 
 "@vue/compiler-dom@^3.5.0":
   version "3.5.17"
@@ -3678,6 +3697,21 @@
     postcss "^8.5.6"
     source-map-js "^1.2.1"
 
+"@vue/compiler-sfc@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.5.19.tgz#7f9792ad7de5d4be9b6a32129c75e1f6cd4da015"
+  integrity sha512-YWCm1CYaJ+2RvNmhCwI7t3I3nU+hOrWGWMsn+Z/kmm1jy5iinnVtlmkiZwbLlbV1SRizX7vHsc0/bG5dj0zRTg==
+  dependencies:
+    "@babel/parser" "^7.28.3"
+    "@vue/compiler-core" "3.5.19"
+    "@vue/compiler-dom" "3.5.19"
+    "@vue/compiler-ssr" "3.5.19"
+    "@vue/shared" "3.5.19"
+    estree-walker "^2.0.2"
+    magic-string "^0.30.17"
+    postcss "^8.5.6"
+    source-map-js "^1.2.1"
+
 "@vue/compiler-ssr@3.5.16":
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.16.tgz#3b7874dff771ab2f85fb09be71f6c76a75fcc5ac"
@@ -3693,6 +3727,14 @@
   dependencies:
     "@vue/compiler-dom" "3.5.18"
     "@vue/shared" "3.5.18"
+
+"@vue/compiler-ssr@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.19.tgz#1719e7fda6d54f5696ca63d4d40281668c0e601c"
+  integrity sha512-/wx0VZtkWOPdiQLWPeQeqpHWR/LuNC7bHfSX7OayBTtUy8wur6vT6EQIX6Et86aED6J+y8tTw43qo2uoqGg5sw==
+  dependencies:
+    "@vue/compiler-dom" "3.5.19"
+    "@vue/shared" "3.5.19"
 
 "@vue/compiler-vue2@^2.7.16":
   version "2.7.16"
@@ -3804,6 +3846,13 @@
   dependencies:
     "@vue/shared" "3.5.18"
 
+"@vue/reactivity@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.19.tgz#c06f172da26e2fc74060cc490d1c3aaffc024622"
+  integrity sha512-4bueZg2qs5MSsK2dQk3sssV0cfvxb/QZntTC8v7J448GLgmfPkQ+27aDjlt40+XFqOwUq5yRxK5uQh14Fc9eVA==
+  dependencies:
+    "@vue/shared" "3.5.19"
+
 "@vue/runtime-core@3.5.16":
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.16.tgz#0a828c322224ada26f81a2e227c3d4aebcb72c7a"
@@ -3819,6 +3868,14 @@
   dependencies:
     "@vue/reactivity" "3.5.18"
     "@vue/shared" "3.5.18"
+
+"@vue/runtime-core@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.19.tgz#7af375addd88b8be0a3a90162112bb98f92a9359"
+  integrity sha512-TaooCr8Hge1sWjLSyhdubnuofs3shhzZGfyD11gFolZrny76drPwBVQj28/z/4+msSFb18tOIg6VVVgf9/IbIA==
+  dependencies:
+    "@vue/reactivity" "3.5.19"
+    "@vue/shared" "3.5.19"
 
 "@vue/runtime-dom@3.5.16":
   version "3.5.16"
@@ -3840,6 +3897,16 @@
     "@vue/shared" "3.5.18"
     csstype "^3.1.3"
 
+"@vue/runtime-dom@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.5.19.tgz#b8cb4101778a306bdb64b5faba539a90ecce712c"
+  integrity sha512-qmahqeok6ztuUTmV8lqd7N9ymbBzctNF885n8gL3xdCC1u2RnM/coX16Via0AiONQXUoYpxPojL3U1IsDgSWUQ==
+  dependencies:
+    "@vue/reactivity" "3.5.19"
+    "@vue/runtime-core" "3.5.19"
+    "@vue/shared" "3.5.19"
+    csstype "^3.1.3"
+
 "@vue/server-renderer@3.5.16":
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.5.16.tgz#5a68cd1d423d843f74c9e6b37133850abab07c13"
@@ -3856,6 +3923,14 @@
     "@vue/compiler-ssr" "3.5.18"
     "@vue/shared" "3.5.18"
 
+"@vue/server-renderer@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.5.19.tgz#68269701e73640ec0b861fcaff5cc77331d245e9"
+  integrity sha512-ZJ/zV9SQuaIO+BEEVq/2a6fipyrSYfjKMU3267bPUk+oTx/hZq3RzV7VCh0Unlppt39Bvh6+NzxeopIFv4HJNg==
+  dependencies:
+    "@vue/compiler-ssr" "3.5.19"
+    "@vue/shared" "3.5.19"
+
 "@vue/shared@3.5.16":
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.16.tgz#d5ea7671182742192938a4b4cbf86ef12bef7418"
@@ -3870,6 +3945,11 @@
   version "3.5.18"
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.18.tgz#529f24a88d3ed678d50fd5c07455841fbe8ac95e"
   integrity sha512-cZy8Dq+uuIXbxCZpuLd2GJdeSO/lIzIspC2WtkqIpje5QyFbvLaI5wZtdUjLHjGZrlVX6GilejatWwVYYRc8tA==
+
+"@vue/shared@3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.19.tgz#5301967a910cb62145e4f17131f3bee88b463c83"
+  integrity sha512-IhXCOn08wgKrLQxRFKKlSacWg4Goi1BolrdEeLYn6tgHjJNXVrWJ5nzoxZqNwl5p88aLlQ8LOaoMa3AYvaKJ/Q==
 
 "@vueuse/core@^10.11.0":
   version "10.11.1"
@@ -4702,10 +4782,10 @@ chrome-trace-event@^1.0.3:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.4.tgz#05bffd7ff928465093314708c93bdfa9bd1f0f5b"
   integrity sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==
 
-chromium-bidi@7.3.1:
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-7.3.1.tgz#021b8864cbd5ad0401620a7eb4ef5a2a0011591b"
-  integrity sha512-i+BMGluhZZc4Jic9L1aHJBTfaopxmCqQxGklyMcqFx4fvF3nI4BJ3bCe1ad474nvYRIo/ZN/VrdA4eOaRZua4Q==
+chromium-bidi@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-8.0.0.tgz#d73c9beed40317adf2bcfeb9a47087003cd467ec"
+  integrity sha512-d1VmE0FD7lxZQHzcDUCKZSNRtRwISXDsdg4HjdTR5+Ll5nQ/vzU12JeNmupD6VWffrPSlrnGhEWlLESKH3VO+g==
   dependencies:
     mitt "^3.0.1"
     zod "^3.24.1"
@@ -6444,10 +6524,10 @@ eventsource@^3.0.2:
   dependencies:
     eventsource-parser "^3.0.1"
 
-exa-js@^1.8.27:
-  version "1.8.27"
-  resolved "https://registry.yarnpkg.com/exa-js/-/exa-js-1.8.27.tgz#8b32ff304966d1ff54be6f2937a064a338a04ed0"
-  integrity sha512-C0vsC3r5B1vhibXAxtJ9OlCwXTp+AaWFPk3ozLoUBV2VH+Xd+WhkKp8/30i9mkBVJopK/8+lDMv8MyRjkOWm5g==
+exa-js@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/exa-js/-/exa-js-1.9.1.tgz#eeec10215f2a13453cee6262dfc86d6b5570a896"
+  integrity sha512-BJ+voD+0c9q2vWW6l310p10E18HU1Q1A7jlTk6bHyANSfC1cV/A1NaEaNUwyM2Hshl+8KJjUC8LlLrkr8qvYdQ==
   dependencies:
     cross-fetch "~4.1.0"
     dotenv "~16.4.7"
@@ -9082,26 +9162,26 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.5.tgz#04f1b4cbfc774837705c223d22ad0950a1723950"
-  integrity sha512-j4ERwbC3eVjgAM5ZhkndTdm1glBCEBBD5jjJOG3xqNiN3s6a7kKbKoc0YDlAm+aOBZnoGIRCw/zBiUEtV3W7Jg==
+mulmocast@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.6.tgz#2a85755df61e00bdba316f3d62fbe07eb7339137"
+  integrity sha512-PzsxSGhsTGHclTNcl+rzVTlMFYUIEhS/d5qPcw62xHlIYVY2dEcH5KeRc6JQevMQuJ9wKzi53p8BywdIh0431Q==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
-    "@google/genai" "^1.13.0"
+    "@google/genai" "^1.15.0"
     "@graphai/anthropic_agent" "^2.0.11"
     "@graphai/browserless_agent" "^2.0.1"
     "@graphai/gemini_agent" "^2.0.1"
     "@graphai/groq_agent" "^2.0.2"
     "@graphai/input_agents" "^1.0.2"
-    "@graphai/openai_agent" "^2.0.5"
+    "@graphai/openai_agent" "^2.0.7"
     "@graphai/stream_agent_filter" "^2.0.2"
     "@graphai/vanilla" "^2.0.12"
     "@graphai/vanilla_node_agents" "^2.0.4"
     "@inquirer/input" "^4.2.1"
     "@inquirer/select" "^4.3.1"
-    "@modelcontextprotocol/sdk" "^1.15.1"
-    "@tavily/core" "^0.5.9"
+    "@modelcontextprotocol/sdk" "^1.17.3"
+    "@tavily/core" "^0.5.11"
     canvas "^3.2.0"
     clipboardy "^4.0.0"
     dotenv "^17.2.1"
@@ -9109,8 +9189,8 @@ mulmocast@^1.2.5:
     graphai "^2.0.14"
     marked "^16.2.0"
     ora "^8.2.0"
-    puppeteer "^24.16.2"
-    replicate "^1.0.1"
+    puppeteer "^24.17.0"
+    replicate "^1.1.0"
     yaml "^2.8.1"
     yargs "^18.0.0"
     zod "^3.25.76"
@@ -9656,10 +9736,10 @@ openai@^5.0.1:
   resolved "https://registry.yarnpkg.com/openai/-/openai-5.12.1.tgz#c86b266ce77714eb7b6f5831981acd93edddb662"
   integrity sha512-26s536j4Fi7P3iUma1S9H33WRrw0Qu8pJ2nYJHffrlKHPU0JK4d0r3NcMgqEcAeTdNLGYNyoFsqN4g4YE9vutg==
 
-openai@^5.12.2:
-  version "5.12.2"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.12.2.tgz#512ab6b80eb8414837436e208f1b951442b97761"
-  integrity sha512-xqzHHQch5Tws5PcKR2xsZGX9xtch+JQFz5zb14dGqlshmmDAFBFEWmeIpf7wVqWV+w7Emj7jRgkNJakyKE0tYQ==
+openai@^5.15.0:
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-5.15.0.tgz#de3ae6d0914f7a0fcc12d0faa21a2289f9d5cc5d"
+  integrity sha512-kcUdws8K/A8m02I+IqFBwO51gS+87GP89yWEufGbzEi8anBz4FB/bti2QxaJdGwwY4mwJGzx85XO7TuL/Tpu1w==
 
 optionator@^0.9.3:
   version "0.9.4"
@@ -10613,28 +10693,28 @@ punycode@^2.1.0, punycode@^2.3.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-puppeteer-core@24.16.2:
-  version "24.16.2"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.16.2.tgz#f210ca0efefb7ded0f40fb783878968913b83206"
-  integrity sha512-areKSSQzpoHa5nCk3uD/o504yjrW5ws0N6jZfdFZ3a4H+Q7NBgvuDydjN5P87jN4Rj+eIpLcK3ELOThTtYuuxg==
+puppeteer-core@24.17.0:
+  version "24.17.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.17.0.tgz#66eaa3532d06c22fbbdc36e09f416cb69b8c8637"
+  integrity sha512-RYOBKFiF+3RdwIZTEacqNpD567gaFcBAOKTT7742FdB1icXudrPI7BlZbYTYWK2wgGQUXt9Zi1Yn+D5PmCs4CA==
   dependencies:
-    "@puppeteer/browsers" "2.10.6"
-    chromium-bidi "7.3.1"
+    "@puppeteer/browsers" "2.10.7"
+    chromium-bidi "8.0.0"
     debug "^4.4.1"
     devtools-protocol "0.0.1475386"
     typed-query-selector "^2.12.0"
     ws "^8.18.3"
 
-puppeteer@^24.16.2:
-  version "24.16.2"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.16.2.tgz#e3c08b26b7832779c0e1dbef0542f5242aadde16"
-  integrity sha512-eNjKzwjITM4Lvho6iHb+VQamadUBgc8TsjAApsKi5N8DXipxAaAZWssBOFsrIOLo4eYWYj0Qk5gmr4wBSqzJWw==
+puppeteer@^24.17.0:
+  version "24.17.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.17.0.tgz#2fa286ed7b755846ef6064c1ee42b5491abcd21b"
+  integrity sha512-CGrmJ8WgilK3nyE73k+pbxHggETPpEvL6AQ9H5JSK1RgZRGMQVJ+iO3MocGm9yBQXQJ9U5xijyLvkYXFeb0/+g==
   dependencies:
-    "@puppeteer/browsers" "2.10.6"
-    chromium-bidi "7.3.1"
+    "@puppeteer/browsers" "2.10.7"
+    chromium-bidi "8.0.0"
     cosmiconfig "^9.0.0"
     devtools-protocol "0.0.1475386"
-    puppeteer-core "24.16.2"
+    puppeteer-core "24.17.0"
     typed-query-selector "^2.12.0"
 
 qs@^6.14.0, qs@^6.9.6:
@@ -10901,10 +10981,10 @@ remove-trailing-separator@^1.0.1:
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
   integrity sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==
 
-replicate@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/replicate/-/replicate-1.0.1.tgz#c1f4bdd4fc29bbaf44af07662d23a858409421e9"
-  integrity sha512-EY+rK1YR5bKHcM9pd6WyaIbv6m2aRIvHfHDh51j/LahlHTLKemTYXF6ptif2sLa+YospupAsIoxw8Ndt5nI3vg==
+replicate@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/replicate/-/replicate-1.1.0.tgz#6e3fbb5fcc605a91ab503725043293e43b1de61a"
+  integrity sha512-6D49t/etFvRUz7hOseEmI6mxm3vypFPffpTR37Gai924s6JmeNmnPk+QooFINYsq4Gu5HYlg49ut6zxwhfKxqQ==
   optionalDependencies:
     readable-stream ">=4.0.0"
 
@@ -12760,6 +12840,17 @@ vue@^3.5.18:
     "@vue/runtime-dom" "3.5.18"
     "@vue/server-renderer" "3.5.18"
     "@vue/shared" "3.5.18"
+
+vue@^3.5.19:
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.19.tgz#973ba643a331bd35578eec2a27fa115f500eb25b"
+  integrity sha512-ZRh0HTmw6KChRYWgN8Ox/wi7VhpuGlvMPrHjIsdRbzKNgECFLzy+dKL5z9yGaBSjCpmcfJCbh3I1tNSRmBz2tg==
+  dependencies:
+    "@vue/compiler-dom" "3.5.19"
+    "@vue/compiler-sfc" "3.5.19"
+    "@vue/runtime-dom" "3.5.19"
+    "@vue/server-renderer" "3.5.19"
+    "@vue/shared" "3.5.19"
 
 w3c-xmlserializer@^5.0.0:
   version "5.0.0"
