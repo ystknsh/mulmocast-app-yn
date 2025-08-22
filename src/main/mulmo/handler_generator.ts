@@ -54,7 +54,8 @@ export const mulmoActionRunner = async (projectId: string, actionName: string | 
     const audioContext = enables.audio ? await audio(context, args) : context;
     const imageContext = enables.image ? await images(audioContext, args) : audioContext;
     if (enables.movie) {
-      const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
+      // const captioncontext = imageContext.caption ? await captions(imageContext) : imageContext;
+      const captioncontext = await captions(imageContext);
       await movie(captioncontext);
     }
     if (enables.pdfSlide) {
