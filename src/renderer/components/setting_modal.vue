@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Dialog, DialogContent, DialogOverlay, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Settings from "@/pages/settings.vue";
