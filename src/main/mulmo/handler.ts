@@ -115,7 +115,8 @@ const mediaFilePath = async (projectId: string, actionName: string) => {
     return movieFilePath(context);
   }
   if (actionName === "pdf") {
-    return pdfFilePath(context, "slide");
+    // return pdfFilePath(context, "slide");
+    return pdfFilePath(context, "handout");
   }
   throw Error("no download file");
 };
