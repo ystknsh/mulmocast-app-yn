@@ -56,6 +56,8 @@ const lang = {
 
       enable: "有効",
       disable: "無効",
+
+      by: "×",
     },
 
     // Common actions (placeholder pairs)
