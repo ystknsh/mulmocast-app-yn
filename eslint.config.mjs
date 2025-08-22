@@ -156,7 +156,7 @@ export default [
       "vue/no-mutating-props": "error",
 
       "@intlify/vue-i18n/no-raw-text": [
-        "warn",
+        "error",
         {
           ignorePattern: "[\\-():<>/.]", 
         },

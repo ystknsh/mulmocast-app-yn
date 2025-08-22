@@ -56,6 +56,8 @@ const lang = {
 
       enable: "Enable",
       disable: "Disable",
+
+      by: "×",
     },
 
     // Common actions (placeholder pairs)
