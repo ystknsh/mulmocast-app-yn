@@ -3,6 +3,7 @@
   <div>
     <router-view />
     <SettingModal />
+    <ViewerModal />
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import { defineComponent, onMounted } from "vue";
 import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "@/store";
 import { Toaster } from "@/components/ui/sonner";
 import SettingModal from "@/components/setting_modal.vue";
+import ViewerModal from "@/components/viewer_modal.vue";
 
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -22,6 +24,7 @@ export default defineComponent({
   components: {
     Toaster,
     SettingModal,
+    ViewerModal,
   },
   setup() {
     const mulmoEventStore = useMulmoEventStore();

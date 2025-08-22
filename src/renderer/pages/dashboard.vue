@@ -81,20 +81,6 @@
     </div>
 
     <!-- Viewer Dialog -->
-    <Dialog v-model:open="isViewerOpen">
-      <DialogContent class="max-h-[90vh] max-w-3xl">
-        <div class="sr-only">
-          <DialogTitle>{{ t("viewer.mulmo.modal.dialogTitle") }}</DialogTitle>
-          <DialogDescription>{{ t("viewer.mulmo.modal.dialogDescription") }}</DialogDescription>
-        </div>
-        <MulmoViewer
-          v-if="selectedProject"
-          :project="selectedProject"
-          :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
-          @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
-        />
-      </DialogContent>
-    </Dialog>
   </Layout>
 </template>
 
@@ -106,16 +92,17 @@ import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
-import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
 import ProjectItems from "./dashboard/project_items.vue";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
+import { useMulmoGlobalStore } from "@/store";
 
 import { projectApi, type Project } from "@/lib/project_api";
-import { SORT_BY, SORT_ORDER, VIEW_MODE, type MulmoViewerTab } from "../../shared/constants";
+import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
 
+const globalStore = useMulmoGlobalStore();
 const router = useRouter();
 const { t } = useI18n();
 const viewMode = ref<typeof VIEW_MODE.list | typeof VIEW_MODE.grid>(VIEW_MODE.list);
@@ -126,8 +113,6 @@ const loading = ref(true);
 const creating = ref(false);
 const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
-const isViewerOpen = ref(false);
-const selectedProject = ref<Project | null>(null);
 
 const loadProjects = async () => {
   projects.value = await projectApi.list();
@@ -201,15 +186,7 @@ const handleDeleteProject = async (project: Project) => {
 };
 
 const handleViewProject = async (project: Project) => {
-  selectedProject.value = project;
-  isViewerOpen.value = true;
-};
-
-const handleUpdateMulmoViewerActiveTab = async (tab: MulmoViewerTab) => {
-  if (selectedProject.value) {
-    selectedProject.value.metadata.mulmoViewerActiveTab = tab;
-    await projectApi.saveProjectMetadata(selectedProject.value.metadata.id, selectedProject.value.metadata);
-  }
+  globalStore.setMulmoViewerProjectId(project.metadata.id);
 };
 
 const updateSort = (value: string) => {
