@@ -2,13 +2,16 @@
   <Toaster richColors expand />
   <div>
     <router-view />
+    <SettingModal />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
-import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "./store";
+import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "@/store";
 import { Toaster } from "@/components/ui/sonner";
+import SettingModal from "@/components/setting_modal.vue";
+
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
 import type { SessionProgressEvent } from "mulmocast/browser";
@@ -18,6 +21,7 @@ import { notifyError } from "@/lib/notification";
 export default defineComponent({
   components: {
     Toaster,
+    SettingModal,
   },
   setup() {
     const mulmoEventStore = useMulmoEventStore();

@@ -15,8 +15,16 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     settings.value = newData;
   };
 
+  const isOpenSettingModal = ref(false);
+  const toggleSettingModal = () => {
+    isOpenSettingModal.value = !isOpenSettingModal.value;
+  };
+
   return {
     settings,
     updateSettings,
+
+    isOpenSettingModal,
+    toggleSettingModal,
   };
 });

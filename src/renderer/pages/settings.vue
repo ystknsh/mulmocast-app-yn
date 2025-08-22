@@ -1,214 +1,212 @@
 <template>
-  <Layout>
-    <div class="container mx-auto max-w-2xl p-6">
-      <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
-      <div class="space-y-6">
-        <!-- App Settings Section -->
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("settings.appSettings.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.appSettings.description") }}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-2">
-              <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
-              <Select v-model="selectedLanguage">
-                <SelectTrigger id="language" data-testid="language-select">
-                  <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem
-                    v-for="language in I18N_SUPPORTED_LANGUAGES"
-                    :key="language.id"
-                    :value="language.id"
-                    :data-testid="`language-option-${language.id}`"
-                  >
-                    {{ t("commonLanguages." + language.id) }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
-            </div>
-          </CardContent>
-        </Card>
+  <div class="container mx-auto max-w-2xl p-6">
+    <h1 class="mb-8 text-3xl font-bold">{{ t("settings.title") }}</h1>
+    <div class="space-y-6">
+      <!-- App Settings Section -->
+      <Card>
+        <CardHeader>
+          <CardTitle>{{ t("settings.appSettings.title") }}</CardTitle>
+          <CardDescription>{{ t("settings.appSettings.description") }}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-2">
+            <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
+            <Select v-model="selectedLanguage">
+              <SelectTrigger id="language" data-testid="language-select">
+                <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="language in I18N_SUPPORTED_LANGUAGES"
+                  :key="language.id"
+                  :value="language.id"
+                  :data-testid="`language-option-${language.id}`"
+                >
+                  {{ t("commonLanguages." + language.id) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
+          </div>
+        </CardContent>
+      </Card>
 
-        <!-- API Key Settings Section -->
-        <Card>
-          <Collapsible v-model:open="apiKeysExpanded">
-            <CardHeader>
-              <CollapsibleTrigger class="w-full">
+      <!-- API Key Settings Section -->
+      <Card>
+        <Collapsible v-model:open="apiKeysExpanded">
+          <CardHeader>
+            <CollapsibleTrigger class="w-full">
+              <div class="flex items-center justify-between">
+                <CardTitle class="cursor-pointer">{{ t("settings.apiKeys.title") }}</CardTitle>
+                <ChevronDown :class="['h-4 w-4 transition-transform', apiKeysExpanded && 'rotate-180']" />
+              </div>
+            </CollapsibleTrigger>
+            <CardDescription class="mt-2">
+              {{ t("settings.apiKeys.description") }}
+              <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+                {{ t("settings.apiKeys.llmDescription") }}
+              </span>
+            </CardDescription>
+          </CardHeader>
+          <CollapsibleContent>
+            <CardContent class="space-y-4">
+              <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
                 <div class="flex items-center justify-between">
-                  <CardTitle class="cursor-pointer">{{ t("settings.apiKeys.title") }}</CardTitle>
-                  <ChevronDown :class="['h-4 w-4 transition-transform', apiKeysExpanded && 'rotate-180']" />
+                  <Label :for="envKey" class="text-base font-medium">{{ t("ai.apiKeyName." + envKey) }}</Label>
+                  <a
+                    v-if="config.url"
+                    :href="config.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    {{ t("settings.apiKeys.getApiKey") }}
+                    <ExternalLink class="h-3 w-3" />
+                  </a>
                 </div>
-              </CollapsibleTrigger>
-              <CardDescription class="mt-2">
-                {{ t("settings.apiKeys.description") }}
-                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("settings.apiKeys.llmDescription") }}
-                </span>
-              </CardDescription>
-            </CardHeader>
-            <CollapsibleContent>
-              <CardContent class="space-y-4">
-                <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
-                  <div class="flex items-center justify-between">
-                    <Label :for="envKey" class="text-base font-medium">{{ t("ai.apiKeyName." + envKey) }}</Label>
-                    <a
-                      v-if="config.url"
-                      :href="config.url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                    >
-                      {{ t("settings.apiKeys.getApiKey") }}
-                      <ExternalLink class="h-3 w-3" />
-                    </a>
-                  </div>
-                  <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
-                    <span
-                      v-for="feature in config.features"
-                      :key="feature"
-                      class="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
-                    >
-                      {{ t(`settings.apiKeys.features.${feature}`) }}
-                    </span>
-                  </div>
-                  <div class="flex gap-2">
-                    <Input
-                      :id="envKey"
-                      v-model="apiKeys[envKey]"
-                      :type="showKeys[envKey] ? 'text' : 'password'"
-                      :placeholder="config.placeholder"
-                      class="flex-1"
-                    />
-                    <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
-                      <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
-                      <EyeOff v-else class="h-4 w-4" />
-                    </Button>
-                  </div>
+                <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
+                  <span
+                    v-for="feature in config.features"
+                    :key="feature"
+                    class="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
+                  >
+                    {{ t(`settings.apiKeys.features.${feature}`) }}
+                  </span>
                 </div>
-              </CardContent>
-            </CollapsibleContent>
-          </Collapsible>
-        </Card>
-        <!-- language -->
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("settings.languages.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4">
-            <div class="text-base font-semibold text-gray-800 dark:text-white">
-              {{ t("settings.languages.mainTitle") }}
-            </div>
-            <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
-              <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
-                <RadioGroupItem :value="language" :id="language" />
-                <Label :for="language">{{ t("languages." + language) }}</Label>
+                <div class="flex gap-2">
+                  <Input
+                    :id="envKey"
+                    v-model="apiKeys[envKey]"
+                    :type="showKeys[envKey] ? 'text' : 'password'"
+                    :placeholder="config.placeholder"
+                    class="flex-1"
+                  />
+                  <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
+                    <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
+                    <EyeOff v-else class="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </RadioGroup>
-            <div class="text-base font-semibold text-gray-800 dark:text-white">
-              {{ t("settings.languages.translatedTitle") }}
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
+      </Card>
+      <!-- language -->
+      <Card>
+        <CardHeader>
+          <CardTitle>{{ t("settings.languages.title") }}</CardTitle>
+          <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
+        </CardHeader>
+        <CardContent class="space-y-4">
+          <div class="text-base font-semibold text-gray-800 dark:text-white">
+            {{ t("settings.languages.mainTitle") }}
+          </div>
+          <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
+            <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
+              <RadioGroupItem :value="language" :id="language" />
+              <Label :for="language">{{ t("languages." + language) }}</Label>
             </div>
-            <div v-for="(language, key) in languages" :key="key">
-              &ensp;
-              <Checkbox v-model="useLanguage[language]" />
-              {{ t("languages." + language) }}
-            </div>
-          </CardContent>
-        </Card>
+          </RadioGroup>
+          <div class="text-base font-semibold text-gray-800 dark:text-white">
+            {{ t("settings.languages.translatedTitle") }}
+          </div>
+          <div v-for="(language, key) in languages" :key="key">
+            &ensp;
+            <Checkbox v-model="useLanguage[language]" />
+            {{ t("languages." + language) }}
+          </div>
+        </CardContent>
+      </Card>
 
-        <!-- llm -->
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-2">
-              <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
-              <Select v-model="selectedLLM">
-                <SelectTrigger id="llm">
-                  <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
-                    {{ t("ai.agent." + llm.id) }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <div v-if="alertLLM" class="text-red-600">
-                {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
-              </div>
+      <!-- llm -->
+      <Card>
+        <CardHeader>
+          <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
+          <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-2">
+            <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
+            <Select v-model="selectedLLM">
+              <SelectTrigger id="llm">
+                <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
+                  {{ t("ai.agent." + llm.id) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <div v-if="alertLLM" class="text-red-600">
+              {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
+            </div>
 
-              <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
-            </div>
-            <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
-              <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
-              {{ t("settings.llmSettings.ollama.url") }}:
-              <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
-              {{ t("settings.llmSettings.model") }}:
-              <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
-            </div>
-            <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
-              {{ t("settings.llmSettings.model") }}:
-              <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
-              <Select v-model="llmConfigs['openai']['model']">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
-                    {{ model }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
-              {{ t("settings.llmSettings.model") }}:
-              <Select v-model="llmConfigs['gemini']['model']">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
-                    {{ model }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
-              {{ t("settings.llmSettings.model") }}:
-              <Select v-model="llmConfigs['anthropic']['model']">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
-                    {{ model }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
-              {{ t("settings.llmSettings.model") }}:
-              <Select v-model="llmConfigs['groq']['model']">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
-                    {{ model }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
+          </div>
+          <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
+            <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
+            {{ t("settings.llmSettings.ollama.url") }}:
+            <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
+            {{ t("settings.llmSettings.model") }}:
+            <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
+          </div>
+          <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
+            {{ t("settings.llmSettings.model") }}:
+            <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
+            <Select v-model="llmConfigs['openai']['model']">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
+                  {{ model }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
+            {{ t("settings.llmSettings.model") }}:
+            <Select v-model="llmConfigs['gemini']['model']">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
+                  {{ model }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
+            {{ t("settings.llmSettings.model") }}:
+            <Select v-model="llmConfigs['anthropic']['model']">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
+                  {{ model }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
+            {{ t("settings.llmSettings.model") }}:
+            <Select v-model="llmConfigs['groq']['model']">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
+                  {{ model }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  </Layout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -222,7 +220,6 @@ import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import Layout from "@/components/layout.vue";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { notifySuccess, notifyError } from "@/lib/notification";

@@ -66,6 +66,12 @@
                 <span>{{ t("menu." + item.key) }}</span>
               </RouterLink>
             </DropdownMenuItem>
+            <DropdownMenuItem as-child @click="globalStore.toggleSettingModal">
+              <div class="flex w-full items-center space-x-2">
+                <Settings :size="20" />
+                <span>{{ t("menu.settings") }}</span>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -87,15 +93,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMulmoEventStore } from "../store";
+import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
+
 const route = useRoute();
 const { t } = useI18n();
+
+const globalStore = useMulmoGlobalStore();
 const mulmoEventStore = useMulmoEventStore();
 
 const dashboardItem = { path: "/", icon: Home, key: "top" };
 const menuItems = [
   { path: "/", icon: Home, key: "top" },
-  { path: "/settings", icon: Settings, key: "settings" },
+  //  { path: "/settings", icon: Settings, key: "settings" },
 ];
 
 const isDashboardActive = computed(() => route.path === dashboardItem.path);
