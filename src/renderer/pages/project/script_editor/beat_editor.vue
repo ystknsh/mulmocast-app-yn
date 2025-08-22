@@ -272,7 +272,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import type { MulmoBeat, MulmoScript } from "mulmocast/browser";
+import type { MulmoBeat, MulmoScript, MulmoImageAsset } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";
 
@@ -304,7 +304,14 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "changeBeat", "updateImageNames", "justSaveAndPushToHistory"]);
+const emit = defineEmits([
+  "update",
+  "updateImageData",
+  "generateImage",
+  "changeBeat",
+  "updateImageNames",
+  "justSaveAndPushToHistory",
+]);
 
 const route = useRoute();
 const { t } = useI18n();
@@ -382,8 +389,16 @@ const handleDrop = (event: DragEvent) => {
         [...uint8Array],
         extension,
       );
-      update("image.source.path", "./" + path);
-      generateImageOnlyImage();
+      const imageData = {
+        type: "image",
+        source: {
+          kind: "path",
+          path: "./" + path,
+        },
+      };
+      updateImageData(imageData, () => {
+        generateImageOnlyImage();
+      });
     };
     reader.readAsArrayBuffer(file);
   }
@@ -409,9 +424,16 @@ const submitUrlImage = async () => {
       mediaUrl.value,
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
-      update("image.type", res.imageType);
-      update("image.source.path", "./" + res.path);
-      generateImageOnlyImage();
+      const imageData = {
+        type: res.imageType,
+        source: {
+          kind: "path",
+          path: "./" + res.path,
+        },
+      };
+      updateImageData(imageData, () => {
+        generateImageOnlyImage();
+      });
       mediaUrl.value = "";
     }
   } catch (error) {
@@ -444,6 +466,9 @@ const update = (path: string, value: unknown) => {
 
 const updateImageNames = (value: string[]) => {
   emit("update", props.index, "imageNames", value);
+};
+const updateImageData = (data: MulmoImageAsset, callback?: () => void) => {
+  emit("updateImageData", data, callback);
 };
 const justSaveAndPushToHistory = () => {
   emit("justSaveAndPushToHistory");

@@ -171,6 +171,7 @@
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   :settingPresence="settingPresence"
                   @update="update"
+                  @updateImageData="(data, callback) => updateImageData(index)(data, callback)"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
@@ -249,6 +250,7 @@ import {
   type MulmoPresentationStyle,
   type MulmoImagePromptMedia,
   type MulmoImageMedia,
+  type MulmoImageAsset,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -268,6 +270,7 @@ import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
+import { projectApi } from "@/lib/project_api";
 
 const { t } = useI18n();
 
@@ -390,6 +393,25 @@ const update = (index: number, path: string, value: unknown) => {
     ...props.mulmoScript,
     beats: newBeats,
   });
+};
+const updateImageData = (index: number) => {
+  return async (data: MulmoImageAsset, callback?: () => void) => {
+    const newBeat = { ...props.mulmoScript.beats[index], image: data };
+    const newBeats = [...props.mulmoScript.beats.slice(0, index), newBeat, ...props.mulmoScript.beats.slice(index + 1)];
+
+    const mulmo = {
+      ...props.mulmoScript,
+      beats: newBeats,
+    };
+    await projectApi.saveProjectScript(projectId.value, mulmo);
+    emit("updateMulmoScript", {
+      ...props.mulmoScript,
+      beats: newBeats,
+    });
+    if (callback) {
+      callback();
+    }
+  };
 };
 
 // end of mulmo editor
