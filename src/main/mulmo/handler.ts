@@ -155,6 +155,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
 };
 
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
+  console.log(`handler ${method} run`);
   try {
     switch (method) {
       case "mulmoActionRunner":
