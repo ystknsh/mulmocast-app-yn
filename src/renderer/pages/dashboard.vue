@@ -161,8 +161,6 @@ const handleCreateProject = async () => {
   try {
     creating.value = true;
     const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en");
-    // Close dialog and refresh project list
-    await loadProjects();
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
   } catch (error) {
