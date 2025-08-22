@@ -627,6 +627,7 @@ const lang = {
       video: "動画",
       image: "画像",
       pdf: "PDF",
+      caption: "Caption",
     },
   },
   languages: {

@@ -72,7 +72,7 @@ const downloadPdf = async () => {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = props.projectId + "_slide.pdf";
+  a.download = props.projectId + "_handout.pdf";
   a.click();
 
   URL.revokeObjectURL(url);
