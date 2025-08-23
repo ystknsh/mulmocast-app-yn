@@ -46,6 +46,8 @@ import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { formatFileSize } from "@/lib/format";
 
+import { downloadFile } from "./utils";
+
 const { t } = useI18n();
 
 interface Props {
