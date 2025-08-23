@@ -371,7 +371,7 @@ export const AUDIO_PARAMS_DEFAULT_VALUES = {
   audioVolume: 1.0,
   bgm: {
     kind: "url",
-    url: bgmAssets.bgms[0].url,
+    url: bgmAssets.bgms[1].url,
   },
 } as const;
 
