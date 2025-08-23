@@ -8,9 +8,7 @@
       </div>
       <div v-else>
         <div class="flex w-full items-center justify-between">
-          <Button @click="decrease" variant="outline">{{
-            t("ui.common.decrease")
-          }}</Button>
+          <Button @click="decrease" variant="outline">{{ t("ui.common.decrease") }}</Button>
           <div class="flex flex-1 justify-center">
             <video
               v-if="lipSyncFiles?.[beats[currentPage]?.id]"
@@ -31,9 +29,7 @@
             />
           </div>
 
-          <Button @click="increase" variant="outline">{{
-            t("ui.common.increase")
-          }}</Button>
+          <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
       </div>
 
