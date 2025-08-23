@@ -46,7 +46,7 @@ import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { formatFileSize } from "@/lib/format";
 
-import { downloadFile } from "./utils";
+import { downloadFile, useMediaContents } from "./utils";
 
 const { t } = useI18n();
 
@@ -56,33 +56,32 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const pdfData = ref();
 const pdfCurrentPage = ref(1);
 const pdfMetadata = ref({
   fileSize: "",
 });
 
-const pdfBuffer = ref();
-const { pdf, pages } = usePDF(pdfBuffer);
-pdfData.value = pdf;
-
 const downloadPdf = async () => {
   downloadFile(props.projectId, "pdf", "application/pdf", "handout.pdf");
 };
 
-const updateResources = async () => {
-  const bufferPdf = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "pdf")) as Buffer;
-  if (bufferPdf && bufferPdf.byteLength > 0) {
-    pdfBuffer.value = new Uint8Array(bufferPdf);
-    pdfMetadata.value.fileSize = formatFileSize(bufferPdf.byteLength);
-  }
-};
+const {
+  mediaUrl: pdfBuffer,
+  bufferLength,
+  updateResources,
+} = useMediaContents("pdf", undefined, async () => {
+  pdfMetadata.value.fileSize = formatFileSize(bufferLength.value);
+});
+
+const pdfData = ref();
+const { pdf, pages } = usePDF(pdfBuffer);
+pdfData.value = pdf;
 
 watch(
   () => props.projectId,
   async (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
-      await updateResources();
+      await updateResources(newProjectId);
     }
   },
   { immediate: true },

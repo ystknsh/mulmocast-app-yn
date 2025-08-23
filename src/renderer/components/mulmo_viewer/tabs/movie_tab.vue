@@ -87,10 +87,10 @@ const videoMetadata = ref({
   resolution: "",
   fileSize: "",
 });
-const updateVideoMetadata = () => {
+const updateMetadata = () => {
   if (!videoRef.value) return;
 
-  videoMetadata.value.fileSize = formatFileSize(videoBufferLength.value);
+  videoMetadata.value.fileSize = formatFileSize(bufferLength.value);
 
   if (!isNaN(videoRef.value.duration)) {
     videoMetadata.value.duration = formatDuration(videoRef.value.duration);
@@ -103,11 +103,11 @@ const updateVideoMetadata = () => {
 
 const {
   mediaUrl: videoUrl,
-  bufferLength: videoBufferLength,
+  bufferLength,
   updateResources,
 } = useMediaContents("movie", "video/mp4", async () => {
   await nextTick();
-  updateVideoMetadata();
+  updateMetadata();
 });
 
 watch(

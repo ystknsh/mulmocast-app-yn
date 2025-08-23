@@ -34,20 +34,13 @@ import { TabsContent } from "@/components/ui/tabs";
 import { bufferToUrl } from "@/lib/utils";
 import { formatFileSize, formatDuration } from "@/lib/format";
 
-import { downloadFile } from "./utils";
+import { downloadFile, useMediaContents } from "./utils";
 
 const { t } = useI18n();
 
-interface Props {
+const props = defineProps<{
   projectId: string;
-}
-
-const props = defineProps<Props>();
-const audioUrl = ref("");
-const audioMetadata = ref({
-  duration: "",
-  fileSize: "",
-});
+}>();
 
 const audioRef = ref<HTMLAudioElement | null>(null);
 
@@ -55,32 +48,34 @@ const downloadMp3 = async () => {
   downloadFile(props.projectId, "audio", "audio/mp3", "audio.mp3");
 };
 
-const updateAudioMetadata = () => {
+const audioMetadata = ref({
+  duration: "",
+  fileSize: "",
+});
+const updateMetadata = () => {
   if (!audioRef.value) return;
 
   const audio = audioRef.value;
-
+  audioMetadata.value.fileSize = formatFileSize(bufferLength.value);
   if (!isNaN(audio.duration)) {
     audioMetadata.value.duration = formatDuration(audio.duration);
   }
 };
 
-const updateResources = async () => {
-  const bufferAudio = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "audio")) as Buffer;
-  if (bufferAudio && bufferAudio.byteLength > 0) {
-    audioUrl.value = bufferToUrl(new Uint8Array(bufferAudio), "audio/mp3");
-    audioMetadata.value.fileSize = formatFileSize(bufferAudio.byteLength);
-
-    await nextTick();
-    updateAudioMetadata();
-  }
-};
+const {
+  mediaUrl: audioUrl,
+  bufferLength,
+  updateResources,
+} = useMediaContents("audio", "audio/mp3", async () => {
+  await nextTick();
+  updateMetadata();
+});
 
 watch(
   () => props.projectId,
   async (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
-      await updateResources();
+      await updateResources(newProjectId);
     }
   },
   { immediate: true },
