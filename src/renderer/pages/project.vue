@@ -284,7 +284,7 @@ import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
 import { zodError2MulmoError } from "../lib/error";
-import { useImageFiles } from "./composable";
+import { useImageFiles, useAudioFiles } from "./composable";
 
 // State
 const route = useRoute();
@@ -306,11 +306,14 @@ const isDevelopment = import.meta.env.DEV;
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
-const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles, downloadImageFile } = useImageFiles();
+const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
+  useImageFiles();
+
+const { audioFiles, downloadAudioFiles, resetAudioData } = useAudioFiles();
 
 // Load project data on mount
 onMounted(async () => {
-  downloadAudioFiles();
+  downloadAudioFiles(projectId.value);
   downloadImageFiles(projectId.value);
 
   try {
@@ -416,24 +419,9 @@ const generateImage = async (index: number, target: string) => {
   });
 };
 
-const audioFiles = ref<Record<string, string | null>>({});
-
 const resetMediaFiles = () => {
-  audioFiles.value = {};
-  imageFiles.value = {};
-  movieFiles.value = {};
-  lipSyncFiles.value = {};
-};
-
-const downloadAudioFiles = async () => {
-  console.log("audioFiles");
-  const res = (await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId.value)) as Buffer[];
-  audioFiles.value = Object.entries(res).reduce((tmp, [k, v]) => {
-    if (v) {
-      tmp[k] = bufferToUrl(v, "audio/mp3");
-    }
-    return tmp;
-  }, {});
+  resetImagesData();
+  resetAudioData();
 };
 
 const downloadAudioFile = async (index: number, beatId: string) => {
@@ -464,7 +452,7 @@ watch(
         downloadImageFiles(projectId.value);
       }
       if (mulmoEvent.sessionType === "audio") {
-        downloadAudioFiles();
+        downloadAudioFiles(projectId.value);
       }
       if (mulmoEvent.sessionType === "pdf") {
         // downloadAudioFiles();
