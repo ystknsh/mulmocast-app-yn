@@ -20,7 +20,6 @@ export const useMediaContents = (mediaType: string, mimeType: string, callback: 
   const mediaUrl = ref("");
   const bufferLength = ref(0);
   const updateResources = async (projectId: string) => {
-    console.log(projectId);
     const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId, mediaType)) as Buffer;
     if (bufferMovie && bufferMovie.byteLength > 0) {
       mediaUrl.value = bufferToUrl(new Uint8Array(bufferMovie), mimeType);
