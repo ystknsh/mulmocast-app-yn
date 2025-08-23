@@ -6,7 +6,7 @@
 
     <div class="flex-1">
       <div
-        class="chat-markdown bg-muted text-foreground block max-w-md rounded-lg p-3 text-sm break-words whitespace-pre-wrap"
+        class="chat-markdown bg-primary/10 text-foreground block max-w-md rounded-lg p-3 text-sm break-words whitespace-pre-wrap"
         v-html="safeHtml"
       />
       <p class="text-foreground mt-1 text-xs">{{ formatedTime }}</p>
