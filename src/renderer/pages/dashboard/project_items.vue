@@ -15,22 +15,22 @@
             />
           </template>
           <template v-else>
-            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30">
               <div
                 :class="
                   viewMode === 'grid'
-                    ? 'rounded-full bg-white p-8 shadow-lg transition-all duration-200 hover:scale-110 hover:shadow-xl'
+                    ? 'rounded-full bg-background p-8 shadow-lg transition-all duration-200 hover:scale-110 hover:shadow-xl'
                     : ''
                 "
               >
-                <FileText :class="viewMode === 'grid' ? 'h-12 w-12 text-blue-600' : 'h-6 w-6 text-green-500'" />
+                <FileText :class="viewMode === 'grid' ? 'h-12 w-12 text-primary' : 'h-6 w-6 text-primary'" />
               </div>
             </div>
           </template>
         </div>
 
         <!-- Title -->
-        <h3 class="title truncate">
+        <h3 class="title truncate text-foreground">
           {{ project?.script?.title || t("project.newProject.defaultTitle") }}
         </h3>
 
@@ -38,15 +38,15 @@
         <div class="info">
           <Calendar class="h-3 w-3" />
           <span>{{ formatDate(project.metadata.updatedAt || project.metadata.createdAt) }}</span>
-          <span class="rounded bg-gray-100 px-2 py-1 text-xs">
+          <span class="rounded bg-muted px-2 py-1 text-xs">
             {{ project.metadata.version }}
           </span>
           <div
             v-if="mulmoEventStore.isGenerating(project.metadata.id)"
-            class="inline-flex items-center space-x-1 rounded bg-blue-100 px-2 py-1"
+            class="inline-flex items-center space-x-1 rounded bg-primary/10 px-2 py-1"
           >
-            <Loader2 class="h-3 w-3 animate-spin text-blue-500" />
-            <span class="text-xs font-medium text-blue-600">{{ t("ui.status.generating") }}</span>
+            <Loader2 class="h-3 w-3 animate-spin text-primary" />
+            <span class="text-xs font-medium text-primary">{{ t("ui.status.generating") }}</span>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
             @click="viewProject($event, project)"
             variant="ghost"
             size="icon"
-            class="text-gray-400 hover:text-blue-600"
+            class="text-muted-foreground hover:text-primary"
           >
             <Eye class="h-4 w-4" />
           </Button>
@@ -64,7 +64,7 @@
             @click="deleteProject($event, project)"
             variant="ghost"
             size="icon"
-            class="text-gray-400 hover:text-red-600"
+            class="text-muted-foreground hover:text-destructive"
           >
             <Trash2 class="h-4 w-4" />
           </Button>
@@ -105,8 +105,8 @@ const containerClass = computed(() => {
 
 const cardClass = computed(() => {
   return props.viewMode === "grid"
-    ? "project-card-grid group cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:shadow-lg"
-    : "project-card-list cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md";
+    ? "project-card-grid group cursor-pointer overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-200 hover:shadow-lg hover:border-primary/50 dark:hover:border-primary/30"
+    : "project-card-list cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/50 dark:hover:border-primary/30";
 });
 
 const deleteProject = (event: Event, project: Project) => {
@@ -139,7 +139,7 @@ const viewProject = (event: Event, project: Project) => {
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background-color: rgb(243 244 246);
+  background-color: var(--muted);
 }
 
 .project-card-grid .title {
@@ -149,8 +149,12 @@ const viewProject = (event: Event, project: Project) => {
   white-space: nowrap;
   font-size: 0.875rem;
   font-weight: 600;
-  color: rgb(17 24 39);
+  color: var(--foreground);
   padding: 1rem 1rem 0;
+}
+
+.project-card-grid:hover .title {
+  color: var(--primary);
 }
 
 .project-card-grid .info {
@@ -159,7 +163,7 @@ const viewProject = (event: Event, project: Project) => {
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: rgb(107 114 128);
+  color: var(--muted-foreground);
   padding: 0 1rem;
 }
 
@@ -192,13 +196,17 @@ const viewProject = (event: Event, project: Project) => {
   justify-content: center;
   overflow: hidden;
   border-radius: 0.5rem;
-  background-color: rgb(243 244 246);
+  background-color: var(--muted);
 }
 
 .project-card-list .title {
   grid-area: title;
   font-weight: 600;
-  color: rgb(17 24 39);
+  color: var(--foreground);
+}
+
+.project-card-list:hover .title {
+  color: var(--primary);
 }
 
 .project-card-list .info {
@@ -207,7 +215,7 @@ const viewProject = (event: Event, project: Project) => {
   align-items: center;
   gap: 0.25rem;
   font-size: 0.875rem;
-  color: rgb(107 114 128);
+  color: var(--muted-foreground);
 }
 
 .project-card-list .actions {

@@ -226,6 +226,11 @@ const lang = {
     signout: "SignOut",
     about: "About",
   },
+  theme: {
+    toggle: "Toggle theme",
+    light: "Light",
+    dark: "Dark",
+  },
   settings: {
     title: "Settings",
     appSettings: {

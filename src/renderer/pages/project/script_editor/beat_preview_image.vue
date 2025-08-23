@@ -4,7 +4,7 @@
     <div class="mb-4">
       <!-- Image preview -->
       <div
-        class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center"
+        class="relative rounded-lg border-2 border-dashed border-border p-4 text-center"
         :key="`beat_editor_${beat.id ?? index}`"
       >
         <!-- Generate image button -->
@@ -12,7 +12,7 @@
           <Button
             variant="ghost"
             size="icon"
-            class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
+            class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card shadow transition-colors hover:bg-muted"
             @click="generateImage"
             :disabled="isImageGenerating || isHtmlGenerating || props.toggleTypeMode || disabled"
             :title="t('ui.actions.' + imageGenerateButtonTitle)"
@@ -34,7 +34,7 @@
           <template v-if="beat?.image?.type === 'movie'">
             <video
               :size="64"
-              class="mx-auto mb-4 cursor-pointer text-gray-400 transition-opacity hover:opacity-80"
+              class="mx-auto mb-4 cursor-pointer text-muted-foreground transition-opacity hover:opacity-80"
               controls
               :src="mediaUri(imageFile)"
               @click="openModal('video', imageFile)"
@@ -49,9 +49,9 @@
           </template>
         </template>
         <template v-else>
-          <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto mb-2 text-gray-400" />
-          <FileImage v-else :size="32" class="mx-auto mb-2 text-gray-400" />
-          <p class="text-sm text-gray-500">
+          <Video v-if="beat?.image?.type === 'movie'" :size="32" class="mx-auto mb-2 text-muted-foreground" />
+          <FileImage v-else :size="32" class="mx-auto mb-2 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">
             {{ t("beat." + (beat?.image?.type === "movie" ? "videoPreview" : "imagePreview")) }}
           </p>
         </template>

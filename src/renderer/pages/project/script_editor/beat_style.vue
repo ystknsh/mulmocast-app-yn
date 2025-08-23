@@ -3,7 +3,7 @@
     <CollapsibleTrigger as-child>
       <div class="mb-3 flex items-center gap-2">
         <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-gray-500' : ''">
+        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
           {{ t("parameters.imageParams.title") }}
         </h4>
       </div>

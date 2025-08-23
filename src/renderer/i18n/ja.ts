@@ -226,6 +226,11 @@ const lang = {
     signout: "ログアウト",
     about: "About",
   },
+  theme: {
+    toggle: "テーマを切り替え",
+    light: "ライト",
+    dark: "ダーク",
+  },
   settings: {
     title: "設定",
     appSettings: {

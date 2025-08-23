@@ -24,7 +24,7 @@
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, imageKey)"
               draggable="true"
-              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
+              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-border bg-card p-6 text-center text-muted-foreground shadow-sm"
             >
               {{ t("ui.common.drophere") }}
             </div>
@@ -47,12 +47,12 @@
           </div>
         </div>
         <div>
-          <div class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center">
+          <div class="relative rounded-lg border-2 border-dashed border-border p-4 text-center">
             <Button
               v-if="images[imageKey].type === 'imagePrompt'"
               variant="ghost"
               size="icon"
-              class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
+              class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card shadow transition-colors hover:bg-muted"
               @click="() => submitImage(imageKey, key)"
               :disabled="isGeneratings[imageKey]"
             >
@@ -63,8 +63,8 @@
               <img :src="imageRefs[imageKey]" class="max-h-64" @click="openImage(imageKey)" />
             </div>
             <template v-else>
-              <FileImage :size="32" class="mx-auto mb-2 text-gray-400" />
-              <p class="text-sm text-gray-500">
+              <FileImage :size="32" class="mx-auto mb-2 text-muted-foreground" />
+              <p class="text-sm text-muted-foreground">
                 {{ t("beat.imagePreview") }}
               </p>
             </template>
@@ -73,10 +73,10 @@
       </div>
     </Card>
     <div
-      class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
+      class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-border bg-card px-2 py-1 shadow-sm"
     >
       <Trash
-        class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
+        class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-destructive"
         @click="deleteReference(imageKey)"
       />
     </div>

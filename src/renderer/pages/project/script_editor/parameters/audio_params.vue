@@ -92,29 +92,29 @@
           @drop.prevent="handleDrop"
           @click="handleFileClick"
           :class="[
-            'relative cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-3 text-center shadow-sm transition-colors',
-            isUploading ? 'cursor-not-allowed opacity-50' : 'hover:bg-gray-50',
+            'relative cursor-pointer rounded-md border-2 border-dashed border-border bg-card p-3 text-center shadow-sm transition-colors',
+            isUploading ? 'cursor-not-allowed opacity-50' : 'hover:bg-muted/50',
           ]"
         >
           <template v-if="isUploading">
-            <div class="text-gray-600">
+            <div class="text-muted-foreground">
               {{ t("ui.status.loading") }}
             </div>
           </template>
           <template v-else-if="customAudioFileName">
             <div class="flex items-center justify-center gap-2">
-              <Music class="h-4 w-4 text-gray-500" />
-              <span class="text-sm font-medium text-gray-700">{{ customAudioFileName }}</span>
+              <Music class="h-4 w-4 text-muted-foreground" />
+              <span class="text-sm font-medium text-foreground">{{ customAudioFileName }}</span>
             </div>
-            <div class="mt-1 text-xs text-gray-500">
+            <div class="mt-1 text-xs text-muted-foreground">
               {{ t("parameters.audioParams.clickToReplace") }}
             </div>
           </template>
           <template v-else>
-            <div class="text-gray-600">
+            <div class="text-muted-foreground">
               {{ t("parameters.audioParams.dropAudioHere") }}
             </div>
-            <div class="mt-1 text-xs text-gray-400">
+            <div class="mt-1 text-xs text-muted-foreground/80">
               {{ t("parameters.audioParams.clickToSelect") }}
             </div>
           </template>

@@ -3,13 +3,13 @@
     <!-- Movie section -->
     <div v-if="enableMovieGenerate">
       <!-- Movie preview -->
-      <div class="relative rounded-lg border-2 border-dashed border-gray-300 p-4 text-center">
+      <div class="relative rounded-lg border-2 border-dashed border-border p-4 text-center">
         <!-- Generate movie button -->
         <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
           <Button
             variant="ghost"
             size="icon"
-            class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow transition-colors hover:bg-gray-100"
+            class="absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card shadow transition-colors hover:bg-muted"
             @click="generateMovie"
             :disabled="!enableMovieGenerate || isMovieGenerating || props.toggleTypeMode || disabled"
             :title="t('ui.actions.' + movieGenerateButtonTitle)"
@@ -24,7 +24,7 @@
         <div class="relative cursor-pointer transition-opacity hover:opacity-80" v-else-if="movieFile">
           <video
             :size="64"
-            class="mx-auto cursor-pointer text-gray-400"
+            class="mx-auto cursor-pointer text-muted-foreground"
             :src="mediaUri(movieFile)"
             @click="openModal('video', movieFile)"
           />
@@ -35,8 +35,8 @@
           />
         </div>
         <div v-else>
-          <Video :size="32" class="mx-auto mb-2 text-gray-400" />
-          <p class="text-sm text-gray-500">{{ t("beat.videoPreview") }}</p>
+          <Video :size="32" class="mx-auto mb-2 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">{{ t("beat.videoPreview") }}</p>
         </div>
       </div>
     </div>

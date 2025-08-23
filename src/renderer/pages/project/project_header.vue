@@ -29,7 +29,7 @@
           <Pencil
             v-if="!isEditingTitle"
             :size="16"
-            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
+            class="ml-2 cursor-pointer text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
             @click="startEditingTitle"
           />
         </div>
@@ -38,7 +38,7 @@
         <div class="group relative flex items-center">
           <p
             v-if="!isEditingDescription"
-            class="max-w-128 cursor-pointer truncate text-gray-600"
+            class="max-w-128 cursor-pointer truncate text-muted-foreground"
             @click="startEditingDescription"
           >
             {{ displayDescription }}
@@ -46,7 +46,7 @@
           <Input
             v-else
             v-model="displayDescription"
-            class="`w-128 text-gray-600"
+            class="`w-128 text-muted-foreground"
             @blur="saveDescription"
             @keydown.enter="handleDescriptionEnter"
             autoFocus
@@ -54,7 +54,7 @@
           <Pencil
             v-if="!isEditingDescription"
             :size="14"
-            class="ml-2 cursor-pointer text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-600"
+            class="ml-2 cursor-pointer text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
             @click="startEditingDescription"
           />
         </div>

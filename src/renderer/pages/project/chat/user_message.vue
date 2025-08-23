@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-row-reverse items-start space-x-3 space-x-reverse">
-    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-500">
-      <User :size="16" class="text-white" />
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary">
+      <User :size="16" class="text-primary-foreground" />
     </div>
     <div class="flex-1 text-right">
-      <div class="inline-block max-w-md rounded-lg bg-blue-500 p-3 break-words whitespace-pre-wrap text-white">
+      <div class="inline-block max-w-md rounded-lg bg-primary p-3 break-words whitespace-pre-wrap text-primary-foreground">
         <p class="text-sm">{{ message }}</p>
       </div>
-      <div class="mt-1 flex items-center justify-end space-x-1 text-xs text-gray-500">
+      <div class="mt-1 flex items-center justify-end space-x-1 text-xs text-muted-foreground">
         <span>{{ formatedTime }}</span>
-        <button @click="editUser" class="text-gray-400 transition-colors duration-150 hover:text-gray-600">
+        <button @click="editUser" class="text-muted-foreground transition-colors duration-150 hover:text-foreground">
           <Edit :size="16" class="ml-2" />
         </button>
       </div>

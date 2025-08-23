@@ -23,7 +23,7 @@
 
     <div
       v-if="mulmoError?.script && hasScriptError"
-      class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
+      class="mt-2 w-full rounded border border-destructive bg-destructive/10 p-2 text-sm text-destructive"
     >
       <div v-for="(message, key) in Object.values(mulmoError?.script ?? {}).flat()" :key="key">
         {{ message }}
@@ -32,9 +32,9 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.TEXT" class="mt-2">
       <div
-        class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
+        class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border border-border bg-muted/50 p-4 font-mono text-sm"
       >
-        <p class="mb-2 text-sm text-gray-500">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.text.mode") }} - {{ t("project.scriptEditor.text.modeDescription") }}
         </p>
         <div class="mx-auto space-y-2">
@@ -67,21 +67,21 @@
                 />
               </Card>
               <div
-                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
+                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-border bg-card px-2 py-1 shadow-sm"
               >
                 <ArrowUp
                   v-if="index !== 0"
                   @click="() => positionUp(index)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-primary"
                 />
                 <ArrowDown
                   v-if="(mulmoScript?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-primary"
                 />
                 <Trash
                   @click="deleteBeat(index)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-destructive"
                   :data-testid="`script-editor-text-tab-delete-beat-${index}`"
                 />
               </div>
@@ -96,11 +96,11 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.YAML" class="mt-4">
       <div
         :class="[
-          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border bg-gray-50 p-4',
+          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border border-border bg-muted/50 p-4',
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.yaml.mode") }} - {{ t("project.scriptEditor.yaml.modeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
@@ -118,11 +118,11 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.JSON" class="mt-4">
       <div
         :class="[
-          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border bg-gray-50 p-4',
+          'mb-[2px] flex h-[calc(100vh-340px)] flex-col rounded-lg border border-border bg-muted/50 p-4',
           { 'outline outline-2 outline-red-400': !isValidScriptData },
         ]"
       >
-        <p class="mb-2 text-sm text-gray-500">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.json.mode") }} - {{ t("project.scriptEditor.json.modeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
@@ -138,8 +138,8 @@
     </TabsContent>
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
-      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border border-border bg-muted/50 p-4">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.media.mode") }} - {{ t("project.scriptEditor.media.modeDescription") }}
         </p>
 
@@ -178,21 +178,21 @@
                 />
               </Card>
               <div
-                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-gray-300 bg-white px-2 py-1 shadow-sm"
+                class="absolute -top-5 right-0 z-10 flex items-center gap-3 rounded border border-border bg-card px-2 py-1 shadow-sm"
               >
                 <ArrowUp
                   v-if="index !== 0"
                   @click="() => positionUp(index)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-primary"
                 />
                 <ArrowDown
                   v-if="(mulmoScript?.beats ?? []).length !== index + 1"
                   @click="() => positionUp(index + 1)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-blue-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-primary"
                 />
                 <Trash
                   @click="deleteBeat(index)"
-                  class="h-5 w-5 cursor-pointer text-gray-500 transition hover:text-red-500"
+                  class="h-5 w-5 cursor-pointer text-muted-foreground transition hover:text-destructive"
                   :data-testid="`script-editor-media-tab-delete-beat-${index}`"
                 />
               </div>
@@ -205,8 +205,8 @@
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
-      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border border-border bg-muted/50 p-4">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.style.mode") }} - {{ t("project.scriptEditor.style.modeDescription") }}
         </p>
         <PresentationStyleEditor
@@ -219,8 +219,8 @@
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
-      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
-        <p class="mb-2 text-sm text-gray-500">
+      <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border border-border bg-muted/50 p-4">
+        <p class="mb-2 text-sm text-muted-foreground">
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>

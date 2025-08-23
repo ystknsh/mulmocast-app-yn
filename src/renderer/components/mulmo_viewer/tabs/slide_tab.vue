@@ -1,9 +1,9 @@
 <template>
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="rounded-lg border bg-gray-50 p-8 text-center">
-      <FileImage :size="64" class="mx-auto mb-4 text-gray-400" />
+    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
+      <FileImage :size="64" class="mx-auto mb-4 text-muted-foreground" />
       <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
-      <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.slide.description") }}</p>
+      <p class="mb-4 text-sm text-muted-foreground">{{ t("project.productTabs.slide.description") }}</p>
       <div class="flex flex-wrap items-center justify-center gap-2">
         <Button>
           <Play :size="16" class="mr-2" />
@@ -14,7 +14,7 @@
           {{ t("project.productTabs.slide.export") }}
         </Button>
       </div>
-      <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.slide.details") }}</div>
+      <div class="mt-4 text-sm text-muted-foreground">{{ t("project.productTabs.slide.details") }}</div>
     </div>
   </TabsContent>
 </template>
