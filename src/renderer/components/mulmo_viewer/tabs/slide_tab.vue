@@ -14,22 +14,40 @@
           {{ t("project.productTabs.slide.export") }}
         </Button>
       </div>
+      <div v-for="(beat, key) in project.script.beats" :key="`${key}_${beat.id}_${projectId}`">
+        <img :src="imageFiles[beat.id]" />
+      </div>
       <div class="mt-4 text-sm text-gray-500">{{ t("project.productTabs.slide.details") }}</div>
     </div>
   </TabsContent>
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileImage, Play } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
+import { useImageFiles } from "../../../pages/composable";
 
 const { t } = useI18n();
 
 interface Props {
   projectId: string;
+  project: Project;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const { imageFiles, downloadImageFiles } = useImageFiles();
+
+watch(
+  () => props.projectId,
+  async (newProjectId, oldProjectId) => {
+    if (newProjectId && newProjectId !== oldProjectId) {
+      await downloadImageFiles(newProjectId);
+    }
+  },
+  { immediate: true },
+);
 </script>
