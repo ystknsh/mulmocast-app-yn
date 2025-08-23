@@ -164,35 +164,35 @@ const emit = defineEmits<{
 }>();
 
 const bgmState = ref<{
-  type: 'preset' | 'custom' | 'silent';
+  type: "preset" | "custom" | "silent";
   url?: string;
   filename?: string;
   previewUrl?: string;
-}>({ type: 'preset' });
+}>({ type: "preset" });
 
 const isUploading = ref(false);
 const fileInput = ref<HTMLInputElement>();
 
 const currentBgmSelection = computed(() => {
-  if (bgmState.value.type === 'silent') return 'silent';
-  if (bgmState.value.type === 'custom') return 'custom';
+  if (bgmState.value.type === "silent") return "silent";
+  if (bgmState.value.type === "custom") return "custom";
 
   const bgm = props.audioParams?.bgm;
   if (!bgm) return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
-  if (bgm.kind === 'url' && bgm.url === SILENT_BGM.url) return 'silent';
-  if (bgm.kind === 'path') return 'custom';
-  if (bgm.kind === 'url') return bgm.url;
+  if (bgm.kind === "url" && bgm.url === SILENT_BGM.url) return "silent";
+  if (bgm.kind === "path") return "custom";
+  if (bgm.kind === "url") return bgm.url;
   return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
 });
 
 const audioPreviewUrl = computed(() => {
-  if (bgmState.value.type === 'custom' && bgmState.value.previewUrl) {
+  if (bgmState.value.type === "custom" && bgmState.value.previewUrl) {
     return bgmState.value.previewUrl;
   }
-  if (bgmState.value.type === 'custom') {
+  if (bgmState.value.type === "custom") {
     return null;
   }
-  if (bgmState.value.type === 'silent') {
+  if (bgmState.value.type === "silent") {
     return null;
   }
   if (props.audioParams?.bgm?.kind === "url") {
@@ -204,17 +204,17 @@ const audioPreviewUrl = computed(() => {
 const initializeBgmState = async () => {
   const bgm = props.audioParams?.bgm;
   if (!bgm) {
-    bgmState.value = { type: 'preset' };
+    bgmState.value = { type: "preset" };
     return;
   }
 
-  if (bgm.kind === 'url' && bgm.url === SILENT_BGM.url) {
-    bgmState.value = { type: 'silent' };
+  if (bgm.kind === "url" && bgm.url === SILENT_BGM.url) {
+    bgmState.value = { type: "silent" };
     return;
   }
-  if (bgm.kind === 'path') {
+  if (bgm.kind === "path") {
     const filename = typeof bgm.path === "string" ? bgm.path.split("/").pop() || bgm.path : String(bgm.path);
-    bgmState.value = { type: 'custom', filename };
+    bgmState.value = { type: "custom", filename };
 
     try {
       const audioData = await window.electronAPI.mulmoHandler("mulmoAudioBgmGet", props.projectId, bgm.path);
@@ -227,21 +227,17 @@ const initializeBgmState = async () => {
     }
     return;
   }
-  if (bgm.kind === 'url') {
-    bgmState.value = { type: 'preset', url: bgm.url };
+  if (bgm.kind === "url") {
+    bgmState.value = { type: "preset", url: bgm.url };
     return;
   }
-  bgmState.value = { type: 'preset' };
+  bgmState.value = { type: "preset" };
 };
 
-watch(
-  () => props.audioParams?.bgm,
-  initializeBgmState,
-  { immediate: true },
-);
+watch(() => props.audioParams?.bgm, initializeBgmState, { immediate: true });
 
 onUnmounted(() => {
-  if (bgmState.value.type === 'custom' && bgmState.value.previewUrl) {
+  if (bgmState.value.type === "custom" && bgmState.value.previewUrl) {
     URL.revokeObjectURL(bgmState.value.previewUrl);
   }
 });
@@ -258,8 +254,8 @@ const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: nu
 const handleBgmSelection = (selection: string) => {
   const currentParams = props.audioParams || ({} as AudioParams);
 
-  if (selection === 'silent') {
-    bgmState.value = { type: 'silent' };
+  if (selection === "silent") {
+    bgmState.value = { type: "silent" };
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
       ...currentParams,
@@ -267,11 +263,11 @@ const handleBgmSelection = (selection: string) => {
     });
     return;
   }
-  if (selection === 'custom') {
-    bgmState.value = { type: 'custom' };
+  if (selection === "custom") {
+    bgmState.value = { type: "custom" };
     return;
   }
-  bgmState.value = { type: 'preset', url: selection };
+  bgmState.value = { type: "preset", url: selection };
   emit("update", {
     ...AUDIO_PARAMS_DEFAULT_VALUES,
     ...currentParams,
@@ -307,9 +303,9 @@ const handleAudioFileUpload = async (file: File) => {
       const previewUrl = URL.createObjectURL(file);
 
       bgmState.value = {
-        type: 'custom',
+        type: "custom",
         filename: file.name,
-        previewUrl
+        previewUrl,
       };
 
       emit("update", {
@@ -349,5 +345,4 @@ const handleDrop = (event: DragEvent) => {
     handleAudioFileUpload(files[0]);
   }
 };
-
 </script>
