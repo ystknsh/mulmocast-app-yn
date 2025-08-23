@@ -63,8 +63,8 @@ export const useAudioFiles = () => {
 
   const downloadAudioFiles = async (projectId: string) => {
     console.log("audioFiles");
-    const res = (await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId)) as Buffer[];
-    audioFiles.value = Object.entries(res).reduce((tmp, [k, v]) => {
+    const res = (await window.electronAPI.mulmoHandler("mulmoAudioFiles", projectId)) as Uint8Array<ArrayBuffer>[];
+    audioFiles.value = Object.entries(res).reduce((tmp: Record<string, string | null>, [k, v]) => {
       if (v) {
         tmp[k] = bufferToUrl(v, "audio/mp3");
       }

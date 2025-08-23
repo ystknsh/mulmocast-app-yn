@@ -72,7 +72,7 @@ const props = defineProps<Props>();
 const currentPage = ref(0);
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
-const { audioFiles, downloadAudioFiles, resetAudioData } = useAudioFiles();
+const { audioFiles, downloadAudioFiles } = useAudioFiles();
 
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
