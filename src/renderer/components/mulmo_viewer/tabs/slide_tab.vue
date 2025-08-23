@@ -8,7 +8,7 @@
       </div>
       <div v-else>
         <div class="flex w-full items-center justify-between">
-          <Button @click="decrease" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300" variant="outline">{{
+          <Button @click="decrease" variant="outline">{{
             t("ui.common.decrease")
           }}</Button>
           <div class="flex flex-1 flex-col justify-center">
