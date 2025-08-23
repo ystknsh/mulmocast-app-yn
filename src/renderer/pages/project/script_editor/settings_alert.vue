@@ -1,5 +1,5 @@
 <template>
-  <div v-if="providerAlert" class="text-red-600">
+  <div v-if="providerAlert" class="text-destructive">
     {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + providerAlert) }) }}
   </div>
 </template>

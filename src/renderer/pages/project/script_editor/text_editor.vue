@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between font-bold text-gray-700">
+  <div class="text-foreground flex items-center justify-between font-bold">
     <span>{{ t("ui.common.beat") }} {{ index + 1 }}</span>
     <Badge variant="outline">{{ t("beat." + getBadge(beat) + ".badge") }}</Badge>
   </div>

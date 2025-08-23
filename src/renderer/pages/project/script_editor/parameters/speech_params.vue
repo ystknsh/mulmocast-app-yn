@@ -24,7 +24,7 @@
             variant="ghost"
             size="sm"
             @click="handleDeleteSpeaker(name)"
-            class="text-red-600 hover:text-red-700"
+            class="text-destructive hover:text-destructive/80"
           >
             {{ t("ui.actions.delete") }}
           </Button>
@@ -135,7 +135,7 @@
       <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
-      <p class="mb-2 text-sm text-gray-500">{{ t("parameters.speechParams.noSpeakersDefined") }}</p>
+      <p class="text-muted-foreground mb-2 text-sm">{{ t("parameters.speechParams.noSpeakersDefined") }}</p>
       <Button variant="outline" size="sm" @click="initializeSpeechParams">{{
         t("parameters.speechParams.initializeSpeechParameters")
       }}</Button>

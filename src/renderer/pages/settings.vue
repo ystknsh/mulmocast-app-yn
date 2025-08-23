@@ -43,7 +43,7 @@
             </CollapsibleTrigger>
             <CardDescription class="mt-2">
               {{ t("settings.apiKeys.description") }}
-              <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+              <span class="text-muted-foreground mt-1 block text-xs">
                 {{ t("settings.apiKeys.llmDescription") }}
               </span>
             </CardDescription>
@@ -58,18 +58,14 @@
                     :href="config.url"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    class="text-primary hover:text-primary/80 flex items-center gap-1 text-xs"
                   >
                     {{ t("settings.apiKeys.getApiKey") }}
                     <ExternalLink class="h-3 w-3" />
                   </a>
                 </div>
                 <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
-                  <span
-                    v-for="feature in config.features"
-                    :key="feature"
-                    class="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
-                  >
+                  <span v-for="feature in config.features" :key="feature" class="bg-muted rounded-md px-2 py-1 text-xs">
                     {{ t(`settings.apiKeys.features.${feature}`) }}
                   </span>
                 </div>
@@ -98,7 +94,7 @@
           <CardDescription>{{ t("settings.languages.description") }}</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
-          <div class="text-base font-semibold text-gray-800 dark:text-white">
+          <div class="text-foreground text-base font-semibold">
             {{ t("settings.languages.mainTitle") }}
           </div>
           <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
@@ -107,7 +103,7 @@
               <Label :for="language">{{ t("languages." + language) }}</Label>
             </div>
           </RadioGroup>
-          <div class="text-base font-semibold text-gray-800 dark:text-white">
+          <div class="text-foreground text-base font-semibold">
             {{ t("settings.languages.translatedTitle") }}
           </div>
           <div v-for="(language, key) in languages" :key="key">
@@ -137,7 +133,7 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <div v-if="alertLLM" class="text-red-600">
+            <div v-if="alertLLM" class="text-destructive">
               {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
             </div>
 

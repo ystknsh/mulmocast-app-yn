@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center gap-1">
-    <Languages :size="14" class="text-gray-500" />
+    <Languages :size="14" class="text-muted-foreground" />
     <Select :model-value="currentLanguage" @update:model-value="handleLanguageChange">
-      <SelectTrigger class="h-6! w-30 border-gray-200 text-xs">
+      <SelectTrigger class="border-border h-6! w-30 text-xs">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

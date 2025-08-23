@@ -4,7 +4,7 @@
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
-      class="h-80 space-y-4 overflow-y-auto rounded-lg border bg-white p-4 lg:flex-1"
+      class="border-border bg-muted/50 h-80 space-y-4 overflow-y-auto rounded-lg border p-4 lg:flex-1"
       v-show="messages.length > 0 || isRunning"
     >
       <div v-for="(message, key) in messages" :key="key">
@@ -44,7 +44,7 @@
       />
       <div
         v-if="isRunning"
-        class="block max-w-md rounded-lg bg-gray-100 p-3 text-xs break-words whitespace-pre-wrap text-gray-800"
+        class="bg-muted text-muted-foreground block max-w-md rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
       >
         {{ t("ui.actions.runningThing", { thing: `${currentRunningAgent}/${currentRunningNode}` }) }}
       </div>
@@ -56,16 +56,16 @@
       <div>
         <Label class="mb-2">
           {{ t("project.chat.enterMessage") }}
-          <span class="text-gray-400">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
+          <span class="text-muted-foreground">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
         </Label>
-        <div class="chat-input-container flex items-center justify-between transition-colors duration-200">
+        <div class="chat-input-container flex items-center justify-between">
           <Textarea
             ref="textareaRef"
             autofocus
             v-model="userInput"
             :disabled="isRunning"
             :placeholder="t('project.chat.exampleMessage')"
-            class="field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border-2 border-none border-gray-200 bg-transparent bg-white px-3 py-2 text-sm outline-none focus-within:border-2 focus-within:border-blue-500"
+            class="border-border bg-background focus:border-primary focus:ring-primary/20 field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm transition-colors outline-none focus:ring-2"
             @keydown="handleKeydown"
           />
           <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning || noChatText" class="ml-2">
