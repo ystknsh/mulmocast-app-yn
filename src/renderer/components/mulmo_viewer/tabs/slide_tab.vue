@@ -29,6 +29,7 @@ import { FileImage, Play } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { useImageFiles } from "../../../pages/composable";
+import type { Project } from "@/lib/project_api";
 
 const { t } = useI18n();
 
