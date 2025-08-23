@@ -11,23 +11,29 @@
           <Button @click="decrease" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300">{{
             t("ui.common.decrease")
           }}</Button>
-          <div class="flex flex-1 justify-center">
+          <div class="flex flex-1 flex-col justify-center">
             <video
-              v-if="lipSyncFiles?.[beats[currentPage]?.id]"
-              :src="lipSyncFiles?.[beats[currentPage]?.id]"
+              v-if="lipSyncFiles?.[currentBeat?.id]"
+              :src="lipSyncFiles?.[currentBeat?.id]"
               controls
               class="max-h-64 object-contain"
             />
             <video
-              v-else-if="movieFiles?.[beats[currentPage]?.id]"
-              :src="movieFiles?.[beats[currentPage]?.id]"
+              v-else-if="movieFiles?.[currentBeat?.id]"
+              :src="movieFiles?.[currentBeat?.id]"
               controls
               class="max-h-64 object-contain"
             />
             <img
-              v-else-if="imageFiles?.[beats[currentPage]?.id]"
-              :src="imageFiles?.[beats[currentPage]?.id]"
+              v-else-if="imageFiles?.[currentBeat?.id]"
+              :src="imageFiles?.[currentBeat?.id]"
               class="max-h-64 object-contain"
+            />
+            <audio
+              :src="audioFiles[currentBeat?.id]"
+              v-if="!!audioFiles[currentBeat?.id]"
+              controls
+              class="mx-auto mt-2"
             />
           </div>
 
@@ -35,6 +41,8 @@
             t("ui.common.increase")
           }}</Button>
         </div>
+
+        {{ currentBeat?.text }}
       </div>
 
       <div class="mt-4 text-sm text-gray-500">
@@ -50,7 +58,7 @@ import { useI18n } from "vue-i18n";
 import { FileImage } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { useImageFiles } from "../../../pages/composable";
+import { useImageFiles, useAudioFiles } from "../../../pages/composable";
 import type { Project } from "@/lib/project_api";
 
 const { t } = useI18n();
@@ -64,9 +72,13 @@ const props = defineProps<Props>();
 const currentPage = ref(0);
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
+const { audioFiles, downloadAudioFiles, resetAudioData } = useAudioFiles();
 
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
+});
+const currentBeat = computed(() => {
+  return beats.value[currentPage.value];
 });
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
@@ -81,9 +93,10 @@ const decrease = () => {
 
 watch(
   () => props.projectId,
-  async (newProjectId, oldProjectId) => {
+  (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
-      await downloadImageFiles(newProjectId);
+      downloadImageFiles(newProjectId);
+      downloadAudioFiles(newProjectId);
     }
   },
   { immediate: true },
