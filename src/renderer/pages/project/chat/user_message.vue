@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-row-reverse items-start space-x-3 space-x-reverse">
-    <div class="bg-primary flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-      <User :size="16" class="text-primary-foreground" />
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/20 dark:bg-blue-500/30">
+      <User :size="16" class="text-blue-600 dark:text-blue-400" />
     </div>
     <div class="flex-1 text-right">
       <div
-        class="bg-primary text-primary-foreground inline-block max-w-md rounded-lg p-3 break-words whitespace-pre-wrap"
+        class="text-foreground inline-block max-w-md rounded-lg bg-blue-500/20 p-3 break-words whitespace-pre-wrap dark:bg-blue-500/30"
       >
         <p class="text-sm">{{ message }}</p>
       </div>
