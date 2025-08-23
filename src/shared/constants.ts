@@ -371,7 +371,7 @@ export const AUDIO_PARAMS_DEFAULT_VALUES = {
   audioVolume: 1.0,
   bgm: {
     kind: "url",
-    url: bgmAssets.bgms[1].url,
+    url: bgmAssets.bgms[1].url, // Default BGM configured in mulmocast-cli. https://github.com/receptron/mulmocast-cli/blob/main/src/utils/file.ts
   },
 } as const;
 
