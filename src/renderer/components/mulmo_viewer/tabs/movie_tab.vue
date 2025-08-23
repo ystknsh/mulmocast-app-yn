@@ -84,16 +84,7 @@ const playVideo = () => {
 };
 
 const downloadMp4 = async () => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "movie")) as ArrayBuffer;
-  const blob = new Blob([buffer], { type: "video/mp4" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = props.projectId + "_video.mp4";
-  a.click();
-
-  URL.revokeObjectURL(url);
+  downloadFile(props.projectId, "movie", "video/mp4", "video.mp4");
 };
 
 const updateVideoMetadata = () => {

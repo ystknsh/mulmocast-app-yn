@@ -34,6 +34,8 @@ import { TabsContent } from "@/components/ui/tabs";
 import { bufferToUrl } from "@/lib/utils";
 import { formatFileSize, formatDuration } from "@/lib/format";
 
+import { downloadFile } from "./utils";
+
 const { t } = useI18n();
 
 interface Props {
@@ -50,16 +52,7 @@ const audioMetadata = ref({
 const audioRef = ref<HTMLAudioElement | null>(null);
 
 const downloadMp3 = async () => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "audio")) as ArrayBuffer;
-  const blob = new Blob([buffer], { type: "audio/mp3" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = props.projectId + "_audio.mp3";
-  a.click();
-
-  URL.revokeObjectURL(url);
+  downloadFile(props.projectId, "audio", "audio/mp3", "audio.mp3");
 };
 
 const updateAudioMetadata = () => {
