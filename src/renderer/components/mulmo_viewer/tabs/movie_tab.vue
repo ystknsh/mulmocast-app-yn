@@ -56,6 +56,8 @@ import { bufferToUrl } from "@/lib/utils";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
 
+import { downloadFile } from "./utils";
+
 const { t } = useI18n();
 
 interface Props {
