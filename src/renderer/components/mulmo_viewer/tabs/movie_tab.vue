@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Video, Play, Pause } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -121,12 +121,10 @@ watch(
 );
 
 const mulmoEventStore = useMulmoEventStore();
-watch(
-  () => mulmoEventStore.mulmoEvent[props.projectId],
-  async (mulmoEvent) => {
-    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
-      await updateResources();
-    }
-  },
-);
+const currentEvent = computed(() => mulmoEventStore.mulmoEvent[props.projectId]);
+watch(currentEvent, async (mulmoEvent) => {
+  if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+    await updateResources(props.projectId);
+  }
+});
 </script>

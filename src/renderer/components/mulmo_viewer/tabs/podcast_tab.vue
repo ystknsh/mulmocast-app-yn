@@ -26,13 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Volume2 } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { bufferToUrl } from "@/lib/utils";
 import { formatFileSize, formatDuration } from "@/lib/format";
+import { useMulmoEventStore } from "@/store";
 
 import { downloadFile, useMediaContents } from "./utils";
 
@@ -80,4 +81,12 @@ watch(
   },
   { immediate: true },
 );
+
+const mulmoEventStore = useMulmoEventStore();
+const currentEvent = computed(() => mulmoEventStore.mulmoEvent[props.projectId]);
+watch(currentEvent, async (mulmoEvent) => {
+  if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "audio" && !mulmoEvent.inSession) {
+    await updateResources(props.projectId);
+  }
+});
 </script>

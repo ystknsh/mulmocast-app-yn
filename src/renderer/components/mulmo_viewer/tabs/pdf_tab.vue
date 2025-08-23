@@ -1,7 +1,7 @@
 <template>
   <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="rounded-lg border bg-gray-50 p-8 text-center">
-      <div class="mx-auto" v-if="pdfData.value">
+      <div class="mx-auto" v-if="pdfData.value && pages > 0">
         <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
       </div>
       <template v-else>
@@ -38,13 +38,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileText } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { formatFileSize } from "@/lib/format";
+import { useMulmoEventStore } from "@/store";
 
 import { downloadFile, useMediaContents } from "./utils";
 
@@ -86,4 +87,12 @@ watch(
   },
   { immediate: true },
 );
+
+const mulmoEventStore = useMulmoEventStore();
+const currentEvent = computed(() => mulmoEventStore.mulmoEvent[props.projectId]);
+watch(currentEvent, async (mulmoEvent) => {
+  if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "pdf" && !mulmoEvent.inSession) {
+    await updateResources(props.projectId);
+  }
+});
 </script>
