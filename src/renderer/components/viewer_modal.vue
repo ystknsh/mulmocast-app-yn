@@ -1,6 +1,6 @@
 <template>
   <Dialog :open="!!globalStore.mulmoViewerProjectId" @update:open="globalStore.setMulmoViewerProjectId(null)">
-    <DialogContent class="max-h-[90vh] max-w-3xl">
+    <DialogContent class="!top-8 max-h-[90vh] max-w-3xl !translate-y-0">
       <div class="sr-only">
         <DialogTitle>{{ t("viewer.mulmo.modal.dialogTitle") }}</DialogTitle>
         <DialogDescription>{{ t("viewer.mulmo.modal.dialogDescription") }}</DialogDescription>

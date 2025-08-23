@@ -1,7 +1,7 @@
 <template>
   <Dialog :open="globalStore.isOpenSettingModal" @update:open="globalStore.toggleSettingModal">
     <DialogOverlay class="bg-black/10" @click="globalStore.toggleSettingModal" />
-    <DialogContent class="bg-card h-[80%] w-[80%] max-w-3xl overflow-y-auto rounded-lg border-0 p-6 shadow-lg">
+    <DialogContent class="bg-card h-[90%] w-[80%] max-w-3xl overflow-y-auto rounded-lg border-0 p-6 shadow-lg">
       <div class="sr-only">
         <DialogTitle>{{ t("viewer.mediaPreview.modal.dialogTitle") }}</DialogTitle>
         <DialogDescription>{{ t("viewer.mediaPreview.modal.dialogDescription") }}</DialogDescription>
