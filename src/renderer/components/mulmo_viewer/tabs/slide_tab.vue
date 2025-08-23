@@ -8,17 +8,32 @@
       </div>
       <div v-else>
         <div class="flex w-full items-center justify-between">
-          <button @click="decrease" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300">－</button>
-
+          <Button @click="decrease" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300">{{
+            t("ui.common.decrease")
+          }}</Button>
           <div class="flex flex-1 justify-center">
+            <video
+              v-if="lipSyncFiles?.[beats[currentPage]?.id]"
+              :src="lipSyncFiles?.[beats[currentPage]?.id]"
+              controls
+              class="max-h-64 object-contain"
+            />
+            <video
+              v-else-if="movieFiles?.[beats[currentPage]?.id]"
+              :src="movieFiles?.[beats[currentPage]?.id]"
+              controls
+              class="max-h-64 object-contain"
+            />
             <img
-              v-if="imageFiles?.[beats[currentPage]?.id]"
+              v-else-if="imageFiles?.[beats[currentPage]?.id]"
               :src="imageFiles?.[beats[currentPage]?.id]"
               class="max-h-64 object-contain"
             />
           </div>
 
-          <button @click="increase" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300">＋</button>
+          <Button @click="increase" class="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300">{{
+            t("ui.common.increase")
+          }}</Button>
         </div>
       </div>
 
@@ -32,7 +47,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { FileImage, Play } from "lucide-vue-next";
+import { FileImage } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { useImageFiles } from "../../../pages/composable";
@@ -48,7 +63,7 @@ interface Props {
 const props = defineProps<Props>();
 const currentPage = ref(0);
 
-const { imageFiles, downloadImageFiles } = useImageFiles();
+const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
 
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
