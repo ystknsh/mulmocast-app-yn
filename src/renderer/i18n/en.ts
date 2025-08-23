@@ -58,6 +58,8 @@ const lang = {
       disable: "Disable",
 
       by: "×",
+      decrease: "-",
+      increase: "+",
     },
 
     // Common actions (placeholder pairs)
@@ -400,7 +402,7 @@ const lang = {
         description: "Slide format display and navigation",
         start: "Start Slideshow",
         export: "Export Images",
-        details: "8 slides - Resolution: 1920x1080",
+        details: "{pages} slides",
       },
     },
     chat: {

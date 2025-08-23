@@ -58,6 +58,8 @@ const lang = {
       disable: "無効",
 
       by: "×",
+      decrease: "-",
+      increase: "+",
     },
 
     // Common actions (placeholder pairs)
@@ -399,7 +401,7 @@ const lang = {
         description: "スライド形式の表示とナビゲーション",
         start: "スライドショーの開始",
         export: "スライドをエクスポート",
-        details: "8 スライド - 解像度: 1920x1080",
+        details: "{pages} スライド",
       },
     },
     chat: {
