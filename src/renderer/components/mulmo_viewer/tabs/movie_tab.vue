@@ -52,11 +52,10 @@ import { useI18n } from "vue-i18n";
 import { Video, Play, Pause } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { bufferToUrl } from "@/lib/utils";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
 
-import { downloadFile } from "./utils";
+import { downloadFile, useMediaContents } from "./utils";
 
 const { t } = useI18n();
 
@@ -65,12 +64,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const videoUrl = ref("");
-const videoMetadata = ref({
-  duration: "",
-  resolution: "",
-  fileSize: "",
-});
 
 const videoRef = ref<HTMLVideoElement | null>(null);
 const isPlaying = ref(false);
@@ -89,36 +82,39 @@ const downloadMp4 = async () => {
   downloadFile(props.projectId, "movie", "video/mp4", "video.mp4");
 };
 
+const videoMetadata = ref({
+  duration: "",
+  resolution: "",
+  fileSize: "",
+});
 const updateVideoMetadata = () => {
   if (!videoRef.value) return;
 
-  const video = videoRef.value;
+  videoMetadata.value.fileSize = formatFileSize(videoBufferLength.value);
 
-  if (!isNaN(video.duration)) {
-    videoMetadata.value.duration = formatDuration(video.duration);
+  if (!isNaN(videoRef.value.duration)) {
+    videoMetadata.value.duration = formatDuration(videoRef.value.duration);
   }
 
-  if (video.videoWidth && video.videoHeight) {
-    videoMetadata.value.resolution = `${video.videoWidth}×${video.videoHeight}`;
-  }
-};
-
-const updateResources = async () => {
-  const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "movie")) as Buffer;
-  if (bufferMovie && bufferMovie.byteLength > 0) {
-    videoUrl.value = bufferToUrl(new Uint8Array(bufferMovie), "video/mp4");
-    videoMetadata.value.fileSize = formatFileSize(bufferMovie.byteLength);
-
-    await nextTick();
-    updateVideoMetadata();
+  if (videoRef.value.videoWidth && videoRef.value.videoHeight) {
+    videoMetadata.value.resolution = `${videoRef.value.videoWidth}×${videoRef.value.videoHeight}`;
   }
 };
+
+const {
+  mediaUrl: videoUrl,
+  bufferLength: videoBufferLength,
+  updateResources,
+} = useMediaContents("movie", "video/mp4", async () => {
+  await nextTick();
+  updateVideoMetadata();
+});
 
 watch(
   () => props.projectId,
   async (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
-      await updateResources();
+      await updateResources(newProjectId);
     }
   },
   { immediate: true },

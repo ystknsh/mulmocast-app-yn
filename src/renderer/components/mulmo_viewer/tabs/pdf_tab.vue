@@ -59,7 +59,6 @@ const props = defineProps<Props>();
 const pdfData = ref();
 const pdfCurrentPage = ref(1);
 const pdfMetadata = ref({
-  pageSize: "",
   fileSize: "",
 });
 

@@ -1,3 +1,6 @@
+import { ref } from "vue";
+import { bufferToUrl } from "@/lib/utils";
+
 export const downloadFile = async (projectId: string, mediaType: string, mimeType: string, fileSuffix: string) => {
   const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId, mediaType)) as ArrayBuffer;
   if (buffer && buffer.byteLength > 0) {
@@ -11,4 +14,23 @@ export const downloadFile = async (projectId: string, mediaType: string, mimeTyp
 
     URL.revokeObjectURL(url);
   }
+};
+
+export const useMediaContents = (mediaType: string, mimeType: string, callback: () => void) => {
+  const mediaUrl = ref("");
+  const bufferLength = ref(0);
+  const updateResources = async (projectId: string) => {
+    console.log(projectId);
+    const bufferMovie = (await window.electronAPI.mulmoHandler("downloadFile", projectId, mediaType)) as Buffer;
+    if (bufferMovie && bufferMovie.byteLength > 0) {
+      mediaUrl.value = bufferToUrl(new Uint8Array(bufferMovie), mimeType);
+      bufferLength.value = bufferMovie.byteLength;
+      callback();
+    }
+  };
+  return {
+    mediaUrl,
+    bufferLength,
+    updateResources,
+  };
 };
