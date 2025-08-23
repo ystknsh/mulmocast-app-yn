@@ -284,6 +284,7 @@ import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
 import { zodError2MulmoError } from "../lib/error";
+import { useImageFiles } from "./composable";
 
 // State
 const route = useRoute();
@@ -305,10 +306,12 @@ const isDevelopment = import.meta.env.DEV;
 
 const graphAIDebugStore = useGraphAIDebugLogStore();
 
+const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles, downloadImageFile } = useImageFiles();
+
 // Load project data on mount
 onMounted(async () => {
   downloadAudioFiles();
-  downloadImageFiles();
+  downloadImageFiles(projectId.value);
 
   try {
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
@@ -414,9 +417,6 @@ const generateImage = async (index: number, target: string) => {
 };
 
 const audioFiles = ref<Record<string, string | null>>({});
-const imageFiles = ref<Record<string, string | null>>({});
-const movieFiles = ref<Record<string, string | null>>({});
-const lipSyncFiles = ref<Record<string, string | null>>({});
 
 const resetMediaFiles = () => {
   audioFiles.value = {};
@@ -443,34 +443,6 @@ const downloadAudioFile = async (index: number, beatId: string) => {
   }
 };
 
-const downloadImageFiles = async () => {
-  const res = await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId.value);
-  Object.keys(res).forEach((id) => {
-    const data = res[id];
-    if (data.imageData) {
-      imageFiles.value[id] = bufferToUrl(data.imageData, "image/png");
-    }
-    if (data.movieData) {
-      movieFiles.value[id] = bufferToUrl(data.movieData, "video/mp4");
-    }
-    if (data.lipSyncData) {
-      lipSyncFiles.value[id] = bufferToUrl(data.lipSyncData, "video/mp4");
-    }
-  });
-};
-const downloadImageFile = async (index: number, beatId: string) => {
-  const data = await window.electronAPI.mulmoHandler("mulmoImageFile", projectId.value, index);
-  if (data?.imageData) {
-    imageFiles.value[beatId] = bufferToUrl(data.imageData, "image/png");
-  }
-  if (data?.movieData) {
-    movieFiles.value[beatId] = bufferToUrl(data.movieData, "video/mp4");
-  }
-  if (data?.lipSyncData) {
-    lipSyncFiles.value[beatId] = bufferToUrl(data.lipSyncData, "video/mp4");
-  }
-};
-
 const isValidScriptData = ref(true);
 
 const logContainer = ref<HTMLElement | null>(null);
@@ -489,7 +461,7 @@ watch(
     // generate image
     if (mulmoEvent && mulmoEvent.kind === "session") {
       if (mulmoEvent.sessionType === "image") {
-        downloadImageFiles();
+        downloadImageFiles(projectId.value);
       }
       if (mulmoEvent.sessionType === "audio") {
         downloadAudioFiles();
@@ -505,7 +477,7 @@ watch(
       if (index === -1 || index === undefined) {
         return;
       }
-      downloadImageFile(index, mulmoEvent.id);
+      downloadImageFile(projectId.value, index, mulmoEvent.id);
     }
     if (mulmoEvent?.kind === "beat" && mulmoEvent.sessionType === "audio") {
       const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);

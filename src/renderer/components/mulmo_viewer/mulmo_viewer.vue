@@ -10,7 +10,7 @@
     <MovieTab :project-id="projectId" />
     <PdfTab :project-id="projectId" />
     <PodcastTab :project-id="projectId" />
-    <SlideTab :project-id="projectId" />
+    <SlideTab :project-id="projectId" :project="project" />
   </Tabs>
 </template>
 
