@@ -66,16 +66,7 @@ const { pdf, pages } = usePDF(pdfBuffer);
 pdfData.value = pdf;
 
 const downloadPdf = async () => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", props.projectId, "pdf")) as ArrayBuffer;
-  const blob = new Blob([buffer], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = props.projectId + "_handout.pdf";
-  a.click();
-
-  URL.revokeObjectURL(url);
+  downloadFile(props.projectId, "pdf", "application/pdf", "handout.pdf");
 };
 
 const updateResources = async () => {
