@@ -35,7 +35,7 @@
       </div>
 
       <div class="mt-1 flex items-center gap-2">
-        <p class="text-xs text-gray-500">{{ formatedTime }}</p>
+        <p class="text-muted-foreground text-xs">{{ formatedTime }}</p>
       </div>
     </div>
   </div>

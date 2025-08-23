@@ -1,11 +1,11 @@
 <template>
   <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="rounded-lg border bg-gray-50 p-8 text-center">
+    <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
       <div>
         <video
           v-if="videoUrl"
           :size="64"
-          class="mx-auto mb-4 max-h-[90vh] text-gray-400"
+          class="text-muted-foreground mx-auto mb-4 max-h-[90vh]"
           controls
           :src="videoUrl"
           ref="videoRef"
@@ -13,9 +13,9 @@
         />
 
         <template v-else>
-          <Video :size="64" class="mx-auto mb-4 text-gray-400" />
+          <Video :size="64" class="text-muted-foreground mx-auto mb-4" />
           <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.movie.title") }}</p>
-          <p class="mb-4 text-sm text-gray-600">{{ t("project.productTabs.movie.description") }}</p>
+          <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.movie.description") }}</p>
         </template>
         <div class="flex flex-wrap items-center justify-center gap-2">
           <Button
@@ -32,7 +32,7 @@
             {{ t("project.productTabs.movie.download") }}
           </Button>
         </div>
-        <div class="mt-2 text-xs text-gray-500" v-if="videoUrl">
+        <div class="text-muted-foreground mt-2 text-xs" v-if="videoUrl">
           {{
             t("project.productTabs.movie.details", {
               duration: videoMetadata.duration || "-",

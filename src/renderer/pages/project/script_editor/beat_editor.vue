@@ -14,7 +14,7 @@
         </BeatSelector>
       </div>
     </div>
-    <p class="mb-2 text-sm text-gray-600">{{ beat.text }}</p>
+    <p class="text-muted-foreground mb-2 text-sm">{{ beat.text }}</p>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -28,7 +28,7 @@
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e)"
               draggable="true"
-              class="mt-4 cursor-pointer rounded-md border-2 border-dashed border-gray-300 bg-white p-6 text-center text-gray-600 shadow-sm"
+              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
             >
               {{ t("ui.common.drophere") }}
             </div>
@@ -144,7 +144,9 @@
           </template>
           <!-- Other -->
           <template v-else>
-            <div class="text-sm text-red-500">{{ t("ui.validation.unsupportedType", { type: beat.image.type }) }}</div>
+            <div class="text-destructive text-sm">
+              {{ t("ui.validation.unsupportedType", { type: beat.image.type }) }}
+            </div>
           </template>
         </div>
         <!-- end of beat.image -->
@@ -258,7 +260,7 @@
 
     <div
       v-if="mulmoError && mulmoError.length > 0"
-      class="mt-2 w-full rounded border border-red-500 bg-red-100 p-2 text-sm text-red-800"
+      class="border-destructive bg-destructive/10 text-destructive mt-2 w-full rounded border p-2 text-sm"
     >
       <div v-for="(error, key) in mulmoError" :key="key">
         {{ error }}

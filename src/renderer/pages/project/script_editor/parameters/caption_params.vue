@@ -4,7 +4,7 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("parameters.captionParams.language") }}</Label>
-        <div class="mb-2 text-xs text-gray-500">{{ t("parameters.captionParams.languageDescription") }}</div>
+        <div class="text-muted-foreground mb-2 text-xs">{{ t("parameters.captionParams.languageDescription") }}</div>
         <Select :model-value="props.captionParams?.lang || ''" @update:model-value="handleLangInput">
           <SelectTrigger>
             <SelectValue placeholder="None" />
@@ -19,11 +19,11 @@
       </div>
       <div>
         <Label>{{ t("parameters.captionParams.styles") }}</Label>
-        <div class="mb-2 text-xs text-gray-500">{{ t("parameters.captionParams.stylesDescription") }}</div>
+        <div class="text-muted-foreground mb-2 text-xs">{{ t("parameters.captionParams.stylesDescription") }}</div>
         <Textarea
           v-model="styles"
           :placeholder="`${t('ui.common.example')}\ncolor: #FF6B6B;\nfont-family: 'Arial Black', sans-serif;\ntext-shadow: 2px 2px 4px rgba(0,0,0,0.5);`"
-          :class="['font-mono', { 'cursor-not-allowed bg-gray-100 text-gray-400': !props.captionParams?.lang }]"
+          :class="['font-mono', { 'bg-muted text-muted-foreground cursor-not-allowed': !props.captionParams?.lang }]"
           rows="6"
           :disabled="!props.captionParams?.lang"
           @change="handleStylesInput"

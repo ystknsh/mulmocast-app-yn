@@ -1,15 +1,15 @@
 <template>
   <div class="flex items-start space-x-3">
-    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-      <Bot :size="16" class="text-blue-600" />
+    <div class="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+      <Bot :size="16" class="text-primary" />
     </div>
 
     <div class="flex-1">
       <div
-        class="chat-markdown block max-w-md rounded-lg bg-gray-100 p-3 text-sm break-words whitespace-pre-wrap text-gray-800"
+        class="chat-markdown bg-muted text-foreground block max-w-md rounded-lg p-3 text-sm break-words whitespace-pre-wrap"
         v-html="safeHtml"
       />
-      <p class="mt-1 text-xs text-gray-500">{{ formatedTime }}</p>
+      <p class="text-foreground mt-1 text-xs">{{ formatedTime }}</p>
     </div>
   </div>
 </template>
