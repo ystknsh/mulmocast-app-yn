@@ -29,7 +29,7 @@
           <Pencil
             v-if="!isEditingTitle"
             :size="16"
-            class="ml-2 cursor-pointer text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
+            class="text-muted-foreground/60 hover:text-foreground ml-2 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
             @click="startEditingTitle"
           />
         </div>
@@ -38,7 +38,7 @@
         <div class="group relative flex items-center">
           <p
             v-if="!isEditingDescription"
-            class="max-w-128 cursor-pointer truncate text-muted-foreground"
+            class="text-muted-foreground max-w-128 cursor-pointer truncate"
             @click="startEditingDescription"
           >
             {{ displayDescription }}
@@ -54,7 +54,7 @@
           <Pencil
             v-if="!isEditingDescription"
             :size="14"
-            class="ml-2 cursor-pointer text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground"
+            class="text-muted-foreground/60 hover:text-foreground ml-2 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
             @click="startEditingDescription"
           />
         </div>

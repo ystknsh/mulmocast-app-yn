@@ -15,22 +15,24 @@
             />
           </template>
           <template v-else>
-            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30">
+            <div
+              class="from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex h-full w-full items-center justify-center bg-gradient-to-br"
+            >
               <div
                 :class="
                   viewMode === 'grid'
-                    ? 'rounded-full bg-background p-8 shadow-lg transition-all duration-200 hover:scale-110 hover:shadow-xl'
+                    ? 'bg-background rounded-full p-8 shadow-lg transition-all duration-200 hover:scale-110 hover:shadow-xl'
                     : ''
                 "
               >
-                <FileText :class="viewMode === 'grid' ? 'h-12 w-12 text-primary' : 'h-6 w-6 text-primary'" />
+                <FileText :class="viewMode === 'grid' ? 'text-primary h-12 w-12' : 'text-primary h-6 w-6'" />
               </div>
             </div>
           </template>
         </div>
 
         <!-- Title -->
-        <h3 class="title truncate text-foreground">
+        <h3 class="title text-foreground truncate">
           {{ project?.script?.title || t("project.newProject.defaultTitle") }}
         </h3>
 
@@ -38,15 +40,15 @@
         <div class="info">
           <Calendar class="h-3 w-3" />
           <span>{{ formatDate(project.metadata.updatedAt || project.metadata.createdAt) }}</span>
-          <span class="rounded bg-muted px-2 py-1 text-xs">
+          <span class="bg-muted rounded px-2 py-1 text-xs">
             {{ project.metadata.version }}
           </span>
           <div
             v-if="mulmoEventStore.isGenerating(project.metadata.id)"
-            class="inline-flex items-center space-x-1 rounded bg-primary/10 px-2 py-1"
+            class="bg-primary/10 inline-flex items-center space-x-1 rounded px-2 py-1"
           >
-            <Loader2 class="h-3 w-3 animate-spin text-primary" />
-            <span class="text-xs font-medium text-primary">{{ t("ui.status.generating") }}</span>
+            <Loader2 class="text-primary h-3 w-3 animate-spin" />
+            <span class="text-primary text-xs font-medium">{{ t("ui.status.generating") }}</span>
           </div>
         </div>
 

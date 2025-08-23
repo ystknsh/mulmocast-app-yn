@@ -135,7 +135,7 @@
       <MulmoError :mulmoError="mulmoError" />
     </div>
     <div v-else>
-      <p class="mb-2 text-sm text-muted-foreground">{{ t("parameters.speechParams.noSpeakersDefined") }}</p>
+      <p class="text-muted-foreground mb-2 text-sm">{{ t("parameters.speechParams.noSpeakersDefined") }}</p>
       <Button variant="outline" size="sm" @click="initializeSpeechParams">{{
         t("parameters.speechParams.initializeSpeechParameters")
       }}</Button>

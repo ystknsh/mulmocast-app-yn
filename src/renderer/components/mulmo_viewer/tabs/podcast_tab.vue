@@ -1,10 +1,10 @@
 <template>
   <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
+    <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
       <template v-if="!audioUrl">
-        <Volume2 :size="64" class="mx-auto mb-4 text-muted-foreground" />
+        <Volume2 :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.podcast.title") }}</p>
-        <p class="mb-4 text-sm text-muted-foreground">{{ t("project.productTabs.podcast.description") }}</p>
+        <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.podcast.description") }}</p>
       </template>
       <div class="flex flex-col items-center justify-center gap-4">
         <audio :src="audioUrl" v-if="!!audioUrl" controls ref="audioRef" @loadedmetadata="updateAudioMetadata" />
@@ -13,7 +13,7 @@
           {{ t("project.productTabs.podcast.download") }}
         </Button>
       </div>
-      <div class="mt-2 text-xs text-muted-foreground" v-if="audioUrl">
+      <div class="text-muted-foreground mt-2 text-xs" v-if="audioUrl">
         {{
           t("project.productTabs.podcast.details", {
             duration: audioMetadata.duration || "-",

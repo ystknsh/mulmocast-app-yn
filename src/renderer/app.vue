@@ -13,7 +13,7 @@ import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmo
 import { Toaster } from "@/components/ui/sonner";
 import SettingModal from "@/components/setting_modal.vue";
 import ViewerModal from "@/components/viewer_modal.vue";
-import { useTheme } from "@/composables/use-theme";
+import { useTheme } from "@/composables/use_theme";
 
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -32,7 +32,7 @@ export default defineComponent({
     const graphAIDebugStore = useGraphAIDebugLogStore();
     const zodErrorStore = useZodErrorStore();
     const globalStore = useMulmoGlobalStore();
-    
+
     // Initialize theme
     useTheme();
 

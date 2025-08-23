@@ -1,13 +1,9 @@
 <template>
-  <header
-    class="relative border-b border-border bg-card px-6 py-4 transition-colors duration-200"
-  >
+  <header class="border-border bg-card relative border-b px-6 py-4 transition-colors duration-200">
     <div class="mx-auto flex items-center justify-between">
       <!-- Logo/Brand -->
       <RouterLink to="/">
-        <h1
-          class="cursor-pointer text-2xl font-bold text-foreground transition-colors duration-200 hover:text-primary"
-        >
+        <h1 class="text-foreground hover:text-primary cursor-pointer text-2xl font-bold transition-colors duration-200">
           {{ t("ui.common.applicationName") }}
         </h1>
       </RouterLink>

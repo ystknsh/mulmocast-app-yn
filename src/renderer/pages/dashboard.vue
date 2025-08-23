@@ -2,14 +2,14 @@
   <Layout>
     <div class="mx-auto max-w-7xl space-y-6 p-6">
       <!-- Main Content -->
-      <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+      <div class="border-border bg-card rounded-lg border p-6 shadow-sm">
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <Button @click="handleCreateProject" class="flex items-center space-x-2" data-testid="create-new-button">
               <Plus class="h-5 w-5" />
               <span>{{ t("dashboard.createNew") }}</span>
             </Button>
-            <div class="flex items-center space-x-2 rounded-lg border border-border bg-card p-1">
+            <div class="border-border bg-card flex items-center space-x-2 rounded-lg border p-1">
               <Button
                 @click="viewMode = VIEW_MODE.list"
                 :variant="viewMode === VIEW_MODE.list ? 'default' : 'ghost'"
@@ -53,7 +53,7 @@
               </SelectContent>
             </Select>
           </div>
-          <div class="text-sm text-muted-foreground">{{ t("dashboard.project", { count: projects.length }) }}</div>
+          <div class="text-muted-foreground text-sm">{{ t("dashboard.project", { count: projects.length }) }}</div>
         </div>
 
         <!-- Loading State -->
@@ -63,7 +63,7 @@
 
         <!-- Empty State -->
         <div v-else-if="projects.length === 0" class="py-16 text-center">
-          <p class="mb-4 text-muted-foreground">{{ t("dashboard.empty") }}</p>
+          <p class="text-muted-foreground mb-4">{{ t("dashboard.empty") }}</p>
         </div>
 
         <!-- Project Items -->

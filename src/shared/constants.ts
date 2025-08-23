@@ -125,7 +125,7 @@ export const LLM_GROQ_DEFAULT_CONFIG = {
   model: provider2LLMAgent.groq.defaultModel,
 };
 
-export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER";
+export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER" | "DARK_MODE";
 
 export const VOICE_LISTS = {
   openai: [

@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { Sun, Moon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/composables/use-theme";
+import { useTheme } from "@/composables/use_theme";
 
 const { theme, setTheme } = useTheme();
 

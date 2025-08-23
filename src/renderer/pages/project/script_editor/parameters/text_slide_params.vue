@@ -4,7 +4,7 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("parameters.textSlideParams.css") }}</Label>
-        <div class="mb-2 text-xs text-muted-foreground">{{ t("parameters.textSlideParams.cssDescription") }}</div>
+        <div class="text-muted-foreground mb-2 text-xs">{{ t("parameters.textSlideParams.cssDescription") }}</div>
         <Textarea
           :model-value="cssStylesText"
           @update:model-value="handleCssStylesInput"

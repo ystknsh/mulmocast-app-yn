@@ -21,13 +21,13 @@
               <CardHeader class="flex-shrink-0">
                 <div class="flex items-center justify-between">
                   <div>
-                    <CardTitle class="flex items-center space-x-2 text-primary">
+                    <CardTitle class="text-primary flex items-center space-x-2">
                       <Bot :size="20" />
                       <span>
                         {{ t("project.chat.title") }}
                       </span>
                     </CardTitle>
-                    <p class="text-sm text-primary/80">
+                    <p class="text-primary/80 text-sm">
                       {{ t("project.chat.beginnerDescription") }}
                     </p>
                   </div>
@@ -50,16 +50,16 @@
           </div>
 
           <!-- Left Column - Collapsed State -->
-          <div v-if="!isLeftColumnOpen" class="hidden h-full w-[48px] border-r border-border bg-muted lg:flex">
+          <div v-if="!isLeftColumnOpen" class="border-border bg-muted hidden h-full w-[48px] border-r lg:flex">
             <button
               @click="isLeftColumnOpen = true"
-              class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-muted-foreground/10"
+              class="hover:bg-muted-foreground/10 flex h-full w-full flex-col items-center p-2 transition-colors"
               :aria-label="t('project.chat.openPanel')"
               :title="t('project.chat.openPanel')"
             >
-              <PanelLeftOpen :size="16" class="mt-2 mb-4 text-muted-foreground" />
-              <Bot :size="20" class="mb-2 text-primary" />
-              <span class="writing-mode-vertical text-sm text-muted-foreground">{{ t("project.chat.title") }}</span>
+              <PanelLeftOpen :size="16" class="text-muted-foreground mt-2 mb-4" />
+              <Bot :size="20" class="text-primary mb-2" />
+              <span class="writing-mode-vertical text-muted-foreground text-sm">{{ t("project.chat.title") }}</span>
             </button>
           </div>
 
@@ -79,9 +79,12 @@
                       <!-- Validation Status -->
                       <div class="flex items-center space-x-2">
                         <div v-if="isValidScriptData" class="group relative">
-                          <CheckCircle :size="16" class="cursor-pointer text-green-500 group-hover:text-green-600 dark:text-green-400 dark:group-hover:text-green-300" />
+                          <CheckCircle
+                            :size="16"
+                            class="cursor-pointer text-green-500 group-hover:text-green-600 dark:text-green-400 dark:group-hover:text-green-300"
+                          />
                           <span
-                            class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded bg-popover px-2 py-1 text-xs whitespace-nowrap text-popover-foreground border border-border opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                            class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                           >
                             {{ t("project.scriptEditor.validationStatus") }}
                           </span>
@@ -95,7 +98,10 @@
                         :disabled="!mulmoScriptHistoryStore.undoable"
                         @click="mulmoScriptHistoryStore.undo"
                       >
-                        <Undo :size="16" :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'" />
+                        <Undo
+                          :size="16"
+                          :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'"
+                        />
                       </Button>
                       <Button
                         variant="ghost"
@@ -103,7 +109,10 @@
                         :disabled="!mulmoScriptHistoryStore.redoable"
                         @click="mulmoScriptHistoryStore.redo"
                       >
-                        <Redo :size="16" :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'" />
+                        <Redo
+                          :size="16"
+                          :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'"
+                        />
                       </Button>
                     </div>
                   </div>
@@ -175,7 +184,7 @@
             <Card>
               <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
-                <div class="rounded-lg bg-muted p-4">
+                <div class="bg-muted rounded-lg p-4">
                   <div class="mb-2 flex items-center justify-between">
                     <h3 class="text-sm font-medium">{{ t("project.menu.debugLog") }}</h3>
                     <Button
@@ -189,7 +198,10 @@
                       {{ t("ui.actions.copy") }}
                     </Button>
                   </div>
-                  <div class="h-40 overflow-y-auto rounded border border-border bg-card p-2 font-mono text-xs" ref="logContainer">
+                  <div
+                    class="border-border bg-card h-40 overflow-y-auto rounded border p-2 font-mono text-xs"
+                    ref="logContainer"
+                  >
                     <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
                       {{ entry }}
                     </div>
@@ -200,16 +212,18 @@
           </div>
 
           <!-- Right Column - Collapsed State -->
-          <div v-if="!isRightColumnOpen" class="hidden h-full w-[48px] border-l border-border bg-muted lg:flex">
+          <div v-if="!isRightColumnOpen" class="border-border bg-muted hidden h-full w-[48px] border-l lg:flex">
             <button
               @click="isRightColumnOpen = true"
-              class="flex h-full w-full flex-col items-center p-2 transition-colors hover:bg-muted-foreground/10"
+              class="hover:bg-muted-foreground/10 flex h-full w-full flex-col items-center p-2 transition-colors"
               :aria-label="t('project.generate.openPanel')"
               :title="t('project.generate.openPanel')"
             >
-              <PanelRightOpen :size="16" class="mt-2 mb-4 text-muted-foreground" />
-              <Settings :size="20" class="mb-2 text-foreground" />
-              <span class="writing-mode-vertical text-sm text-muted-foreground">{{ t("project.generate.outputProduct") }}</span>
+              <PanelRightOpen :size="16" class="text-muted-foreground mt-2 mb-4" />
+              <Settings :size="20" class="text-foreground mb-2" />
+              <span class="writing-mode-vertical text-muted-foreground text-sm">{{
+                t("project.generate.outputProduct")
+              }}</span>
             </button>
           </div>
         </div>

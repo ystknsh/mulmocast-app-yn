@@ -92,7 +92,7 @@
           @drop.prevent="handleDrop"
           @click="handleFileClick"
           :class="[
-            'relative cursor-pointer rounded-md border-2 border-dashed border-border bg-card p-3 text-center shadow-sm transition-colors',
+            'border-border bg-card relative cursor-pointer rounded-md border-2 border-dashed p-3 text-center shadow-sm transition-colors',
             isUploading ? 'cursor-not-allowed opacity-50' : 'hover:bg-muted/50',
           ]"
         >
@@ -103,10 +103,10 @@
           </template>
           <template v-else-if="customAudioFileName">
             <div class="flex items-center justify-center gap-2">
-              <Music class="h-4 w-4 text-muted-foreground" />
-              <span class="text-sm font-medium text-foreground">{{ customAudioFileName }}</span>
+              <Music class="text-muted-foreground h-4 w-4" />
+              <span class="text-foreground text-sm font-medium">{{ customAudioFileName }}</span>
             </div>
-            <div class="mt-1 text-xs text-muted-foreground">
+            <div class="text-muted-foreground mt-1 text-xs">
               {{ t("parameters.audioParams.clickToReplace") }}
             </div>
           </template>
@@ -114,7 +114,7 @@
             <div class="text-muted-foreground">
               {{ t("parameters.audioParams.dropAudioHere") }}
             </div>
-            <div class="mt-1 text-xs text-muted-foreground/80">
+            <div class="text-muted-foreground/80 mt-1 text-xs">
               {{ t("parameters.audioParams.clickToSelect") }}
             </div>
           </template>

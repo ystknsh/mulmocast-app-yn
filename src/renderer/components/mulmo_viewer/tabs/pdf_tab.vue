@@ -1,13 +1,13 @@
 <template>
   <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
+    <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
       <div class="mx-auto" v-if="pdfData.value">
         <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
       </div>
       <template v-else>
-        <FileText :size="64" class="mx-auto mb-4 text-muted-foreground" />
+        <FileText :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
-        <p class="mb-4 text-sm text-muted-foreground">{{ t("project.productTabs.pdf.description") }}</p>
+        <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.pdf.description") }}</p>
       </template>
       <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
       <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-2">
@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-2 text-xs text-muted-foreground" v-if="pdfData.value">
+      <div class="text-muted-foreground mt-2 text-xs" v-if="pdfData.value">
         {{
           t("project.productTabs.pdf.details", {
             pages: pages || "-",
