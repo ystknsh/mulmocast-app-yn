@@ -68,7 +68,7 @@
       </div>
       <div>
         <Label>{{ t("parameters.audioParams.bgm") }}</Label>
-        <Select :model-value="currentBgmUrl" @update:model-value="handleBgmUpdate">
+        <Select :model-value="currentBgmSelection" @update:model-value="handleBgmSelection">
           <SelectTrigger>
             <SelectValue :placeholder="t('parameters.audioParams.bgmSelect')" />
           </SelectTrigger>
@@ -76,17 +76,17 @@
             <SelectItem v-for="bgm in bgmAssets.bgms" :key="bgm.name" :value="bgm.url">
               {{ bgm.title }}
             </SelectItem>
-            <SelectItem value="__custom__">
+            <SelectItem value="custom">
               {{ t("parameters.audioParams.customAudio") }}
             </SelectItem>
-            <SelectItem :value="SILENT_BGM.url">
+            <SelectItem value="silent">
               {{ t("parameters.audioParams.noBgm") }}
             </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div v-if="isShowingCustom" class="space-y-2">
+      <div v-if="bgmState.type === 'custom'" class="space-y-2">
         <div
           @dragover.prevent
           @drop.prevent="handleDrop"
@@ -101,10 +101,10 @@
               {{ t("ui.status.loading") }}
             </div>
           </template>
-          <template v-else-if="customAudioFileName">
+          <template v-else-if="bgmState.filename">
             <div class="flex items-center justify-center gap-2">
               <Music class="h-4 w-4 text-gray-500" />
-              <span class="text-sm font-medium text-gray-700">{{ customAudioFileName }}</span>
+              <span class="text-sm font-medium text-gray-700">{{ bgmState.filename }}</span>
             </div>
             <div class="mt-1 text-xs text-gray-500">
               {{ t("parameters.audioParams.clickToReplace") }}
@@ -130,8 +130,8 @@
       </div>
 
       <!-- Audio Player -->
-      <div v-if="audioUrl && audioUrl !== SILENT_BGM.url" class="mt-3">
-        <audio :src="audioUrl" controls />
+      <div v-if="audioPreviewUrl" class="mt-3">
+        <audio :src="audioPreviewUrl" controls />
       </div>
 
       <MulmoError :mulmoError="mulmoError" />
@@ -163,15 +163,37 @@ const emit = defineEmits<{
   update: [audioParams: AudioParams];
 }>();
 
-const customAudioFileName = ref<string>("");
-const customAudioUrl = ref<string>(null);
-const isShowingCustom = ref(false);
+const bgmState = ref<{
+  type: 'preset' | 'custom' | 'silent';
+  url?: string;
+  filename?: string;
+  previewUrl?: string;
+}>({ type: 'preset' });
+
 const isUploading = ref(false);
 const fileInput = ref<HTMLInputElement>();
 
-const audioUrl = computed(() => {
-  if (isShowingCustom.value) {
-    return customAudioUrl.value;
+const currentBgmSelection = computed(() => {
+  if (bgmState.value.type === 'silent') return 'silent';
+  if (bgmState.value.type === 'custom') return 'custom';
+
+  const bgm = props.audioParams?.bgm;
+  if (!bgm) return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
+  if (bgm.kind === 'url' && bgm.url === SILENT_BGM.url) return 'silent';
+  if (bgm.kind === 'path') return 'custom';
+  if (bgm.kind === 'url') return bgm.url;
+  return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
+});
+
+const audioPreviewUrl = computed(() => {
+  if (bgmState.value.type === 'custom' && bgmState.value.previewUrl) {
+    return bgmState.value.previewUrl;
+  }
+  if (bgmState.value.type === 'custom') {
+    return null;
+  }
+  if (bgmState.value.type === 'silent') {
+    return null;
   }
   if (props.audioParams?.bgm?.kind === "url") {
     return props.audioParams.bgm.url;
@@ -179,43 +201,49 @@ const audioUrl = computed(() => {
   return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
 });
 
-const revokeAudioUrlIfExists = () => {
-  if (customAudioUrl.value) {
-    URL.revokeObjectURL(customAudioUrl.value);
+const initializeBgmState = async () => {
+  const bgm = props.audioParams?.bgm;
+  if (!bgm) {
+    bgmState.value = { type: 'preset' };
+    return;
   }
-};
 
-const initializeCustomAudioDisplay = async () => {
-  if (props.audioParams?.bgm) {
-    if (props.audioParams.bgm.kind === "path") {
-      const path = props.audioParams.bgm.path;
-      if (typeof path === "string") {
-        customAudioFileName.value = path.split("/").pop() || path;
-        try {
-          const audioData = await window.electronAPI.mulmoHandler("mulmoAudioBgmGet", props.projectId, path);
-          if (audioData) {
-            const blob = new Blob([new Uint8Array(audioData as ArrayBuffer)], { type: "audio/mpeg" });
-            revokeAudioUrlIfExists();
-            customAudioUrl.value = URL.createObjectURL(blob);
-          }
-        } catch (error) {
-          console.error("Failed to load custom BGM:", error);
-        }
-      }
-    }
+  if (bgm.kind === 'url' && bgm.url === SILENT_BGM.url) {
+    bgmState.value = { type: 'silent' };
+    return;
   }
+  if (bgm.kind === 'path') {
+    const filename = typeof bgm.path === "string" ? bgm.path.split("/").pop() || bgm.path : String(bgm.path);
+    bgmState.value = { type: 'custom', filename };
+
+    try {
+      const audioData = await window.electronAPI.mulmoHandler("mulmoAudioBgmGet", props.projectId, bgm.path);
+      if (audioData) {
+        const blob = new Blob([new Uint8Array(audioData as ArrayBuffer)], { type: "audio/mpeg" });
+        bgmState.value.previewUrl = URL.createObjectURL(blob);
+      }
+    } catch (error) {
+      console.error("Failed to load custom BGM:", error);
+    }
+    return;
+  }
+  if (bgm.kind === 'url') {
+    bgmState.value = { type: 'preset', url: bgm.url };
+    return;
+  }
+  bgmState.value = { type: 'preset' };
 };
 
 watch(
   () => props.audioParams?.bgm,
-  async () => {
-    await initializeCustomAudioDisplay();
-  },
+  initializeBgmState,
   { immediate: true },
 );
 
 onUnmounted(() => {
-  revokeAudioUrlIfExists();
+  if (bgmState.value.type === 'custom' && bgmState.value.previewUrl) {
+    URL.revokeObjectURL(bgmState.value.previewUrl);
+  }
 });
 
 const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: number) => {
@@ -227,73 +255,31 @@ const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: nu
   });
 };
 
-const currentBgmUrl = computed(() => {
-  if (isShowingCustom.value) {
-    return "__custom__";
-  }
-
-  if (props.audioParams?.bgm) {
-    if (props.audioParams.bgm.kind === "url" && props.audioParams.bgm.url === SILENT_BGM.url) {
-      return SILENT_BGM.url;
-    }
-
-    if (props.audioParams.bgm.kind === "url") {
-      const url = props.audioParams.bgm.url;
-      const isPreset = bgmAssets.bgms.some((bgm) => bgm.url === url);
-      if (!isPreset && url !== "") {
-        customAudioFileName.value = url;
-        isShowingCustom.value = true;
-        return "__custom__";
-      }
-      return url;
-    } else if (props.audioParams.bgm.kind === "path") {
-      const path = props.audioParams.bgm.path;
-      const filename = typeof path === "string" ? path.split("/").pop() || path : String(path);
-      customAudioFileName.value = filename;
-      isShowingCustom.value = true;
-      return "__custom__";
-    }
-  }
-  return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
-});
-
-const handleBgmUpdate = (bgmUrl: string) => {
+const handleBgmSelection = (selection: string) => {
   const currentParams = props.audioParams || ({} as AudioParams);
 
-  if (bgmUrl === "__none__") {
-    customAudioFileName.value = "";
-    isShowingCustom.value = false;
-    customAudioUrl.value = "";
-    revokeAudioUrlIfExists();
+  if (selection === 'silent') {
+    bgmState.value = { type: 'silent' };
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
       ...currentParams,
       bgm: SILENT_BGM,
     });
-  } else if (bgmUrl === "__custom__") {
-    isShowingCustom.value = true;
-    customAudioUrl.value = "";
-    if (!customAudioFileName.value && !props.audioParams?.bgm) {
-      const { bgm: __bgm, ...paramsWithoutBgm } = currentParams;
-      emit("update", {
-        ...AUDIO_PARAMS_DEFAULT_VALUES,
-        ...paramsWithoutBgm,
-      });
-    }
-  } else {
-    customAudioFileName.value = "";
-    isShowingCustom.value = false;
-    customAudioUrl.value = "";
-    revokeAudioUrlIfExists();
-    emit("update", {
-      ...AUDIO_PARAMS_DEFAULT_VALUES,
-      ...currentParams,
-      bgm: {
-        kind: "url",
-        url: bgmUrl,
-      },
-    });
+    return;
   }
+  if (selection === 'custom') {
+    bgmState.value = { type: 'custom' };
+    return;
+  }
+  bgmState.value = { type: 'preset', url: selection };
+  emit("update", {
+    ...AUDIO_PARAMS_DEFAULT_VALUES,
+    ...currentParams,
+    bgm: {
+      kind: "url",
+      url: selection,
+    },
+  });
 };
 
 const handleFileClick = () => {
@@ -302,31 +288,29 @@ const handleFileClick = () => {
   }
 };
 
-const handleFileSelect = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
-  if (files && files.length > 0) {
-    processAudioFile(files[0]);
-  }
-};
-
-const processAudioFile = async (file: File) => {
+const handleAudioFileUpload = async (file: File) => {
   isUploading.value = true;
 
   const reader = new FileReader();
   reader.onload = async () => {
     try {
       const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-
       const path = (await window.electronAPI.mulmoHandler("mulmoAudioBgmUpload", props.projectId, file.name, [
         ...uint8Array,
       ])) as string;
 
       const currentParams = props.audioParams || ({} as AudioParams);
-      customAudioFileName.value = file.name;
 
-      revokeAudioUrlIfExists();
-      customAudioUrl.value = URL.createObjectURL(file);
+      if (bgmState.value.previewUrl) {
+        URL.revokeObjectURL(bgmState.value.previewUrl);
+      }
+      const previewUrl = URL.createObjectURL(file);
+
+      bgmState.value = {
+        type: 'custom',
+        filename: file.name,
+        previewUrl
+      };
 
       emit("update", {
         ...AUDIO_PARAMS_DEFAULT_VALUES,
@@ -351,10 +335,19 @@ const processAudioFile = async (file: File) => {
   reader.readAsArrayBuffer(file);
 };
 
+const handleFileSelect = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+  if (files && files.length > 0) {
+    handleAudioFileUpload(files[0]);
+  }
+};
+
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer?.files;
   if (files && files.length > 0) {
-    processAudioFile(files[0]);
+    handleAudioFileUpload(files[0]);
   }
 };
+
 </script>
