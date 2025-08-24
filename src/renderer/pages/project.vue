@@ -258,7 +258,6 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Copy,
-  FileText,
   Expand,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
