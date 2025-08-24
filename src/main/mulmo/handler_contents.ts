@@ -87,7 +87,10 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
   return async (beat, index) => {
     try {
       const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-      if (res.imagePath) {
+      if (res.htmlImageFile && fs.existsSync(res.htmlImageFile)) {
+        const buffer = fs.readFileSync(res.htmlImageFile);
+        res.imageData = buffer.buffer;
+      } else if (res.imagePath) {
         if (res.imagePath.startsWith("http")) {
           const response = await fetch(res.imagePath);
           if (!response.ok) {
