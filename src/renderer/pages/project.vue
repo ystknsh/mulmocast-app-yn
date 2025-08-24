@@ -2,6 +2,14 @@
   <Layout>
     <TooltipProvider>
       <div class="mx-auto max-w-[95%] space-y-6 p-6">
+        <div class="fixed right-4 z-50 mt-[-16px] flex items-center gap-3 rounded-lg bg-black/50 px-3 py-2 text-white">
+          <div class="p-1 hover:text-red-400">
+            <Play class="h-5 w-5" @click="openModal" />
+          </div>
+          <div class="p-1 hover:text-red-400">
+            <FileText class="h-5 w-5" @click="openModal" />
+          </div>
+        </div>
         <!-- Header Section -->
         <ProjectHeader
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
@@ -9,7 +17,6 @@
           @openProjectFolder="openProjectFolder"
           @updateMulmoScript="handleUpdateMulmoScript"
         />
-
         <!-- 3 Split Layout -->
         <div class="relative grid h-auto grid-cols-1 gap-4 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
@@ -252,6 +259,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Copy,
+  FileText,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
