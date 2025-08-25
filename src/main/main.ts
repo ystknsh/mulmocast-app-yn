@@ -38,7 +38,7 @@ const createSplashWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: path.join(__dirname, "../../images/mulmocast.icns"),
+    icon: path.join(__dirname, "../../images/mulmocast_icon.icns"),
   });
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
