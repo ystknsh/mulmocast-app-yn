@@ -406,7 +406,7 @@ const lang = {
         description: "スライド形式の表示とナビゲーション",
         start: "スライドショーの開始",
         export: "スライドをエクスポート",
-        details: "{pages} スライド",
+        details: "{current} / {pages} スライド",
       },
     },
     chat: {

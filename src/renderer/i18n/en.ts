@@ -407,7 +407,7 @@ const lang = {
         description: "Slide format display and navigation",
         start: "Start Slideshow",
         export: "Export Images",
-        details: "{pages} slides",
+        details: "{current} / {pages} slides",
       },
     },
     chat: {
