@@ -70,7 +70,7 @@ import { Button, Label, Input, Badge, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getBadge } from "@/lib/beat_util.js";
 
-import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
+import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import { notifyProgress } from "@/lib/notification";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
@@ -89,7 +89,7 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const emit = defineEmits(["update", "justSaveAndPushToHistory"]);
+const emit = defineEmits(["update", "justSaveAndPushToHistory", "updateMultiLingual"]);
 
 const supporLanguages = computed(() => {
   const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
@@ -128,7 +128,6 @@ const translateBeat = async (index: number) => {
 const multiLingualDataset = ref({});
 
 const saveMultiLingual = () => {
-  // todo updat and save multiLingual
   const data = supporLanguages.value.reduce((tmp, key) => {
     tmp[key] = {
       ...props.mulmoMultiLingual[key],
@@ -140,6 +139,7 @@ const saveMultiLingual = () => {
     return tmp;
   }, {});
   window.electronAPI.mulmoHandler("mulmoUpdateMultiLingual", props.projectId, props.index, data);
+  emit("updateMultiLingual");
 };
 
 const convMultiLingualData = (mulmoMultiLingual?: MultiLingualTexts) => {
@@ -159,5 +159,4 @@ watch(
   },
   { deep: true, immediate: true },
 );
-
 </script>

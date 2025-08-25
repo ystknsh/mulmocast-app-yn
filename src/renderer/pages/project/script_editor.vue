@@ -63,6 +63,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
+                  @updateMultiLingual="updateMultiLingual"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
                 />
               </Card>
@@ -325,7 +326,7 @@ onMounted(async () => {
     settingPresence.value[envKey] = !!(settings.APIKEY && settings.APIKEY[envKey]);
   });
 });
-                 
+
 watch(
   () => mulmoEventStore.mulmoEvent[projectId.value],
   async (mulmoEvent) => {
@@ -339,6 +340,9 @@ watch(
     }
   },
 );
+const updateMultiLingual = async () => {
+  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+};
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
 
