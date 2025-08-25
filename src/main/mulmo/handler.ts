@@ -157,7 +157,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
     version: currentMulmoScriptVersion,
     multiLingual: multiLingual,
   };
-  const result = mulmoStudioMultiLingualFileSchema.parse(savedData);
+  mulmoStudioMultiLingualFileSchema.parse(savedData);
   fs.writeFileSync(outputMultilingualFilePath, JSON.stringify(savedData, null, 2), "utf8");
 };
 
