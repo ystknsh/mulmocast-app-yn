@@ -160,19 +160,4 @@ watch(
   { deep: true, immediate: true },
 );
 
-watch(
-  () => mulmoEventStore.mulmoEvent[props.projectId],
-  async (mulmoEvent) => {
-    if (
-      mulmoEvent &&
-      mulmoEvent.kind === "beat" &&
-      mulmoEvent.sessionType === "multiLingual" &&
-      !mulmoEvent.inSession
-    ) {
-      const mulmoMultiLinguals = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", props.projectId);
-      const mulmoMultiLingual = mulmoMultiLinguals?.[props.index]?.multiLingualTexts;
-      multiLingualDataset.value = convMultiLingualData(mulmoMultiLingual);
-    }
-  },
-);
 </script>

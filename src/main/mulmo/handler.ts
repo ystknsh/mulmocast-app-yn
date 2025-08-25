@@ -133,7 +133,7 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
-  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
   Object.values(data).map((d) => {

@@ -60,7 +60,7 @@
                   :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
                   :lang="mulmoScript.lang"
-                  :mulmoMultiLingual="mulmoMultiLinguals?.[index]?.multiLingualTexts"
+                  :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
@@ -271,14 +271,16 @@ import Reference from "./script_editor/reference.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { removeEmptyValues } from "@/lib/utils";
+import { removeEmptyValues, beatId } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
+import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
+const mulmoEventStore = useMulmoEventStore();
 
 interface Props {
   mulmoScript: MulmoScript;
@@ -323,6 +325,20 @@ onMounted(async () => {
     settingPresence.value[envKey] = !!(settings.APIKEY && settings.APIKEY[envKey]);
   });
 });
+                 
+watch(
+  () => mulmoEventStore.mulmoEvent[projectId.value],
+  async (mulmoEvent) => {
+    if (
+      mulmoEvent &&
+      mulmoEvent.kind === "beat" &&
+      mulmoEvent.sessionType === "multiLingual" &&
+      !mulmoEvent.inSession
+    ) {
+      mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+    }
+  },
+);
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
 
