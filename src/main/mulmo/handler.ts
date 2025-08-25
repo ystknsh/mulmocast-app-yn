@@ -130,10 +130,16 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
   return buffer.buffer;
 };
 
+// from cli
+const beatId = (id: string | undefined, index: number) => {
+  const key = id ?? `__index__${index}`;
+  return key;
+};
+
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
-  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats.length);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
   Object.values(data).map((d) => {
@@ -141,17 +147,17 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
       d.cacheKey = hashSHA256(beat?.text ?? "");
     }
   });
-  multiLingual[index].multiLingualTexts = data;
-  if (!multiLingual[index].cacheKey) {
+  const key = beatId(beat?.id, index);
+  multiLingual[key].multiLingualTexts = data;
+  if (!multiLingual[key].cacheKey) {
     const beat = context.studio.script.beats[index];
-    multiLingual[index].cacheKey = hashSHA256(beat.text ?? "");
+    multiLingual[key].cacheKey = hashSHA256(beat.text ?? "");
   }
   const savedData = {
     version: currentMulmoScriptVersion,
     multiLingual: multiLingual,
   };
-  const result = mulmoStudioMultiLingualFileSchema.parse(savedData);
-  console.log(result);
+  mulmoStudioMultiLingualFileSchema.parse(savedData);
   fs.writeFileSync(outputMultilingualFilePath, JSON.stringify(savedData, null, 2), "utf8");
 };
 

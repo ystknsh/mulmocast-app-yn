@@ -148,7 +148,6 @@ export default [
       ],
       "vue/require-explicit-emits": "error",
       "vue/valid-define-emits": "error",
-      "vue/define-emits-declaration": ["warn", "type-based"],
       "vue/no-unused-refs": "error",
       "vue/no-unused-vars": "error",
 
