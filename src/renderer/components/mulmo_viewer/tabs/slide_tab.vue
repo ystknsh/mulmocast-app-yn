@@ -42,7 +42,7 @@
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
-        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1  }) }}
+        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
       </div>
     </div>
   </TabsContent>
