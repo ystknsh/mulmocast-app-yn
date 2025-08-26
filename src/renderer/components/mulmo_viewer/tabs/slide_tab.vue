@@ -32,6 +32,8 @@
               v-if="!!audioFiles[currentBeat?.id]"
               controls
               class="mx-auto mt-2"
+              @ended="handleAudioEnded"
+              ref="audioRef"
             />
           </div>
 
@@ -56,6 +58,7 @@ import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { useImageFiles, useAudioFiles } from "../../../pages/composable";
 import type { Project } from "@/lib/project_api";
+import { sleep } from "graphai";
 
 const { t } = useI18n();
 
@@ -66,6 +69,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const currentPage = ref(0);
+const audioRef = ref();
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
 const { audioFiles, downloadAudioFiles } = useAudioFiles();
@@ -79,13 +83,23 @@ const currentBeat = computed(() => {
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
     currentPage.value = currentPage.value + 1;
+    return true;
   }
+  return false;
 };
 const decrease = () => {
   if (currentPage.value > 0) {
     currentPage.value = currentPage.value - 1;
   }
 };
+
+const handleAudioEnded = async () => {
+  if (increase()) {
+    await sleep(500);
+    audioRef.value.play();
+  }
+};
+const handleCanPlay = () => {};
 
 watch(
   () => props.projectId,
