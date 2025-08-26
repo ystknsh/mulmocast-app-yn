@@ -252,6 +252,7 @@ import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import YAML from "yaml";
 import { isNull } from "graphai";
 import {
+  MulmoPresentationStyleMethods,
   mulmoScriptSchema,
   type MulmoScript,
   type MulmoBeat,
@@ -465,17 +466,6 @@ const positionUp = (index: number) => {
   });
 };
 
-// copy from cli
-const getDefaultSpeaker = (presentationStyle: MulmoPresentationStyle) => {
-  const speakers = presentationStyle.speechParams.speakers ?? {};
-  const keys = Object.keys(speakers).sort();
-  const defaultSpeaker = keys.find((key) => speakers[key].isDefault);
-  if (!isNull(defaultSpeaker)) {
-    return defaultSpeaker;
-  }
-  return keys[0];
-};
-
 const changeBeat = (beat: MulmoBeat, index: number) => {
   const newBeats = [...props.mulmoScript.beats];
   newBeats[index] = beat;
@@ -486,7 +476,7 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  beat.speaker = getDefaultSpeaker(props.mulmoScript);
+  beat.speaker = MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript);
   const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
