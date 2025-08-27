@@ -79,6 +79,7 @@ const emit = defineEmits<Emits>();
 const confirmLabel = computed(() => props.confirmLabel || t("ui.actions.ok"));
 const cancelLabel = computed(() => props.cancelLabel || t("ui.actions.cancel"));
 
+// Map icon types to their corresponding Lucide Vue components
 const iconComponent = computed(() => {
   const iconMap = {
     warning: AlertTriangle,
@@ -90,27 +91,29 @@ const iconComponent = computed(() => {
   return props.icon ? iconMap[props.icon] : null;
 });
 
+// Generate background circle classes for each icon type
 const iconBackgroundClass = computed(() => {
   const baseClasses = "flex h-12 w-12 shrink-0 items-center justify-center rounded-full";
   const colorMap = {
-    warning: "bg-destructive/10",
-    error: "bg-destructive/10",
-    success: "bg-green-500/10",
-    info: "bg-blue-500/10",
-    question: "bg-gray-500/10",
+    warning: "bg-destructive/10",    // Red background for warnings/danger
+    error: "bg-destructive/10",      // Red background for errors
+    success: "bg-green-500/10",      // Green background for success
+    info: "bg-blue-500/10",          // Blue background for information
+    question: "bg-gray-500/10",      // Gray background for questions
   };
   const bgColor = props.icon ? colorMap[props.icon] : "bg-gray-500/10";
   return `${baseClasses} ${bgColor}`;
 });
 
+// Generate icon color classes for each icon type
 const iconClass = computed(() => {
   const baseClasses = "h-6 w-6";
   const colorMap = {
-    warning: "text-destructive",
-    error: "text-destructive",
-    success: "text-green-500",
-    info: "text-blue-500",
-    question: "text-gray-500",
+    warning: "text-destructive",     // Red icon for warnings/danger
+    error: "text-destructive",       // Red icon for errors
+    success: "text-green-500",       // Green icon for success
+    info: "text-blue-500",           // Blue icon for information
+    question: "text-gray-500",       // Gray icon for questions
   };
   const textColor = props.icon ? colorMap[props.icon] : "text-gray-500";
   return `${baseClasses} ${textColor}`;
