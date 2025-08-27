@@ -10,7 +10,12 @@
     <MovieTab :project-id="projectId" />
     <PdfTab :project-id="projectId" />
     <PodcastTab :project-id="projectId" />
-    <SlideTab :project-id="projectId" :project="project" :mulmoMultiLinguals="mulmoMultiLinguals" />
+    <SlideTab
+      :project-id="projectId"
+      :project="project"
+      :mulmoMultiLinguals="mulmoMultiLinguals"
+      @updateMultiLingual="updateMultiLingual"
+    />
   </Tabs>
 </template>
 
@@ -37,7 +42,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:mulmoViewerActiveTab"]);
+const emit = defineEmits(["update:mulmoViewerActiveTab", "updateMultiLingual"]);
 
 const projectId = computed(() => props.project?.metadata?.id || "");
 const currentTab = ref<MulmoViewerTab>(props.mulmoViewerActiveTab || MULMO_VIEWER_TABS.MOVIE);
@@ -50,6 +55,9 @@ watch(
     }
   },
 );
+const updateMultiLingual = () => {
+  emit("updateMultiLingual");
+};
 
 const handleUpdateTab = (tab: MulmoViewerTab) => {
   currentTab.value = tab;

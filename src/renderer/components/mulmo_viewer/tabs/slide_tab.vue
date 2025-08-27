@@ -77,8 +77,10 @@ interface Props {
   project: Project;
   mulmoMultiLinguals?: MultiLingualTexts;
 }
-
 const props = defineProps<Props>();
+
+const emit = defineEmits(["updateMultiLingual"]);
+
 const currentPage = ref(0);
 const audioRef = ref();
 
@@ -114,7 +116,7 @@ const handleAudioEnded = async () => {
 };
 const generateLocalize = async () => {
   await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
-
+  emit("updateMultiLingual");
   // translate lang
   // generate audio
   // get multiLingual

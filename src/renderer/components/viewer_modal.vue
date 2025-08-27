@@ -11,6 +11,7 @@
         :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
         :mulmoMultiLinguals="mulmoMultiLinguals"
         @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
+        @updateMultiLingual="updateMultiLingual"
       />
     </DialogContent>
   </Dialog>
@@ -42,6 +43,13 @@ const handleUpdateMulmoViewerActiveTab = async (tab: MulmoViewerTab) => {
   }
 };
 
+const updateMultiLingual = async () => {
+  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler(
+    "mulmoMultiLinguals",
+    globalStore.mulmoViewerProjectId,
+  );
+};
+
 watch(
   () => globalStore.mulmoViewerProjectId,
   async (v) => {
@@ -52,7 +60,7 @@ watch(
         metadata,
         script,
       };
-      mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", v);
+      updateMultiLingual();
     }
   },
 );
