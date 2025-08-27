@@ -127,7 +127,7 @@ const translateBeat = async (index: number) => {
 
 const multiLingualDataset = ref({});
 
-const saveMultiLingual = () => {
+const saveMultiLingual = async () => {
   const data = supporLanguages.value.reduce((tmp, key) => {
     tmp[key] = {
       ...props.mulmoMultiLingual[key],
@@ -138,7 +138,7 @@ const saveMultiLingual = () => {
     };
     return tmp;
   }, {});
-  window.electronAPI.mulmoHandler("mulmoUpdateMultiLingual", props.projectId, props.index, data);
+  await window.electronAPI.mulmoHandler("mulmoUpdateMultiLingual", props.projectId, props.index, data);
   emit("updateMultiLingual");
 };
 

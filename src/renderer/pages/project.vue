@@ -132,6 +132,8 @@
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoError"
+                    @updateMultiLingual="updateMultiLingual"
+                    :mulmoMultiLinguals="mulmoMultiLinguals"
                   />
                 </CardContent>
               </Card>
@@ -181,6 +183,7 @@
                   v-if="project"
                   :project="project"
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
+                  :mulmoMultiLinguals="mulmoMultiLinguals"
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
                 />
               </CardContent>
@@ -287,6 +290,11 @@ const project = computed(() => ({
   script: mulmoScriptHistoryStore.currentMulmoScript,
 }));
 
+const mulmoMultiLinguals = ref({});
+const updateMultiLingual = async () => {
+  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+};
+
 const isDevelopment = import.meta.env.DEV;
 
 const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
@@ -300,6 +308,7 @@ onMounted(async () => {
   downloadImageFiles(projectId.value);
 
   try {
+    updateMultiLingual();
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
     data.beats.map(setRandomBeatId);
@@ -449,12 +458,17 @@ watch(
       }
       downloadImageFile(projectId.value, index, mulmoEvent.id);
     }
-    if (mulmoEvent?.kind === "beat" && mulmoEvent.sessionType === "audio") {
-      const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
-      if (index === -1 || index === undefined) {
-        return;
+    if (mulmoEvent?.kind === "beat") {
+      if (mulmoEvent.sessionType === "audio") {
+        const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
+        if (index === -1 || index === undefined) {
+          return;
+        }
+        downloadAudioFile(index, mulmoEvent.id);
       }
-      downloadAudioFile(index, mulmoEvent.id);
+      if (mulmoEvent.sessionType === "multiLingual") {
+        updateMultiLingual();
+      }
     }
     console.log(mulmoEvent);
   },

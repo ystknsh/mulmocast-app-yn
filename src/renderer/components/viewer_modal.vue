@@ -9,6 +9,7 @@
         v-if="selectedProject"
         :project="selectedProject"
         :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
+        :mulmoMultiLinguals="mulmoMultiLinguals"
         @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
       />
     </DialogContent>
@@ -32,6 +33,8 @@ const { t } = useI18n();
 
 const selectedProject = ref<Project | null>(null);
 
+const mulmoMultiLinguals = ref({});
+
 const handleUpdateMulmoViewerActiveTab = async (tab: MulmoViewerTab) => {
   if (selectedProject.value) {
     selectedProject.value.metadata.mulmoViewerActiveTab = tab;
@@ -49,6 +52,7 @@ watch(
         metadata,
         script,
       };
+      mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", v);
     }
   },
 );
