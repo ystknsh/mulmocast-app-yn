@@ -280,10 +280,8 @@ import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../sha
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
-import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
-const mulmoEventStore = useMulmoEventStore();
 
 interface Props {
   mulmoScript: MulmoScript;
