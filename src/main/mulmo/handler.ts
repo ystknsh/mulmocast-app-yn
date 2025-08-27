@@ -5,7 +5,6 @@ import {
   pdfFilePath,
   addSessionProgressCallback,
   removeSessionProgressCallback,
-  translateBeat,
   setFfmpegPath,
   setFfprobePath,
   getImageRefs,
@@ -22,10 +21,14 @@ import { app, WebContents } from "electron";
 import path from "path";
 import fs from "fs";
 
-import { loadSettings } from "../settings_manager";
-
 import { createMulmoScript } from "./scripting";
-import { mulmoActionRunner, mulmoGenerateImage, mulmoGenerateAudio, mulmoReferenceImage } from "./handler_generator";
+import {
+  mulmoActionRunner,
+  mulmoGenerateImage,
+  mulmoGenerateAudio,
+  mulmoReferenceImage,
+  mulmoTranslateBeat,
+} from "./handler_generator";
 import {
   mulmoAudioFiles,
   mulmoAudioFile,
@@ -53,34 +56,6 @@ const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-s
 
 setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
 setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
-
-export const mulmoTranslateBeat = async (
-  projectId: string,
-  index: number,
-  targetLangs: string[],
-  webContents: WebContents,
-) => {
-  const settings = await loadSettings();
-  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
-  try {
-    addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId);
-    // context.force = true;
-    await translateBeat(index, context, targetLangs, { settings: settings.APIKEY ?? {} });
-    removeSessionProgressCallback(mulmoCallback);
-  } catch (error) {
-    removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
-    return {
-      result: false,
-      error,
-    };
-  }
-};
 
 // generate all reference
 export const mulmoReferenceImages = async (projectId: string, webContents: WebContents) => {

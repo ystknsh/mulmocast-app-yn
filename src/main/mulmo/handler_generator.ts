@@ -12,6 +12,7 @@ import {
   generateReferenceImage,
   getBeatAudioPath,
   addSessionProgressCallback,
+  translateBeat,
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
   type MulmoStudioContext,
@@ -238,5 +239,33 @@ export const mulmoReferenceImage = async (
       data: error,
     });
     return null;
+  }
+};
+
+export const mulmoTranslateBeat = async (
+  projectId: string,
+  index: number,
+  targetLangs: string[],
+  webContents: WebContents,
+) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+    // context.force = true;
+    await translateBeat(index, context, targetLangs, { settings: settings.APIKEY ?? {} });
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
   }
 };
