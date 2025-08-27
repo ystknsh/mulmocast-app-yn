@@ -9210,10 +9210,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.2.12:
-  version "1.2.12"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.12.tgz#075ab0e3d42842f7050205e3725a39dabd429049"
-  integrity sha512-P62/W6t7X341jevNwMDyuvu/3lMPzuZyLDWxPaENS98mofOf/Rk2i1BWs0eiP2MFgLLRvuOCYLTo9JlaDDinPQ==
+mulmocast@^1.2.13:
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.13.tgz#9346af9bd6fbc6e807981d13020d56ffe63e8849"
+  integrity sha512-6zRhhQZjrfIDR1uodNXSPx05bMB0v642TKGSVy1SrSv0BtHyJnt20H29KNW60geYC9eG/nsPypbGTXWYuh2J1g==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.15.0"

@@ -97,7 +97,7 @@
     "marked": "^16.2.1",
     "monaco-editor": "^0.52.2",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^1.2.12",
+    "mulmocast": "^1.2.13",
     "pinia": "^3.0.3",
     "radix-vue": "^1.9.17",
     "reka-ui": "^2.5.0",
