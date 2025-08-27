@@ -14,20 +14,12 @@
           </div>
         </div>
       </DialogHeader>
-      
+
       <DialogFooter class="flex-row justify-end gap-3 sm:gap-3">
-        <Button
-          :variant="cancelVariant"
-          @click="handleCancel"
-          :disabled="loading"
-        >
+        <Button :variant="cancelVariant" @click="handleCancel" :disabled="loading">
           {{ cancelLabel }}
         </Button>
-        <Button
-          :variant="confirmVariant"
-          @click="handleConfirm"
-          :disabled="loading"
-        >
+        <Button :variant="confirmVariant" @click="handleConfirm" :disabled="loading">
           <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
           {{ confirmLabel }}
         </Button>
@@ -38,21 +30,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { 
-  AlertTriangle, 
-  Loader2, 
-  Info, 
-  CheckCircle, 
-  XCircle,
-  HelpCircle 
-} from "lucide-vue-next";
+import { AlertTriangle, Loader2, Info, CheckCircle, XCircle, HelpCircle } from "lucide-vue-next";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "vue-i18n";
@@ -109,7 +94,7 @@ const iconBackgroundClass = computed(() => {
   const baseClasses = "flex h-12 w-12 shrink-0 items-center justify-center rounded-full";
   const colorMap = {
     warning: "bg-destructive/10",
-    error: "bg-destructive/10", 
+    error: "bg-destructive/10",
     success: "bg-green-500/10",
     info: "bg-blue-500/10",
     question: "bg-gray-500/10",
@@ -124,7 +109,7 @@ const iconClass = computed(() => {
     warning: "text-destructive",
     error: "text-destructive",
     success: "text-green-500",
-    info: "text-blue-500", 
+    info: "text-blue-500",
     question: "text-gray-500",
   };
   const textColor = props.icon ? colorMap[props.icon] : "text-gray-500";
