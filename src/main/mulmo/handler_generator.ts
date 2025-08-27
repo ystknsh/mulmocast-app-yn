@@ -191,6 +191,7 @@ export const mulmoGenerateAudio = async (projectId: string, index: number, webCo
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
     // context.force = true;
+    //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
     await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {

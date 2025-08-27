@@ -188,6 +188,6 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
 export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
   const context = await getContext(projectId);
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
-  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
+  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);
   return multiLingual;
 };

@@ -10,19 +10,22 @@
     <MovieTab :project-id="projectId" />
     <PdfTab :project-id="projectId" />
     <PodcastTab :project-id="projectId" />
-    <SlideTab :project-id="projectId" :project="project" />
+    <SlideTab :project-id="projectId" :project="project" :mulmoMultiLinguals="mulmoMultiLinguals" />
   </Tabs>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { type MultiLingualTexts } from "mulmocast/browser";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { Project } from "@/lib/project_api";
+
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
 import PodcastTab from "./tabs/podcast_tab.vue";
 import SlideTab from "./tabs/slide_tab.vue";
-import type { Project } from "@/lib/project_api";
+
 import { MULMO_VIEWER_TABS, type MulmoViewerTab } from "../../../shared/constants";
 
 const { t } = useI18n();
@@ -30,6 +33,7 @@ const { t } = useI18n();
 interface Props {
   project: Project;
   mulmoViewerActiveTab?: MulmoViewerTab;
+  mulmoMultiLinguals?: MultiLingualTexts;
 }
 
 const props = defineProps<Props>();

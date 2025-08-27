@@ -1,6 +1,7 @@
 <template>
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
+      <SelectLanguage v-model="currentLanguage" />
       <div v-if="beats.length === 0">
         <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
@@ -39,8 +40,10 @@
 
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
-
-        {{ currentBeat?.text }}
+        {{
+          mulmoMultiLinguals?.[beatId(currentBeat?.id, currentPage)]?.["multiLingualTexts"]?.[currentLanguage]?.text ||
+          currentBeat?.text
+        }}
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
@@ -54,22 +57,29 @@
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileImage } from "lucide-vue-next";
+import { sleep } from "graphai";
+
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { useImageFiles, useAudioFiles } from "../../../pages/composable";
+
+import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import type { Project } from "@/lib/project_api";
-import { sleep } from "graphai";
+import SelectLanguage from "./select_language.vue";
+import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 
 const { t } = useI18n();
 
 interface Props {
   projectId: string;
   project: Project;
+  mulmoMultiLinguals?: MultiLingualTexts;
 }
 
 const props = defineProps<Props>();
 const currentPage = ref(0);
 const audioRef = ref();
+
+const currentLanguage = ref(props.project?.script?.lang ?? "en");
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
 const { audioFiles, downloadAudioFiles } = useAudioFiles();

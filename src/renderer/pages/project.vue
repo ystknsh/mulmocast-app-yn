@@ -183,6 +183,7 @@
                   v-if="project"
                   :project="project"
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
+                  :mulmoMultiLinguals="mulmoMultiLinguals"
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
                 />
               </CardContent>
@@ -289,7 +290,7 @@ const project = computed(() => ({
   script: mulmoScriptHistoryStore.currentMulmoScript,
 }));
 
-const mulmoMultiLinguals = ref([]);
+const mulmoMultiLinguals = ref({});
 const updateMultiLingual = async () => {
   mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
 };
