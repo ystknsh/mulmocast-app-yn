@@ -72,7 +72,7 @@ const lang = {
       generateThing: "Generate {thing}",
       fetch: "Fetch",
       cancel: "Cancel",
-      ok: "OK", 
+      ok: "OK",
       runningThing: "{thing} is running",
 
       // Media actions (placeholder pairs)

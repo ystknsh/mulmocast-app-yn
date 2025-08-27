@@ -81,7 +81,7 @@
     </div>
 
     <!-- Viewer Dialog -->
-    
+
     <!-- Delete Confirmation Dialog -->
     <ConfirmDialog
       v-model:open="deleteDialog.open"
@@ -203,7 +203,7 @@ const handleDeleteProject = (project: Project) => {
 
 const confirmDelete = async () => {
   if (!deleteDialog.value.projectToDelete) return;
-  
+
   deleteDialog.value.loading = true;
   try {
     await projectApi.delete(deleteDialog.value.projectToDelete.metadata.id);
