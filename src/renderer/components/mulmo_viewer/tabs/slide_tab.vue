@@ -1,7 +1,10 @@
 <template>
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
-      <SelectLanguage v-model="currentLanguage" />
+      <div class="mb-2 flex items-center justify-center gap-2">
+        <SelectLanguage v-model="currentLanguage" />
+        <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
+      </div>
       <div v-if="beats.length === 0">
         <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
@@ -108,6 +111,14 @@ const handleAudioEnded = async () => {
     await sleep(500);
     audioRef.value.play();
   }
+};
+const generateLocalize = async () => {
+  await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
+
+  // translate lang
+  // generate audio
+  // get multiLingual
+  // get audio
 };
 
 watch(

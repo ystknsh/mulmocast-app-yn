@@ -13,6 +13,7 @@ import {
   getBeatAudioPath,
   addSessionProgressCallback,
   translateBeat,
+  translate,
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
   type MulmoStudioContext,
@@ -256,6 +257,29 @@ export const mulmoTranslateBeat = async (
     const context = await getContext(projectId);
     // context.force = true;
     await translateBeat(index, context, targetLangs, { settings: settings.APIKEY ?? {} });
+    removeSessionProgressCallback(mulmoCallback);
+  } catch (error) {
+    removeSessionProgressCallback(mulmoCallback);
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+    });
+    return {
+      result: false,
+      error,
+    };
+  }
+};
+
+export const mulmoTranslate = async (projectId: string, targetLangs: string[], webContents: WebContents) => {
+  const settings = await loadSettings();
+  const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
+  try {
+    addSessionProgressCallback(mulmoCallback);
+    const context = await getContext(projectId);
+
+    await translate(context, { settings: settings.APIKEY ?? {}, targetLangs });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
