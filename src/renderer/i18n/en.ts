@@ -170,6 +170,11 @@ const lang = {
       badge: "Badge",
     },
 
+    // Common messages
+    messages: {
+      cannotUndo: "This action cannot be undone.",
+    },
+
     // Validation messages
     validation: {
       required: "This field is required",

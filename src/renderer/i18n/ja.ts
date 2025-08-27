@@ -170,6 +170,11 @@ const lang = {
       badge: "バッジ",
     },
 
+    // Common messages
+    messages: {
+      cannotUndo: "この操作は元に戻せません。",
+    },
+
     // Validation messages
     validation: {
       required: "この項目は必須です",

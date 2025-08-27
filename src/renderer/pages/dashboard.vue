@@ -81,6 +81,16 @@
     </div>
 
     <!-- Viewer Dialog -->
+    
+    <!-- Delete Confirmation Dialog -->
+    <ConfirmDialog
+      v-model:open="deleteDialog.open"
+      :title="deleteDialog.title"
+      :description="deleteDialog.description"
+      :loading="deleteDialog.loading"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </Layout>
 </template>
 
@@ -94,7 +104,7 @@ import dayjs from "dayjs";
 import Layout from "@/components/layout.vue";
 import ProjectItems from "./dashboard/project_items.vue";
 
-import { Button } from "@/components/ui/button";
+import { Button, ConfirmDialog } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useMulmoGlobalStore } from "@/store";
@@ -107,6 +117,15 @@ const router = useRouter();
 const { t } = useI18n();
 const viewMode = ref<typeof VIEW_MODE.list | typeof VIEW_MODE.grid>(VIEW_MODE.list);
 const sortBy = ref<typeof SORT_BY.updatedAt | typeof SORT_BY.title>(SORT_BY.updatedAt);
+
+// Delete dialog state
+const deleteDialog = ref({
+  open: false,
+  title: "",
+  description: "",
+  loading: false,
+  projectToDelete: null as Project | null,
+});
 const sortOrder = ref<typeof SORT_ORDER.desc | typeof SORT_ORDER.asc>(SORT_ORDER.desc);
 const projects = ref<Project[]>([]);
 const loading = ref(true);
@@ -171,16 +190,40 @@ const handleCreateProject = async () => {
   }
 };
 
-const handleDeleteProject = async (project: Project) => {
-  if (confirm(t("dashboard.confirmDelete", { title: project?.script?.title }))) {
-    try {
-      await projectApi.delete(project.metadata.id);
-      await loadProjects();
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-      alert(t("dashboard.errors.deleteProjectFailed"));
-    }
+const handleDeleteProject = (project: Project) => {
+  deleteDialog.value = {
+    open: true,
+    title: t("dashboard.confirmDelete", { title: project?.script?.title || t("project.newProject.defaultTitle") }),
+    description: t("ui.messages.cannotUndo"),
+    loading: false,
+    projectToDelete: project,
+  };
+};
+
+const confirmDelete = async () => {
+  if (!deleteDialog.value.projectToDelete) return;
+  
+  deleteDialog.value.loading = true;
+  try {
+    await projectApi.delete(deleteDialog.value.projectToDelete.metadata.id);
+    await loadProjects();
+    deleteDialog.value.open = false;
+  } catch (error) {
+    console.error("Failed to delete project:", error);
+    alert(t("dashboard.errors.deleteProjectFailed"));
+  } finally {
+    deleteDialog.value.loading = false;
   }
+};
+
+const cancelDelete = () => {
+  deleteDialog.value = {
+    open: false,
+    title: "",
+    description: "",
+    loading: false,
+    projectToDelete: null,
+  };
 };
 
 const handleViewProject = async (project: Project) => {
