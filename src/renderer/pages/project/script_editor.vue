@@ -259,6 +259,7 @@ import {
   type MulmoImagePromptMedia,
   type MulmoImageMedia,
   type MulmoImageAsset,
+  type MultiLingualTexts,
 } from "mulmocast/browser";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -279,10 +280,8 @@ import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../sha
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
-import { useMulmoEventStore } from "@/store";
 
 const { t } = useI18n();
-const mulmoEventStore = useMulmoEventStore();
 
 interface Props {
   mulmoScript: MulmoScript;
@@ -293,6 +292,7 @@ interface Props {
   lipSyncFiles: Record<string, string | null>;
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
+  mulmoMultiLinguals: MultiLingualTexts;
 }
 
 const props = defineProps<Props>();
@@ -303,6 +303,7 @@ const emit = defineEmits([
   "update:isValidScriptData",
   "generateImage",
   "update:scriptEditorActiveTab",
+  "updateMultiLingual",
 ]);
 
 const route = useRoute();
@@ -319,30 +320,15 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
 };
 
 const settingPresence = ref({});
-const mulmoMultiLinguals = ref([]);
 onMounted(async () => {
-  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
   const settings = await window.electronAPI.settings.get();
   Object.keys(ENV_KEYS).forEach((envKey) => {
     settingPresence.value[envKey] = !!(settings.APIKEY && settings.APIKEY[envKey]);
   });
 });
 
-watch(
-  () => mulmoEventStore.mulmoEvent[projectId.value],
-  async (mulmoEvent) => {
-    if (
-      mulmoEvent &&
-      mulmoEvent.kind === "beat" &&
-      mulmoEvent.sessionType === "multiLingual" &&
-      !mulmoEvent.inSession
-    ) {
-      mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
-    }
-  },
-);
 const updateMultiLingual = async () => {
-  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+  emit("updateMultiLingual");
 };
 
 const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
