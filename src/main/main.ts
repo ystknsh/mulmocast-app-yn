@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
+import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 
@@ -8,6 +9,11 @@ import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
+
+// Cross-platform icon path
+const iconPath = os.platform() === "darwin"
+  ? path.join(__dirname, "../../images/mulmocast_icon.icns")
+  : path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
@@ -38,7 +44,7 @@ const createSplashWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: path.join(__dirname, "../../images/mulmocast_icon.icns"),
+    icon: iconPath,
   });
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
@@ -60,6 +66,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
+    icon: iconPath,
   });
 
   // and load the index.html of the app.
@@ -150,6 +157,17 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  // In development on macOS, force set the Dock icon.
+  if (isDev && os.platform() === "darwin") {
+    try {
+      // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
+      const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
+      app.dock.setIcon(dockIconPath);
+    } catch (error) {
+      console.error("Failed to set dock icon:", error);
+    }
+  }
+
   const splashWindow = createSplashWindow();
 
   // Install Vue.js DevTools in development mode
