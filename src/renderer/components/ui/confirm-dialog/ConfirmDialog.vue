@@ -3,8 +3,8 @@
     <DialogContent class="max-w-md">
       <DialogHeader>
         <div class="flex items-center gap-3">
-          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive/10">
-            <AlertTriangle class="h-6 w-6 text-destructive" />
+          <div v-if="icon" :class="iconBackgroundClass">
+            <component :is="iconComponent" :class="iconClass" />
           </div>
           <div class="flex-1">
             <DialogTitle class="text-left">{{ title }}</DialogTitle>
@@ -17,14 +17,14 @@
       
       <DialogFooter class="flex-row justify-end gap-3 sm:gap-3">
         <Button
-          variant="outline"
+          :variant="cancelVariant"
           @click="handleCancel"
           :disabled="loading"
         >
           {{ cancelLabel }}
         </Button>
         <Button
-          variant="destructive"
+          :variant="confirmVariant"
           @click="handleConfirm"
           :disabled="loading"
         >
@@ -38,7 +38,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { AlertTriangle, Loader2 } from "lucide-vue-next";
+import { 
+  AlertTriangle, 
+  Loader2, 
+  Info, 
+  CheckCircle, 
+  XCircle,
+  HelpCircle 
+} from "lucide-vue-next";
 import {
   Dialog,
   DialogContent,
@@ -50,12 +57,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { useI18n } from "vue-i18n";
 
+type IconType = "warning" | "error" | "success" | "info" | "question";
+type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost";
+
 interface Props {
   open: boolean;
   title: string;
   description?: string;
+  icon?: IconType | null;
   confirmLabel?: string;
   cancelLabel?: string;
+  confirmVariant?: ButtonVariant;
+  cancelVariant?: ButtonVariant;
   loading?: boolean;
 }
 
@@ -68,15 +81,55 @@ interface Emits {
 const { t } = useI18n();
 
 const props = withDefaults(defineProps<Props>(), {
+  icon: "warning",
   confirmLabel: "",
   cancelLabel: "",
+  confirmVariant: "destructive",
+  cancelVariant: "outline",
   loading: false,
 });
 
 const emit = defineEmits<Emits>();
 
-const confirmLabel = computed(() => props.confirmLabel || t("ui.actions.delete"));
+const confirmLabel = computed(() => props.confirmLabel || t("ui.actions.ok"));
 const cancelLabel = computed(() => props.cancelLabel || t("ui.actions.cancel"));
+
+const iconComponent = computed(() => {
+  const iconMap = {
+    warning: AlertTriangle,
+    error: XCircle,
+    success: CheckCircle,
+    info: Info,
+    question: HelpCircle,
+  };
+  return props.icon ? iconMap[props.icon] : null;
+});
+
+const iconBackgroundClass = computed(() => {
+  const baseClasses = "flex h-12 w-12 shrink-0 items-center justify-center rounded-full";
+  const colorMap = {
+    warning: "bg-destructive/10",
+    error: "bg-destructive/10", 
+    success: "bg-green-500/10",
+    info: "bg-blue-500/10",
+    question: "bg-gray-500/10",
+  };
+  const bgColor = props.icon ? colorMap[props.icon] : "bg-gray-500/10";
+  return `${baseClasses} ${bgColor}`;
+});
+
+const iconClass = computed(() => {
+  const baseClasses = "h-6 w-6";
+  const colorMap = {
+    warning: "text-destructive",
+    error: "text-destructive",
+    success: "text-green-500",
+    info: "text-blue-500", 
+    question: "text-gray-500",
+  };
+  const textColor = props.icon ? colorMap[props.icon] : "text-gray-500";
+  return `${baseClasses} ${textColor}`;
+});
 
 const handleConfirm = () => {
   emit("confirm");
