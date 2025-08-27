@@ -383,8 +383,9 @@ const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   saveProjectMetadataDebounced();
 };
 
-const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
+const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
   projectMetadata.value.scriptEditorActiveTab = tab;
+  await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   saveProjectMetadata({ updateTimestamp: false });
 };
 
