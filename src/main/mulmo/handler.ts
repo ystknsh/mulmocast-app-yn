@@ -25,8 +25,8 @@ import fs from "fs";
 import { createMulmoScript } from "./scripting";
 import {
   mulmoActionRunner,
-  mulmoGenerateImage,
-  mulmoGenerateAudio,
+  mulmoGenerateBeatImage,
+  mulmoGenerateBeatAudio,
   mulmoReferenceImage,
   mulmoTranslateBeat,
   mulmoTranslate,
@@ -138,10 +138,10 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
     switch (method) {
       case "mulmoActionRunner":
         return await mulmoActionRunner(args[0], args[1], webContents);
-      case "mulmoImageGenerate":
-        return await mulmoGenerateImage(args[0], args[1], args[2], webContents);
-      case "mulmoAudioGenerate":
-        return await mulmoGenerateAudio(args[0], args[1], webContents);
+      case "mulmoGenerateBeatImage":
+        return await mulmoGenerateBeatImage(args[0], args[1], args[2], webContents);
+      case "mulmoGenerateBeatAudio":
+        return await mulmoGenerateBeatAudio(args[0], args[1], webContents);
       case "mulmoTranslateBeat":
         return await mulmoTranslateBeat(args[0], args[1], args[2], webContents);
       case "mulmoTranslate":

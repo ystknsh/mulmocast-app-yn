@@ -110,7 +110,7 @@ const justSaveAndPushToHistory = () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", props.projectId, index), {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.audio.successMessage"),
     errorMessage: t("notify.audio.errorMessage"),

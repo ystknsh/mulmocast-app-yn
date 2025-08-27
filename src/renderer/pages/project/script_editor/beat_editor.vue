@@ -458,7 +458,7 @@ const generateImageOnlyMovie = () => {
 };
 
 const generateLipSyncMovie = async () => {
-  await window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, props.index);
+  await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);
   emit("generateImage", props.index, "lipSync");
 };
 

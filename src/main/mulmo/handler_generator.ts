@@ -103,7 +103,7 @@ const beatAudioPath = (context: MulmoStudioContext, beat) => {
   return getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
 };
 
-export const mulmoGenerateImage = async (
+export const mulmoGenerateBeatImage = async (
   projectId: string,
   index: number,
   target: string,
@@ -186,7 +186,7 @@ export const mulmoGenerateImage = async (
   }
 };
 
-export const mulmoGenerateAudio = async (projectId: string, index: number, webContents: WebContents) => {
+export const mulmoGenerateBeatAudio = async (projectId: string, index: number, webContents: WebContents) => {
   const settings = await loadSettings();
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {

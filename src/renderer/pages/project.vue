@@ -406,7 +406,7 @@ const openProjectFolder = async () => {
 
 const generateImage = async (index: number, target: string) => {
   // await saveMulmoScript();
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoImageGenerate", projectId.value, index, target), {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatImage", projectId.value, index, target), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),
     errorMessage: t("notify.image.errorMessage"),
