@@ -15,13 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { computed } from "vue";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import { Languages } from "lucide-vue-next";
-import { LANGUAGES } from "../../../shared/constants";
 import { useMulmoGlobalStore } from "@/store";
 
-import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
 const globalStore = useMulmoGlobalStore();
