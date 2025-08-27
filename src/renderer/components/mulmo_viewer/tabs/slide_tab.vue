@@ -99,7 +99,6 @@ const handleAudioEnded = async () => {
     audioRef.value.play();
   }
 };
-const handleCanPlay = () => {};
 
 watch(
   () => props.projectId,

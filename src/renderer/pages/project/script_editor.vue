@@ -250,7 +250,6 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import YAML from "yaml";
-import { isNull } from "graphai";
 import {
   MulmoPresentationStyleMethods,
   mulmoScriptSchema,

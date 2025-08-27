@@ -339,7 +339,7 @@ onUnmounted(() => {
 });
 
 // mulmoScript
-// for only header
+// for only chat
 const handleUpdateMulmoScriptWithNotify = (script: MulmoScript) => {
   handleUpdateMulmoScriptAndPushToHistory(script);
   notifySuccess(t("settings.notifications.createSuccess"));
