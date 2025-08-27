@@ -64,7 +64,7 @@ const referenceKeyDirty = ref(false);
 const validateKey = computed(() => {
   return (
     referenceKey.value !== "" &&
-    /^[a-z0-9]+$/.test(referenceKey.value) &&
+    /^[A-Za-z0-9]+$/.test(referenceKey.value) &&
     !props.referenceKeys.includes(referenceKey.value)
   );
 });
