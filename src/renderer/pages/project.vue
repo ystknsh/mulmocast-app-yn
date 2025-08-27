@@ -185,6 +185,7 @@
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
                   :mulmoMultiLinguals="mulmoMultiLinguals"
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
+                  @updateMultiLingual="updateMultiLingual"
                 />
               </CardContent>
             </Card>

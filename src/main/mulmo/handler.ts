@@ -8,6 +8,7 @@ import {
   setFfmpegPath,
   setFfprobePath,
   getImageRefs,
+  beatId,
   MulmoStudioContextMethods,
   getMultiLingual,
   getOutputMultilingualFilePathAndMkdir,
@@ -28,6 +29,7 @@ import {
   mulmoGenerateAudio,
   mulmoReferenceImage,
   mulmoTranslateBeat,
+  mulmoTranslate,
 } from "./handler_generator";
 import {
   mulmoAudioFiles,
@@ -105,12 +107,6 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
   return buffer.buffer;
 };
 
-// from cli
-const beatId = (id: string | undefined, index: number) => {
-  const key = id ?? `__index__${index}`;
-  return key;
-};
-
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
@@ -148,6 +144,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoGenerateAudio(args[0], args[1], webContents);
       case "mulmoTranslateBeat":
         return await mulmoTranslateBeat(args[0], args[1], args[2], webContents);
+      case "mulmoTranslate":
+        return await mulmoTranslate(args[0], args[1], webContents);
       case "downloadFile":
         return await mulmoDownload(args[0], args[1]);
       case "mediaFilePath":
