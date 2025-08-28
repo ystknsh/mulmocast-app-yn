@@ -88,7 +88,7 @@
       :title="deleteDialog.title"
       :description="deleteDialog.description"
       :loading="deleteDialog.loading"
-      :confirm-label="t('ui.actions.delete')"
+      confirm-label-key="ui.actions.delete"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />

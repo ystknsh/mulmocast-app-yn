@@ -50,8 +50,8 @@ interface Props {
   title: string;
   description?: string;
   icon?: IconType | null;
-  confirmLabel?: string;
-  cancelLabel?: string;
+  confirmLabelKey?: string;
+  cancelLabelKey?: string;
   confirmVariant?: ButtonVariant;
   cancelVariant?: ButtonVariant;
   loading?: boolean;
@@ -67,8 +67,8 @@ const { t } = useI18n();
 
 const props = withDefaults(defineProps<Props>(), {
   icon: "warning",
-  confirmLabel: "",
-  cancelLabel: "",
+  confirmLabelKey: "",
+  cancelLabelKey: "",
   confirmVariant: "destructive",
   cancelVariant: "outline",
   loading: false,
@@ -76,8 +76,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const confirmLabel = computed(() => props.confirmLabel || t("ui.actions.ok"));
-const cancelLabel = computed(() => props.cancelLabel || t("ui.actions.cancel"));
+const confirmLabel = computed(() => props.confirmLabelKey ? t(props.confirmLabelKey) : t("ui.actions.ok"));
+const cancelLabel = computed(() => props.cancelLabelKey ? t(props.cancelLabelKey) : t("ui.actions.cancel"));
 
 // Map icon types to their corresponding Lucide Vue components
 const iconComponent = computed(() => {
