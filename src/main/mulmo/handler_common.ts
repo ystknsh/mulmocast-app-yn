@@ -7,7 +7,7 @@ export const getContext = async (projectId: string, targetLang?: string): Promis
   const projectPath = getProjectPath(projectId);
 
   const argv = {
-    // v: true,
+    v: true,
     b: projectPath,
     o: path.join(projectPath, "output"),
     file: SCRIPT_FILE_NAME,
