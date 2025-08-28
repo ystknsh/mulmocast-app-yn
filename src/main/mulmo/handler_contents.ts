@@ -19,7 +19,7 @@ import { getContext } from "./handler_common";
 
 // audio
 const beatAudio = (context: MulmoStudioContext) => {
-  return (beat, option?: any) => {
+  return (beat, option?: { lang: string; multiLingual: MulmoStudioMultiLingual }) => {
     try {
       const { lang, multiLingual } = option ?? {};
       // const { text } = beat; // TODO: multiLingual
