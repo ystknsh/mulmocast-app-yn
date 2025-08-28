@@ -121,7 +121,7 @@
                     :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
                     :imageFiles="imageFiles"
                     :movieFiles="movieFiles"
-                    :audioFiles="audioFiles"
+                    :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? 'en'] ?? {}"
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="isValidScriptData"
@@ -198,7 +198,6 @@
               </CardContent>
             </Card>
           </div>
-
           <!-- Right Column - Collapsed State -->
           <div v-if="!isRightColumnOpen" class="border-border bg-muted hidden h-full w-[48px] border-l lg:flex">
             <button
@@ -305,15 +304,15 @@ const { audioFiles, downloadAudioFiles, resetAudioData } = useAudioFiles();
 
 // Load project data on mount
 onMounted(async () => {
-  downloadAudioFiles(projectId.value);
-  downloadImageFiles(projectId.value);
-
   try {
     updateMultiLingual();
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
     data.beats.map(setRandomBeatId);
     mulmoScriptHistoryStore.initMulmoScript(data);
+    // mulmoScriptHistoryStore.lang
+    downloadAudioFiles(projectId.value, data.lang ?? "en");
+    downloadImageFiles(projectId.value);
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
@@ -398,11 +397,11 @@ const formatAndPushHistoryMulmoScript = () => {
   console.log(data);
 };
 
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value ?? "");
-
 const openProjectFolder = async () => {
   await projectApi.openProjectFolder(projectId.value);
 };
+
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value ?? "");
 
 const generateImage = async (index: number, target: string) => {
   // await saveMulmoScript();
@@ -444,7 +443,7 @@ watch(
         downloadImageFiles(projectId.value);
       }
       if (mulmoEvent.sessionType === "audio") {
-        downloadAudioFiles(projectId.value);
+        downloadAudioFiles(projectId.value, mulmoScriptHistoryStore.lang);
       }
       if (mulmoEvent.sessionType === "pdf") {
         // downloadAudioFiles();
