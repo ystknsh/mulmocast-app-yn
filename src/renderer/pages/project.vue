@@ -401,6 +401,8 @@ const openProjectFolder = async () => {
   await projectApi.openProjectFolder(projectId.value);
 };
 
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value ?? "");
+
 const generateImage = async (index: number, target: string) => {
   // await saveMulmoScript();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatImage", projectId.value, index, target), {
