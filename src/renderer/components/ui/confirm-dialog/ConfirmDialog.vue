@@ -76,8 +76,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const confirmLabel = computed(() => props.confirmLabelKey ? t(props.confirmLabelKey) : t("ui.actions.ok"));
-const cancelLabel = computed(() => props.cancelLabelKey ? t(props.cancelLabelKey) : t("ui.actions.cancel"));
+const confirmLabel = computed(() => (props.confirmLabelKey ? t(props.confirmLabelKey) : t("ui.actions.ok")));
+const cancelLabel = computed(() => (props.cancelLabelKey ? t(props.cancelLabelKey) : t("ui.actions.cancel")));
 
 // Map icon types to their corresponding Lucide Vue components
 const iconComponent = computed(() => {
