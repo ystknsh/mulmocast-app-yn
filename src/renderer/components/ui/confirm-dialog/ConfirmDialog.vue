@@ -19,11 +19,11 @@
 
       <DialogFooter class="flex-row justify-end gap-3 sm:gap-3">
         <Button :variant="cancelVariant" @click="handleCancel" :disabled="loading">
-          {{ cancelLabelKey ? t(cancelLabelKey) : t("ui.actions.cancel") }}
+          {{ t(cancelLabelKey ? cancelLabelKey : "ui.actions.cancel") }}
         </Button>
         <Button :variant="confirmVariant" @click="handleConfirm" :disabled="loading">
           <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
-          {{ confirmLabelKey ? t(confirmLabelKey) : t("ui.actions.ok") }}
+          {{ t(confirmLabelKey ? confirmLabelKey : "ui.actions.ok") }}
         </Button>
       </DialogFooter>
     </DialogContent>
