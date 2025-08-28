@@ -40,7 +40,6 @@
               ref="audioRef"
             />
           </div>
-
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
         {{
@@ -111,17 +110,25 @@ const decrease = () => {
 const handleAudioEnded = async () => {
   if (increase()) {
     await sleep(500);
-    audioRef.value.play();
+    if (audioRef.value) {
+      audioRef.value.play();
+    }
   }
 };
 const generateLocalize = async () => {
-  await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
-  emit("updateMultiLingual");
   // translate lang
-  // generate audio
+  await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
   // get multiLingual
+  emit("updateMultiLingual");
+  // generate audio
+  await window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["audio"], currentLanguage.value);
+
+  downloadAudioFiles(props.projectId, currentLanguage.value);
   // get audio
 };
+watch(currentLanguage, (v) => {
+  downloadAudioFiles(props.projectId, v);
+});
 
 watch(
   () => props.projectId,

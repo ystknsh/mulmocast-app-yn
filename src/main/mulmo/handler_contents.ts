@@ -6,6 +6,9 @@ import {
   getReferenceImagePath,
   getMultiLingual,
   getOutputMultilingualFilePathAndMkdir,
+  localizedText,
+  beatId,
+  listLocalizedAudioPaths,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
 } from "mulmocast";
@@ -16,10 +19,14 @@ import { getContext } from "./handler_common";
 
 // audio
 const beatAudio = (context: MulmoStudioContext) => {
-  return (beat) => {
+  return (beat, option?: { lang: string; multiLingual: MulmoStudioMultiLingual }) => {
     try {
-      const { text } = beat; // TODO: multiLingual
-      const fileName = getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
+      const { lang, multiLingual } = option ?? {};
+      // const { text } = beat; // TODO: multiLingual
+      const text = lang && multiLingual ? localizedText(beat, multiLingual, lang) : beat.text;
+
+      const fileName = getBeatAudioPath(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
+      console.log(fileName);
       if (fs.existsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
@@ -32,11 +39,17 @@ const beatAudio = (context: MulmoStudioContext) => {
   };
 };
 
-export const mulmoAudioFiles = async (projectId: string) => {
+export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
   try {
-    const context = await getContext(projectId);
-    return context.studio.script.beats.reduce((tmp, beat) => {
-      tmp[beat.id] = beatAudio(context)(beat);
+    const context = await getContext(projectId, lang);
+    const audios = await listLocalizedAudioPaths(context);
+    return context.studio.script.beats.reduce((tmp, beat, index) => {
+      const fileName = audios[index];
+      // console.log(fileName);
+      if (fs.existsSync(fileName)) {
+        const buffer = fs.readFileSync(fileName);
+        tmp[beatId(beat?.id, index)] = buffer.buffer;
+      }
       return tmp;
     }, {});
   } catch (error) {

@@ -137,7 +137,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
   try {
     switch (method) {
       case "mulmoActionRunner":
-        return await mulmoActionRunner(args[0], args[1], webContents);
+        return await mulmoActionRunner(args[0], args[1], args[2], webContents);
       case "mulmoGenerateBeatImage":
         return await mulmoGenerateBeatImage(args[0], args[1], args[2], webContents);
       case "mulmoGenerateBeatAudio":
@@ -151,7 +151,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "mediaFilePath":
         return await mediaFilePath(args[0], args[1]);
       case "mulmoAudioFiles":
-        return await mulmoAudioFiles(args[0]);
+        return await mulmoAudioFiles(args[0], args[1]);
       case "mulmoAudioFile":
         return await mulmoAudioFile(args[0], args[1]);
       case "mulmoImageFiles":
