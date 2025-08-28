@@ -72,6 +72,7 @@ const lang = {
       generateThing: "{thing}を生成",
       fetch: "取得",
       cancel: "キャンセル",
+      ok: "OK",
       runningThing: "{thing}を実行中",
 
       // Media actions (placeholder pairs)
@@ -168,6 +169,11 @@ const lang = {
       list: "リスト",
       card: "カード",
       badge: "バッジ",
+    },
+
+    // Common messages
+    messages: {
+      cannotUndo: "この操作は元に戻せません。",
     },
 
     // Validation messages

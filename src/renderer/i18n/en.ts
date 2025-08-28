@@ -72,6 +72,7 @@ const lang = {
       generateThing: "Generate {thing}",
       fetch: "Fetch",
       cancel: "Cancel",
+      ok: "OK",
       runningThing: "{thing} is running",
 
       // Media actions (placeholder pairs)
@@ -168,6 +169,11 @@ const lang = {
       list: "List",
       card: "Card",
       badge: "Badge",
+    },
+
+    // Common messages
+    messages: {
+      cannotUndo: "This action cannot be undone.",
     },
 
     // Validation messages
