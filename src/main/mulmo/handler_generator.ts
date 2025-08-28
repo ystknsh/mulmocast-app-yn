@@ -23,10 +23,15 @@ import { z } from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
 
-export const mulmoActionRunner = async (projectId: string, actionName: string | string[], webContents: WebContents) => {
+export const mulmoActionRunner = async (
+  projectId: string,
+  actionName: string | string[],
+  targetLang: string | undefined,
+  webContents: WebContents,
+) => {
   const settings = await loadSettings();
   try {
-    const context = await getContext(projectId);
+    const context = await getContext(projectId, targetLang);
     const graphAICallbacks = [
       (log: TransactionLog) => {
         if (webContents) {
