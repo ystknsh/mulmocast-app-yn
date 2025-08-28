@@ -7,9 +7,9 @@
             <component :is="iconComponent" :class="iconClass" />
           </div>
           <div class="flex-1">
-            <DialogTitle class="text-left">{{ t(titleKey, titleParams) }}</DialogTitle>
-            <DialogDescription v-if="descriptionKey" class="mt-2 text-left">
-              {{ t(descriptionKey) }}
+            <DialogTitle class="text-left">{{ t(dialogTitleKey, dialogTitleParams) }}</DialogTitle>
+            <DialogDescription v-if="dialogDescriptionKey" class="mt-2 text-left">
+              {{ t(dialogDescriptionKey) }}
             </DialogDescription>
           </div>
         </div>
@@ -47,9 +47,9 @@ type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghos
 
 interface Props {
   open: boolean;
-  titleKey: string;
-  titleParams?: Record<string, any>;
-  descriptionKey?: string;
+  dialogTitleKey: string;
+  dialogTitleParams?: Record<string, any>;
+  dialogDescriptionKey?: string;
   icon?: IconType | null;
   confirmLabelKey?: string;
   cancelLabelKey?: string;
