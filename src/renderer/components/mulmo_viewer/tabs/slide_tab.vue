@@ -36,8 +36,8 @@
               class="max-h-64 object-contain"
             />
             <audio
-              :src="audioFiles[currentBeat?.id]"
-              v-if="!!audioFiles[currentBeat?.id]"
+              :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
+              v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
               controls
               class="mx-auto mt-2"
               @ended="handleAudioEnded"
@@ -120,6 +120,7 @@ const handleAudioEnded = async () => {
     }
   }
 };
+
 const generateLocalize = async () => {
   // translate lang
   await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
@@ -127,9 +128,8 @@ const generateLocalize = async () => {
   emit("updateMultiLingual");
   // generate audio
   await window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["audio"], currentLanguage.value);
-
-  downloadAudioFiles(props.projectId, currentLanguage.value);
   // get audio
+  downloadAudioFiles(props.projectId, currentLanguage.value);
 };
 watch(currentLanguage, (v) => {
   downloadAudioFiles(props.projectId, v);
@@ -140,7 +140,7 @@ watch(
   (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
       downloadImageFiles(newProjectId);
-      downloadAudioFiles(newProjectId);
+      downloadAudioFiles(newProjectId, currentLanguage.value);
     }
   },
   { immediate: true },

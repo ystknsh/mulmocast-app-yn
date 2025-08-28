@@ -65,6 +65,10 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     }
   };
 
+  const lang = computed(() => {
+    return currentMulmoScript.value?.lang ?? "en";
+  });
+
   return {
     currentMulmoScript,
     initMulmoScript,
@@ -75,5 +79,6 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     redoable,
     redo,
     resetMulmoScript,
+    lang,
   };
 });

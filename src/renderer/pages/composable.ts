@@ -59,16 +59,16 @@ export const useImageFiles = () => {
 };
 
 export const useAudioFiles = () => {
-  const audioFiles = ref<Record<string, string | null>>({});
+  const audioFiles = ref<Record<string, Record<string, string | null>>>({});
 
-  const downloadAudioFiles = async (projectId: string, lang?: string) => {
+  const downloadAudioFiles = async (projectId: string, lang: string) => {
     console.log("audioFiles");
     const res = (await window.electronAPI.mulmoHandler(
       "mulmoAudioFiles",
       projectId,
       lang,
     )) as Uint8Array<ArrayBuffer>[];
-    audioFiles.value = Object.entries(res).reduce((tmp: Record<string, string | null>, [k, v]) => {
+    audioFiles.value[lang] = Object.entries(res).reduce((tmp: Record<string, string | null>, [k, v]) => {
       if (v) {
         tmp[k] = bufferToUrl(v, "audio/mp3");
       }
