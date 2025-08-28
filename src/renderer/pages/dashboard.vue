@@ -85,8 +85,9 @@
     <!-- Delete Confirmation Dialog -->
     <ConfirmDialog
       v-model:open="deleteDialog.open"
-      :title="deleteDialog.title"
-      :description="deleteDialog.description"
+      :title-key="deleteDialog.titleKey"
+      :title-params="deleteDialog.titleParams"
+      :description-key="deleteDialog.descriptionKey"
       :loading="deleteDialog.loading"
       confirm-label-key="ui.actions.delete"
       @confirm="confirmDelete"
@@ -122,8 +123,9 @@ const sortBy = ref<typeof SORT_BY.updatedAt | typeof SORT_BY.title>(SORT_BY.upda
 // Delete dialog state
 const deleteDialog = ref({
   open: false,
-  title: "",
-  description: "",
+  titleKey: "",
+  titleParams: {},
+  descriptionKey: "",
   loading: false,
   projectToDelete: null as Project | null,
 });
@@ -194,8 +196,9 @@ const handleCreateProject = async () => {
 const handleDeleteProject = (project: Project) => {
   deleteDialog.value = {
     open: true,
-    title: t("dashboard.confirmDelete", { title: project?.script?.title || t("project.newProject.defaultTitle") }),
-    description: t("ui.messages.cannotUndo"),
+    titleKey: "dashboard.confirmDelete",
+    titleParams: { title: project?.script?.title || t("project.newProject.defaultTitle") },
+    descriptionKey: "ui.messages.cannotUndo",
     loading: false,
     projectToDelete: project,
   };
@@ -220,8 +223,9 @@ const confirmDelete = async () => {
 const cancelDelete = () => {
   deleteDialog.value = {
     open: false,
-    title: "",
-    description: "",
+    titleKey: "",
+    titleParams: {},
+    descriptionKey: "",
     loading: false,
     projectToDelete: null,
   };

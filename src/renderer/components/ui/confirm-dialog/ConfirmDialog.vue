@@ -7,9 +7,9 @@
             <component :is="iconComponent" :class="iconClass" />
           </div>
           <div class="flex-1">
-            <DialogTitle class="text-left">{{ title }}</DialogTitle>
-            <DialogDescription v-if="description" class="mt-2 text-left">
-              {{ description }}
+            <DialogTitle class="text-left">{{ t(titleKey, titleParams) }}</DialogTitle>
+            <DialogDescription v-if="descriptionKey" class="mt-2 text-left">
+              {{ t(descriptionKey) }}
             </DialogDescription>
           </div>
         </div>
@@ -17,11 +17,11 @@
 
       <DialogFooter class="flex-row justify-end gap-3 sm:gap-3">
         <Button :variant="cancelVariant" @click="handleCancel" :disabled="loading">
-          {{ cancelLabel }}
+          {{ cancelLabelKey ? t(cancelLabelKey) : t("ui.actions.cancel") }}
         </Button>
         <Button :variant="confirmVariant" @click="handleConfirm" :disabled="loading">
           <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
-          {{ confirmLabel }}
+          {{ confirmLabelKey ? t(confirmLabelKey) : t("ui.actions.ok") }}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -47,8 +47,9 @@ type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghos
 
 interface Props {
   open: boolean;
-  title: string;
-  description?: string;
+  titleKey: string;
+  titleParams?: Record<string, any>;
+  descriptionKey?: string;
   icon?: IconType | null;
   confirmLabelKey?: string;
   cancelLabelKey?: string;
@@ -76,8 +77,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const confirmLabel = computed(() => (props.confirmLabelKey ? t(props.confirmLabelKey) : t("ui.actions.ok")));
-const cancelLabel = computed(() => (props.cancelLabelKey ? t(props.cancelLabelKey) : t("ui.actions.cancel")));
 
 // Map icon types to their corresponding Lucide Vue components
 const iconComponent = computed(() => {
