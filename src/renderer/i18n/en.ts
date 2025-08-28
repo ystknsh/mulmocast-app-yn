@@ -408,6 +408,7 @@ const lang = {
         start: "Start Slideshow",
         export: "Export Images",
         details: "{current} / {pages} slides",
+        autoPlay: "Auto Play",
       },
     },
     chat: {
