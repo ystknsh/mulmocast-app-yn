@@ -196,9 +196,10 @@ const handleCreateProject = async () => {
 const handleDeleteProject = (project: Project) => {
   deleteDialog.value = {
     open: true,
-    dialogTitleKey: "dashboard.confirmDelete",
+    // "dashboard.confirmDelete" expects {title} param from dialogTitleParams
+    dialogTitleKey: "dashboard.confirmDelete", // I18n key. This key needs param
     dialogTitleParams: { title: project?.script?.title || t("project.newProject.defaultTitle") },
-    dialogDescriptionKey: "ui.messages.cannotUndo",
+    dialogDescriptionKey: "ui.messages.cannotUndo", // I18n key. No params needed
     loading: false,
     projectToDelete: project,
   };
