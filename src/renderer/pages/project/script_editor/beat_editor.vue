@@ -66,7 +66,9 @@
             <Textarea
               :placeholder="t('beat.textSlide.placeholder')"
               :model-value="beat.image?.slide?.bullets?.join('\n')"
-              @update:model-value="(value) => update('image.slide.bullets', value === '' ? [] : String(value).split('\n'))"
+              @update:model-value="
+                (value) => update('image.slide.bullets', value === '' ? [] : String(value).split('\n'))
+              "
               @blur="justSaveAndPushToHistory"
               rows="4"
             />

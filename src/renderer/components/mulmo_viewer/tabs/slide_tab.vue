@@ -46,10 +46,7 @@
           </div>
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
-        {{
-          mulmoMultiLinguals?.[beatId(currentBeat?.id, currentPage)]?.["multiLingualTexts"]?.[currentLanguage]?.text ||
-          currentBeat?.text
-        }}
+        {{ mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text || currentBeat?.text }}
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
@@ -98,6 +95,9 @@ const beats = computed(() => {
 });
 const currentBeat = computed(() => {
   return beats.value[currentPage.value];
+});
+const currentBeatId = computed(() => {
+  return beatId(currentBeat.value?.id, currentPage.value);
 });
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
