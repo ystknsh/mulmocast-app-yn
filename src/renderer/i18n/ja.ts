@@ -407,6 +407,7 @@ const lang = {
         start: "スライドショーの開始",
         export: "スライドをエクスポート",
         details: "{current} / {pages} スライド",
+        autoPlay: "自動再生",
       },
     },
     chat: {

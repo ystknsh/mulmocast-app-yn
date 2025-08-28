@@ -2,6 +2,10 @@
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
       <div class="mb-2 flex items-center justify-center gap-2">
+        <label>
+          <Checkbox v-model="autoPlay" />
+          {{ t("project.productTabs.slide.autoPlay") }}
+        </label>
         <SelectLanguage v-model="currentLanguage" />
         <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
       </div>
@@ -61,7 +65,7 @@ import { useI18n } from "vue-i18n";
 import { FileImage } from "lucide-vue-next";
 import { sleep } from "graphai";
 
-import { Button } from "@/components/ui/button";
+import { Button, Checkbox } from "@/components/ui";
 import { TabsContent } from "@/components/ui/tabs";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
@@ -82,6 +86,7 @@ const emit = defineEmits(["updateMultiLingual"]);
 
 const currentPage = ref(0);
 const audioRef = ref();
+const autoPlay = ref(true);
 
 const currentLanguage = ref(props.project?.script?.lang ?? "en");
 
@@ -108,7 +113,7 @@ const decrease = () => {
 };
 
 const handleAudioEnded = async () => {
-  if (increase()) {
+  if (autoPlay.value && increase()) {
     await sleep(500);
     if (audioRef.value) {
       audioRef.value.play();
