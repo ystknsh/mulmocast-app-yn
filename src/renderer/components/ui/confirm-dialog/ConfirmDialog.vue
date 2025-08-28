@@ -77,7 +77,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-
 // Map icon types to their corresponding Lucide Vue components
 const iconComponent = computed(() => {
   const iconMap = {
