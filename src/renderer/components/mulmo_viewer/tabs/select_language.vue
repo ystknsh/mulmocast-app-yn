@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import { Languages } from "lucide-vue-next";
 import { useMulmoGlobalStore } from "@/store";
