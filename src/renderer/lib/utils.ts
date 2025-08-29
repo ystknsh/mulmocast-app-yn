@@ -45,9 +45,3 @@ export const bufferToUrl = (buffer: Uint8Array<ArrayBuffer>, mimeType: string) =
   const url = URL.createObjectURL(blob);
   return url;
 };
-
-// from cli
-export const beatId = (id: string | undefined, index: number) => {
-  const key = id ?? `__index__${index}`;
-  return key;
-};

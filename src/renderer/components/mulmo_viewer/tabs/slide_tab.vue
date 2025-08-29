@@ -60,17 +60,19 @@
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileImage } from "lucide-vue-next";
+import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
 import { Button, Checkbox } from "@/components/ui";
 import { TabsContent } from "@/components/ui/tabs";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
+import { useMulmoGlobalStore } from "@/store";
 import type { Project } from "@/lib/project_api";
 import SelectLanguage from "./select_language.vue";
-import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 
 const { t } = useI18n();
+const globalStore = useMulmoGlobalStore();
 
 interface Props {
   projectId: string;
@@ -85,7 +87,8 @@ const currentPage = ref(0);
 const audioRef = ref();
 const autoPlay = ref(true);
 
-const currentLanguage = ref(props.project?.script?.lang ?? "en");
+const lang = props.project?.script?.lang ?? "en";
+const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
 const { audioFiles, downloadAudioFiles } = useAudioFiles();
