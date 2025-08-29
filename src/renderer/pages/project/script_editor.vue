@@ -253,6 +253,7 @@ import YAML from "yaml";
 import {
   MulmoPresentationStyleMethods,
   mulmoScriptSchema,
+  beatId,
   type MulmoScript,
   type MulmoBeat,
   type MulmoPresentationStyle,
@@ -274,7 +275,7 @@ import Reference from "./script_editor/reference.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { removeEmptyValues, beatId } from "@/lib/utils";
+import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 

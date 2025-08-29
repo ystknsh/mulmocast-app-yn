@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
 export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
@@ -25,6 +25,14 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     mulmoViewerProjectId.value = projectId;
   };
 
+  const useLanguages = computed(() => {
+    return Object.keys(settings.value?.USE_LANGUAGES)
+      .map((lang) => {
+        return settings.value?.USE_LANGUAGES[lang] ? lang : null;
+      })
+      .filter((v) => v);
+  });
+
   return {
     settings,
     updateSettings,
@@ -34,5 +42,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
 
     mulmoViewerProjectId,
     setMulmoViewerProjectId,
+
+    useLanguages,
   };
 });
