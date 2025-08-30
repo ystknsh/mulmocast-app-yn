@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "NODE_ENV=development electron-forge start",
+    "start": "npx electron-rebuild -f && NODE_ENV=development electron-forge start",
     "dev": "NODE_ENV=development vite --config vite.renderer.config.ts",
     "package": "npx puppeteer browsers install chrome && electron-forge package",
     "make:local": "bash -c 'set -a && source .env && set +a && npx puppeteer browsers install chrome && electron-forge make'",
