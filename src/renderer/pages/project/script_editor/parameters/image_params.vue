@@ -5,10 +5,7 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
-        <Select
-          :model-value="imageProvider"
-          @update:model-value="handleProviderChange"
-        >
+        <Select :model-value="imageProvider" @update:model-value="handleProviderChange">
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -158,7 +155,7 @@ const handleProviderChange = (value: Text2ImageProvider) => {
 };
 
 const imageProvider = computed(() => {
-  return props.imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider
+  return props.imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider;
 });
 
 const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
