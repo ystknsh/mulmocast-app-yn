@@ -1,3 +1,86 @@
+# 追加レポート（今回の修正と運用方針）
+
+## サマリ
+- パッケージ起動時の `Cannot find module 'puppeteer'` および間接依存（例: `semver`）解決失敗を、以下の最小構成で解消。
+  - Forge で `puppeteer/.local-chromium/**` を asar 外に展開（実行可能化）。
+  - main バンドルの external（`puppeteer`, `puppeteer-core`, `jsdom`）を `.vite/build/node_modules` に再帰コピーして app.asar 内へ同梱。
+  - `puppeteer` をトップレベルの prod 依存に追加し、パッケージ前に Chromium を導入。
+  - CI では Puppeteer のキャッシュを使い Chromium 導入を安定化・高速化。
+- スプラッシュ画像（`images/mulmocast_credit.png`）をビルド時に `.vite/build/images/` へコピーし、本番でも表示されるように修正。
+- 開発起動（`yarn start`）は、必要時のみネイティブ拡張を再ビルドする運用に変更し、通常は従来の速度を維持。
+
+## 変更点（事実ベース）
+- `forge.config.ts`
+  - `packagerConfig.asar` をオブジェクト化し、`"**/node_modules/puppeteer/.local-chromium/**"` を unpack 対象に設定。
+    - forge.config.ts:12
+
+- `package.json`
+  - 依存に `"puppeteer": "^24.17.0"` を追加（prod）。
+    - package.json:76
+- スクリプトを以下に更新：
+  - `start`: `npx electron-rebuild && NODE_ENV=development electron-forge start`（非強制リビルド）
+  - `rebuild:native`: `npx electron-rebuild -f`（必要時のみフルリビルド用）
+  - `package`: `npx puppeteer browsers install chrome && electron-forge package`
+  - `make:local`: `.env` 読み込み後に `npx puppeteer browsers install chrome && electron-forge make`
+  - `make:ci`: `npx puppeteer browsers install chrome && electron-forge make`
+
+### スクリプト更新の意図（説明）
+
+- 事前準備: Puppeteer で Chromium を先にインストールしてから Forge を実行する運用に変更。`npx puppeteer browsers install chrome` が `.local-chromium` を用意し、パッケージ時に asar.unpacked へ展開され実行可能になります（キャッシュがあれば短時間で完了）。
+- 開発起動: `electron-rebuild` を先に実行してネイティブ拡張のABIを整合（非強制）。依存更新直後のみ時間がかかり、以後は高速に起動します。
+- 手動フルリビルド: 必要時だけ `rebuild:native`（強制）を実行できるよう分離。
+
+スクリプトの意図
+
+- start: `npx electron-rebuild && NODE_ENV=development electron-forge start`
+  - 起動前に非強制のネイティブ再ビルドで整合を確保（通常は高速）。
+- rebuild:native: `npx electron-rebuild -f`
+  - 強制フル再ビルドが必要なときのみ手動で実行。
+- package: `npx puppeteer browsers install chrome && electron-forge package`
+  - 先に Chromium を導入してからパッケージ化（`.local-chromium` を同梱・展開）。
+- make:local: `.env` 読み込み後に `npx puppeteer browsers install chrome && electron-forge make`
+  - ローカル署名/公証向け。環境変数を読み込んだ上で Chromium を導入→ビルド。
+- make:ci: `npx puppeteer browsers install chrome && electron-forge make`
+  - CI でも同様に先に Chromium を導入してからビルド（キャッシュ併用で高速化）。
+
+- `vite.main.config.ts`
+  - build.rollupOptions.external に `electron`, `jsdom`, `puppeteer`, `puppeteer-core` を指定（main の外部化を維持）。
+  - ポストビルドで以下をコピー：
+    - `ffmpeg/ffprobe` を `.vite/build/ffmpeg` へ。
+    - `splash.html` を `.vite/build/` へ、`images/mulmocast_credit.png` を `.vite/build/images/` へ。
+    - external 指定したパッケージ（`puppeteer`, `puppeteer-core`, `jsdom`）とその依存・任意依存を再帰的に `.vite/build/node_modules/` へコピー。
+
+- CI（GitHub Actions）
+  - `.github/workflows/ci-mac.yml` / `.github/workflows/ci-ms.yml` に Puppeteer キャッシュ復元（`PUPPETEER_CACHE_DIR`）と `npx puppeteer browsers install chrome` を追加。
+
+## 補足（試行錯誤の記録）
+- 一時的に `vite build --config vite.main.config.ts` 等で main/preload を手動ビルドしたところ、Node 組み込みモジュールの外部化がブラウザ互換扱いになり、`url.fileURLToPath` などでビルド失敗。現在は Forge の VitePlugin にビルドを委譲する構成に戻して解消済み。
+
+## 今後の注意点・運用指針
+- external の基本運用
+  - main（Node/Electron 側）で `puppeteer`/`puppeteer-core`/`jsdom` を external 指定する場合は、実行時解決先を app.asar 内に用意する必要あり。
+    - 本プロジェクトでは、ポストビルドで `.vite/build/node_modules/**` に再帰コピーして app.asar に含める。
+  - `puppeteer` を使うなら `.local-chromium/**` は asar 外へ（`forge.config.ts` の `asar.unpack`）。
+
+- Chromium 導入とサイズ
+  - パッケージ前に `npx puppeteer browsers install chrome` を実行して `.local-chromium` を生成（ローカル・CI ともに必要）。
+  - CI は `PUPPETEER_CACHE_DIR` を設定して `actions/cache` で高速化。
+
+- renderer での禁止事項
+  - `puppeteer`/`jsdom` を renderer から import しない（ブラウザターゲットで解決不可・サイズ肥大）。IPC 経由で main に委譲。
+
+- 起動速度とネイティブ拡張
+  - 開発時の `start` は非強制の `electron-rebuild` にし、依存更新直後のみ時間がかかる運用にする。
+  - 毎回のフルリビルドが必要な場合のみ `yarn rebuild:native` を使用。
+  - さらなる高速化が必要なら、`bufferutil`/`utf-8-validate`（任意依存）を外す選択肢も検討。
+
+- 画像や追加アセット
+  - `splash.html` で相対参照する画像は、ビルド時に `.vite/build/` 配下へコピーする（本件は `images/mulmocast_credit.png` を `.vite/build/images/` へ）。
+
+- Forge と Vite の責務分担
+  - Forge の VitePlugin が main/preload/renderer のビルドと `.vite/build` 生成を担当する前提を維持。
+  - main/preload の「手動 Vite ビルド」はトラブルの元になりやすいため避ける。
+
 # Vite + Vue + Electron での external 指定と puppeteer/puppeteer-core/jsdom 取り扱いまとめ
 
 ## 冒頭ポイント（先に結論）
