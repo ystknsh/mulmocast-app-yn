@@ -46,7 +46,12 @@
           </div>
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
-        {{ isScriptLang ? currentBeat?.text : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ?? t("ui.common.noLang"))}}
+        {{
+          isScriptLang
+            ? currentBeat?.text
+            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+              t("ui.common.noLang"))
+        }}
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
