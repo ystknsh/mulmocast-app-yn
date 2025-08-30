@@ -67,7 +67,7 @@
                   :key="voice.id"
                   :value="voice.id"
                 >
-                  {{ t(["voiceList", speaker?.provider || defaultSpeechProvider, voice.key].join(".")) }}
+                  {{ t(["voiceList", speaker?.provider || defaultSpeechProvider, voice.key ?? voice.id].join(".")) }}
                 </SelectItem>
               </SelectContent>
             </Select>
