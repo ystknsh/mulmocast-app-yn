@@ -297,9 +297,8 @@ export const VOICE_LISTS = {
     { id: "8EkOjt4xTPGMclNlh1pk", name: "Morioki", key: "8EkOjt4xTPGMclNlh1pk" },
     { id: "j210dv0vWm7fCknyQpbA", name: "Hinata", key: "j210dv0vWm7fCknyQpbA" },
     { id: "QEj0heL4nQHjaGrihlr0", name: "Steven Casteel", key: "QEj0heL4nQHjaGrihlr0" },
-    { id: "l39JidvAMB3s85XyNSRd", name: "Sayuri", key: "l39JidvAMB3s85XyNSRd" }
+    { id: "l39JidvAMB3s85XyNSRd", name: "Sayuri", key: "l39JidvAMB3s85XyNSRd" },
   ],
-  
 } as const;
 
 export const SCRIPT_EDITOR_TABS = {
