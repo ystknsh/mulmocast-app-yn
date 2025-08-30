@@ -60,6 +60,8 @@ const lang = {
       by: "×",
       decrease: "-",
       increase: "+",
+
+      noLang: "翻訳されていません",
     },
 
     // Common actions (placeholder pairs)
