@@ -822,7 +822,6 @@ const lang = {
       ichiha_tsubaki: "一葉 ツバキ",
       shiba_soma: "柴 颯真",
     },
-
     elevenlabs: {
       "3JDquces8E8bkmvbh6Bc": "Otan",
       c6SfcYrb2t09NHXiT80T: "Janathan",
