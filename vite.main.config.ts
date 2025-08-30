@@ -28,9 +28,27 @@ export default defineConfig({
       name: "copy-splash-html",
       apply: "build",
       closeBundle() {
+        // Copy splash.html
         const srcPath = path.resolve(__dirname, "splash.html");
         const destPath = path.resolve(__dirname, ".vite/build/splash.html");
         fs.copyFileSync(srcPath, destPath);
+
+        // Ensure splash image exists alongside splash.html path expectations
+        const imgSrc = path.resolve(__dirname, "images/mulmocast_credit.png");
+        const imgDir = path.resolve(__dirname, ".vite/build/images");
+        const imgDest = path.join(imgDir, "mulmocast_credit.png");
+        try {
+          fs.mkdirSync(imgDir, { recursive: true });
+          if (fs.existsSync(imgSrc)) {
+            fs.copyFileSync(imgSrc, imgDest);
+            console.log("✅ splash image copied to build/images");
+          } else {
+            console.warn("⚠️  splash image not found:", imgSrc);
+          }
+        } catch (e) {
+          console.warn("⚠️  failed to copy splash image:", e);
+        }
+
         console.log("✅ splash.html copied to build directory");
       },
     },
