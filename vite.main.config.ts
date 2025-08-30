@@ -3,11 +3,15 @@ import path from "path";
 import fs from "fs";
 import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 
+// Packages to exclude from bundle and load directly from node_modules
+const external_packages = ["jsdom", "puppeteer", "puppeteer-core"];
+
+
 // https://vitejs.dev/config
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: ["jsdom", "puppeteer", "puppeteer-core"],
+      external: external_packages,
     },
     commonjsOptions: { transformMixedEsModules: true },
   },
@@ -60,7 +64,7 @@ export default defineConfig({
         fs.mkdirSync(buildNodeModules, { recursive: true });
 
         // Root packages to include (externalized in main bundle)
-        const roots = ["puppeteer", "puppeteer-core", "jsdom"];
+        const roots = external_packages;
         const visited = new Set<string>();
 
         const pkgRoot = (name: string) => path.resolve(__dirname, `node_modules/${name}`);
