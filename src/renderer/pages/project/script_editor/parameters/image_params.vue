@@ -6,7 +6,7 @@
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select
-          :model-value="imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider"
+          :model-value="imageProvider"
           @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
@@ -18,7 +18,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="imageParams?.provider" />
+        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="imageProvider" />
       </div>
       <div>
         <Label>{{ t("ui.common.model") }}</Label>
@@ -32,7 +32,7 @@
           <SelectContent>
             <SelectItem value="__undefined__">{{ t("parameters.imageParams.modelAuto") }}</SelectItem>
             <SelectItem
-              v-for="model in PROVIDERS.find((p) => p.value === imageParams?.provider)?.models || []"
+              v-for="model in PROVIDERS.find((p) => p.value === imageProvider)?.models || []"
               :key="model"
               :value="model"
             >
@@ -89,6 +89,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Label, Input, Checkbox, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -155,6 +156,10 @@ const handleProviderChange = (value: Text2ImageProvider) => {
     emit("update", { ...props.imageParams, provider: value, model: undefined });
   }
 };
+
+const imageProvider = computed(() => {
+  return props.imageParams?.provider || IMAGE_PARAMS_DEFAULT_VALUES.provider
+});
 
 const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
   const currentParams = props.imageParams || {};
