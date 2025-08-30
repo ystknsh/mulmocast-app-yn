@@ -673,6 +673,29 @@ const lang = {
   },
   commonLanguages,
   voiceList: {
+    openai: {
+      shimmer: "Shimmer",
+      alloy: "Alloy",
+      ash: "Ash",
+      ballad: "Ballad",
+      coral: "Coral",
+      echo: "Echo",
+      fable: "Fable",
+      nova: "Nova",
+      onyx: "Onyx",
+      sage: "Sage",
+    },
+    google: {
+      "ja-JP-Standard-A": "JP Standard A (Female)",
+      "ja-JP-Standard-B": "JP Standard B (Female)",
+      "ja-JP-Standard-C": "JP Standard C (Male)",
+      "ja-JP-Standard-D": "JP Standard D (Male)",
+      "en-US-Standard-A": "US Standard A (Male)",
+      "en-US-Standard-B": "US Standard B (Male)",
+      "en-US-Standard-C": "US Standard C (Female)",
+      "en-US-Standard-D": "US Standard D (Male)",
+      "en-US-Standard-E": "US Standard E (Female)",
+    },
     nijivoice: {
       hanamura_honoka: "花村 穂ノ香",
       shitsuya_ren: "漆夜 蓮",
@@ -798,6 +821,16 @@ const lang = {
       azumi_rosetta_noibara: "あずみ・ロゼッタ・野茨",
       ichiha_tsubaki: "一葉 ツバキ",
       shiba_soma: "柴 颯真",
+    },
+
+    elevenlabs: {
+      "3JDquces8E8bkmvbh6Bc": "Otan",
+      c6SfcYrb2t09NHXiT80T: "Janathan",
+      Mv8AjrYZCBkdsmDHNwcB: "Ishibashi",
+      "8EkOjt4xTPGMclNlh1pk": "Morioki",
+      j210dv0vWm7fCknyQpbA: "Hinata",
+      QEj0heL4nQHjaGrihlr0: "Steven Casteel",
+      l39JidvAMB3s85XyNSRd: "Sayuri",
     },
   },
 };
