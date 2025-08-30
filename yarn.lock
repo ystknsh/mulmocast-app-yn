@@ -5459,10 +5459,10 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-dayjs@^1.11.15:
-  version "1.11.15"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.15.tgz#fd7fd2db6fc92f08ffe4adc306756d45db00ada3"
-  integrity sha512-MC+DfnSWiM9APs7fpiurHGCoeIx0Gdl6QZBy+5lu8MbYKN5FZEXqOgrundfibdfhGZ15o9hzmZ2xJjZnbvgKXQ==
+dayjs@^1.11.18:
+  version "1.11.18"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.18.tgz#835fa712aac52ab9dec8b1494098774ed7070a11"
+  integrity sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==
 
 db0@^0.3.2:
   version "0.3.2"
@@ -6597,10 +6597,10 @@ eventsource@^3.0.2:
   dependencies:
     eventsource-parser "^3.0.1"
 
-exa-js@^1.9.2:
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/exa-js/-/exa-js-1.9.2.tgz#f6878d2eaa430b2127a45f7415b66927dfcfacaa"
-  integrity sha512-KU5BojZ+OjkWd6JUrehblHClYkmP4QpKqZ0chifaavshcW3fdkoJFRaLkZY8ytbFpaJNoMNubWReXXRKKOFGFQ==
+exa-js@^1.9.3:
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/exa-js/-/exa-js-1.9.3.tgz#60a363f10a339600e136aa6fdfaf26c3ff5e2cb0"
+  integrity sha512-4u8vO5KHstifBz6fcwcBVvU62zfwsWFpD8qomU2zQ+lLRYCwOh2Rz04xSSqEeoHrkCypGjy2VHez7elBt6ibQQ==
   dependencies:
     cross-fetch "~4.1.0"
     dotenv "~16.4.7"
