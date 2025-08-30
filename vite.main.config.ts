@@ -34,5 +34,53 @@ export default defineConfig({
         console.log("✅ splash.html copied to build directory");
       },
     },
+    {
+      name: "copy-external-node-modules",
+      apply: "build",
+      closeBundle() {
+        const buildNodeModules = path.resolve(__dirname, ".vite/build/node_modules");
+        fs.mkdirSync(buildNodeModules, { recursive: true });
+
+        // Root packages to include (externalized in main bundle)
+        const roots = ["puppeteer", "puppeteer-core", "jsdom"];
+        const visited = new Set<string>();
+
+        const pkgRoot = (name: string) => path.resolve(__dirname, `node_modules/${name}`);
+        const pkgJsonPath = (name: string) => path.join(pkgRoot(name), "package.json");
+
+        const copyPackage = (name: string) => {
+          const src = pkgRoot(name);
+          const dest = path.join(buildNodeModules, name);
+          if (!fs.existsSync(src)) {
+            console.warn(`⚠️  ${name} not found in root node_modules`);
+            return;
+          }
+          // Ensure parent dir exists for scoped packages
+          fs.mkdirSync(path.dirname(dest), { recursive: true });
+          fs.cpSync(src, dest, { recursive: true });
+          console.log(`✅ copied ${name}`);
+        };
+
+        const walk = (name: string) => {
+          if (visited.has(name)) return;
+          visited.add(name);
+          try {
+            const jsonPath = pkgJsonPath(name);
+            const json = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            copyPackage(name);
+            const deps = Object.assign({}, json.dependencies || {}, json.optionalDependencies || {});
+            for (const depName of Object.keys(deps)) {
+              // Skip builtins and electron
+              if (/^(electron|node:|fs|path|crypto|stream|events|url|buffer)$/.test(depName)) continue;
+              walk(depName);
+            }
+          } catch (e) {
+            console.warn(`⚠️  Failed to process ${name}: ${String((e as any)?.message || e)}`);
+          }
+        };
+
+        roots.forEach(walk);
+      },
+    },
   ],
 });
