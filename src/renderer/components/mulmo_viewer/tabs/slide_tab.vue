@@ -192,7 +192,7 @@ watch(
         downloadAudioFile(index, mulmoEvent.id);
       }
       if (mulmoEvent.sessionType === "multiLingual") {
-        updateMultiLingual();
+        emit("updateMultiLingual");
       }
     }
     console.log(mulmoEvent);
