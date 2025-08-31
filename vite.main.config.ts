@@ -6,6 +6,7 @@ import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 // Packages to exclude from bundle and load directly from node_modules
 const external_packages = ["jsdom", "puppeteer", "puppeteer-core"];
 
+const isDev = process.env.NODE_ENV === "development";
 
 // https://vitejs.dev/config
 export default defineConfig({
@@ -20,6 +21,8 @@ export default defineConfig({
       name: "copy-ffmpeg-after-build",
       apply: "build",
       closeBundle() {
+        if (isDev) return;
+
         const destDir = path.resolve(__dirname, ".vite/build/ffmpeg");
         fs.mkdirSync(destDir, { recursive: true });
 
@@ -32,6 +35,8 @@ export default defineConfig({
       name: "copy-splash-html",
       apply: "build",
       closeBundle() {
+        if (isDev) return;
+
         // Copy splash.html
         const srcPath = path.resolve(__dirname, "splash.html");
         const destPath = path.resolve(__dirname, ".vite/build/splash.html");
@@ -60,6 +65,8 @@ export default defineConfig({
       name: "copy-external-node-modules",
       apply: "build",
       closeBundle() {
+        if (isDev) return;
+
         const buildNodeModules = path.resolve(__dirname, ".vite/build/node_modules");
         fs.mkdirSync(buildNodeModules, { recursive: true });
 
