@@ -17,10 +17,8 @@
 <script setup lang="ts">
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import { Languages } from "lucide-vue-next";
-import { useMulmoGlobalStore } from "@/store";
 
 import { useI18n } from "vue-i18n";
-const globalStore = useMulmoGlobalStore();
 
 interface Props {
   modelValue: string;
