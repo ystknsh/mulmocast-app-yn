@@ -6,7 +6,7 @@
           <Checkbox v-model="autoPlay" />
           {{ t("project.productTabs.slide.autoPlay") }}
         </label>
-        <SelectLanguage v-model="currentLanguage" />
+        <SelectLanguage v-model="currentLanguage" :languages="languages" />
         <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
       </div>
       <div v-if="beats.length === 0">
@@ -95,6 +95,13 @@ const autoPlay = ref(true);
 
 const lang = props.project?.script?.lang ?? "en";
 const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
+
+const languages = computed(() => {
+  if (globalStore.useLanguages.includes(lang)) {
+    return globalStore.useLanguages;
+  }
+  return [lang, ...globalStore.useLanguages];
+});
 
 const isScriptLang = computed(() => {
   return props.project?.script?.lang === currentLanguage.value;
