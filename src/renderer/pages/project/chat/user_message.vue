@@ -19,9 +19,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
-import dayjs from "dayjs";
 import { User, Edit } from "lucide-vue-next";
+
+import { useFormatedDate } from "./date_format";
 
 const props = defineProps<{
   message: string;
@@ -29,9 +29,8 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["editUser"]);
 
-const formatedTime = computed(() => {
-  return dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"); // TODO: format i18n
-});
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT");
+
 const editUser = () => {
   emit("editUser");
 };

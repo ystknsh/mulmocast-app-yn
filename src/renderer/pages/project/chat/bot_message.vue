@@ -15,20 +15,18 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { Bot } from "lucide-vue-next";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import { computed } from "vue";
-import dayjs from "dayjs";
+import { useFormatedDate } from "./date_format";
 
 const props = defineProps<{
   message: string;
   time?: number;
 }>();
 
-const formatedTime = computed(() => {
-  return dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"); // TODO: format i18n
-});
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT");
 
 function markdownCodeBlocks(input: string): string {
   return input.replace(/```markdown\s*\n([\s\S]*?)\n```/g, (_, code) => {
