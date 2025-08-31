@@ -33,6 +33,7 @@ export default defineComponent({
     const zodErrorStore = useZodErrorStore();
     const globalStore = useMulmoGlobalStore();
 
+    const isDevelopment = import.meta.env.DEV;
     // Initialize theme
     useTheme();
 
@@ -50,7 +51,7 @@ export default defineComponent({
         if (message.type === "mulmo") {
           mulmoEventStore.mulmoLogCallback(message as MulmoProgressLog<SessionProgressEvent>);
         }
-        if (message.type === "graphai") {
+        if (message.type === "graphai" && isDevelopment) {
           graphAIDebugStore.graphaiLogCallback(message);
         }
         if (message.type === "error") {
