@@ -26,7 +26,7 @@ const props = defineProps<{
   time?: number;
 }>();
 
-const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT")
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT");
 
 function markdownCodeBlocks(input: string): string {
   return input.replace(/```markdown\s*\n([\s\S]*?)\n```/g, (_, code) => {

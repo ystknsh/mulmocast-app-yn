@@ -16,5 +16,4 @@ export const useFormatedDate = (date: Date, format: string) => {
     return dayjs(date).format(format);
   });
   return { formatedTime };
-
 };

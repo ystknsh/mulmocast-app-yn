@@ -29,7 +29,7 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["editUser"]);
 
-const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT")
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT");
 
 const editUser = () => {
   emit("editUser");

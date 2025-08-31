@@ -111,5 +111,5 @@ const argments = computed(() => {
   }
   return text.slice(0, 30) + "...";
 });
-const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT")
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT");
 </script>
