@@ -6,7 +6,7 @@
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem v-for="lang in globalStore.useLanguages" :key="lang" :value="lang">
+        <SelectItem v-for="lang in languages" :key="lang" :value="lang">
           {{ t("languages." + lang) }}
         </SelectItem>
       </SelectContent>
@@ -22,9 +22,13 @@ import { useMulmoGlobalStore } from "@/store";
 import { useI18n } from "vue-i18n";
 const globalStore = useMulmoGlobalStore();
 
-defineProps({
-  modelValue: String,
-});
+interface Props {
+  modelValue: string;
+  languages: string[];
+}
+
+defineProps<Props>();
+
 const emit = defineEmits(["update:modelValue"]);
 
 const { t } = useI18n();
