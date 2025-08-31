@@ -28,7 +28,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   };
 
   const useLanguages = computed(() => {
-    return Object.keys(settings.value?.USE_LANGUAGES)
+    return Object.keys(settings.value?.USE_LANGUAGES ?? {})
       .map((lang) => {
         return settings.value?.USE_LANGUAGES[lang] ? lang : null;
       })
