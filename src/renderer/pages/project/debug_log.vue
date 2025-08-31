@@ -13,7 +13,11 @@
         {{ t("ui.actions.copy") }}
       </Button>
     </div>
-    <div class="border-border bg-card h-40 overflow-y-auto rounded border p-2 font-mono text-xs" ref="logContainer" v-if="false">
+    <div
+      class="border-border bg-card h-40 overflow-y-auto rounded border p-2 font-mono text-xs"
+      ref="logContainer"
+      v-if="false"
+    >
       <div v-for="(entry, i) in debugLog" :key="'debug-' + i" class="whitespace-pre-wrap">
         {{ entry }}
       </div>
