@@ -72,12 +72,13 @@ import { Button, Checkbox } from "@/components/ui";
 import { TabsContent } from "@/components/ui/tabs";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
-import { useMulmoGlobalStore } from "@/store";
+import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import type { Project } from "@/lib/project_api";
 import SelectLanguage from "./select_language.vue";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
+const mulmoEventStore = useMulmoEventStore();
 
 interface Props {
   projectId: string;
@@ -99,8 +100,8 @@ const isScriptLang = computed(() => {
   return props.project?.script?.lang === currentLanguage.value;
 });
 
-const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
-const { audioFiles, downloadAudioFiles } = useAudioFiles();
+const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles, downloadImageFile } = useImageFiles();
+const { audioFiles, downloadAudioFiles, downloadAudioFile } = useAudioFiles();
 
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
@@ -156,5 +157,45 @@ watch(
     }
   },
   { immediate: true },
+);
+
+watch(
+  () => mulmoEventStore.mulmoEvent[props.projectId],
+  async (mulmoEvent) => {
+    if (mulmoEvent?.inSession) {
+      return;
+    }
+    // generate image
+    if (mulmoEvent && mulmoEvent.kind === "session") {
+      if (mulmoEvent.sessionType === "image") {
+        downloadImageFiles(props.projectId);
+      }
+      if (mulmoEvent.sessionType === "audio") {
+        downloadAudioFiles(props.projectId, currentLanguage.value);
+      }
+    }
+
+    // beats
+    if (mulmoEvent?.kind === "beatGenerate" && ["image"].includes(mulmoEvent.sessionType)) {
+      const index = props.project?.script?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
+      if (index === -1 || index === undefined) {
+        return;
+      }
+      downloadImageFile(props.projectId, index, mulmoEvent.id);
+    }
+    if (mulmoEvent?.kind === "beat") {
+      if (mulmoEvent.sessionType === "audio") {
+        const index = props.project?.script?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
+        if (index === -1 || index === undefined) {
+          return;
+        }
+        downloadAudioFile(index, mulmoEvent.id);
+      }
+      if (mulmoEvent.sessionType === "multiLingual") {
+        emit("updateMultiLingual");
+      }
+    }
+    console.log(mulmoEvent);
+  },
 );
 </script>
