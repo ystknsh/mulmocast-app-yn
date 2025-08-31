@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { Search, ScrollText, Globe, Loader2 } from "lucide-vue-next";
 import { computed, ref } from "vue";
-import dayjs from "dayjs";
+import { useFormatedDate } from "./date_format";
 
 const props = defineProps<{
   message: string;
@@ -111,5 +111,5 @@ const argments = computed(() => {
   }
   return text.slice(0, 30) + "...";
 });
-const formatedTime = computed(() => dayjs(props.time ?? Date.now()).format("MM/DD HH:mm"));
+const { formatedTime } = useFormatedDate(props.time ?? Date.now(), "L LT")
 </script>
