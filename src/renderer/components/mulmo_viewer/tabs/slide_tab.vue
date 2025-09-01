@@ -16,7 +16,14 @@
       </div>
       <div v-else>
         <div class="flex w-full items-center justify-between">
-          <Button @click="decrease" variant="outline">{{ t("ui.common.decrease") }}</Button>
+          <Button
+            @click="decrease"
+            variant="ghost"
+            :disabled="currentPage === 0"
+            :class="{ 'opacity-0!': currentPage === 0 }"
+          >
+            <ChevronLeft class="h-4 w-4" />
+          </Button>
           <div class="flex min-w-0 flex-1 flex-col justify-center">
             <video
               v-if="lipSyncFiles?.[currentBeat?.id]"
@@ -36,7 +43,14 @@
               class="max-h-64 object-contain"
             />
           </div>
-          <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
+          <Button
+            @click="increase"
+            variant="ghost"
+            :disabled="currentPage === beats.length - 1"
+            :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
+          >
+            <ChevronRight class="h-4 w-4" />
+          </Button>
         </div>
         <audio
           :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
