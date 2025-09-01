@@ -415,7 +415,7 @@ const lang = {
         description: "Slide format display and navigation",
         start: "Start Slideshow",
         export: "Export Images",
-        details: "{current} / {pages} slides",
+        details: "{current} / {pages}",
         autoPlay: "Auto Play",
       },
     },

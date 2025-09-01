@@ -47,6 +47,14 @@
         <div class="text-muted-foreground mt-1 text-sm">
           {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
         </div>
+        <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
+          {{
+            isScriptLang
+              ? currentBeat?.text
+              : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+                t("ui.common.noLang"))
+          }}
+        </div>
         <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
           <Checkbox v-model="autoPlay" />
           <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
@@ -59,14 +67,6 @@
           @ended="handleAudioEnded"
           ref="audioRef"
         />
-        <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
-          {{
-            isScriptLang
-              ? currentBeat?.text
-              : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
-                t("ui.common.noLang"))
-          }}
-        </div>
         <div class="mt-2 flex items-center justify-center gap-2">
           <SelectLanguage v-model="currentLanguage" :languages="languages" />
           <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
