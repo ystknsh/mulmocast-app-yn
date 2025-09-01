@@ -1,14 +1,6 @@
 <template>
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
-      <div class="mb-2 flex items-center justify-center gap-2">
-        <label>
-          <Checkbox v-model="autoPlay" />
-          {{ t("project.productTabs.slide.autoPlay") }}
-        </label>
-        <SelectLanguage v-model="currentLanguage" :languages="languages" />
-        <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
-      </div>
       <div v-if="beats.length === 0">
         <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
@@ -16,8 +8,15 @@
       </div>
       <div v-else>
         <div class="flex w-full items-center justify-between">
-          <Button @click="decrease" variant="outline">{{ t("ui.common.decrease") }}</Button>
-          <div class="flex flex-1 flex-col justify-center">
+          <Button
+            @click="decrease"
+            variant="ghost"
+            :disabled="currentPage === 0"
+            :class="{ 'opacity-0!': currentPage === 0 }"
+          >
+            <ChevronLeft class="h-4 w-4" />
+          </Button>
+          <div class="flex min-w-0 flex-1 flex-col justify-center">
             <video
               v-if="lipSyncFiles?.[currentBeat?.id]"
               :src="lipSyncFiles?.[currentBeat?.id]"
@@ -35,27 +34,51 @@
               :src="imageFiles?.[currentBeat?.id]"
               class="max-h-64 object-contain"
             />
-            <audio
-              :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
-              v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
-              controls
-              class="mx-auto mt-2"
-              @ended="handleAudioEnded"
-              ref="audioRef"
-            />
           </div>
-          <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
+          <Button
+            @click="increase"
+            variant="ghost"
+            :disabled="currentPage === beats.length - 1"
+            :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
+          >
+            <ChevronRight class="h-4 w-4" />
+          </Button>
         </div>
-        {{
-          isScriptLang
-            ? currentBeat?.text
-            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
-              t("ui.common.noLang"))
-        }}
-      </div>
-
-      <div class="text-muted-foreground mt-4 text-sm">
-        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        <div class="text-muted-foreground mt-1 text-sm">
+          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        </div>
+        <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
+          {{
+            isScriptLang
+              ? currentBeat?.text
+              : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+                t("ui.common.noLang"))
+          }}
+          <Button
+            variant="outline"
+            @click="generateLocalize"
+            v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[currentLanguage]?.text"
+            >{{ t("ui.actions.translate") }}</Button
+          >
+        </div>
+        <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
+          <Checkbox v-model="autoPlay" />
+          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+        </label>
+        <audio
+          :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
+          v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          controls
+          class="mx-auto mt-2 w-full max-w-full"
+          ref="audioRef"
+          @play="handlePlay"
+          @pause="handlePause"
+          @ended="handleAudioEnded"
+        />
+        <div class="mt-2 flex items-center justify-center gap-2">
+          <SelectLanguage v-model="currentLanguage" :languages="languages" />
+          <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
+        </div>
       </div>
     </div>
   </TabsContent>
@@ -64,7 +87,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { FileImage } from "lucide-vue-next";
+import { FileImage, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
@@ -92,6 +115,18 @@ const emit = defineEmits(["updateMultiLingual"]);
 const currentPage = ref(0);
 const audioRef = ref();
 const autoPlay = ref(true);
+
+const isPlaying = ref(false);
+
+const handlePlay = () => {
+  isPlaying.value = true;
+};
+const handlePause = () => {
+  isPlaying.value = false;
+};
+const handleEnded = () => {
+  isPlaying.value = false;
+};
 
 const lang = props.project?.script?.lang ?? "en";
 const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
@@ -122,6 +157,9 @@ const currentBeatId = computed(() => {
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
     currentPage.value = currentPage.value + 1;
+    if (isPlaying.value && autoPlay.value) {
+      waitAndPlay();
+    }
     return true;
   }
   return false;
@@ -129,15 +167,23 @@ const increase = () => {
 const decrease = () => {
   if (currentPage.value > 0) {
     currentPage.value = currentPage.value - 1;
+    if (isPlaying.value && autoPlay.value) {
+      waitAndPlay();
+    }
+  }
+};
+
+const waitAndPlay = async () => {
+  await sleep(500);
+  if (audioRef.value) {
+    audioRef.value.play();
   }
 };
 
 const handleAudioEnded = async () => {
+  handleEnded();
   if (autoPlay.value && increase()) {
-    await sleep(500);
-    if (audioRef.value) {
-      audioRef.value.play();
-    }
+    waitAndPlay();
   }
 };
 

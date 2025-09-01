@@ -76,6 +76,7 @@ const lang = {
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
+      translate: "翻訳する",
 
       // Media actions (placeholder pairs)
       play: "再生",
@@ -414,7 +415,7 @@ const lang = {
         description: "スライド形式の表示とナビゲーション",
         start: "スライドショーの開始",
         export: "スライドをエクスポート",
-        details: "{current} / {pages} スライド",
+        details: "{current} / {pages}",
         autoPlay: "自動再生",
       },
     },
