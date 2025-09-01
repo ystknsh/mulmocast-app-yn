@@ -263,7 +263,6 @@ import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_ta
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { notifySuccess, notifyProgress } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
-import { bufferToUrl } from "@/lib/utils";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
