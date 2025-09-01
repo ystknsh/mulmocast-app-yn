@@ -64,8 +64,10 @@
           v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
           controls
           class="mx-auto mt-2 w-full max-w-full"
-          @ended="handleAudioEnded"
           ref="audioRef"
+          @play="handlePlay"
+          @pause="handlePause"
+          @ended="handleAudioEnded"
         />
         <div class="mt-2 flex items-center justify-center gap-2">
           <SelectLanguage v-model="currentLanguage" :languages="languages" />
@@ -108,6 +110,18 @@ const currentPage = ref(0);
 const audioRef = ref();
 const autoPlay = ref(true);
 
+const isPlaying = ref(false);
+
+const handlePlay = () => {
+  isPlaying.value = true;
+};
+const handlePause = () => {
+  isPlaying.value = false;
+};
+const handleEnded = () => {
+  isPlaying.value = false;
+};
+
 const lang = props.project?.script?.lang ?? "en";
 const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
 
@@ -137,7 +151,7 @@ const currentBeatId = computed(() => {
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
     currentPage.value = currentPage.value + 1;
-    if (autoPlay.value) {
+    if (isPlaying.value && autoPlay.value) {
       waitAndPlay();
     }
     return true;
@@ -147,7 +161,7 @@ const increase = () => {
 const decrease = () => {
   if (currentPage.value > 0) {
     currentPage.value = currentPage.value - 1;
-    if (autoPlay.value) {
+    if (isPlaying.value && autoPlay.value) {
       waitAndPlay();
     }
   }
@@ -161,6 +175,7 @@ const waitAndPlay = async () => {
 };
 
 const handleAudioEnded = async () => {
+  handleEnded();
   if (autoPlay.value && increase()) {
     waitAndPlay();
   }
