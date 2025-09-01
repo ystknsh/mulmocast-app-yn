@@ -2,10 +2,6 @@
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
       <div class="mb-2 flex items-center justify-center gap-2">
-        <label>
-          <Checkbox v-model="autoPlay" />
-          {{ t("project.productTabs.slide.autoPlay") }}
-        </label>
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
         <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
       </div>
@@ -60,12 +56,18 @@
           @ended="handleAudioEnded"
           ref="audioRef"
         />
-        {{
-          isScriptLang
-            ? currentBeat?.text
-            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
-              t("ui.common.noLang"))
-        }}
+        <label class="ml-4 flex items-center gap-2 text-sm">
+          <Checkbox v-model="autoPlay" />
+          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+        </label>
+        <div class="bg-foreground/5 mt-4 rounded-lg p-2 text-sm">
+          {{
+            isScriptLang
+              ? currentBeat?.text
+              : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+                t("ui.common.noLang"))
+          }}
+        </div>
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
@@ -78,7 +80,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { FileImage } from "lucide-vue-next";
+import { FileImage, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
