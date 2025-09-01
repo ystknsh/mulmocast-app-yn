@@ -2635,6 +2635,19 @@
     tar-fs "^3.1.0"
     yargs "^17.7.2"
 
+"@puppeteer/browsers@2.10.8":
+  version "2.10.8"
+  resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-2.10.8.tgz#80e983ca0365478b39c4c0f559785345393f8fa2"
+  integrity sha512-f02QYEnBDE0p8cteNoPYHHjbDuwyfbe4cCIVlNi8/MRicIxFW4w4CfgU0LNgWEID6s06P+hRJ1qjpBLMhPRCiQ==
+  dependencies:
+    debug "^4.4.1"
+    extract-zip "^2.0.1"
+    progress "^2.0.3"
+    proxy-agent "^6.5.0"
+    semver "^7.7.2"
+    tar-fs "^3.1.0"
+    yargs "^17.7.2"
+
 "@receptron/event_agent_generator@^0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.6.tgz#267533315a53e84f419d3dd4856900ee11328960"
@@ -9210,10 +9223,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast@^1.2.16:
-  version "1.2.16"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.16.tgz#067afc8f17d91a3e2cf03d42f114a2d2ca101c47"
-  integrity sha512-zJ7eJfJAj9hwuUpFstPLQOf/A/efau5TFGsaRo4acUjnv5HFqUjYaWiTtDKkdj3lwLafCY5gv6ynjzK3TXzAkQ==
+mulmocast@^1.2.17:
+  version "1.2.17"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.17.tgz#082be1d114fc372e109a436109e37e34f069eb2e"
+  integrity sha512-/T5fg6ynAWqtww5+VirJARQRtBkYAX6DJ83sNs3JlTr6CpmXM3s/c2XOFzXdNDSUxQQ5jd2pk0bsSy2PEK7PCg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.15.0"
@@ -9229,11 +9242,13 @@ mulmocast@^1.2.16:
     "@inquirer/input" "^4.2.2"
     "@inquirer/select" "^4.3.2"
     "@modelcontextprotocol/sdk" "^1.17.4"
+    "@mozilla/readability" "^0.6.0"
     "@tavily/core" "^0.5.11"
     clipboardy "^4.0.0"
     dotenv "^17.2.1"
     fluent-ffmpeg "^2.1.3"
     graphai "^2.0.14"
+    jsdom "^26.1.0"
     marked "^16.2.0"
     ora "^8.2.0"
     puppeteer "^24.17.0"
@@ -10729,6 +10744,18 @@ puppeteer-core@24.17.0:
     typed-query-selector "^2.12.0"
     ws "^8.18.3"
 
+puppeteer-core@24.17.1:
+  version "24.17.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.17.1.tgz#b71955b757cc315c5b23c3adbe878708d0a7d09c"
+  integrity sha512-Msh/kf9k1XFN0wuKiT4/npMmMWOT7kPBEUw01gWvRoKOOoz3It9TEmWjnt4Gl4eO+p73VMrvR+wfa0dm9rfxjw==
+  dependencies:
+    "@puppeteer/browsers" "2.10.8"
+    chromium-bidi "8.0.0"
+    debug "^4.4.1"
+    devtools-protocol "0.0.1475386"
+    typed-query-selector "^2.12.0"
+    ws "^8.18.3"
+
 puppeteer@^24.17.0:
   version "24.17.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.17.0.tgz#2fa286ed7b755846ef6064c1ee42b5491abcd21b"
@@ -10739,6 +10766,18 @@ puppeteer@^24.17.0:
     cosmiconfig "^9.0.0"
     devtools-protocol "0.0.1475386"
     puppeteer-core "24.17.0"
+    typed-query-selector "^2.12.0"
+
+puppeteer@^24.17.1:
+  version "24.17.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.17.1.tgz#a83fa102a8d0dfb9341d7312f34d40fc95e28f85"
+  integrity sha512-KIuX0w+0um4TUbm55yFl2WIsbgjya2BHIgW9ylTuhavtwjXCOM7lMo9oLR1jQnCxrFvm9h/Yeb+zfs4nlgntPg==
+  dependencies:
+    "@puppeteer/browsers" "2.10.8"
+    chromium-bidi "8.0.0"
+    cosmiconfig "^9.0.0"
+    devtools-protocol "0.0.1475386"
+    puppeteer-core "24.17.1"
     typed-query-selector "^2.12.0"
 
 qs@^6.14.0, qs@^6.9.6:
