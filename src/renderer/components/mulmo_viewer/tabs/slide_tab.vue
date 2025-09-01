@@ -137,6 +137,9 @@ const currentBeatId = computed(() => {
 const increase = () => {
   if (currentPage.value + 1 < beats.value.length) {
     currentPage.value = currentPage.value + 1;
+    if (autoPlay.value) {
+      waitAndPlay();
+    }
     return true;
   }
   return false;
@@ -144,15 +147,22 @@ const increase = () => {
 const decrease = () => {
   if (currentPage.value > 0) {
     currentPage.value = currentPage.value - 1;
+    if (autoPlay.value) {
+      waitAndPlay();
+    }
+  }
+};
+
+const waitAndPlay = async () => {
+  await sleep(500);
+  if (audioRef.value) {
+    audioRef.value.play();
   }
 };
 
 const handleAudioEnded = async () => {
   if (autoPlay.value && increase()) {
-    await sleep(500);
-    if (audioRef.value) {
-      audioRef.value.play();
-    }
+    waitAndPlay();
   }
 };
 
