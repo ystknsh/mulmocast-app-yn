@@ -10,12 +10,14 @@
     <MovieTab :project-id="projectId" />
     <PdfTab :project-id="projectId" />
     <PodcastTab :project-id="projectId" />
-    <SlideTab
-      :project-id="projectId"
-      :project="project"
-      :mulmoMultiLinguals="mulmoMultiLinguals"
-      @updateMultiLingual="updateMultiLingual"
-    />
+    <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <SlideTab
+        :project-id="projectId"
+        :project="project"
+        :mulmoMultiLinguals="mulmoMultiLinguals"
+        @updateMultiLingual="updateMultiLingual"
+      />
+    </TabsContent>
   </Tabs>
 </template>
 
@@ -25,6 +27,8 @@ import { useI18n } from "vue-i18n";
 import { type MultiLingualTexts } from "mulmocast/browser";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Project } from "@/lib/project_api";
+
+import { TabsContent } from "@/components/ui/tabs";
 
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
