@@ -1,10 +1,6 @@
 <template>
   <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
     <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
-      <div class="mb-2 flex items-center justify-center gap-2">
-        <SelectLanguage v-model="currentLanguage" :languages="languages" />
-        <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
-      </div>
       <div v-if="beats.length === 0">
         <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
         <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
@@ -48,6 +44,9 @@
             <ChevronRight class="h-4 w-4" />
           </Button>
         </div>
+        <div class="text-muted-foreground mt-1 text-sm">
+          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        </div>
         <audio
           :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
           v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
@@ -68,10 +67,10 @@
                 t("ui.common.noLang"))
           }}
         </div>
-      </div>
-
-      <div class="text-muted-foreground mt-4 text-sm">
-        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        <div class="mt-2 flex items-center justify-center gap-2">
+          <SelectLanguage v-model="currentLanguage" :languages="languages" />
+          <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
+        </div>
       </div>
     </div>
   </TabsContent>
