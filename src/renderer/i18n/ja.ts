@@ -414,7 +414,7 @@ const lang = {
         description: "スライド形式の表示とナビゲーション",
         start: "スライドショーの開始",
         export: "スライドをエクスポート",
-        details: "{current} / {pages} スライド",
+        details: "{current} / {pages}",
         autoPlay: "自動再生",
       },
     },
