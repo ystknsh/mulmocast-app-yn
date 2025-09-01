@@ -17,7 +17,7 @@
       <div v-else>
         <div class="flex w-full items-center justify-between">
           <Button @click="decrease" variant="outline">{{ t("ui.common.decrease") }}</Button>
-          <div class="flex flex-1 flex-col justify-center">
+          <div class="flex min-w-0 flex-1 flex-col justify-center">
             <video
               v-if="lipSyncFiles?.[currentBeat?.id]"
               :src="lipSyncFiles?.[currentBeat?.id]"
