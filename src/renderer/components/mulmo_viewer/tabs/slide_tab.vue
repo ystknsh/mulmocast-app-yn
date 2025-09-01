@@ -47,6 +47,10 @@
         <div class="text-muted-foreground mt-1 text-sm">
           {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
         </div>
+        <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
+          <Checkbox v-model="autoPlay" />
+          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+        </label>
         <audio
           :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
           v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
@@ -55,11 +59,7 @@
           @ended="handleAudioEnded"
           ref="audioRef"
         />
-        <label class="ml-4 flex items-center gap-2 text-sm">
-          <Checkbox v-model="autoPlay" />
-          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
-        </label>
-        <div class="bg-foreground/5 mt-4 rounded-lg p-2 text-sm">
+        <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
           {{
             isScriptLang
               ? currentBeat?.text
