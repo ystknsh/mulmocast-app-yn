@@ -417,15 +417,6 @@ const resetMediaFiles = () => {
   resetAudioData();
 };
 
-/*
-const downloadAudioFile = async (index: number, beatId: string) => {
-  const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, index)) as Buffer;
-  if (res) {
-    audioFiles.value[mulmoScriptHistoryStore.lang][beatId] = bufferToUrl(res, "audio/mp3");
-  }
-};
-*/
-
 const isValidScriptData = ref(true);
 
 const openModal = () => {

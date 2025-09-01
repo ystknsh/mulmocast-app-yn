@@ -83,7 +83,7 @@ export const useAudioFiles = () => {
     if (res) {
       audioFiles.value[lang][beatId] = bufferToUrl(res, "audio/mp3");
     }
-};
+  };
 
   const resetAudioData = () => {
     audioFiles.value = {};
