@@ -1,6 +1,5 @@
 import { WebContents } from "electron";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
-import type { TransactionLog } from "graphai";
 import {
   images,
   audio,
