@@ -61,7 +61,7 @@ const lang = {
       decrease: "-",
       increase: "+",
 
-      noLang: "翻訳されていません",
+      noLang: "Not translated",
     },
 
     // Common actions (placeholder pairs)
@@ -76,6 +76,7 @@ const lang = {
       cancel: "Cancel",
       ok: "OK",
       runningThing: "{thing} is running",
+      translate: "Translate",
 
       // Media actions (placeholder pairs)
       play: "Play",

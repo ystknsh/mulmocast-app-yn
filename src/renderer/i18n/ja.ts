@@ -76,6 +76,7 @@ const lang = {
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
+      translate: "翻訳する",
 
       // Media actions (placeholder pairs)
       play: "再生",
