@@ -32,17 +32,6 @@ export const mulmoActionRunner = async (
   const settings = await loadSettings();
   try {
     const context = await getContext(projectId, targetLang);
-    const graphAICallbacks = [
-      (log: TransactionLog) => {
-        if (webContents) {
-          webContents.send("progress-update", {
-            projectId,
-            type: "graphai",
-            data: log,
-          });
-        }
-      },
-    ];
     const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
 
@@ -57,7 +46,7 @@ export const mulmoActionRunner = async (
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
     };
-    const args = { settings: settings.APIKEY ?? {}, callbacks: graphAICallbacks };
+    const args = { settings: settings.APIKEY ?? {} };
     const audioContext = enables.audio ? await audio(context, args) : context;
     const imageContext = enables.image ? await images(audioContext, args) : audioContext;
     if (enables.movie) {
