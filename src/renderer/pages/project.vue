@@ -263,7 +263,6 @@ import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_ta
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { notifySuccess, notifyProgress } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
-import { bufferToUrl } from "@/lib/utils";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
@@ -300,7 +299,7 @@ const isDevelopment = import.meta.env.DEV;
 const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
   useImageFiles();
 
-const { audioFiles, downloadAudioFiles, resetAudioData } = useAudioFiles();
+const { audioFiles, downloadAudioFiles, downloadAudioFile, resetAudioData } = useAudioFiles();
 
 // Load project data on mount
 onMounted(async () => {
@@ -417,13 +416,6 @@ const resetMediaFiles = () => {
   resetAudioData();
 };
 
-const downloadAudioFile = async (index: number, beatId: string) => {
-  const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId.value, index)) as Buffer;
-  if (res) {
-    audioFiles.value[beatId] = bufferToUrl(res, "audio/mp3");
-  }
-};
-
 const isValidScriptData = ref(true);
 
 const openModal = () => {
@@ -464,7 +456,7 @@ watch(
         if (index === -1 || index === undefined) {
           return;
         }
-        downloadAudioFile(index, mulmoEvent.id);
+        downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         updateMultiLingual();

@@ -242,7 +242,7 @@ watch(
         if (index === -1 || index === undefined) {
           return;
         }
-        downloadAudioFile(index, mulmoEvent.id);
+        downloadAudioFile(props.projectId, currentLanguage.value, index, mulmoEvent.id);
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         emit("updateMultiLingual");
