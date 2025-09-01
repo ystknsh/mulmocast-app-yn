@@ -112,6 +112,7 @@ export const mulmoGenerateBeatImage = async (
     const { id } = beat;
     const forceImage = target === "image";
     const forceMovie = target === "movie";
+    const forceLipSync = target === "lipSync";
     if (forceImage) {
       beat.moviePrompt = "";
     }
@@ -161,6 +162,7 @@ export const mulmoGenerateBeatImage = async (
         settings: settings.APIKEY ?? {},
         forceImage,
         forceMovie,
+        forceLipSync,
         callbacks: [graphaiCallbacks],
       },
     });
