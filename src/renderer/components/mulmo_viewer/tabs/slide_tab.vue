@@ -54,6 +54,12 @@
               : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
                 t("ui.common.noLang"))
           }}
+          <Button
+            variant="outline"
+            @click="generateLocalize"
+            v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[currentLanguage]?.text"
+            >{{ t("ui.actions.translate") }}</Button
+          >
         </div>
         <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
           <Checkbox v-model="autoPlay" />
@@ -71,7 +77,7 @@
         />
         <div class="mt-2 flex items-center justify-center gap-2">
           <SelectLanguage v-model="currentLanguage" :languages="languages" />
-          <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.generate") }}</Button>
+          <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
         </div>
       </div>
     </div>
