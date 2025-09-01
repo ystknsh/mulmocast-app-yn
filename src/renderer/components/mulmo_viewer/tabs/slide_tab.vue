@@ -1,87 +1,85 @@
 <template>
-  <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
-      <div v-if="beats.length === 0">
-        <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
-        <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.slide.description") }}</p>
+  <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
+    <div v-if="beats.length === 0">
+      <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
+      <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>
+      <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.slide.description") }}</p>
+    </div>
+    <div v-else>
+      <div class="flex w-full items-center justify-between">
+        <Button
+          @click="decrease"
+          variant="ghost"
+          :disabled="currentPage === 0"
+          :class="{ 'opacity-0!': currentPage === 0 }"
+        >
+          <ChevronLeft class="h-4 w-4" />
+        </Button>
+        <div class="flex min-w-0 flex-1 flex-col justify-center">
+          <video
+            v-if="lipSyncFiles?.[currentBeat?.id]"
+            :src="lipSyncFiles?.[currentBeat?.id]"
+            controls
+            class="max-h-64 object-contain"
+          />
+          <video
+            v-else-if="movieFiles?.[currentBeat?.id]"
+            :src="movieFiles?.[currentBeat?.id]"
+            controls
+            class="max-h-64 object-contain"
+          />
+          <img
+            v-else-if="imageFiles?.[currentBeat?.id]"
+            :src="imageFiles?.[currentBeat?.id]"
+            class="max-h-64 object-contain"
+          />
+        </div>
+        <Button
+          @click="increase"
+          variant="ghost"
+          :disabled="currentPage === beats.length - 1"
+          :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
+        >
+          <ChevronRight class="h-4 w-4" />
+        </Button>
       </div>
-      <div v-else>
-        <div class="flex w-full items-center justify-between">
-          <Button
-            @click="decrease"
-            variant="ghost"
-            :disabled="currentPage === 0"
-            :class="{ 'opacity-0!': currentPage === 0 }"
-          >
-            <ChevronLeft class="h-4 w-4" />
-          </Button>
-          <div class="flex min-w-0 flex-1 flex-col justify-center">
-            <video
-              v-if="lipSyncFiles?.[currentBeat?.id]"
-              :src="lipSyncFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <video
-              v-else-if="movieFiles?.[currentBeat?.id]"
-              :src="movieFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <img
-              v-else-if="imageFiles?.[currentBeat?.id]"
-              :src="imageFiles?.[currentBeat?.id]"
-              class="max-h-64 object-contain"
-            />
-          </div>
-          <Button
-            @click="increase"
-            variant="ghost"
-            :disabled="currentPage === beats.length - 1"
-            :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
-          >
-            <ChevronRight class="h-4 w-4" />
-          </Button>
-        </div>
-        <div class="text-muted-foreground mt-1 text-sm">
-          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
-        </div>
-        <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
-          {{
-            isScriptLang
-              ? currentBeat?.text
-              : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
-                t("ui.common.noLang"))
-          }}
-          <Button
-            variant="outline"
-            @click="generateLocalize"
-            v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[currentLanguage]?.text"
-            >{{ t("ui.actions.translate") }}</Button
-          >
-        </div>
-        <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
-          <Checkbox v-model="autoPlay" />
-          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
-        </label>
-        <audio
-          :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
-          v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
-          controls
-          class="mx-auto mt-2 w-full max-w-full"
-          ref="audioRef"
-          @play="handlePlay"
-          @pause="handlePause"
-          @ended="handleAudioEnded"
-        />
-        <div class="mt-2 flex items-center justify-center gap-2">
-          <SelectLanguage v-model="currentLanguage" :languages="languages" />
-          <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
-        </div>
+      <div class="text-muted-foreground mt-1 text-sm">
+        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+      </div>
+      <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
+        {{
+          isScriptLang
+            ? currentBeat?.text
+            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+              t("ui.common.noLang"))
+        }}
+        <Button
+          variant="outline"
+          @click="generateLocalize"
+          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[currentLanguage]?.text"
+          >{{ t("ui.actions.translate") }}</Button
+        >
+      </div>
+      <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
+        <Checkbox v-model="autoPlay" />
+        <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+      </label>
+      <audio
+        :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
+        v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
+        controls
+        class="mx-auto mt-2 w-full max-w-full"
+        ref="audioRef"
+        @play="handlePlay"
+        @pause="handlePause"
+        @ended="handleAudioEnded"
+      />
+      <div class="mt-2 flex items-center justify-center gap-2">
+        <SelectLanguage v-model="currentLanguage" :languages="languages" />
+        <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
       </div>
     </div>
-  </TabsContent>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -92,7 +90,6 @@ import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
 import { Button, Checkbox } from "@/components/ui";
-import { TabsContent } from "@/components/ui/tabs";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";

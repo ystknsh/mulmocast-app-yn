@@ -7,10 +7,9 @@
       </div>
       <MulmoViewer
         v-if="selectedProject"
+        :project-id="selectedProject?.metadata?.id"
         :project="selectedProject"
-        :mulmoViewerActiveTab="selectedProject?.metadata?.mulmoViewerActiveTab"
         :mulmoMultiLinguals="mulmoMultiLinguals"
-        @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
         @updateMultiLingual="updateMultiLingual"
       />
     </DialogContent>
@@ -22,9 +21,10 @@ import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
+//import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
+import MulmoViewer from "@/components/mulmo_viewer/tabs/slide_tab.vue";
 
-import { MulmoViewerTab } from "../../shared/constants";
+// import { MulmoViewerTab } from "../../shared/constants";
 
 import { projectApi, type Project } from "@/lib/project_api";
 import { useMulmoGlobalStore } from "@/store";
@@ -35,13 +35,6 @@ const { t } = useI18n();
 const selectedProject = ref<Project | null>(null);
 
 const mulmoMultiLinguals = ref({});
-
-const handleUpdateMulmoViewerActiveTab = async (tab: MulmoViewerTab) => {
-  if (selectedProject.value) {
-    selectedProject.value.metadata.mulmoViewerActiveTab = tab;
-    await projectApi.saveProjectMetadata(selectedProject.value.metadata.id, selectedProject.value.metadata);
-  }
-};
 
 const updateMultiLingual = async () => {
   mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler(
