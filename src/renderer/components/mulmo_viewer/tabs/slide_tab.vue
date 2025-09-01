@@ -35,17 +35,17 @@
               :src="imageFiles?.[currentBeat?.id]"
               class="max-h-64 object-contain"
             />
-            <audio
-              :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
-              v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
-              controls
-              class="mx-auto mt-2"
-              @ended="handleAudioEnded"
-              ref="audioRef"
-            />
           </div>
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
+        <audio
+          :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
+          v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          controls
+          class="mx-auto mt-2 w-full max-w-full"
+          @ended="handleAudioEnded"
+          ref="audioRef"
+        />
         {{
           isScriptLang
             ? currentBeat?.text
