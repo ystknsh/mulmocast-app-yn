@@ -53,7 +53,7 @@
             <Label>{{ t("ui.common.provider") }}</Label>
             <Select
               :model-value="speaker.provider || defaultSpeechProvider"
-              @update:model-value="(value) => handleProviderChange(name, String(value) as Provider)"
+              @update:model-value="(value) => handleProviderChange(name, value)"
             >
               <SelectTrigger>
                 <SelectValue />
@@ -208,6 +208,7 @@ const getVoiceList = (provider: string) => {
 
 const updateSpeechParams = (updates: Partial<NonNullable<SpeechParams>>): void => {
   const baseParams = props.speechParams || {
+    provider: "openai" as Provider,
     speakers: {},
   };
 
