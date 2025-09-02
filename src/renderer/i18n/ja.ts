@@ -543,6 +543,8 @@ const lang = {
     },
     speechParams: {
       title: "音声設定",
+      defaultSpeaker: "標準のスピーカー",
+      speakers: "スピーカー一覧",
       language: "言語",
       displayName: "表示名",
       voiceId: "音声ID",

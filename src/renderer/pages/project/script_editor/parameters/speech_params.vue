@@ -2,6 +2,25 @@
   <Card class="p-4">
     <h4 class="mb-3 font-medium">{{ t("parameters.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
+      <div v-if="speechParams.speakers && Object.keys(speechParams.speakers).length" class="mb-2">
+        <Label class="mb-2">{{ t("parameters.speechParams.defaultSpeaker") }}</Label>
+        <Select
+          :model-value="defaultSpeakerName"
+          @update:model-value="(value) => handleDefaultSpeakerChange(String(value))"
+        >
+          <SelectTrigger class="h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="(_, name) in speechParams.speakers" :key="name" :value="name">
+              {{ name }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div v-if="speechParams.speakers && Object.keys(speechParams.speakers).length" class="mt-4 mb-2">
+        <Label class="mb-2">{{ t("parameters.speechParams.speakers") }}</Label>
+      </div>
       <div
         v-if="speechParams.speakers"
         v-for="(speaker, name) in speechParams.speakers"
@@ -179,7 +198,7 @@ const { t } = useI18n();
 
 const selectedLanguages = ref<Record<string, string>>({});
 
-const speakers = computed(() => props.speechParams?.speakers || {});
+const speakers = computed<Record<string, Speaker>>(() => props.speechParams?.speakers || {});
 const speakerCount = computed(() => Object.keys(speakers.value).length);
 const canDeleteSpeaker = computed(() => speakerCount.value > 1);
 
@@ -241,6 +260,21 @@ const handleDisplayNameChange = (name: string, language: string, value: string) 
       [language]: value,
     },
   });
+};
+
+const defaultSpeakerName = computed(() => {
+  const entries = Object.entries(speakers.value);
+  if (entries.length === 0) return "";
+  const found = entries.find(([, s]) => Boolean(s.isDefault));
+  return found ? found[0] : entries[0][0];
+});
+
+const handleDefaultSpeakerChange = (name: string) => {
+  const updated: NonNullable<SpeechParams>["speakers"] = {};
+  for (const [key, sp] of Object.entries(speakers.value)) {
+    updated[key] = { ...sp, isDefault: key === name } as Speaker;
+  }
+  updateSpeakers(updated);
 };
 
 const handleDeleteSpeaker = (name: string) => {
@@ -311,13 +345,13 @@ const handleAddSpeaker = () => {
 
 const initializeSpeechParams = () => {
   updateSpeechParams({
-    provider: defaultSpeechProvider,
     speakers: {
       Presenter: {
         voiceId: DEFAULT_VOICE_IDS[defaultSpeechProvider],
         displayName: {
           [SPEECH_DEFAULT_LANGUAGE]: "Presenter",
         },
+        isDefault: true,
       },
     },
   });
