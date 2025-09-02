@@ -543,6 +543,8 @@ const lang = {
     },
     speechParams: {
       title: "Speech Parameters",
+      defaultSpeaker: "Default Speaker",
+      speakers: "Speakers",
       language: "Language",
       displayName: "Display Name",
       voiceId: "Voice ID",
