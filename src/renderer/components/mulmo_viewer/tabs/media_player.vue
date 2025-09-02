@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="videoWithAudioSource">
-      1
       <video
         :src="videoWithAudioSource"
         controls
@@ -12,7 +11,6 @@
       />
     </div>
     <div v-else-if="videoSource">
-      2
       <video
         :src="videoSource"
         ref="videoRef"
@@ -24,7 +22,6 @@
       <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
     </div>
     <div v-else-if="audioSource">
-      3
       <video
         :src="audioSource"
         :poster="imageSource ?? mulmoImage"
@@ -36,22 +33,24 @@
       />
     </div>
     <div v-else-if="imageSource">
-      4
       <img :src="imageSource" ref="imageRef" />
     </div>
-    <div v-else>no media</div>
+    <div v-else>{{ t("ui.common.noMedia") }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 interface Props {
   videoWithAudioSource?: string;
   videoSource?: string;
   imageSource?: string;
   audioSource?: string;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
+
+const { t } = useI18n();
 
 const emit = defineEmits(["play", "pause", "ended"]);
 
@@ -78,7 +77,7 @@ const handleVideoPause = () => {
 };
 const handleVideoEnded = () => {
   if (audioSyncRef.value) {
-    audioSyncRef.value.pause();
+    audioSyncRef.value.stop();
   }
 };
 

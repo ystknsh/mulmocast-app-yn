@@ -121,7 +121,7 @@ import { sleep } from "graphai";
 
 import { Button, Checkbox } from "@/components/ui";
 
-import MediaPlayer from "./MediaPlayer.vue";
+import MediaPlayer from "./media_player.vue";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";

@@ -62,6 +62,7 @@ const lang = {
       increase: "+",
 
       noLang: "翻訳されていません",
+      noMedia: "No Media",
     },
 
     // Common actions (placeholder pairs)
