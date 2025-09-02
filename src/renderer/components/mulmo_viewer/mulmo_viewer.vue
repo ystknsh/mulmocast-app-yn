@@ -73,8 +73,15 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
-      <div class="text-muted-foreground mt-1 text-right text-sm">
-        {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+      <div class="text-muted-foreground mt-1 flex justify-end items-center gap-4 text-sm">
+        <SelectLanguage v-model="currentLanguage" :languages="languages" />
+        <label class="flex items-center gap-2">
+          <Checkbox v-model="autoPlay" />
+          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+        </label>
+        <div>
+          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        </div>
       </div>
       <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
         {{
@@ -90,10 +97,6 @@
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>
-      <label class="my-2 mr-4 flex items-center justify-end gap-2 text-sm">
-        <Checkbox v-model="autoPlay" />
-        <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
-      </label>
       <div v-if="false">
         <audio
           :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
@@ -107,7 +110,6 @@
         />
       </div>
       <div class="mt-2 flex items-center justify-center gap-2">
-        <SelectLanguage v-model="currentLanguage" :languages="languages" />
         <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
       </div>
     </div>
