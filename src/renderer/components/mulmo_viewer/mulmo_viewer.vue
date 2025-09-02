@@ -73,7 +73,7 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
-      <div class="text-muted-foreground mt-1 flex justify-end items-center gap-4 text-sm">
+      <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
         <label class="flex items-center gap-2">
           <Checkbox v-model="autoPlay" />
