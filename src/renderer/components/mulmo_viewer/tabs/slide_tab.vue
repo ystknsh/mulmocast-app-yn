@@ -7,6 +7,15 @@
     </div>
     <div v-else>
       <div class="flex w-full items-center justify-between">
+        <MediaPlayer
+          :videoWithAudioSource="lipSyncFiles?.[currentBeat?.id]"
+          :videoSource="movieFiles?.[currentBeat?.id]"
+          :imageSource="imageFiles?.[currentBeat?.id]"
+          :audioSource="audioFiles[currentLanguage]?.[currentBeat?.id]"
+          />
+        
+      </div>
+      <div class="flex w-full items-center justify-between">
         <Button
           @click="decrease"
           variant="ghost"
@@ -90,6 +99,8 @@ import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
 import { Button, Checkbox } from "@/components/ui";
+
+import MediaPlayer from "./MediaPlayer.vue";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
