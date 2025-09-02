@@ -52,23 +52,6 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
-      <!-- media manu -->
-      <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
-        <SelectLanguage v-model="currentLanguage" :languages="languages" />
-        <Button
-          variant="outline"
-          @click="generateLocalizeAudio"
-          v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]"
-          >{{ t("ui.actions.generateAudio") }}</Button
-        >
-        <label class="flex items-center gap-2">
-          <Checkbox v-model="autoPlay" />
-          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
-        </label>
-        <div>
-          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
-        </div>
-      </div>
       <!-- text section -->
       <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
         {{
@@ -84,8 +67,24 @@
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>
-      <div class="mt-2 flex items-center justify-center gap-2">
-        <SelectLanguage v-model="textLanguage" :languages="languages" />
+
+      <!-- media manu -->
+      <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
+        {{ t("mulmoViewer.text") }} <SelectLanguage v-model="textLanguage" :languages="languages" />
+        {{ t("mulmoViewer.audio") }} <SelectLanguage v-model="currentLanguage" :languages="languages" />
+        <Button
+          variant="outline"
+          @click="generateLocalizeAudio"
+          v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          >{{ t("ui.actions.generateAudio") }}</Button
+        >
+        <label class="flex items-center gap-2">
+          <Checkbox v-model="autoPlay" />
+          <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
+        </label>
+        <div>
+          {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
+        </div>
       </div>
     </div>
   </div>
