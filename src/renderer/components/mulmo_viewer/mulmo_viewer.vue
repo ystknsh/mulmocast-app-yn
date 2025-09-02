@@ -43,27 +43,6 @@
         >
           <ChevronLeft class="h-4 w-4" />
         </Button>
-        <div class="flex min-w-0 flex-1 flex-col justify-center">
-          <div>
-            <video
-              v-if="lipSyncFiles?.[currentBeat?.id]"
-              :src="lipSyncFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <video
-              v-else-if="movieFiles?.[currentBeat?.id]"
-              :src="movieFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <img
-              v-else-if="imageFiles?.[currentBeat?.id]"
-              :src="imageFiles?.[currentBeat?.id]"
-              class="max-h-64 object-contain"
-            />
-          </div>
-        </div>
         <Button
           @click="increase"
           variant="ghost"
@@ -73,8 +52,15 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
+      <!-- media manu -->
       <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
+        <Button
+          variant="outline"
+          @click="generateLocalizeAudio"
+          v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          >{{ t("ui.actions.generateAudio") }}</Button
+        >
         <label class="flex items-center gap-2">
           <Checkbox v-model="autoPlay" />
           <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
@@ -83,34 +69,23 @@
           {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
         </div>
       </div>
+      <!-- text section -->
       <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
         {{
           isScriptLang
             ? currentBeat?.text
-            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ??
+            : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[textLanguage]?.text ??
               t("ui.common.noLang"))
         }}
         <Button
           variant="outline"
-          @click="generateLocalize"
-          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[currentLanguage]?.text"
+          @click="generateLocalizeText"
+          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text"
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>
-      <div v-if="false">
-        <audio
-          :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
-          v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
-          controls
-          class="mx-auto mt-2 w-full max-w-full"
-          ref="audioRef"
-          @play="handlePlay"
-          @pause="handlePause"
-          @ended="handleAudioEnded"
-        />
-      </div>
       <div class="mt-2 flex items-center justify-center gap-2">
-        <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
+        <SelectLanguage v-model="textLanguage" :languages="languages" />
       </div>
     </div>
   </div>
@@ -164,6 +139,7 @@ const handleEnded = () => {
 
 const lang = props.project?.script?.lang ?? "en";
 const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
+const textLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
 
 const languages = computed(() => {
   if (globalStore.useLanguages.includes(lang)) {
@@ -173,7 +149,7 @@ const languages = computed(() => {
 });
 
 const isScriptLang = computed(() => {
-  return props.project?.script?.lang === currentLanguage.value;
+  return props.project?.script?.lang === textLanguage.value;
 });
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles, downloadImageFile } = useImageFiles();
@@ -224,14 +200,18 @@ const handleAudioEnded = async () => {
   }
 };
 
-const generateLocalize = async () => {
+const generateLocalizeText = async () => {
+  // translate lang
+  await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [textLanguage.value]);
+  emit("updateMultiLingual");
+};
+const generateLocalizeAudio = async () => {
   // translate lang
   await window.electronAPI.mulmoHandler("mulmoTranslate", props.projectId, [currentLanguage.value]);
-  // get multiLingual
   emit("updateMultiLingual");
+
   // generate audio
   await window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["audio"], currentLanguage.value);
-  // get audio
   downloadAudioFiles(props.projectId, currentLanguage.value);
 };
 watch(currentLanguage, (v) => {
