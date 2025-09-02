@@ -44,23 +44,25 @@
           <ChevronLeft class="h-4 w-4" />
         </Button>
         <div class="flex min-w-0 flex-1 flex-col justify-center">
-          <video
-            v-if="lipSyncFiles?.[currentBeat?.id]"
-            :src="lipSyncFiles?.[currentBeat?.id]"
-            controls
-            class="max-h-64 object-contain"
-          />
-          <video
-            v-else-if="movieFiles?.[currentBeat?.id]"
-            :src="movieFiles?.[currentBeat?.id]"
-            controls
-            class="max-h-64 object-contain"
-          />
-          <img
-            v-else-if="imageFiles?.[currentBeat?.id]"
-            :src="imageFiles?.[currentBeat?.id]"
-            class="max-h-64 object-contain"
-          />
+          <div>
+            <video
+              v-if="lipSyncFiles?.[currentBeat?.id]"
+              :src="lipSyncFiles?.[currentBeat?.id]"
+              controls
+              class="max-h-64 object-contain"
+            />
+            <video
+              v-else-if="movieFiles?.[currentBeat?.id]"
+              :src="movieFiles?.[currentBeat?.id]"
+              controls
+              class="max-h-64 object-contain"
+            />
+            <img
+              v-else-if="imageFiles?.[currentBeat?.id]"
+              :src="imageFiles?.[currentBeat?.id]"
+              class="max-h-64 object-contain"
+            />
+          </div>
         </div>
         <Button
           @click="increase"
@@ -71,7 +73,7 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
-      <div class="text-muted-foreground mt-1 text-sm">
+      <div class="text-muted-foreground mt-1 text-right text-sm">
         {{ t("project.productTabs.slide.details", { pages: beats.length, current: currentPage + 1 }) }}
       </div>
       <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">

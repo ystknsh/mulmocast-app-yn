@@ -80,7 +80,7 @@ const handleVideoPause = () => {
 };
 const handleVideoEnded = () => {
   if (audioSyncRef.value) {
-    audioSyncRef.value.stop();
+    audioSyncRef.value.pause();
   }
 };
 

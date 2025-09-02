@@ -24,10 +24,7 @@ import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-//import MulmoViewer from "@/components/mulmo_viewer/mulmo_viewer.vue";
-import MulmoViewer from "@/components/mulmo_viewer/tabs/slide_tab.vue";
-
-// import { MulmoViewerTab } from "../../shared/constants";
+import MulmoViewer from "@/components/product/tabs/slide_tab.vue";
 
 import { projectApi, type Project } from "@/lib/project_api";
 import { useMulmoGlobalStore } from "@/store";
