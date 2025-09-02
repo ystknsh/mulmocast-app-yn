@@ -55,7 +55,12 @@
       <!-- media manu -->
       <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
-        <Button variant="outline" @click="generateLocalizeAudio"  v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]" >{{ t("ui.actions.generateAudio") }}</Button>
+        <Button
+          variant="outline"
+          @click="generateLocalizeAudio"
+          v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          >{{ t("ui.actions.generateAudio") }}</Button
+        >
         <label class="flex items-center gap-2">
           <Checkbox v-model="autoPlay" />
           <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
