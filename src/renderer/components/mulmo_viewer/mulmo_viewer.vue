@@ -43,27 +43,6 @@
         >
           <ChevronLeft class="h-4 w-4" />
         </Button>
-        <div class="flex min-w-0 flex-1 flex-col justify-center">
-          <div>
-            <video
-              v-if="lipSyncFiles?.[currentBeat?.id]"
-              :src="lipSyncFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <video
-              v-else-if="movieFiles?.[currentBeat?.id]"
-              :src="movieFiles?.[currentBeat?.id]"
-              controls
-              class="max-h-64 object-contain"
-            />
-            <img
-              v-else-if="imageFiles?.[currentBeat?.id]"
-              :src="imageFiles?.[currentBeat?.id]"
-              class="max-h-64 object-contain"
-            />
-          </div>
-        </div>
         <Button
           @click="increase"
           variant="ghost"
@@ -73,9 +52,10 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
+      <!-- media manu -->
       <div class="text-muted-foreground mt-1 flex items-center justify-end gap-4 text-sm">
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
-        <Button variant="outline" @click="generateLocalizeAudio">{{ t("ui.actions.generateAudio") }}</Button>
+        <Button variant="outline" @click="generateLocalizeAudio"  v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]" >{{ t("ui.actions.generateAudio") }}</Button>
         <label class="flex items-center gap-2">
           <Checkbox v-model="autoPlay" />
           <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>

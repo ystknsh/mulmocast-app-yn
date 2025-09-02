@@ -63,6 +63,7 @@ const lang = {
 
       noLang: "Not translated",
       noMedia: "No Media",
+      noAudio: "音声なし",
     },
 
     // Common actions (placeholder pairs)
