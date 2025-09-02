@@ -612,6 +612,10 @@ const lang = {
       },
     },
   },
+  mulmoViewer: {
+    text: "Text:",
+    audio: "Audio:",
+  },
   notify: {
     audio: {
       successMessage: "Audio generated successfully",

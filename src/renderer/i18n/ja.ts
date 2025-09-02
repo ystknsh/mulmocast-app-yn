@@ -612,6 +612,10 @@ const lang = {
       },
     },
   },
+  mulmoViewer: {
+    text: "文章:",
+    audio: "音声:",
+  },
   notify: {
     audio: {
       successMessage: "音声生成成功!!",

@@ -1,11 +1,11 @@
 <template>
   <Dialog :open="!!globalStore.mulmoViewerProjectId" @update:open="globalStore.setMulmoViewerProjectId(null)">
-    <DialogContent class="!top-8 max-h-[95vh] max-w-full !translate-y-0">
+    <DialogContent class="!top-2 max-h-[98vh] max-w-full !translate-y-0">
       <div class="sr-only">
         <DialogTitle>{{ t("viewer.mulmo.modal.dialogTitle") }}</DialogTitle>
         <DialogDescription>{{ t("viewer.mulmo.modal.dialogDescription") }}</DialogDescription>
       </div>
-      <div class="max-h-[90vh] overflow-y-auto">
+      <div class="max-h-[95vh] overflow-hidden overflow-y-auto">
         <MulmoViewer
           v-if="selectedProject"
           :project-id="selectedProject?.metadata?.id"
