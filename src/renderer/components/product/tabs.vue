@@ -33,7 +33,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
 import PodcastTab from "./tabs/podcast_tab.vue";
-import SlideTab from "./tabs/slide_tab.vue";
+import SlideTab from "../mulmo_viewer/mulmo_viewer.vue";
 
 import { MULMO_VIEWER_TABS, type MulmoViewerTab } from "../../../shared/constants";
 
