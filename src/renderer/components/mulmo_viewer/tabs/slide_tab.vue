@@ -7,15 +7,34 @@
     </div>
     <div v-else>
       <div class="flex w-full items-center justify-between">
+        <Button
+          @click="decrease"
+          variant="ghost"
+          :disabled="currentPage === 0"
+          :class="{ 'opacity-0!': currentPage === 0 }"
+        >
+          <ChevronLeft class="h-4 w-4" />
+        </Button>
         <MediaPlayer
           :videoWithAudioSource="lipSyncFiles?.[currentBeat?.id]"
           :videoSource="movieFiles?.[currentBeat?.id]"
           :imageSource="imageFiles?.[currentBeat?.id]"
           :audioSource="audioFiles[currentLanguage]?.[currentBeat?.id]"
-          />
-        
+          @play="handlePlay"
+          @pause="handlePause"
+          @ended="handleAudioEnded"
+          ref="mediaPlayer"
+        />
+        <Button
+          @click="increase"
+          variant="ghost"
+          :disabled="currentPage === beats.length - 1"
+          :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
+        >
+          <ChevronRight class="h-4 w-4" />
+        </Button>
       </div>
-      <div class="flex w-full items-center justify-between">
+      <div class="flex w-full items-center justify-between" v-if="false">
         <Button
           @click="decrease"
           variant="ghost"
@@ -73,16 +92,18 @@
         <Checkbox v-model="autoPlay" />
         <span class="text-sm">{{ t("project.productTabs.slide.autoPlay") }}</span>
       </label>
-      <audio
-        :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
-        v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
-        controls
-        class="mx-auto mt-2 w-full max-w-full"
-        ref="audioRef"
-        @play="handlePlay"
-        @pause="handlePause"
-        @ended="handleAudioEnded"
-      />
+      <div v-if="false">
+        <audio
+          :src="audioFiles[currentLanguage]?.[currentBeat?.id]"
+          v-if="!!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          controls
+          class="mx-auto mt-2 w-full max-w-full"
+          ref="audioRef"
+          @play="handlePlay"
+          @pause="handlePause"
+          @ended="handleAudioEnded"
+        />
+      </div>
       <div class="mt-2 flex items-center justify-center gap-2">
         <SelectLanguage v-model="currentLanguage" :languages="languages" />
         <Button variant="outline" @click="generateLocalize">{{ t("ui.actions.translate") }}</Button>
@@ -119,6 +140,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const emit = defineEmits(["updateMultiLingual"]);
+const mediaPlayer = ref();
 
 const currentPage = ref(0);
 const audioRef = ref();
@@ -183,6 +205,9 @@ const decrease = () => {
 
 const waitAndPlay = async () => {
   await sleep(500);
+  if (mediaPlayer.value) {
+    mediaPlayer.value.play();
+  }
   if (audioRef.value) {
     audioRef.value.play();
   }
