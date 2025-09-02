@@ -11,7 +11,7 @@
     <PdfTab :project-id="projectId" />
     <PodcastTab :project-id="projectId" />
     <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-      <SlideTab
+      <MulmoViewer
         :project-id="projectId"
         :project="project"
         :mulmoMultiLinguals="mulmoMultiLinguals"
@@ -33,7 +33,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
 import PodcastTab from "./tabs/podcast_tab.vue";
-import SlideTab from "../mulmo_viewer/mulmo_viewer.vue";
+import MulmoViewer from "../mulmo_viewer/mulmo_viewer.vue";
 
 import { MULMO_VIEWER_TABS, type MulmoViewerTab } from "../../../shared/constants";
 

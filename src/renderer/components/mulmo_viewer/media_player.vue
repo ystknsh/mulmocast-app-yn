@@ -19,7 +19,7 @@
         controls
         @play="handleVideoPlay"
         @pause="handleVideoPause"
-        @ended="handleVideoEnded"
+        @ended="handleVideoPause"
       />
       <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
     </div>
@@ -74,11 +74,6 @@ const handleVideoPlay = () => {
   }
 };
 const handleVideoPause = () => {
-  if (audioSyncRef.value) {
-    audioSyncRef.value.pause();
-  }
-};
-const handleVideoEnded = () => {
   if (audioSyncRef.value) {
     audioSyncRef.value.pause();
   }
