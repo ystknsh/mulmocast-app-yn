@@ -254,7 +254,7 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
-import MulmoViewer from "../components/mulmo_viewer/mulmo_viewer.vue";
+import MulmoViewer from "../components/product/tabs.vue";
 import ProjectHeader from "./project/project_header.vue";
 import DebugLog from "./project/debug_log.vue";
 
