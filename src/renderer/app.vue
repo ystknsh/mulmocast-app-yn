@@ -12,7 +12,7 @@ import { defineComponent, onMounted } from "vue";
 import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "@/store";
 import { Toaster } from "@/components/ui/sonner";
 import SettingModal from "@/components/setting_modal.vue";
-import ViewerModal from "@/components/viewer_modal.vue";
+import ViewerModal from "@/components/mulmo_viewer_modal.vue";
 import { useTheme } from "@/composables/use_theme";
 
 import "vue-sonner/style.css";
