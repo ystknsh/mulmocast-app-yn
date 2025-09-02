@@ -1,5 +1,5 @@
 <template>
-  <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
+  <div class="border-border text-center">
     <div v-if="beats.length === 0">
       <FileImage :size="64" class="text-muted-foreground mx-auto mb-4" />
       <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.slide.title") }}</p>

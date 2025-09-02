@@ -3,6 +3,7 @@
     <div v-if="videoWithAudioSource">
       <video
         :src="videoWithAudioSource"
+        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         controls
         @play="handlePlay"
         @pause="handlePause"
@@ -12,6 +13,7 @@
     </div>
     <div v-else-if="videoSource">
       <video
+        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="videoSource"
         ref="videoRef"
         controls
@@ -23,6 +25,7 @@
     </div>
     <div v-else-if="audioSource">
       <video
+        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="audioSource"
         :poster="imageSource ?? mulmoImage"
         controls
@@ -33,7 +36,7 @@
       />
     </div>
     <div v-else-if="imageSource">
-      <img :src="imageSource" ref="imageRef" />
+      <img :src="imageSource" ref="imageRef" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
     </div>
     <div v-else>{{ t("ui.common.noMedia") }}</div>
   </div>

@@ -5,13 +5,16 @@
         <DialogTitle>{{ t("viewer.mulmo.modal.dialogTitle") }}</DialogTitle>
         <DialogDescription>{{ t("viewer.mulmo.modal.dialogDescription") }}</DialogDescription>
       </div>
-      <MulmoViewer
-        v-if="selectedProject"
-        :project-id="selectedProject?.metadata?.id"
-        :project="selectedProject"
-        :mulmoMultiLinguals="mulmoMultiLinguals"
-        @updateMultiLingual="updateMultiLingual"
-      />
+      <div class="max-h-[90vh] overflow-y-auto">
+        <MulmoViewer
+          v-if="selectedProject"
+          :project-id="selectedProject?.metadata?.id"
+          :project="selectedProject"
+          :mulmoMultiLinguals="mulmoMultiLinguals"
+          @updateMultiLingual="updateMultiLingual"
+          class="max-h-full"
+        />
+      </div>
     </DialogContent>
   </Dialog>
 </template>
