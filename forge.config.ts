@@ -17,7 +17,7 @@ const config: ForgeConfig = {
       ".vite/build/ffmpeg",
       "node_modules/mulmocast/assets",
       "node_modules/mulmocast/scripts",
-      "node_modules/mulmocast-vision/assets",
+      "node_modules/mulmocast-vision/html",
     ],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
