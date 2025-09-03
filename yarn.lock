@@ -9258,9 +9258,9 @@ mulmocast-vision@^0.0.2:
     puppeteer "^24.17.0"
 
 mulmocast@^1.2.20:
-  version "1.2.20"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.20.tgz#92187f8f7db42f05a1174c093e329c132aa27981"
-  integrity sha512-ZT90Laij79N4LFNbSt2fHr6iyVWKRGkHUKYxqTX1a7oW49fUg5Ddbh+nBTfnIxY0iZKRHTkhQsWSB+C7OB/zRA==
+  version "1.2.21"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.21.tgz#0401f4e39ca947493956e7c488441fd429e12f15"
+  integrity sha512-iYzrguGbUX3vMHwzeW3dzBzlUK7omekys1C6MlS01+px/rCHQ1BedWhGyqAuQNqEaIy74rFZDzo2dw97Jd06eg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.15.0"

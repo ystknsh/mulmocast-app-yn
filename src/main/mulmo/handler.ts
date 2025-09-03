@@ -1,6 +1,5 @@
 import {
   updateNpmRoot,
-  updateVisionRootDir,
   getAudioArtifactFilePath,
   movieFilePath,
   pdfFilePath,
@@ -52,10 +51,8 @@ const isDev = !app.isPackaged;
 
 if (isDev) {
   updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
-  updateVisionRootDir(path.resolve(__dirname, "../../node_modules/mulmocast-vision"));
 } else {
   updateNpmRoot(process.resourcesPath);
-  updateVisionRootDir(process.resourcesPath);
 }
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
