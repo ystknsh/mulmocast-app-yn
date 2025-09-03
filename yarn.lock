@@ -1287,17 +1287,17 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@google-cloud/text-to-speech@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/text-to-speech/-/text-to-speech-6.2.0.tgz#5179c16ac1bd3ad7ad1dc88249a2734af1ec5ea7"
-  integrity sha512-CsmGFNZVL0mPrgcrkBPJ5LB8TPEKiPsER0N5h3nAkkPIeyAGGn3YwuRWyQhDYI5/XWLp11LlDEWqL8B14aYtNg==
+"@google-cloud/text-to-speech@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/text-to-speech/-/text-to-speech-6.3.0.tgz#aeaa679f95d39457cd1d376b19690f3749f83ccb"
+  integrity sha512-Yy3+vKYFs1/oGWWDQoonvaUc8beDObcZFl+HCMjSu5+Okld2Bk8gjNekv37f5posRlQSN65xF7h5m8r2jmXJZg==
   dependencies:
     google-gax "^5.0.0"
 
-"@google/genai@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.15.0.tgz#0eab6dbc1a7c29a8a7b8c509b615524b48fce1cf"
-  integrity sha512-4CSW+hRTESWl3xVtde7pkQ3E+dDFhDq+m4ztmccRctZfx1gKy3v0M9STIMGk6Nq0s6O2uKMXupOZQ1JGorXVwQ==
+"@google/genai@^1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.16.0.tgz#b4b88203881249e31ae726bc8d61fabd2712a47c"
+  integrity sha512-hdTYu39QgDFxv+FB6BK2zi4UIJGWhx2iPc0pHQ0C5Q/RCi+m+4gsryIzTGO+riqWcUA8/WGYp6hpqckdOBNysw==
   dependencies:
     google-auth-library "^9.14.2"
     ws "^8.18.0"
@@ -1728,6 +1728,24 @@
   version "1.17.4"
   resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.17.4.tgz#27861b312d413ec700caf1e3064642011d8df977"
   integrity sha512-zq24hfuAmmlNZvik0FLI58uE5sriN0WWsQzIlYnzSuKDAHFqJtBFrl/LfB1NLgJT5Y7dEBzaX4yAKqOPrcetaw==
+  dependencies:
+    ajv "^6.12.6"
+    content-type "^1.0.5"
+    cors "^2.8.5"
+    cross-spawn "^7.0.5"
+    eventsource "^3.0.2"
+    eventsource-parser "^3.0.0"
+    express "^5.0.1"
+    express-rate-limit "^7.5.0"
+    pkce-challenge "^5.0.0"
+    raw-body "^3.0.0"
+    zod "^3.23.8"
+    zod-to-json-schema "^3.24.1"
+
+"@modelcontextprotocol/sdk@^1.17.5":
+  version "1.17.5"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.17.5.tgz#7eab1c9249532b16b7e181d9af0aec5f696c1a55"
+  integrity sha512-QakrKIGniGuRVfWBdMsDea/dx1PNE739QJ7gCM41s9q+qaCYTHCdsIBXQVVXry3mfWAiaM9kT22Hyz53Uw8mfg==
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"
@@ -5843,6 +5861,11 @@ dotenv@^17.2.1:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.2.1.tgz#6f32e10faf014883515538dc922a0fb8765d9b32"
   integrity sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==
 
+dotenv@^17.2.2:
+  version "17.2.2"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-17.2.2.tgz#4010cfe1c2be4fc0f46fd3d951afb424bc067ac6"
+  integrity sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==
+
 dotenv@~16.4.7:
   version "16.4.7"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.7.tgz#0e20c5b82950140aa99be360a8a5f52335f53c26"
@@ -8895,11 +8918,6 @@ map-age-cleaner@^0.1.1:
   dependencies:
     p-defer "^1.0.0"
 
-marked@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-16.2.0.tgz#c407a4f7ed3acc1110812525cfd1b0ed8502792c"
-  integrity sha512-LbbTuye+0dWRz2TS9KJ7wsnD4KAtpj0MVkWc90XvBa6AslXsT0hTBVH5k32pcSyHH1fst9XEFJunXHktVy0zlg==
-
 marked@^16.2.1:
   version "16.2.1"
   resolved "https://registry.yarnpkg.com/marked/-/marked-16.2.1.tgz#f4b82ffa8e6201bafebc59249492b88b2dcc949f"
@@ -9245,10 +9263,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.0.1.tgz#5cc250a94d2e8ef61d6629e3c472d73de7b5e915"
-  integrity sha512-stvZi4HG+7S1aOwLzpe0kz520e4YrlEWlqf+BI4KrMM+upeESBoeCEueRAMNqhOBiHtpvRHBE088pwNKW+SoUw==
+mulmocast-vision@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.0.4.tgz#df52b26c1631b74fdd8dc243648281215eaf3cbd"
+  integrity sha512-Guc7RsK5ICEsd6QQKTApkozAmKoFalArcKjs7GQdz+Pz7FsAOygs2qdr5mNrUiHF9SFEjAaaDXDyYzBeNXycPw==
   dependencies:
     "@graphai/openai_agent" "^2.0.7"
     "@modelcontextprotocol/sdk" "^1.17.4"
@@ -9257,13 +9275,13 @@ mulmocast-vision@^0.0.1:
     nunjucks "^3.2.4"
     puppeteer "^24.17.0"
 
-mulmocast@^1.2.19:
-  version "1.2.19"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.19.tgz#656244bdf437f1e5572b269b5fa89d125de9783d"
-  integrity sha512-eLy4Uj7rtSMY2YGDVLtfXub7go59IeO7jv9rNLNucVg3pWOjqVZ1EykpKgXJ2CHhhcd6Vho2DIdK5sWvpQdXiA==
+mulmocast@^1.2.22:
+  version "1.2.22"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.22.tgz#89aee5fab82db84d1b5d63b90e473092fe252288"
+  integrity sha512-hT7BubiOJmJQbhhxG5YafQRZ3ft0l1s5fThVdvGjohDWEqsixEwo8C6JcwiFkMFet6ARx2JSfpR8vZLkWwYNdw==
   dependencies:
-    "@google-cloud/text-to-speech" "^6.2.0"
-    "@google/genai" "^1.15.0"
+    "@google-cloud/text-to-speech" "^6.3.0"
+    "@google/genai" "^1.16.0"
     "@graphai/anthropic_agent" "^2.0.11"
     "@graphai/browserless_agent" "^2.0.1"
     "@graphai/gemini_agent" "^2.0.1"
@@ -9275,18 +9293,18 @@ mulmocast@^1.2.19:
     "@graphai/vanilla_node_agents" "^2.0.4"
     "@inquirer/input" "^4.2.2"
     "@inquirer/select" "^4.3.2"
-    "@modelcontextprotocol/sdk" "^1.17.4"
+    "@modelcontextprotocol/sdk" "^1.17.5"
     "@mozilla/readability" "^0.6.0"
     "@tavily/core" "^0.5.11"
     clipboardy "^4.0.0"
-    dotenv "^17.2.1"
+    dotenv "^17.2.2"
     fluent-ffmpeg "^2.1.3"
     graphai "^2.0.14"
     jsdom "^26.1.0"
-    marked "^16.2.0"
-    mulmocast-vision "^0.0.1"
+    marked "^16.2.1"
+    mulmocast-vision "^0.0.4"
     ora "^8.2.0"
-    puppeteer "^24.17.0"
+    puppeteer "^24.18.0"
     replicate "^1.1.0"
     yaml "^2.8.1"
     yargs "^18.0.0"

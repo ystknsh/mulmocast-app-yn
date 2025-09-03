@@ -13,7 +13,12 @@ const config: ForgeConfig = {
     asar: {
       unpack: "**/node_modules/puppeteer/.local-chromium/**",
     },
-    extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts"],
+    extraResource: [
+      ".vite/build/ffmpeg",
+      "node_modules/mulmocast/assets",
+      "node_modules/mulmocast/scripts",
+      "node_modules/mulmocast-vision/html",
+    ],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
