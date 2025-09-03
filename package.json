@@ -2,7 +2,7 @@
   "name": "mulmocast-app",
   "productName": "MulmoCast",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "MulmoCast",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
@@ -24,8 +24,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "receptron team",
-    "email": "isamu@to-kyo.to"
+    "name": "receptron team"
   },
   "license": "MIT",
   "devDependencies": {

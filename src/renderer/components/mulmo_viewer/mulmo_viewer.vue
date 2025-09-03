@@ -25,6 +25,7 @@
           @ended="handleAudioEnded"
           ref="mediaPlayer"
         />
+        <audio :src="bgmFile" ref="bgmRef" v-if="bgmFile" />
         <Button
           @click="increase"
           variant="ghost"
@@ -63,7 +64,9 @@
         <Button
           variant="outline"
           @click="generateLocalizeText"
-          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text"
+          v-if="
+            (!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text) || true
+          "
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>
@@ -97,6 +100,7 @@ import { FileImage, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
+import { bufferToUrl } from "@/lib/utils";
 import { Button, Checkbox } from "@/components/ui";
 
 import MediaPlayer from "./media_player.vue";
@@ -119,6 +123,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits(["updateMultiLingual"]);
 const mediaPlayer = ref();
+const bgmRef = ref();
 
 const currentPage = ref(0);
 const audioRef = ref();
@@ -128,12 +133,15 @@ const isPlaying = ref(false);
 
 const handlePlay = () => {
   isPlaying.value = true;
+  if (bgmRef.value) {
+    bgmRef.value.play();
+  }
 };
 const handlePause = () => {
   isPlaying.value = false;
-};
-const handleEnded = () => {
-  isPlaying.value = false;
+  if (bgmRef.value) {
+    bgmRef.value.pause();
+  }
 };
 
 const lang = props.project?.script?.lang ?? "en";
@@ -153,6 +161,7 @@ const isScriptLang = computed(() => {
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles, downloadImageFile } = useImageFiles();
 const { audioFiles, downloadAudioFiles, downloadAudioFile } = useAudioFiles();
+const bgmFile = ref("");
 
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
@@ -193,7 +202,7 @@ const waitAndPlay = async () => {
 };
 
 const handleAudioEnded = async () => {
-  handleEnded();
+  handlePause();
   if (autoPlay.value && increase()) {
     waitAndPlay();
   }
@@ -219,10 +228,12 @@ watch(currentLanguage, (v) => {
 
 watch(
   () => props.projectId,
-  (newProjectId, oldProjectId) => {
+  async (newProjectId, oldProjectId) => {
     if (newProjectId && newProjectId !== oldProjectId) {
       downloadImageFiles(newProjectId);
       downloadAudioFiles(newProjectId, currentLanguage.value);
+      const bgmRes = await window.electronAPI.mulmoHandler("mulmoBGM", newProjectId);
+      bgmFile.value = bgmRes ? bufferToUrl(bgmRes) : null;
     }
   },
   { immediate: true },
