@@ -9275,10 +9275,10 @@ mulmocast-vision@^0.0.4:
     nunjucks "^3.2.4"
     puppeteer "^24.17.0"
 
-mulmocast@^1.2.22:
-  version "1.2.22"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.22.tgz#89aee5fab82db84d1b5d63b90e473092fe252288"
-  integrity sha512-hT7BubiOJmJQbhhxG5YafQRZ3ft0l1s5fThVdvGjohDWEqsixEwo8C6JcwiFkMFet6ARx2JSfpR8vZLkWwYNdw==
+mulmocast@^1.2.23:
+  version "1.2.23"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.23.tgz#b1237d5e7cd74582d385e583bc59f60025467d6d"
+  integrity sha512-NHV69uw3EsB9JzIRnD5868dEBR5Ud9puuWM2Cn6ZMFVcv9IAyvJzy/aREMZjfWjs9F4hkHYAaRP15o/iLcBbhQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.3.0"
     "@google/genai" "^1.16.0"
