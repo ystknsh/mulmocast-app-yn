@@ -9245,10 +9245,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.0.1.tgz#5cc250a94d2e8ef61d6629e3c472d73de7b5e915"
-  integrity sha512-stvZi4HG+7S1aOwLzpe0kz520e4YrlEWlqf+BI4KrMM+upeESBoeCEueRAMNqhOBiHtpvRHBE088pwNKW+SoUw==
+mulmocast-vision@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.0.2.tgz#cdb69f247c70e37a9c43a06f8f539ab8e1e4ff78"
+  integrity sha512-RCo8X85oSq/2KxsNEpeSXBIMUjzVrbKZhWleAqK8K2UFcTUmnMjGNj6u149FmdZOhj1T4dt45r7gNDANy1LIbg==
   dependencies:
     "@graphai/openai_agent" "^2.0.7"
     "@modelcontextprotocol/sdk" "^1.17.4"
@@ -9257,10 +9257,10 @@ mulmocast-vision@^0.0.1:
     nunjucks "^3.2.4"
     puppeteer "^24.17.0"
 
-mulmocast@^1.2.19:
-  version "1.2.19"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.19.tgz#656244bdf437f1e5572b269b5fa89d125de9783d"
-  integrity sha512-eLy4Uj7rtSMY2YGDVLtfXub7go59IeO7jv9rNLNucVg3pWOjqVZ1EykpKgXJ2CHhhcd6Vho2DIdK5sWvpQdXiA==
+mulmocast@^1.2.20:
+  version "1.2.20"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.20.tgz#92187f8f7db42f05a1174c093e329c132aa27981"
+  integrity sha512-ZT90Laij79N4LFNbSt2fHr6iyVWKRGkHUKYxqTX1a7oW49fUg5Ddbh+nBTfnIxY0iZKRHTkhQsWSB+C7OB/zRA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.2.0"
     "@google/genai" "^1.15.0"
@@ -9284,7 +9284,7 @@ mulmocast@^1.2.19:
     graphai "^2.0.14"
     jsdom "^26.1.0"
     marked "^16.2.0"
-    mulmocast-vision "^0.0.1"
+    mulmocast-vision "^0.0.2"
     ora "^8.2.0"
     puppeteer "^24.17.0"
     replicate "^1.1.0"
