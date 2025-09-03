@@ -2,6 +2,7 @@ import {
   getBeatAudioPath,
   MulmoPresentationStyleMethods,
   MulmoStudioContextMethods,
+  MulmoMediaSourceMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
   getMultiLingual,
@@ -9,6 +10,7 @@ import {
   localizedText,
   beatId,
   listLocalizedAudioPaths,
+  defaultBGMPath,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
 } from "mulmocast";
@@ -22,11 +24,9 @@ const beatAudio = (context: MulmoStudioContext) => {
   return (beat, option?: { lang: string; multiLingual: MulmoStudioMultiLingual }) => {
     try {
       const { lang, multiLingual } = option ?? {};
-      // const { text } = beat; // TODO: multiLingual
       const text = lang && multiLingual ? localizedText(beat, multiLingual, lang) : beat.text;
 
       const fileName = getBeatAudioPath(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
-      console.log(fileName);
       if (fs.existsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
@@ -203,4 +203,21 @@ export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLin
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);
   return multiLingual;
+};
+
+export const mulmoBGM = async (projectId: string) => {
+  const context = await getContext(projectId);
+  const content =
+    MulmoMediaSourceMethods.resolve(context.presentationStyle.audioParams.bgm, context) ??
+    process.env.PATH_BGM ??
+    defaultBGMPath();
+
+  if (content && content.startsWith("http")) {
+    const response = await fetch(content);
+    if (!response.ok) {
+      throw new Error(`Failed to download image: ${content}`);
+    }
+    const buffer = Buffer.from(await response.arrayBuffer());
+    return buffer.buffer;
+  }
 };
