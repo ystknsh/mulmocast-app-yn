@@ -4,7 +4,7 @@
       <video
         :src="videoWithAudioSource"
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
-        controls
+        :controls="controlsEnabled"
         @play="handlePlay"
         @pause="handlePause"
         @ended="handleEnded"
@@ -16,7 +16,7 @@
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="videoSource"
         ref="videoRef"
-        controls
+        :controls="controlsEnabled"
         @play="handleVideoPlay"
         @pause="handleVideoPause"
         @ended="handleVideoEnd"
@@ -28,7 +28,7 @@
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="audioSource"
         :poster="imageSource ?? mulmoImage"
-        controls
+        :controls="controlsEnabled"
         @play="handlePlay"
         @pause="handlePause"
         @ended="handleEnded"
@@ -101,6 +101,7 @@ const handlePause = (e) => {
 const handleEnded = () => {
   emit("ended");
 };
+const controlsEnabled = ref(true);
 
 const play = () => {
   if (videoWithAudioRef.value) {
@@ -120,5 +121,14 @@ defineExpose({
 <style>
 video::-webkit-media-controls-enclosure {
   background-color: transparent !important;
+}
+
+video::-webkit-media-controls {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+video:hover::-webkit-media-controls {
+  opacity: 1;
 }
 </style>
