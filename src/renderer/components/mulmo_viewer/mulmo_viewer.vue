@@ -22,7 +22,7 @@
           :audioSource="audioFiles[currentLanguage]?.[currentBeat?.id]"
           @play="handlePlay"
           @pause="handlePause"
-          @ended="handleAudioEnded"
+          @ended="handleEnded"
           ref="mediaPlayer"
         />
         <audio :src="bgmFile" ref="bgmRef" v-if="bgmFile" />
@@ -138,6 +138,7 @@ const handlePlay = () => {
   }
 };
 const handlePause = () => {
+  console.log("pause");
   isPlaying.value = false;
   if (bgmRef.value) {
     bgmRef.value.pause();
@@ -201,10 +202,13 @@ const waitAndPlay = async () => {
   }
 };
 
-const handleAudioEnded = async () => {
-  handlePause();
+const handleEnded = async () => {
+  console.log("end");
+  isPlaying.value = false;
   if (autoPlay.value && increase()) {
     waitAndPlay();
+  } else if (bgmRef.value) {
+    bgmRef.value.pause();
   }
 };
 
