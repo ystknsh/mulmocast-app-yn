@@ -119,15 +119,27 @@ defineExpose({
 });
 </script>
 <style>
+
 video::-webkit-media-controls-enclosure {
   background-color: transparent !important;
+}
+
+video::-webkit-media-controls-current-time-display,
+video::-webkit-media-controls-time-remaining-display {
+  -webkit-text-fill-color: #fff !important;
+}
+
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-mute-button,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-fullscreen-button {
+  filter: invert(1) brightness(1.2);
 }
 
 video::-webkit-media-controls {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-
 video:hover::-webkit-media-controls {
   opacity: 1;
 }
