@@ -19,7 +19,7 @@
         controls
         @play="handleVideoPlay"
         @pause="handleVideoPause"
-        @ended="handleVideoPause"
+        @ended="handleVideoEnd"
       />
       <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
     </div>
@@ -77,14 +77,26 @@ const handleVideoPause = () => {
   if (audioSyncRef.value) {
     audioSyncRef.value.pause();
   }
+  handlePause();
+};
+
+const handleVideoEnd = () => {
+  if (audioSyncRef.value) {
+    audioSyncRef.value.pause();
+  }
+  handleEnded();
 };
 
 const handlePlay = () => {
   emit("play");
 };
 
-const handlePause = () => {
-  emit("pause");
+const handlePause = (e) => {
+  const video = e.target as HTMLVideoElement;
+  // It also fires on the end event, so pause is not sent in that case.
+  if (video.duration !== video.currentTime) {
+    emit("pause");
+  }
 };
 const handleEnded = () => {
   emit("ended");
