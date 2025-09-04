@@ -149,6 +149,9 @@ import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
 import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
+import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
+
+// presentation manuscript
 
 import enLang from "../../i18n/en";
 import {
@@ -214,6 +217,7 @@ const graphAIAgents = {
   puppeteerAgent,
   toolsAgent,
   mulmoScriptValidatorAgent,
+  mulmoVisionAgent,
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
@@ -277,8 +281,7 @@ const run = async () => {
     const config = await getGraphConfig();
     const llmModel = config[llmAgent]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
-    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools];
-
+    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools, ...mulmoVisionAgent.tools];
     const postMessages = [
       {
         role: "system",
@@ -314,6 +317,14 @@ const run = async () => {
             func: namedInputs?.func,
           },
         };
+      }
+      if (agentId === "mulmoVisionAgent" && state === "completed") {
+        const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
+        script.beats.push(data.result.data);
+
+        emit("updateMulmoScript", script);
+
+        console.log(data.result.data);
       }
     });
     graphai.injectValue("messages", postMessages);
