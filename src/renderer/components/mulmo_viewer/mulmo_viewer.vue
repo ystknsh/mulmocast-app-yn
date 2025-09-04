@@ -23,6 +23,7 @@
           @play="handlePlay"
           @pause="handlePause"
           @ended="handleEnded"
+          @generateAudio="generateLocalizeAudio"
           ref="mediaPlayer"
         />
         <audio :src="bgmFile" ref="bgmRef" v-if="bgmFile" />
@@ -64,9 +65,7 @@
         <Button
           variant="outline"
           @click="generateLocalizeText"
-          v-if="
-            (!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text) || true
-          "
+          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text"
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>

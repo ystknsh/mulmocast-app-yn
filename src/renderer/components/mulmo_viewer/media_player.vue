@@ -11,7 +11,7 @@
         ref="videoWithAudioRef"
       />
     </div>
-    <div v-else-if="videoSource">
+    <div v-else-if="videoSource" class="relative inline-block">
       <video
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="videoSource"
@@ -22,6 +22,13 @@
         @ended="handleVideoEnd"
       />
       <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
+      <button
+        class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-white hover:bg-black/80"
+        @click="generateAudio"
+        v-if="!controlsEnabled"
+      >
+        {{ t("ui.actions.generateAudio") }}
+      </button>
     </div>
     <div v-else-if="audioSource">
       <video
@@ -35,15 +42,21 @@
         ref="audioRef"
       />
     </div>
-    <div v-else-if="imageSource">
+    <div v-else-if="imageSource" class="relative inline-block">
       <img :src="imageSource" ref="imageRef" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
+      <button
+        class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-white hover:bg-black/80"
+        @click="generateAudio"
+      >
+        {{ t("ui.actions.generateAudio") }}
+      </button>
     </div>
     <div v-else>{{ t("ui.common.noMedia") }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 interface Props {
   videoWithAudioSource?: string;
@@ -51,11 +64,11 @@ interface Props {
   imageSource?: string;
   audioSource?: string;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const { t } = useI18n();
 
-const emit = defineEmits(["play", "pause", "ended"]);
+const emit = defineEmits(["play", "pause", "ended", "generateAudio"]);
 
 const videoWithAudioRef = ref();
 const videoRef = ref();
@@ -73,11 +86,12 @@ const handleVideoPlay = () => {
     }
   }
 };
-const handleVideoPause = () => {
+const handleVideoPause = (e) => {
   if (audioSyncRef.value) {
     audioSyncRef.value.pause();
   }
-  handlePause();
+  console.log(e);
+  handlePause(e);
 };
 
 const handleVideoEnd = () => {
@@ -91,6 +105,10 @@ const handlePlay = () => {
   emit("play");
 };
 
+const generateAudio = () => {
+  emit("generateAudio");
+};
+
 const handlePause = (e) => {
   const video = e.target as HTMLVideoElement;
   // It also fires on the end event, so pause is not sent in that case.
@@ -101,7 +119,9 @@ const handlePause = (e) => {
 const handleEnded = () => {
   emit("ended");
 };
-const controlsEnabled = ref(true);
+const controlsEnabled = computed(() => {
+  return !!props.audioSource;
+});
 
 const play = () => {
   if (videoWithAudioRef.value) {
