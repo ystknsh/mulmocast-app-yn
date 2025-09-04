@@ -1,16 +1,17 @@
 import { type AgentFunctionInfo, type AgentFunction } from "graphai";
-import { mulmoScriptSchema } from "mulmocast/browser";
 import { tools } from "mulmocast-vision/lib/tools";
 
-const mulmoVisionTools = tools.map((tool) => {
-  const { name } = tool.function;
-  tool.function.parameters.properties.talkTrack = {
-    type: "string",
-    description: "What the presenter will say for this slide (1–3 sentences).",
-  };
+const mulmoVisionTools = tools.map(
+  (tool: { function: { name: string; parameters: { properties: Record<string, unknown> } } }) => {
+    const { name } = tool.function;
+    tool.function.parameters.properties.talkTrack = {
+      type: "string",
+      description: "What the presenter will say for this slide (1–3 sentences).",
+    };
 
-  return { type: "function", function: { ...tool.function, name: "mulmoVisionAgent--" + name } };
-});
+    return { type: "function", function: { ...tool.function, name: "mulmoVisionAgent--" + name } };
+  },
+);
 
 const normalizeName = (name: string): string => {
   if (name.startsWith("create")) {
