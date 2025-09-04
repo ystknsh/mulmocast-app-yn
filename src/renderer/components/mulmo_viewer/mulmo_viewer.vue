@@ -65,9 +65,7 @@
         <Button
           variant="outline"
           @click="generateLocalizeText"
-          v-if="
-            (!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text)
-          "
+          v-if="!isScriptLang && !mulmoMultiLinguals?.[currentBeatId]?.['multiLingualTexts']?.[textLanguage]?.text"
           >{{ t("ui.actions.translate") }}</Button
         >
       </div>
