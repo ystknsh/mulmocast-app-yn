@@ -119,7 +119,6 @@ defineExpose({
 });
 </script>
 <style>
-
 video::-webkit-media-controls-enclosure {
   background-color: transparent !important;
 }
