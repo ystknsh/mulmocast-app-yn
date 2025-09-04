@@ -106,6 +106,18 @@ export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
     },
   },
   {
+    key: "vision",
+    beat: {
+      text: "",
+      speaker: "",
+      image: {
+        type: "vision",
+        style: "",
+        data: {},
+      },
+    },
+  },
+  {
     key: "html_tailwind",
     beat: {
       text: "",

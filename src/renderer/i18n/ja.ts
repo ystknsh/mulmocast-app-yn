@@ -531,6 +531,8 @@ const lang = {
     },
     vision: {
       badge: "Vision",
+      label: "Vision",
+      placeholder: "スライドに合わせたjsonデータ",
     },
   },
 
