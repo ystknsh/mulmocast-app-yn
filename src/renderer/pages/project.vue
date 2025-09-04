@@ -165,10 +165,8 @@
 
             <!-- Product Section -->
             <Card class="relative">
-              <div
-                class="absolute right-4 z-50 mt-[-16px] flex items-center rounded-lg bg-black/50 text-white"
-              >
-                <button class="p-3 hover:text-red-400 transition-colors" @click="openModal">
+              <div class="absolute right-4 z-50 mt-[-16px] flex items-center rounded-lg bg-black/50 text-white">
+                <button class="p-3 transition-colors hover:text-red-400" @click="openModal">
                   <Expand class="h-5 w-5" />
                 </button>
               </div>
