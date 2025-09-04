@@ -23,6 +23,7 @@
           @play="handlePlay"
           @pause="handlePause"
           @ended="handleEnded"
+          @generateAudio="generateLocalizeAudio"
           ref="mediaPlayer"
         />
         <audio :src="bgmFile" ref="bgmRef" v-if="bgmFile" />

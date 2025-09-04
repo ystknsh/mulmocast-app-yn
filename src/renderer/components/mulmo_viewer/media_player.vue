@@ -24,7 +24,7 @@
       <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
       <button
         class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-white hover:bg-black/80"
-        @click="onGenerate"
+        @click="generateAudio"
         v-if="!controlsEnabled"
       >
         {{ t("ui.actions.generateAudio") }}
@@ -46,7 +46,7 @@
       <img :src="imageSource" ref="imageRef" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
       <button
         class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-white hover:bg-black/80"
-        @click="onGenerate"
+        @click="generateAudio"
       >
         {{ t("ui.actions.generateAudio") }}
       </button>
@@ -68,7 +68,7 @@ const props = defineProps<Props>();
 
 const { t } = useI18n();
 
-const emit = defineEmits(["play", "pause", "ended"]);
+const emit = defineEmits(["play", "pause", "ended", "generateAudio"]);
 
 const videoWithAudioRef = ref();
 const videoRef = ref();
@@ -103,6 +103,10 @@ const handleVideoEnd = () => {
 
 const handlePlay = () => {
   emit("play");
+};
+
+const generateAudio = () => {
+  emit("generateAudio");
 };
 
 const handlePause = (e) => {
