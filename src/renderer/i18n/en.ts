@@ -529,6 +529,9 @@ const lang = {
     lipSync: {
       label: "LipSync",
     },
+    vision: {
+      badge: "Vision",
+    },
   },
 
   // Parameters structure (extracted from project.scriptEditor.*)

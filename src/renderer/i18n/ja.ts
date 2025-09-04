@@ -529,6 +529,9 @@ const lang = {
     lipSync: {
       label: "リップシンク(声に合わせて口を動かす)",
     },
+    vision: {
+      badge: "Vision",
+    },
   },
 
   // Parameters structure (extracted from project.scriptEditor.*)
