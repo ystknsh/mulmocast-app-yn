@@ -135,28 +135,7 @@
           </template>
           <!-- vision -->
           <template v-else-if="beat.image.type === 'vision'">
-            <Label class="mb-1 block">{{ t("beat.vision.label") }}</Label>
-            <Input
-              :placeholder="t('ui.common.title')"
-              :model-value="beat.image?.style"
-              @update:model-value="(value) => update('image.style', String(value))"
-              @blur="justSaveAndPushToHistory"
-              class="mb-2"
-            />
-            <Textarea
-              :placeholder="t('beat.vision.placeholder')"
-              :model-value="JSON.stringify(beat.image?.data, null, 2)"
-              @update:model-value="
-                (value) => {
-                  try {
-                    update('image.data', JSON.parse(String(value)));
-                  } catch (_) {}
-                }
-              "
-              @blur="justSaveAndPushToHistory"
-              class="font-mono"
-              rows="8"
-            />
+            <Vision :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
           </template>
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
@@ -317,6 +296,8 @@ import BeatStyle from "./beat_style.vue";
 import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
+
+import Vision from "./beat_editors/vision.vue";
 
 type FileData = ArrayBuffer | string | null;
 
