@@ -86,7 +86,7 @@ export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
       image: {
         type: "chart",
         title: "",
-        chartData: undefined,
+        chartData: {},
       },
     },
   },
