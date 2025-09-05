@@ -1,25 +1,7 @@
 import { type AgentFunctionInfo, type AgentFunction } from "graphai";
-import { tools } from "mulmocast-vision/lib/tools";
+import { functionNameToTemplateName, tools, convertTools } from "mulmocast-vision/lib/browser";
 
-const mulmoVisionTools = tools.map(
-  (tool: { function: { name: string; parameters: { properties: Record<string, unknown> } } }) => {
-    const { name } = tool.function;
-    tool.function.parameters.properties.talkTrack = {
-      type: "string",
-      description: "What the presenter will say for this slide (1–3 sentences).",
-    };
-
-    return { type: "function", function: { ...tool.function, name: "mulmoVisionAgent--" + name } };
-  },
-);
-
-const normalizeName = (name: string): string => {
-  if (name.startsWith("create")) {
-    const trimmed = name.slice("create".length);
-    return trimmed.charAt(0).toLowerCase() + trimmed.slice(1);
-  }
-  return name;
-};
+const mulmoVisionTools = convertTools(tools);
 
 const mulmoVisionAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg, func } = namedInputs;
@@ -31,7 +13,7 @@ const mulmoVisionAgent: AgentFunction = async ({ namedInputs }) => {
     text: talkTrack ?? "",
     image: {
       type: "vision",
-      style: normalizeName(func),
+      style: functionNameToTemplateName(func),
       data: arg,
     },
   };
