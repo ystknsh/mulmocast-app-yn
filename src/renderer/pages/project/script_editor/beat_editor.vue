@@ -76,49 +76,17 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Label class="mb-1 block">{{ t("beat.markdown.label") }}</Label>
-            <Textarea
-              :placeholder="t('beat.markdown.placeholder')"
-              :model-value="
-                Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown
-              "
-              @update:model-value="(value) => update('image.markdown', String(value).split('\n'))"
-              @blur="justSaveAndPushToHistory"
-              class="font-mono"
-              rows="6"
-            />
+            <Markdown :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
           </template>
 
           <!-- chart -->
           <template v-else-if="beat.image.type === 'chart'">
-            <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
-            <Textarea
-              :placeholder="t('beat.chart.placeholder')"
-              :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
-              @update:model-value="
-                (value) => {
-                  try {
-                    update('image.chartData', JSON.parse(String(value)));
-                  } catch (_) {}
-                }
-              "
-              @blur="justSaveAndPushToHistory"
-              class="font-mono"
-              rows="8"
-            />
+            <Chart :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
           </template>
 
           <!-- mermaid -->
           <template v-else-if="beat.image.type === 'mermaid'">
-            <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
-            <Textarea
-              :placeholder="t('beat.mermaid.placeholder')"
-              :model-value="beat?.image?.code?.text"
-              @update:model-value="(value) => update('image.code.text', String(value))"
-              @blur="justSaveAndPushToHistory"
-              class="font-mono"
-              rows="6"
-            />
+            <Mermaid :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
           </template>
 
           <!-- html_tailwind -->
@@ -297,6 +265,9 @@ import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
+import Markdown from "./beat_editors/markdown.vue";
+import Chart from "./beat_editors/chart.vue";
+import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 
 type FileData = ArrayBuffer | string | null;
