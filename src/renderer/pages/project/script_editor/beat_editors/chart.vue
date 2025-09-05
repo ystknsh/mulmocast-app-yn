@@ -18,13 +18,14 @@
 
 <script setup lang="ts">
 import { Label, Textarea } from "@/components/ui";
+import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 interface Props {
   beat: MulmoBeat;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {
