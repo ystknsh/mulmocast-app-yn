@@ -47,39 +47,16 @@
           </CardHeader>
           <CollapsibleContent>
             <CardContent class="space-y-4">
-              <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
-                <div class="flex items-center justify-between">
-                  <Label :for="envKey" class="text-base font-medium">{{ t("ai.apiKeyName." + envKey) }}</Label>
-                  <a
-                    v-if="config.url"
-                    :href="config.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:text-primary/80 flex items-center gap-1 text-xs"
-                  >
-                    {{ t("settings.apiKeys.getApiKey") }}
-                    <ExternalLink class="h-3 w-3" />
-                  </a>
-                </div>
-                <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
-                  <span v-for="feature in config.features" :key="feature" class="bg-muted rounded-md px-2 py-1 text-xs">
-                    {{ t(`settings.apiKeys.features.${feature}`) }}
-                  </span>
-                </div>
-                <div class="flex gap-2">
-                  <Input
-                    :id="envKey"
-                    v-model="apiKeys[envKey]"
-                    :type="showKeys[envKey] ? 'text' : 'password'"
-                    :placeholder="config.placeholder"
-                    class="flex-1"
-                  />
-                  <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
-                    <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
-                    <EyeOff v-else class="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <ApiKeyInput
+                v-for="(config, envKey) in ENV_KEYS"
+                :key="envKey"
+                :env-key="envKey"
+                :config="config"
+                :api-key="apiKeys[envKey]"
+                :show-key="showKeys[envKey]"
+                @update:api-key="(value) => updateApiKey(envKey, value)"
+                @update:show-key="(value) => updateShowKey(envKey, value)"
+              />
             </CardContent>
           </CollapsibleContent>
         </Collapsible>
@@ -127,14 +104,15 @@
 import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
+import { ChevronDown } from "lucide-vue-next";
 
-import { Button, Input, Label, Checkbox } from "@/components/ui";
+import { Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import LlmSettings from "@/components/llm_settings.vue";
+import ApiKeyInput from "@/components/api_key_input.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
 import {
@@ -266,6 +244,14 @@ const debouncedSave = useDebounceFn(saveSettings, 1000);
 
 const updateSelectedLLM = (llm: string) => {
   selectedLLM.value = llm;
+};
+
+const updateApiKey = (envKey: string, value: string) => {
+  apiKeys[envKey] = value;
+};
+
+const updateShowKey = (envKey: string, value: boolean) => {
+  showKeys[envKey] = value;
 };
 
 const updateLlmConfigs = (configs: LlmConfigs) => {
