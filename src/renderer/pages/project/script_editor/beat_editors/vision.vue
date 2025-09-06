@@ -1,11 +1,8 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.vision.label") }}</Label>
-  <Input
-    :placeholder="t('ui.common.title')"
+  <VisionSelect
     :model-value="beat.image?.style"
     @update:model-value="(value) => update('image.style', String(value))"
-    @blur="save"
-    class="mb-2"
   />
   <Textarea
     :placeholder="t('beat.vision.placeholder')"
@@ -24,10 +21,12 @@
 </template>
 
 <script setup lang="ts">
-import { Label, Input, Textarea } from "@/components/ui";
+import { Label, Textarea } from "@/components/ui";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
+import VisionSelect from "./vision_select.vue";
 
 interface Props {
   beat: MulmoBeat;
@@ -37,6 +36,7 @@ const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
+  save();
 };
 
 const save = () => {
