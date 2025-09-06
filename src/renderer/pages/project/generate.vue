@@ -32,7 +32,7 @@
 import { ref, watch } from "vue";
 import { useMulmoEventStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
-import { FileText, Monitor, Globe, Volume2Icon } from "lucide-vue-next";
+import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 import { Checkbox } from "@/components/ui/checkbox";
