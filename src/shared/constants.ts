@@ -4,7 +4,8 @@ export { pdf_modes, languages } from "mulmocast/browser";
 
 // Define all valid feature keys as a readonly tuple
 export const FEATURE_KEYS = [
-  "llm",
+  "llmChat",
+  "llmTranslation",
   "tts",
   "tts-jp",
   "imageGeneration",
