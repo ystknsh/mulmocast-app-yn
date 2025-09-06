@@ -144,11 +144,27 @@ const handlePause = () => {
   }
 };
 
-const lang = props.project?.script?.lang ?? "en";
-const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
-const textLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
+const currentLanguage = ref("");
+const textLanguage = ref("");
+
+// initialize currentLanguage and textLanguage to the project lang
+watch(
+  () => props.project?.script?.lang,
+  (v) => {
+    if (currentLanguage.value === "") {
+      currentLanguage.value = v;
+    }
+    if (textLanguage.value === "") {
+      textLanguage.value = v;
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 
 const languages = computed(() => {
+  const lang = props.project?.script?.lang ?? "en";
   if (globalStore.useLanguages.includes(lang)) {
     return globalStore.useLanguages;
   }
