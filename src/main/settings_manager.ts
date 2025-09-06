@@ -19,10 +19,11 @@ const getSettingsPath = (): string => {
 
 export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = getSettingsPath();
+  const defaultUseLanguageSet = new Set(I18N_SUPPORTED_LANGUAGES.map((l) => l.id));
   const defaultSettings: Settings = {
     USE_LANGUAGES: LANGUAGE_IDS.reduce(
       (acc, lang) => {
-        if (I18N_SUPPORTED_LANGUAGES.some((l) => l.id === lang)) {
+        if (defaultUseLanguageSet.has(lang as (typeof I18N_SUPPORTED_LANGUAGES)[number]["id"])) {
           acc[lang] = true;
         } else {
           acc[lang] = false;
@@ -59,7 +60,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     // Dynamically set environment variables based on constants
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings[envKey as keyof Settings];
+      const value = settings[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }
