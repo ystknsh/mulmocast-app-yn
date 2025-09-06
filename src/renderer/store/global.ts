@@ -29,19 +29,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   };
 
   const useLanguages = computed(() => {
-    const languages =
-      settings.value?.USE_LANGUAGES ??
-      LANGUAGE_IDS.reduce(
-        (acc, lang) => {
-          if (I18N_SUPPORTED_LANGUAGES.some((l) => l.id === lang)) {
-            acc[lang] = true;
-          } else {
-            acc[lang] = false;
-          }
-          return acc;
-        },
-        {} as Record<string, boolean>,
-      );
+    const languages = settings.value?.USE_LANGUAGES ?? {};
     return Object.keys(languages)
       .map((lang) => {
         return languages[lang] ? lang : null;
