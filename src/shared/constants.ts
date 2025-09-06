@@ -343,7 +343,7 @@ export const LANGUAGE_IDS = [
   "ar",
   "uk",
   "el",
-];
+] as const;
 
 export const LANGUAGES = [...LANGUAGE_IDS.map((key) => ({ id: key }))] as const;
 
