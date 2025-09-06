@@ -134,7 +134,6 @@
             <div v-if="alertLLM" class="text-destructive">
               {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
             </div>
-
           </div>
           <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
             <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>

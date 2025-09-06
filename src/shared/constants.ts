@@ -22,7 +22,7 @@ export const ENV_KEYS = {
     title: "OpenAI API Key",
     placeholder: "sk-...",
     url: "https://platform.openai.com/api-keys",
-    features: ["llmChat","llmTranslation", "tts", "imageGeneration"] as FeatureKey[],
+    features: ["llmChat", "llmTranslation", "tts", "imageGeneration"] as FeatureKey[],
   },
   NIJIVOICE_API_KEY: {
     title: "NijiVoice API Key",
