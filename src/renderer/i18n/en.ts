@@ -431,7 +431,7 @@ const lang = {
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
-      undoChat: "Undo",
+      undoChat: "Cancel Editing",
       createButtonDescription:
         "To create a script, select a template, \"Copy to Message\", modify content, and send.",
       copyScript: "Copy to Message",
