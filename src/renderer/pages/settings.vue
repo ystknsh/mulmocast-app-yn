@@ -40,13 +40,10 @@
                 <CardTitle class="cursor-pointer">{{ t("settings.apiKeys.title") }}</CardTitle>
                 <ChevronDown :class="['h-4 w-4 transition-transform', apiKeysExpanded && 'rotate-180']" />
               </div>
+              <CardDescription class="mt-2 text-left">
+                {{ t("settings.apiKeys.description") }}
+              </CardDescription>
             </CollapsibleTrigger>
-            <CardDescription class="mt-2">
-              {{ t("settings.apiKeys.description") }}
-              <span class="text-muted-foreground mt-1 block text-xs">
-                {{ t("settings.apiKeys.llmDescription") }}
-              </span>
-            </CardDescription>
           </CardHeader>
           <CollapsibleContent>
             <CardContent class="space-y-4">
