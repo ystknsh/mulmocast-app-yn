@@ -36,7 +36,6 @@ const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
-  save();
 };
 
 const save = () => {
