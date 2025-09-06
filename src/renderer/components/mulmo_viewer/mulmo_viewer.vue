@@ -151,7 +151,7 @@ const textLanguage = ref("");
 // initialize currentLanguage and textLanguage to the project lang
 watch(
   () => props.project?.script?.lang,
-  (v) => {
+  (v: (typeof LANGUAGE_IDS)[number]) => {
     if (v && currentLanguage.value === "") {
       currentLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
     }

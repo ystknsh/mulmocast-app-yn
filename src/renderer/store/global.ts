@@ -29,22 +29,22 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   };
 
   const useLanguages = computed(() => {
-    return Object.keys(
+    const languages =
       settings.value?.USE_LANGUAGES ??
-        LANGUAGE_IDS.reduce(
-          (acc, lang) => {
-            if (I18N_SUPPORTED_LANGUAGES.some((l) => l.id === lang)) {
-              acc[lang] = true;
-            } else {
-              acc[lang] = false;
-            }
-            return acc;
-          },
-          {} as Record<string, boolean>,
-        ),
-    )
+      LANGUAGE_IDS.reduce(
+        (acc, lang) => {
+          if (I18N_SUPPORTED_LANGUAGES.some((l) => l.id === lang)) {
+            acc[lang] = true;
+          } else {
+            acc[lang] = false;
+          }
+          return acc;
+        },
+        {} as Record<string, boolean>,
+      );
+    return Object.keys(languages)
       .map((lang) => {
-        return settings.value?.USE_LANGUAGES[lang] ? lang : null;
+        return languages[lang] ? lang : null;
       })
       .filter((v) => v);
   });
