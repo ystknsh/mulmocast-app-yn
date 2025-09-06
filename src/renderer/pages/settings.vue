@@ -112,114 +112,35 @@
       </Card>
 
       <!-- llm -->
-      <Card>
-        <CardHeader>
-          <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
-          <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="space-y-2">
-            <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
-            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
-            <Select v-model="selectedLLM">
-              <SelectTrigger id="llm">
-                <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
-                  {{ t("ai.agent." + llm.id) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <div v-if="alertLLM" class="text-destructive">
-              {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
-            </div>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
-            <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
-            {{ t("settings.llmSettings.ollama.url") }}:
-            <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
-            {{ t("settings.llmSettings.model") }}:
-            <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
-            <Select v-model="llmConfigs['openai']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['gemini']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['anthropic']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['groq']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <LlmSettings
+        :selected-l-l-m="selectedLLM"
+        :llm-configs="llmConfigs"
+        :api-keys="apiKeys"
+        @update:selected-l-l-m="updateSelectedLLM"
+        @update:llm-configs="updateLlmConfigs"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
-import { provider2LLMAgent } from "mulmocast/browser";
 
 import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import LlmSettings from "@/components/llm_settings.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
 import {
   ENV_KEYS,
   languages,
   I18N_SUPPORTED_LANGUAGES,
-  llms,
   LLM_OLLAMA_DEFAULT_CONFIG,
   LLM_OPENAI_DEFAULT_CONFIG,
   LLM_ANTHROPIC_DEFAULT_CONFIG,
@@ -243,13 +164,6 @@ const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
 const selectedLLM = ref("openAIAgent");
-const alertLLM = computed(() => {
-  const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
-  if (llmKey && apiKeys[llmKey] === "") {
-    return llmKey;
-  }
-  return null;
-});
 
 type LlmConfigOllama = { url: string; model: string };
 type LlmConfigOpenAI = { model: string };
@@ -265,7 +179,7 @@ type LlmConfigs = {
   groq: LlmConfigGroq;
 };
 
-const llmConfigs = reactive<LlmConfigs>({
+const llmConfigs = ref<LlmConfigs>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
   openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
   anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
@@ -311,13 +225,13 @@ onMounted(async () => {
       selectedLLM.value = settings.CHAT_LLM;
     }
     if (settings?.llmConfigs?.ollama) {
-      llmConfigs.ollama = settings.llmConfigs.ollama;
+      llmConfigs.value.ollama = settings.llmConfigs.ollama;
     }
     if (settings?.llmConfigs?.openai) {
-      llmConfigs.openai = settings.llmConfigs.openai;
+      llmConfigs.value.openai = settings.llmConfigs.openai;
     }
     if (settings?.llmConfigs?.anthropic) {
-      llmConfigs.anthropic = settings.llmConfigs.anthropic;
+      llmConfigs.value.anthropic = settings.llmConfigs.anthropic;
     }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
@@ -349,6 +263,14 @@ const saveSettings = async () => {
 };
 
 const debouncedSave = useDebounceFn(saveSettings, 1000);
+
+const updateSelectedLLM = (llm: string) => {
+  selectedLLM.value = llm;
+};
+
+const updateLlmConfigs = (configs: LlmConfigs) => {
+  llmConfigs.value = configs;
+};
 
 // Watch for changes in text
 watch(
