@@ -120,6 +120,7 @@
         <CardContent>
           <div class="space-y-2">
             <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
             <Select v-model="selectedLLM">
               <SelectTrigger id="llm">
                 <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
@@ -134,7 +135,6 @@
               {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
             </div>
 
-            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
           </div>
           <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
             <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
