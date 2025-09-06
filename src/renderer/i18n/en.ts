@@ -433,8 +433,8 @@ const lang = {
       clearChat: "Clear chat",
       undoChat: "Undo",
       createButtonDescription:
-        "To create a script with the content so far, please select a template and press the Create button.",
-      copyScript: "Copy script",
+        "To create a script, select a template, \"Copy to Message\", modify content, and send.",
+      copyScript: "Copy to Message",
       creating: "Creating...",
       createScript: "Create Script",
       exampleMessage: "ex) Thank you very much! Please proceed with the creation.",
