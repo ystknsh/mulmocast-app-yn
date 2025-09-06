@@ -108,6 +108,7 @@ import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import type { Project } from "@/lib/project_api";
 import SelectLanguage from "./select_language.vue";
+import { LANGUAGE_IDS } from "../../../shared/constants";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -144,11 +145,27 @@ const handlePause = () => {
   }
 };
 
-const lang = props.project?.script?.lang ?? "en";
-const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
-const textLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
+const currentLanguage = ref("");
+const textLanguage = ref("");
+
+// initialize currentLanguage and textLanguage to the project lang
+watch(
+  () => props.project?.script?.lang,
+  (v: (typeof LANGUAGE_IDS)[number]) => {
+    if (v && currentLanguage.value === "") {
+      currentLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
+    }
+    if (v && textLanguage.value === "") {
+      textLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 
 const languages = computed(() => {
+  const lang = props.project?.script?.lang ?? "en";
   if (globalStore.useLanguages.includes(lang)) {
     return globalStore.useLanguages;
   }

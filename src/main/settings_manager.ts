@@ -1,13 +1,15 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { ENV_KEYS, type EnvKey, type AppSettingKey } from "../shared/constants";
+import { ENV_KEYS, type EnvKey, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
   [K in EnvKey]?: string;
 } & {
   [K in AppSettingKey]?: string;
+} & {
+  USE_LANGUAGES: Record<string, boolean>;
 };
 
 const getSettingsPath = (): string => {
@@ -17,17 +19,31 @@ const getSettingsPath = (): string => {
 
 export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = getSettingsPath();
+  const defaultUseLanguageSet = new Set(I18N_SUPPORTED_LANGUAGES.map((l) => l.id));
+  const defaultSettings: Settings = {
+    USE_LANGUAGES: LANGUAGE_IDS.reduce(
+      (acc, lang) => {
+        if (defaultUseLanguageSet.has(lang as (typeof I18N_SUPPORTED_LANGUAGES)[number]["id"])) {
+          acc[lang] = true;
+        } else {
+          acc[lang] = false;
+        }
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    ),
+  };
 
   try {
     if (!fs.existsSync(settingsPath)) {
-      return {};
+      return defaultSettings;
     }
 
     const data = await fs.promises.readFile(settingsPath, "utf-8");
-    return JSON.parse(data);
+    return { ...defaultSettings, ...JSON.parse(data) };
   } catch (error) {
     console.error("Failed to load settings:", error);
-    return {};
+    return defaultSettings;
   }
 };
 
@@ -44,7 +60,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     // Dynamically set environment variables based on constants
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings[envKey as keyof Settings];
+      const value = settings[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }
