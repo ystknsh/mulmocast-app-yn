@@ -322,28 +322,30 @@ export const MULMO_VIEWER_TABS = {
 
 export type MulmoViewerTab = (typeof MULMO_VIEWER_TABS)[keyof typeof MULMO_VIEWER_TABS];
 
-export const LANGUAGES = [
-  { id: "en" },
-  { id: "es" },
-  { id: "de" },
-  { id: "ru" },
-  { id: "fr" },
-  { id: "ja" },
-  { id: "pt" },
-  { id: "tr" },
-  { id: "it" },
-  { id: "fa" },
-  { id: "nl" },
-  { id: "pl" },
-  { id: "zh" },
-  { id: "vi" },
-  { id: "id" },
-  { id: "cs" },
-  { id: "ko" },
-  { id: "ar" },
-  { id: "uk" },
-  { id: "el" },
-] as const;
+export const LANGUAGE_IDS = [
+  "en",
+  "es",
+  "de",
+  "ru",
+  "fr",
+  "ja",
+  "pt",
+  "tr",
+  "it",
+  "fa",
+  "nl",
+  "pl",
+  "zh",
+  "vi",
+  "id",
+  "cs",
+  "ko",
+  "ar",
+  "uk",
+  "el",
+];
+
+export const LANGUAGES = [...LANGUAGE_IDS.map((key) => ({ id: key }))] as const;
 
 export const I18N_SUPPORTED_LANGUAGES = [{ id: "en" }, { id: "ja" }] as const;
 

@@ -1,5 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { I18N_SUPPORTED_LANGUAGES, LANGUAGE_IDS } from "../../shared/constants";
 
 type SETTINGS = {
   MAIN_LANGUAGE?: string;
@@ -28,7 +29,20 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   };
 
   const useLanguages = computed(() => {
-    return Object.keys(settings.value?.USE_LANGUAGES ?? {})
+    return Object.keys(
+      settings.value?.USE_LANGUAGES ??
+        LANGUAGE_IDS.reduce(
+          (acc, lang) => {
+            if (I18N_SUPPORTED_LANGUAGES.some((l) => l.id === lang)) {
+              acc[lang] = true;
+            } else {
+              acc[lang] = false;
+            }
+            return acc;
+          },
+          {} as Record<string, boolean>,
+        ),
+    )
       .map((lang) => {
         return settings.value?.USE_LANGUAGES[lang] ? lang : null;
       })

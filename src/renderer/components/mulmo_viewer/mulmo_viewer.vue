@@ -108,6 +108,7 @@ import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import type { Project } from "@/lib/project_api";
 import SelectLanguage from "./select_language.vue";
+import { LANGUAGE_IDS } from "../../../shared/constants";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -151,11 +152,11 @@ const textLanguage = ref("");
 watch(
   () => props.project?.script?.lang,
   (v) => {
-    if (currentLanguage.value === "") {
-      currentLanguage.value = v;
+    if (v && currentLanguage.value === "") {
+      currentLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
     }
-    if (textLanguage.value === "") {
-      textLanguage.value = v;
+    if (v && textLanguage.value === "") {
+      textLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
     }
   },
   {
