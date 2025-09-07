@@ -1,7 +1,7 @@
 <template>
   <Dialog :open="isOpen" @update:open="() => {}">
     <DialogContent
-      class="flex h-[565px] max-w-2xl flex-col"
+      class="flex h-[605px] max-w-2xl flex-col"
       :hide-close="true"
       @escape-key-down.prevent
       @pointer-down-outside.prevent
@@ -28,18 +28,28 @@
       </DialogHeader>
 
       <div class="flex-1 space-y-6 overflow-y-auto p-1">
-        <!-- Step 1: Welcome -->
-        <div v-if="currentStep === 1">
+        <!-- Step 1: Language + Welcome -->
+        <div v-if="currentStep === 1" class="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle class="flex items-center gap-2">
-                <Rocket class="h-5 w-5 text-blue-600" />
-                {{ t("onboarding.welcome.title") }}
-              </CardTitle>
-              <CardDescription>
-                {{ t("onboarding.welcome.description") }}
-              </CardDescription>
+              <CardTitle>{{ t("settings.appSettings.language.label") }}</CardTitle>
+              <CardDescription>{{ t("settings.appSettings.language.description") }}</CardDescription>
             </CardHeader>
+            <CardContent>
+              <Select v-model="locale">
+                <SelectTrigger id="onboarding-language" data-testid="onboarding-language-select">
+                  <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="language in I18N_SUPPORTED_LANGUAGES" :key="language.id" :value="language.id">
+                    {{ t("commonLanguages." + language.id) }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
+
+          <Card>
             <CardContent class="space-y-4">
               <div>
                 <h4 class="mb-2 font-semibold">{{ t("onboarding.welcome.whatIsMulmoCast") }}</h4>
@@ -170,9 +180,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, toRaw } from "vue";
 import { useI18n } from "vue-i18n";
-import { Loader2, Rocket, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "lucide-vue-next";
+import { Loader2, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "lucide-vue-next";
 
 import { Button } from "@/components/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -189,6 +200,7 @@ import { notifySuccess, notifyError } from "@/lib/notification";
 import {
   ENV_KEYS,
   llms,
+  I18N_SUPPORTED_LANGUAGES,
   LLM_OLLAMA_DEFAULT_CONFIG,
   LLM_OPENAI_DEFAULT_CONFIG,
   LLM_ANTHROPIC_DEFAULT_CONFIG,
@@ -198,7 +210,7 @@ import {
 import { useMulmoGlobalStore } from "../store";
 import { Settings } from "../../main/settings_manager";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const globalStore = useMulmoGlobalStore();
 
 type LlmConfigOllama = { url: string; model: string };
@@ -342,6 +354,7 @@ const handleSave = async () => {
     const data = {
       ...apiKeys.value,
       APIKEY: toRaw({ ...apiKeys.value }),
+      APP_LANGUAGE: locale.value,
       CHAT_LLM: selectedLLM.value,
       llmConfigs: toRaw(llmConfigs.value),
     };
