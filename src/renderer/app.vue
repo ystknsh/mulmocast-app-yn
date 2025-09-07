@@ -4,6 +4,7 @@
     <router-view />
     <SettingModal />
     <ViewerModal />
+    <OnboardingModal :is-open="globalStore.isOpenOnboardingModal" @complete="globalStore.toggleOnboardingModal" />
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmo
 import { Toaster } from "@/components/ui/sonner";
 import SettingModal from "@/components/setting_modal.vue";
 import ViewerModal from "@/components/mulmo_viewer_modal.vue";
+import OnboardingModal from "@/components/onboarding_modal.vue";
 import { useTheme } from "@/composables/use_theme";
 
 import "vue-sonner/style.css";
@@ -26,6 +28,7 @@ export default defineComponent({
     Toaster,
     SettingModal,
     ViewerModal,
+    OnboardingModal,
   },
   setup() {
     const mulmoEventStore = useMulmoEventStore();
@@ -42,6 +45,10 @@ export default defineComponent({
         const settings = await window.electronAPI.settings.get();
         if (settings) {
           globalStore.updateSettings(settings);
+        }
+
+        if (globalStore.needsOnboarding) {
+          globalStore.toggleOnboardingModal();
         }
       } catch (error) {
         console.error("Failed to load settings:", error);
@@ -67,6 +74,10 @@ export default defineComponent({
         }
       });
     });
+
+    return {
+      globalStore,
+    };
   },
 });
 </script>

@@ -10,6 +10,8 @@ const lang = {
       applicationName: "MulmoCast",
       // Navigation
       back: "戻る",
+      previous: "前へ",
+      next: "次へ",
 
       // File operations
       drophere: "画像をここにドロップ",
@@ -298,6 +300,37 @@ const lang = {
         url: "URL",
       },
       model: "モデル",
+    },
+  },
+  onboarding: {
+    title: "MulmoCastへようこそ",
+    description: "AIアシスタントをセットアップして始めましょう",
+    welcome: {
+      title: "MulmoCastへようこそ！",
+      description: "AIアシスタントをセットアップして始めましょう",
+      whatIsMulmoCast: "MulmoCastとは？",
+      whatIsMulmoCastDescription:
+        "MulmoCastは、様々なAIモデルを使用して動画、画像、音声を生成するマルチモーダルなAIツールです。",
+      setupGuide:
+        "これから数ステップで設定を行います。お好みの言語モデルとAPIキーを設定して、素晴らしいコンテンツの作成を始めましょう！",
+    },
+    completeBtn: "セットアップ完了",
+    complete: {
+      title: "セットアップ完了！",
+      description: "おめでとうございます！MulmoCastのセットアップが完了しました。",
+      nextSteps: "これから何ができる？",
+      createProjectDescription: "新しいプロジェクトを作成して、AIアシスタントと一緒にコンテンツ制作を始めましょう！",
+      features: {
+        script: "AIアシスタントとの対話でスクリプト作成",
+        media: "画像・動画・音声の自動生成",
+        presentation: "プレゼンテーション資料の作成",
+        translation: "多言語対応の翻訳機能",
+      },
+    },
+    success: "セットアップが正常に完了しました！",
+    errors: {
+      requiredApiKey: "必要なAPIキーを入力してください",
+      saveFailed: "設定の保存に失敗しました。もう一度お試しください。",
     },
   },
   dashboard: {

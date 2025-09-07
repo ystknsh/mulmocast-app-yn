@@ -67,6 +67,52 @@ function findProblematicBeats(jsonData: unknown, targetFilename: string): number
   return problematicIndices;
 }
 
+// Helper function to check and complete onboarding modal
+async function completeOnboarding(page: Page): Promise<boolean> {
+  try {
+    await page.waitForSelector('[role="dialog"]');
+
+    // Step 1: Welcome - Click Next
+    console.log("  - Step 1: Welcome");
+    const nextButton = await page.waitForSelector('button:has-text("Next"), button:has-text("次へ")');
+    await nextButton.click();
+
+    // Step 2: LLM Settings
+    console.log("  - Step 2: LLM Settings");
+
+    const nextButton2 = await page.waitForSelector('button:has-text("Next"), button:has-text("次へ")', {
+      timeout: CONFIG.BUTTON_TIMEOUT_MS,
+    });
+    await nextButton2.click();
+
+    // Step 3: API Key
+    const passwordInput = await page.$('input[type="password"]:visible');
+    if (passwordInput) {
+      await passwordInput.fill("dummy-api-key-for-testing");
+      await sleep(500);
+    }
+
+    const nextButton3 = await page.waitForSelector('button:has-text("Next"), button:has-text("次へ")', {
+      timeout: CONFIG.BUTTON_TIMEOUT_MS,
+    });
+    await nextButton3.click();
+
+    // Final step: Complete
+    console.log("  - Final step: Complete");
+    const completeButton = await page.waitForSelector(
+      'button:has-text("セットアップ完了"), button:has-text("Complete Setup")',
+      { timeout: CONFIG.BUTTON_TIMEOUT_MS },
+    );
+    await completeButton.click();
+
+    console.log("✓ Onboarding completed successfully");
+    return true;
+  } catch (error) {
+    console.log(`⚠️ Failed to complete onboarding: ${error instanceof Error ? error.message : String(error)}`);
+    return false;
+  }
+}
+
 // Phase 1: Create project and prepare data
 async function createProject(page: Page, jsonFile: string, step: { value: number }): Promise<ProjectSetupResult> {
   const startTime = Date.now();
@@ -75,6 +121,7 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
   logStep(step, "Navigating to dashboard...");
   await page.goto("http://localhost:5173/#/");
   await page.waitForLoadState("domcontentloaded");
+
   await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
   console.log("✓ Dashboard loaded");
 
@@ -703,6 +750,11 @@ async function runGenerationE2ETest(): Promise<void> {
     // Execute tests serially (one by one)
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
     console.log("=== Starting SERIAL execution (one project at a time) ===\n");
+
+    // Complete onboarding modal
+    console.log("Completing onboarding modal...");
+    await completeOnboarding(page);
+    console.log("✓ Onboarding completed, waiting for dashboard to load...");
 
     for (let i = 0; i < TEST_JSON_FILES.length; i++) {
       const jsonFile = TEST_JSON_FILES[i];

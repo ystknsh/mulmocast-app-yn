@@ -10,6 +10,8 @@ const lang = {
       applicationName: "MulmoCast",
       // Navigation
       back: "Back",
+      previous: "Previous",
+      next: "Next",
 
       // File operations
       drophere: "Drop file here",
@@ -299,6 +301,37 @@ const lang = {
         url: "URL",
       },
       model: "Model",
+    },
+  },
+  onboarding: {
+    title: "Welcome to MulmoCast",
+    description: "Let's set up your AI assistant to get started",
+    welcome: {
+      title: "Welcome to MulmoCast!",
+      description: "Let's set up your AI assistant to get started",
+      whatIsMulmoCast: "What is MulmoCast?",
+      whatIsMulmoCastDescription:
+        "MulmoCast is a multimodal AI-powered content creation tool that helps you generate videos, images, and audio using various AI models.",
+      setupGuide:
+        "We'll walk you through a few simple steps to get everything configured. Set up your preferred language model and API keys to start creating amazing content!",
+    },
+    completeBtn: "Complete Setup",
+    complete: {
+      title: "Setup Complete!",
+      description: "Congratulations! Your MulmoCast setup is now complete.",
+      nextSteps: "What's next?",
+      createProjectDescription: "Create a new project and start content creation with your AI assistant!",
+      features: {
+        script: "Create scripts through AI assistant conversations",
+        media: "Generate images, videos, and audio automatically",
+        presentation: "Create presentation materials",
+        translation: "Multi-language translation support",
+      },
+    },
+    success: "Setup completed successfully!",
+    errors: {
+      requiredApiKey: "Please enter the required API key",
+      saveFailed: "Failed to save settings. Please try again.",
     },
   },
   dashboard: {

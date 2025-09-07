@@ -27,6 +27,15 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     mulmoViewerProjectId.value = projectId;
   };
 
+  const isOpenOnboardingModal = ref(false);
+  const toggleOnboardingModal = () => {
+    isOpenOnboardingModal.value = !isOpenOnboardingModal.value;
+  };
+  const needsOnboarding = computed(() => {
+    const currentSettings = settings.value;
+    return !currentSettings.CHAT_LLM;
+  });
+
   const useLanguages = computed(() => {
     return Object.keys(settings.value?.USE_LANGUAGES ?? {})
       .map((lang) => {
@@ -44,6 +53,10 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
 
     mulmoViewerProjectId,
     setMulmoViewerProjectId,
+
+    isOpenOnboardingModal,
+    toggleOnboardingModal,
+    needsOnboarding,
 
     useLanguages,
   };

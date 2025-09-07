@@ -116,7 +116,7 @@ type LlmConfigs = {
 type Props = {
   selectedLLM: string;
   llmConfigs: LlmConfigs;
-  apiKeys: Record<string, string>;
+  apiKeys?: Record<string, string>;
 };
 
 type Emits = {
@@ -138,6 +138,9 @@ const llmConfigs = computed({
 });
 
 const alertLLM = computed(() => {
+  if (!props.apiKeys) {
+    return null;
+  }
   const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
   if (llmKey && props.apiKeys[llmKey] === "") {
     return llmKey;
