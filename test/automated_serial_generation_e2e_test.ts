@@ -661,7 +661,6 @@ async function runGenerationE2ETest(): Promise<void> {
         env: {
           ...process.env,
           NODE_ENV: "development",
-          ELECTRON_DISABLE_SANDBOX: "1",
         },
       },
     );
