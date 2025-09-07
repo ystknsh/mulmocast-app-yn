@@ -20,7 +20,7 @@ const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
 
 // Development environment configuration
-if (isDev) {
+if (isDev || isCI) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222"); // Enable Playwright debugging
 }
 
