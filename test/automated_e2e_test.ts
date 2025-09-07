@@ -2,6 +2,7 @@ import { spawn, ChildProcess } from "child_process";
 import playwright, { Browser, BrowserContext, Page } from "playwright-core";
 import dayjs from "dayjs";
 import * as path from "path";
+import { ElectronAPI } from "@/types/electron";
 
 // Configuration constants
 const CONFIG = {
@@ -161,6 +162,26 @@ async function runE2ETest(): Promise<void> {
 
     console.log("✓ Got page from Electron app");
     console.log(`Current URL: ${page.url()}`);
+
+    console.log("\nMocking settings to prevent onboarding modal...");
+    await page.evaluate(() => {
+      (window as Window & { electronAPI: ElectronAPI }).electronAPI = {
+        ...(window as Window & { electronAPI: ElectronAPI }).electronAPI,
+        settings: {
+          ...(window as Window & { electronAPI: ElectronAPI }).electronAPI?.settings,
+          get: async () => ({
+            CHAT_LLM: "openAIAgent",
+            USE_LANGUAGES: { en: true, ja: true },
+            llmConfigs: {
+              openai: { model: "gpt-4o" },
+            },
+            APIKEY: {
+              OPENAI_API_KEY: "sk-mock",
+            },
+          }),
+        },
+      };
+    });
 
     // Click the create new button
     console.log("\n3. Creating new project...");
