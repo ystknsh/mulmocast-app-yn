@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
 import type * as monaco from "monaco-editor";
-import { mockSettings } from "./helpers";
 
 // Configuration constants
 const CONFIG = {
@@ -812,9 +811,6 @@ async function runGenerationE2ETest(): Promise<void> {
     console.log("✓ Found application page");
     console.log(`[DEBUG] Initial page URL: ${page.url()}`);
     console.log(`[DEBUG] Page readyState: ${await page.evaluate(() => document.readyState)}`);
-
-    console.log("\nMocking settings to prevent onboarding modal...");
-    await mockSettings(page);
 
     // Wait for initial page load
     console.log("[DEBUG] Waiting for initial page to fully load...");
