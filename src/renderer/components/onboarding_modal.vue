@@ -272,16 +272,16 @@ const canSave = computed(() => {
 
 const canProceedToNext = computed(() => {
   if (currentStep.value === 1) {
-    return true; // Welcome step can always proceed
+    return true;
   }
   if (currentStep.value === 2) {
-    return true; // LLM selection can always proceed
+    return true;
   }
   if (currentStep.value === 3) {
-    return canSave.value; // API key step requires valid key
+    return canSave.value;
   }
   if (currentStep.value === 4) {
-    return true; // Complete step can always proceed
+    return true;
   }
   return false;
 });
@@ -360,7 +360,6 @@ const handleSave = async () => {
   }
 };
 
-// Watch for LLM changes to clear error message and adjust steps
 watch(selectedLLM, () => {
   errorMessage.value = "";
   // If user is on step 3 (API key) but switches to Ollama, go back to step 2
