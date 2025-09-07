@@ -16,46 +16,57 @@
       </DialogHeader>
 
       <div class="space-y-6">
-        <!-- MulmoCastの説明 -->
-        <div class="bg-muted/50 rounded-lg p-4">
-          <h3 class="mb-2 font-semibold">{{ t("onboarding.whatIsMulmoCast") }}</h3>
-          <p class="text-muted-foreground text-sm">
-            {{ t("onboarding.whatIsMulmoCastDescription") }}
-          </p>
-        </div>
+        <!-- MulmoCast -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <Rocket class="h-5 w-5 text-blue-600" />
+              {{ t("onboarding.whatIsMulmoCast") }}
+            </CardTitle>
+            <CardDescription>
+              {{ t("onboarding.whatIsMulmoCastDescription") }}
+            </CardDescription>
+          </CardHeader>
+        </Card>
 
         <!-- LLM settings -->
-        <div class="space-y-4">
-          <h3 class="font-semibold">{{ t("settings.llmSettings.title") }}</h3>
-          <LlmSettings
-            :selected-l-l-m="selectedLLM"
-            :llm-configs="llmConfigs"
-            :api-keys="apiKeys"
-            @update:selected-l-l-m="updateSelectedLLM"
-            @update:llm-configs="updateLlmConfigs"
-          />
-        </div>
+        <LlmSettings
+          :selected-l-l-m="selectedLLM"
+          :llm-configs="llmConfigs"
+          :api-keys="apiKeys"
+          @update:selected-l-l-m="updateSelectedLLM"
+          @update:llm-configs="updateLlmConfigs"
+        />
 
         <!-- API key -->
-        <div class="space-y-4" v-if="selectedLLM !== 'ollamaAgent'">
-          <h3 class="font-semibold">{{ t("settings.apiKeys.title") }}</h3>
-          <div class="space-y-3">
-            <ApiKeyInput
-              v-for="(config, envKey) in getRequiredApiKeys()"
-              :key="envKey"
-              :env-key="envKey"
-              :config="config"
-              :api-key="apiKeys[envKey]"
-              :show-key="showKeys[envKey]"
-              @update:api-key="(value) => updateApiKey(envKey, value)"
-              @update:show-key="(value) => updateShowKey(envKey, value)"
-            />
-          </div>
-        </div>
+        <Card v-if="selectedLLM !== 'ollamaAgent'">
+          <CardHeader>
+            <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
+            <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="space-y-3">
+              <ApiKeyInput
+                v-for="(config, envKey) in getRequiredApiKeys()"
+                :key="envKey"
+                :env-key="envKey"
+                :config="config"
+                :api-key="apiKeys[envKey]"
+                :show-key="showKeys[envKey]"
+                @update:api-key="(value) => updateApiKey(envKey, value)"
+                @update:show-key="(value) => updateShowKey(envKey, value)"
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         <!-- error message -->
-        <div v-if="errorMessage" class="text-destructive text-sm">
-          {{ errorMessage }}
+        <div
+          v-if="errorMessage"
+          class="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-800/30 dark:bg-red-950/20 dark:text-red-400"
+        >
+          <AlertCircle class="h-4 w-4 flex-shrink-0" />
+          <span class="text-sm">{{ errorMessage }}</span>
         </div>
       </div>
 
@@ -72,7 +83,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, toRaw } from "vue";
 import { useI18n } from "vue-i18n";
-import { Loader2 } from "lucide-vue-next";
+import { Loader2, Rocket, AlertCircle } from "lucide-vue-next";
 
 import { Button } from "@/components/ui";
 import {
@@ -83,6 +94,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 
