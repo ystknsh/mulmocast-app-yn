@@ -47,39 +47,16 @@
           </CardHeader>
           <CollapsibleContent>
             <CardContent class="space-y-4">
-              <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
-                <div class="flex items-center justify-between">
-                  <Label :for="envKey" class="text-base font-medium">{{ t("ai.apiKeyName." + envKey) }}</Label>
-                  <a
-                    v-if="config.url"
-                    :href="config.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:text-primary/80 flex items-center gap-1 text-xs"
-                  >
-                    {{ t("settings.apiKeys.getApiKey") }}
-                    <ExternalLink class="h-3 w-3" />
-                  </a>
-                </div>
-                <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
-                  <span v-for="feature in config.features" :key="feature" class="bg-muted rounded-md px-2 py-1 text-xs">
-                    {{ t(`settings.apiKeys.features.${feature}`) }}
-                  </span>
-                </div>
-                <div class="flex gap-2">
-                  <Input
-                    :id="envKey"
-                    v-model="apiKeys[envKey]"
-                    :type="showKeys[envKey] ? 'text' : 'password'"
-                    :placeholder="config.placeholder"
-                    class="flex-1"
-                  />
-                  <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
-                    <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
-                    <EyeOff v-else class="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <ApiKeyInput
+                v-for="(config, envKey) in ENV_KEYS"
+                :key="envKey"
+                :env-key="envKey"
+                :config="config"
+                :api-key="apiKeys[envKey]"
+                :show-key="showKeys[envKey]"
+                @update:api-key="(value) => updateApiKey(envKey, value)"
+                @update:show-key="(value) => updateShowKey(envKey, value)"
+              />
             </CardContent>
           </CollapsibleContent>
         </Collapsible>
@@ -112,114 +89,36 @@
       </Card>
 
       <!-- llm -->
-      <Card>
-        <CardHeader>
-          <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
-          <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="space-y-2">
-            <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
-            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
-            <Select v-model="selectedLLM">
-              <SelectTrigger id="llm">
-                <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
-                  {{ t("ai.agent." + llm.id) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <div v-if="alertLLM" class="text-destructive">
-              {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
-            </div>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
-            <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
-            {{ t("settings.llmSettings.ollama.url") }}:
-            <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
-            {{ t("settings.llmSettings.model") }}:
-            <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
-            <Select v-model="llmConfigs['openai']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['gemini']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['anthropic']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
-            {{ t("settings.llmSettings.model") }}:
-            <Select v-model="llmConfigs['groq']['model']">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <LlmSettings
+        :selected-l-l-m="selectedLLM"
+        :llm-configs="llmConfigs"
+        :api-keys="apiKeys"
+        @update:selected-l-l-m="updateSelectedLLM"
+        @update:llm-configs="updateLlmConfigs"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
-import { provider2LLMAgent } from "mulmocast/browser";
+import { ChevronDown } from "lucide-vue-next";
 
-import { Button, Input, Label, Checkbox } from "@/components/ui";
+import { Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import LlmSettings from "@/components/llm_settings.vue";
+import ApiKeyInput from "@/components/api_key_input.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
 import {
   ENV_KEYS,
   languages,
   I18N_SUPPORTED_LANGUAGES,
-  llms,
   LLM_OLLAMA_DEFAULT_CONFIG,
   LLM_OPENAI_DEFAULT_CONFIG,
   LLM_ANTHROPIC_DEFAULT_CONFIG,
@@ -243,13 +142,6 @@ const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
 
 const selectedLLM = ref("openAIAgent");
-const alertLLM = computed(() => {
-  const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
-  if (llmKey && apiKeys[llmKey] === "") {
-    return llmKey;
-  }
-  return null;
-});
 
 type LlmConfigOllama = { url: string; model: string };
 type LlmConfigOpenAI = { model: string };
@@ -265,7 +157,7 @@ type LlmConfigs = {
   groq: LlmConfigGroq;
 };
 
-const llmConfigs = reactive<LlmConfigs>({
+const llmConfigs = ref<LlmConfigs>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
   openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
   anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
@@ -311,13 +203,19 @@ onMounted(async () => {
       selectedLLM.value = settings.CHAT_LLM;
     }
     if (settings?.llmConfigs?.ollama) {
-      llmConfigs.ollama = settings.llmConfigs.ollama;
+      llmConfigs.value.ollama = settings.llmConfigs.ollama;
     }
     if (settings?.llmConfigs?.openai) {
-      llmConfigs.openai = settings.llmConfigs.openai;
+      llmConfigs.value.openai = settings.llmConfigs.openai;
     }
     if (settings?.llmConfigs?.anthropic) {
-      llmConfigs.anthropic = settings.llmConfigs.anthropic;
+      llmConfigs.value.anthropic = settings.llmConfigs.anthropic;
+    }
+    if (settings?.llmConfigs?.gemini) {
+      llmConfigs.value.gemini = settings.llmConfigs.gemini;
+    }
+    if (settings?.llmConfigs?.groq) {
+      llmConfigs.value.groq = settings.llmConfigs.groq;
     }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
@@ -337,7 +235,7 @@ const saveSettings = async () => {
       USE_LANGUAGES: { ...useLanguage },
       MAIN_LANGUAGE: mainLanguage.value,
       CHAT_LLM: selectedLLM.value,
-      llmConfigs: toRaw(llmConfigs),
+      llmConfigs: toRaw(llmConfigs.value),
     };
     await window.electronAPI.settings.set(data);
     globalStore.updateSettings(data);
@@ -349,6 +247,22 @@ const saveSettings = async () => {
 };
 
 const debouncedSave = useDebounceFn(saveSettings, 1000);
+
+const updateSelectedLLM = (llm: string) => {
+  selectedLLM.value = llm;
+};
+
+const updateApiKey = (envKey: string, value: string) => {
+  apiKeys[envKey] = value;
+};
+
+const updateShowKey = (envKey: string, value: boolean) => {
+  showKeys[envKey] = value;
+};
+
+const updateLlmConfigs = (configs: LlmConfigs) => {
+  llmConfigs.value = configs;
+};
 
 // Watch for changes in text
 watch(

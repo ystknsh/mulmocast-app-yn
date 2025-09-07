@@ -1,0 +1,147 @@
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>{{ t("settings.llmSettings.title") }}</CardTitle>
+      <CardDescription>{{ t("settings.llmSettings.description") }}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div class="space-y-2">
+        <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
+        <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
+        <Select v-model="selectedLLM">
+          <SelectTrigger id="llm">
+            <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="llm in llms" :key="llm.id" :value="llm.id">
+              {{ t("ai.agent." + llm.id) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <div v-if="alertLLM" class="text-destructive">
+          {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
+        </div>
+      </div>
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
+        <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
+        {{ t("settings.llmSettings.ollama.url") }}:
+        <Input v-model="llmConfigs['ollama']['url']" type="text" class="flex-1" />
+        {{ t("settings.llmSettings.model") }}:
+        <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
+      </div>
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
+        {{ t("settings.llmSettings.model") }}:
+        <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
+        <Select v-model="llmConfigs['openai']['model']">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="model in provider2LLMAgent['openai']['models']" :key="model" :value="model">
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
+        {{ t("settings.llmSettings.model") }}:
+        <Select v-model="llmConfigs['gemini']['model']">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="model in provider2LLMAgent['gemini']['models']" :key="model" :value="model">
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
+        {{ t("settings.llmSettings.model") }}:
+        <Select v-model="llmConfigs['anthropic']['model']">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="model in provider2LLMAgent['anthropic']['models']" :key="model" :value="model">
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
+        {{ t("settings.llmSettings.model") }}:
+        <Select v-model="llmConfigs['groq']['model']">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="model in provider2LLMAgent['groq']['models']" :key="model" :value="model">
+              {{ model }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </CardContent>
+  </Card>
+</template>
+
+<script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { provider2LLMAgent } from "mulmocast/browser";
+
+import { Input, Label } from "@/components/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { llms } from "../../shared/constants";
+
+const { t } = useI18n();
+
+type LlmConfigOllama = { url: string; model: string };
+type LlmConfigOpenAI = { model: string };
+type LlmConfigGemini = { model: string };
+type LlmConfigAnthropic = { model: string };
+type LlmConfigGroq = { model: string };
+
+type LlmConfigs = {
+  ollama: LlmConfigOllama;
+  openai: LlmConfigOpenAI;
+  gemini: LlmConfigGemini;
+  anthropic: LlmConfigAnthropic;
+  groq: LlmConfigGroq;
+};
+
+type Props = {
+  selectedLLM: string;
+  llmConfigs: LlmConfigs;
+  apiKeys: Record<string, string>;
+};
+
+type Emits = {
+  "update:selectedLLM": [value: string];
+  "update:llmConfigs": [value: LlmConfigs];
+};
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
+const selectedLLM = computed({
+  get: () => props.selectedLLM,
+  set: (value: string) => emit("update:selectedLLM", value),
+});
+
+const llmConfigs = computed({
+  get: () => props.llmConfigs,
+  set: (value: LlmConfigs) => emit("update:llmConfigs", value),
+});
+
+const alertLLM = computed(() => {
+  const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
+  if (llmKey && props.apiKeys[llmKey] === "") {
+    return llmKey;
+  }
+  return null;
+});
+</script>
