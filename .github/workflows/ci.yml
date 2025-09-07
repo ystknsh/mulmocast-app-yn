@@ -66,13 +66,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - run: yarn package
-      - run: npx ts-node test/automated_serial_generation_e2e_test.ts
+      - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
         env:
           CI: true
           NODE_ENV: test
           ELECTRON_DISABLE_SANDBOX: 1
-          ELECTRON_ENABLE_LOGGING: 1
-          DISPLAY: ":99"
       
       - name: Upload test screenshots
         uses: actions/upload-artifact@v4

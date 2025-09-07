@@ -22,9 +22,6 @@ const isCI = process.env.CI === "true";
 // Development environment configuration
 if (isDev || isCI) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222"); // Enable Playwright debugging
-  if (isCI) {
-    app.commandLine.appendSwitch("remote-allow-origins", "*"); // Allow all origins in CI
-  }
 }
 
 // CI環境でサンドボックスを無効化
