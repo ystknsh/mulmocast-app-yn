@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import * as fs from "fs/promises";
 import * as path from "path";
 import type * as monaco from "monaco-editor";
-import { ElectronAPI } from "@/types/electron";
 import { mockSettings } from "./helpers";
 
 // Configuration constants

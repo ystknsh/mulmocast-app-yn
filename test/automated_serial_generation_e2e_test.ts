@@ -5,7 +5,6 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import type * as monaco from "monaco-editor";
 import { sleep } from "graphai";
-import { ElectronAPI } from "@/types/electron";
 import { mockSettings } from "./helpers";
 
 // Configuration constants
