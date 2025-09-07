@@ -20,4 +20,5 @@ export const mockSettings = async (page: Page) => {
       },
     };
   });
+  await page.reload();
 };
