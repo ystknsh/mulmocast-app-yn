@@ -235,7 +235,7 @@ const saveSettings = async () => {
       USE_LANGUAGES: { ...useLanguage },
       MAIN_LANGUAGE: mainLanguage.value,
       CHAT_LLM: selectedLLM.value,
-      llmConfigs: toRaw(llmConfigs),
+      llmConfigs: toRaw(llmConfigs.value),
     };
     await window.electronAPI.settings.set(data);
     globalStore.updateSettings(data);
