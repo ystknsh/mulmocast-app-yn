@@ -608,13 +608,15 @@ async function runGenerationE2ETest(): Promise<void> {
 
     resources.electronProcess = spawn(
       process.execPath, // Node.js executable path
-      [electronForgeBinPath, "start"], // Arguments: [script path, "start"]
+      [electronForgeBinPath, "start", "--", "--remote-debugging-port=9222"], // Arguments: [script path, "start", CDP flag]
       {
         shell: false, // Avoid security warnings
         detached: process.platform !== "win32", // Don't use detached on Windows
         env: {
           ...process.env,
           NODE_ENV: "development",
+          ELECTRON_DISABLE_SANDBOX: "1",
+          ELECTRON_ENABLE_LOGGING: "1",
         },
       },
     );
