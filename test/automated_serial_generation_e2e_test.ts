@@ -633,23 +633,37 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Poll for CDP connection availability
     console.log("\n2. Waiting for CDP to be available...");
-    const cdpUrl = "http://localhost:9222/";
+    const cdpUrl = process.env.CI === "true" ? "http://127.0.0.1:9222/" : "http://localhost:9222/";
     let attempts = 0;
+
+    // Test network connectivity first
+    console.log(`[DEBUG] Testing network connectivity to ${cdpUrl}...`);
+    try {
+      const response = await fetch(cdpUrl);
+      console.log(`[DEBUG] HTTP response status: ${response.status}`);
+    } catch (fetchError) {
+      console.log(`[DEBUG] HTTP fetch failed: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}`);
+    }
 
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
       try {
+        console.log(`[DEBUG] Attempting CDP connection to: ${cdpUrl} (attempt ${attempts + 1}/${CONFIG.CDP_MAX_ATTEMPTS})`);
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
         console.log("✓ Connected successfully via CDP");
         break;
       } catch (error: unknown) {
         attempts++;
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
+          console.log(`[DEBUG] Final CDP connection attempt failed. URL: ${cdpUrl}`);
           throw new Error(
             `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
           );
         }
         if (attempts === 1) {
           console.log(`Waiting for Electron app to start (max ${CONFIG.CDP_MAX_ATTEMPTS} attempts)...`);
+        }
+        if (attempts % 10 === 0) {
+          console.log(`[DEBUG] Still waiting for CDP connection... (${attempts}/${CONFIG.CDP_MAX_ATTEMPTS})`);
         }
         await sleep(CONFIG.CDP_RETRY_DELAY_MS);
       }
