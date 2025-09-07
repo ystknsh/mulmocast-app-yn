@@ -300,6 +300,19 @@ const lang = {
       model: "モデル",
     },
   },
+  onboarding: {
+    title: "MulmoCastへようこそ",
+    description: "AIアシスタントをセットアップして始めましょう",
+    whatIsMulmoCast: "MulmoCastとは？",
+    whatIsMulmoCastDescription:
+      "MulmoCastは、様々なAIモデルを使用して動画、画像、音声を生成するマルチモーダルなAIツールです。お好みの言語モデルとAPIキーを設定して、素晴らしいコンテンツの作成を始めましょう。",
+    complete: "セットアップ完了",
+    success: "セットアップが正常に完了しました！",
+    errors: {
+      requiredApiKey: "必要なAPIキーを入力してください",
+      saveFailed: "設定の保存に失敗しました。もう一度お試しください。",
+    },
+  },
   dashboard: {
     createNew: "新規作成",
     project: "{count} 件のプロジェクト",
