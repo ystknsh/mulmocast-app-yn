@@ -635,7 +635,6 @@ async function runGenerationE2ETest(): Promise<void> {
     const cdpUrl = "http://localhost:9222/";
     let attempts = 0;
 
-
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {
       try {
         resources.browser = await playwright.chromium.connectOverCDP(cdpUrl);
