@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { provider2LLMAgent } from "mulmocast";
+import { provider2LLMAgent } from "mulmocast/browser";
 
 import { Input, Label } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
