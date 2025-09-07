@@ -122,13 +122,6 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
   await page.goto("http://localhost:5173/#/");
   await page.waitForLoadState("domcontentloaded");
 
-  // Check and complete onboarding modal if present
-  logStep(step, "Completing onboarding modal...");
-  await completeOnboarding(page);
-
-  console.log("✓ Onboarding completed, waiting for dashboard to load...");
-  await page.waitForLoadState("domcontentloaded");
-
   await page.waitForSelector('[data-testid="create-new-button"]', { timeout: CONFIG.BUTTON_TIMEOUT_MS });
   console.log("✓ Dashboard loaded");
 
@@ -758,6 +751,11 @@ async function runGenerationE2ETest(): Promise<void> {
     // Execute tests serially (one by one)
     console.log(`\nTotal files to process: ${TEST_JSON_FILES.length}`);
     console.log("=== Starting SERIAL execution (one project at a time) ===\n");
+
+    // Complete onboarding modal
+    console.log("Completing onboarding modal...");
+    await completeOnboarding(page);
+    console.log("✓ Onboarding completed, waiting for dashboard to load...");
 
     for (let i = 0; i < TEST_JSON_FILES.length; i++) {
       const jsonFile = TEST_JSON_FILES[i];
