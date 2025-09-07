@@ -211,6 +211,12 @@ onMounted(async () => {
     if (settings?.llmConfigs?.anthropic) {
       llmConfigs.value.anthropic = settings.llmConfigs.anthropic;
     }
+    if (settings?.llmConfigs?.gemini) {
+      llmConfigs.value.gemini = settings.llmConfigs.gemini;
+    }
+    if (settings?.llmConfigs?.groq) {
+      llmConfigs.value.groq = settings.llmConfigs.groq;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
