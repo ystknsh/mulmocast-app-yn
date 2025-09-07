@@ -1,64 +1,143 @@
 <template>
   <Dialog :open="isOpen" @update:open="() => {}">
     <DialogContent
-      class="max-h-[80vh] max-w-2xl overflow-y-auto"
+      class="flex h-[565px] max-w-2xl flex-col"
       :hide-close="true"
       @escape-key-down.prevent
       @pointer-down-outside.prevent
     >
-      <DialogHeader>
+      <DialogHeader class="flex-shrink-0">
         <DialogTitle class="text-center text-2xl font-bold">
           {{ t("onboarding.title") }}
         </DialogTitle>
         <DialogDescription class="text-muted-foreground text-center">
           {{ t("onboarding.description") }}
         </DialogDescription>
+
+        <!-- Step indicator -->
+        <div class="mt-2 flex justify-center space-x-3">
+          <div
+            v-for="step in steps"
+            :key="step.id"
+            :class="[
+              'h-2 w-2 rounded-full transition-all duration-300 ease-in-out',
+              currentStep >= step.id ? 'bg-primary scale-110 shadow-lg' : 'bg-primary/20 scale-105',
+            ]"
+          />
+        </div>
       </DialogHeader>
 
-      <div class="space-y-6">
-        <!-- MulmoCast -->
-        <Card>
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2">
-              <Rocket class="h-5 w-5 text-blue-600" />
-              {{ t("onboarding.whatIsMulmoCast") }}
-            </CardTitle>
-            <CardDescription>
-              {{ t("onboarding.whatIsMulmoCastDescription") }}
-            </CardDescription>
-          </CardHeader>
-        </Card>
+      <div class="flex-1 space-y-6 overflow-y-auto p-1">
+        <!-- Step 1: Welcome -->
+        <div v-if="currentStep === 1">
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <Rocket class="h-5 w-5 text-blue-600" />
+                {{ t("onboarding.welcome.title") }}
+              </CardTitle>
+              <CardDescription>
+                {{ t("onboarding.welcome.description") }}
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              <div>
+                <h4 class="mb-2 font-semibold">{{ t("onboarding.welcome.whatIsMulmoCast") }}</h4>
+                <p class="text-muted-foreground text-sm">
+                  {{ t("onboarding.welcome.whatIsMulmoCastDescription") }}
+                </p>
+              </div>
+              <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
+                <p class="text-sm">
+                  {{ t("onboarding.welcome.setupGuide") }}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        <!-- LLM settings -->
-        <LlmSettings
-          :selected-l-l-m="selectedLLM"
-          :llm-configs="llmConfigs"
-          :api-keys="apiKeys"
-          @update:selected-l-l-m="updateSelectedLLM"
-          @update:llm-configs="updateLlmConfigs"
-        />
+        <!-- Step 2: LLM Settings -->
+        <div v-if="currentStep === 2">
+          <LlmSettings
+            :selected-l-l-m="selectedLLM"
+            :llm-configs="llmConfigs"
+            :hide-errors="true"
+            @update:selected-l-l-m="updateSelectedLLM"
+            @update:llm-configs="updateLlmConfigs"
+          />
+        </div>
 
-        <!-- API key -->
-        <Card v-if="selectedLLM !== 'ollamaAgent'">
-          <CardHeader>
-            <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-3">
-              <ApiKeyInput
-                v-for="(config, envKey) in getRequiredApiKeys()"
-                :key="envKey"
-                :env-key="envKey"
-                :config="config"
-                :api-key="apiKeys[envKey]"
-                :show-key="showKeys[envKey]"
-                @update:api-key="(value) => updateApiKey(envKey, value)"
-                @update:show-key="(value) => updateShowKey(envKey, value)"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <!-- Step 3: API Key -->
+        <div v-if="currentStep === 3 && selectedLLM !== 'ollamaAgent'">
+          <Card>
+            <CardHeader>
+              <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
+              <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="space-y-3">
+                <ApiKeyInput
+                  v-for="(config, envKey) in getRequiredApiKeys()"
+                  :key="envKey"
+                  :env-key="envKey"
+                  :config="config"
+                  :api-key="apiKeys[envKey]"
+                  :show-key="showKeys[envKey]"
+                  @update:api-key="(value) => updateApiKey(envKey, value)"
+                  @update:show-key="(value) => updateShowKey(envKey, value)"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <!-- Step 4: Complete -->
+        <div v-if="currentStep === totalSteps">
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2 text-2xl">
+                <div class="rounded-full border-2 border-green-600 p-1 dark:border-green-900">
+                  <Check class="h-4 w-4 text-green-600" />
+                </div>
+                {{ t("onboarding.complete.title") }}
+              </CardTitle>
+              <CardDescription class="text-lg">
+                {{ t("onboarding.complete.description") }}
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-6">
+              <div>
+                <h4 class="mb-3 font-semibold">{{ t("onboarding.complete.nextSteps") }}</h4>
+                <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div class="flex items-start gap-2 rounded-lg bg-green-50 p-3 dark:bg-green-950/20">
+                    <FileText class="h-5 w-5 text-green-600" />
+                    <div>
+                      <p class="text-sm font-medium">{{ t("onboarding.complete.features.script") }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2 rounded-lg bg-purple-50 p-3 dark:bg-purple-950/20">
+                    <Palette class="h-5 w-5 text-purple-600" />
+                    <div>
+                      <p class="text-sm font-medium">{{ t("onboarding.complete.features.media") }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2 rounded-lg bg-blue-50 p-3 dark:bg-blue-950/20">
+                    <BarChart3 class="h-5 w-5 text-blue-600" />
+                    <div>
+                      <p class="text-sm font-medium">{{ t("onboarding.complete.features.presentation") }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2 rounded-lg bg-orange-50 p-3 dark:bg-orange-950/20">
+                    <Globe class="h-4 w-4 text-orange-600" />
+                    <div>
+                      <p class="text-sm font-medium">{{ t("onboarding.complete.features.translation") }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <!-- error message -->
         <div
@@ -70,10 +149,18 @@
         </div>
       </div>
 
-      <DialogFooter class="flex justify-center">
-        <Button @click="handleSave" :disabled="!canSave || isSaving" class="w-full">
+      <DialogFooter class="flex flex-shrink-0 justify-between border-t pt-4">
+        <Button v-if="currentStep > 1" variant="outline" @click="prevStep" :disabled="isSaving">
+          {{ t("ui.common.previous") }}
+        </Button>
+        <div v-else />
+
+        <Button v-if="currentStep < totalSteps" @click="nextStep" :disabled="!canProceedToNext">
+          {{ t("ui.common.next") }}
+        </Button>
+        <Button v-else @click="handleSave" :disabled="!canSave || isSaving">
           <Loader2 v-if="isSaving" class="mr-2 h-4 w-4 animate-spin" />
-          {{ t("onboarding.complete") }}
+          {{ t("onboarding.completeBtn") }}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -83,7 +170,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, toRaw } from "vue";
 import { useI18n } from "vue-i18n";
-import { Loader2, Rocket, AlertCircle } from "lucide-vue-next";
+import { Loader2, Rocket, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "lucide-vue-next";
 
 import { Button } from "@/components/ui";
 import {
@@ -139,6 +226,7 @@ const emit = defineEmits<{
 const isSaving = ref(false);
 const errorMessage = ref("");
 const selectedLLM = ref("openAIAgent");
+const currentStep = ref(1);
 
 const apiKeys = ref<Record<string, string>>({});
 const showKeys = ref<Record<string, boolean>>({});
@@ -157,6 +245,18 @@ Object.keys(ENV_KEYS).forEach((envKey) => {
   showKeys.value[envKey] = false;
 });
 
+// Step configuration
+const steps = [
+  { id: 1, name: "welcome" },
+  { id: 2, name: "llm" },
+  { id: 3, name: "apiKey" },
+  { id: 4, name: "complete" },
+];
+
+const totalSteps = computed(() => {
+  return selectedLLM.value === "ollamaAgent" ? 3 : 4;
+});
+
 const canSave = computed(() => {
   if (selectedLLM.value === "ollamaAgent") {
     return true; // Ollama doesn't require API key
@@ -168,6 +268,22 @@ const canSave = computed(() => {
   }
 
   return apiKeys.value[selectedLlmConfig.apiKey]?.trim() !== "";
+});
+
+const canProceedToNext = computed(() => {
+  if (currentStep.value === 1) {
+    return true; // Welcome step can always proceed
+  }
+  if (currentStep.value === 2) {
+    return true; // LLM selection can always proceed
+  }
+  if (currentStep.value === 3) {
+    return canSave.value; // API key step requires valid key
+  }
+  if (currentStep.value === 4) {
+    return true; // Complete step can always proceed
+  }
+  return false;
 });
 
 const getRequiredApiKeys = () => {
@@ -197,6 +313,20 @@ const updateShowKey = (envKey: string, value: boolean) => {
 
 const updateLlmConfigs = (configs: LlmConfigs) => {
   llmConfigs.value = configs;
+};
+
+const nextStep = () => {
+  if (currentStep.value < totalSteps.value) {
+    currentStep.value++;
+    errorMessage.value = "";
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 1) {
+    currentStep.value--;
+    errorMessage.value = "";
+  }
 };
 
 const handleSave = async () => {
@@ -230,8 +360,12 @@ const handleSave = async () => {
   }
 };
 
-// Watch for LLM changes to clear error message
+// Watch for LLM changes to clear error message and adjust steps
 watch(selectedLLM, () => {
   errorMessage.value = "";
+  // If user is on step 3 (API key) but switches to Ollama, go back to step 2
+  if (selectedLLM.value === "ollamaAgent" && currentStep.value === 3) {
+    currentStep.value = 2;
+  }
 });
 </script>
