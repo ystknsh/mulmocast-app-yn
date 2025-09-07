@@ -311,7 +311,8 @@ const lang = {
       whatIsMulmoCast: "MulmoCastとは？",
       whatIsMulmoCastDescription:
         "MulmoCastは、様々なAIモデルを使用して動画、画像、音声を生成するマルチモーダルなAIツールです。",
-      setupGuide: "これから数ステップで設定を行います。お好みの言語モデルとAPIキーを設定して、素晴らしいコンテンツの作成を始めましょう！",
+      setupGuide:
+        "これから数ステップで設定を行います。お好みの言語モデルとAPIキーを設定して、素晴らしいコンテンツの作成を始めましょう！",
     },
     completeBtn: "セットアップ完了",
     complete: {
