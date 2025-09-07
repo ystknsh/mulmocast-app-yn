@@ -632,7 +632,7 @@ async function runGenerationE2ETest(): Promise<void> {
 
     // Poll for CDP connection availability
     console.log("\n2. Waiting for CDP to be available...");
-    const cdpUrl = process.env.CI === "true" ? "http://127.0.0.1:9222/" : "http://localhost:9222/";
+    const cdpUrl = "http://localhost:9222/";
     let attempts = 0;
 
 
