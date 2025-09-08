@@ -78,7 +78,9 @@
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
           {{ t("project.chat.undoChat") }}
         </Button>
-        <Button @click="clearChat" variant="outline" size="xs"> {{ t("project.chat.clearChat") }} </Button>
+        <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
+          {{ t("project.chat.clearChat") }}
+        </Button>
       </div>
 
       <!-- Template selection section -->
@@ -108,6 +110,20 @@
       </div>
     </div>
   </div>
+  <ConfirmDialog
+    :open="isClearChatDialogOpen"
+    dialogTitleKey="project.chat.confirmClear"
+    dialogDescriptionKey="ui.messages.cannotUndo"
+    confirmVariant="destructive"
+    confirmLabelKey="ui.actions.clearChat"
+    @update:open="(v) => (isClearChatDialogOpen = v)"
+    @confirm="
+      () => {
+        clearChat();
+        isClearChatDialogOpen = false;
+      }
+    "
+  />
 </template>
 
 <script setup lang="ts">
@@ -135,6 +151,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ConfirmDialog from "@/components/ui/confirm-dialog/ConfirmDialog.vue";
 
 import { ChatMessage } from "@/types";
 import { useStreamData } from "@/lib/stream";
@@ -180,6 +197,7 @@ const emit = defineEmits<{
 }>();
 
 const selectedTemplateIndex = ref(0);
+const isClearChatDialogOpen = ref(false);
 
 const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 
