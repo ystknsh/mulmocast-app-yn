@@ -96,7 +96,6 @@ const PROVIDERS = Object.entries(provider2MovieAgent)
     return provider !== "mock";
   })
   .map(([provider, agent]) => {
-    console.log(provider, agent);
     return {
       name: provider,
       value: provider,
