@@ -66,6 +66,8 @@ const lang = {
       noLang: "翻訳されていません",
       noMedia: "No Media",
       noAudio: "音声なし",
+
+      error: "エラーが発生しました",
     },
 
     // Common actions (placeholder pairs)

@@ -178,6 +178,7 @@ import {
   LLM_DEFAULT_AGENT,
   LLM_GROQ_DEFAULT_MODEL,
 } from "../../../shared/constants";
+import { notifyError } from "@/lib/notification";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -371,7 +372,9 @@ const run = async () => {
       emit("updateMulmoScript", script);
     }
   } catch (error) {
-    console.log(error);
+    const message = error instanceof Error ? error.message : String(error);
+    notifyError(t("ui.common.error"), message);
+    console.error(error);
   }
   isRunning.value = false;
 };
