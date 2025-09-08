@@ -37,6 +37,16 @@ MulmoCast アプリは適宜更新しております。
 Windows版は以下のリンクから同様の手順でダウンロードできます。  
 https://github.com/receptron/mulmocast-app/actions/workflows/ci-ms.yml
 
+### (参考) 開発版を利用する
+アプリケーションとして利用せずに、開発中のアプリケーションを利用する方法です。
+
+- git clone
+- cd mulmocast-app
+- yarn install
+- yarn run start
+
+で利用可能です。なお、開発版、アプリケーション版ともに同じアプケーションフォルダを利用するため、作成したプロジェクト等は共有可能です。
+
 ## アプリケーション 使い方
 
 ### 初期設定
