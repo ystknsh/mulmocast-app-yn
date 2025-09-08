@@ -12,6 +12,7 @@
             <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="__undefined__">{{ t("parameters.movieParams.providerNone") }}</SelectItem>
             <SelectItem v-for="provider in PROVIDERS" :key="provider.value" :value="provider.value">
               {{ t("ai.provider." + provider.name + ".name") }}
             </SelectItem>
