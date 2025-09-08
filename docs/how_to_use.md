@@ -26,6 +26,12 @@ https://github.com/receptron/mulmocast-app/actions/workflows/ci-mac.yml
 6. 初回起動時は以下のポップアップが出ますので、「開く」を選択してください。
     ![pop up at open app](<images/howtouse_popup_alert_first_time.png>)
 
+### Mac版 アプリの更新方法
+MulmoCast アプリは適宜更新しております。  
+更新版を利用するには、上記と同様の方法でアプリケーションをダウンロードし、アプリケーションフォルダにドラッグ&ドロップしてください。
+
+この時、`“MulmoCast.app”という名前の項目がすでにこの場所にあります。現在移動中の項目で置き換えますか?` とポップアップが出ますので、「置き換える」を選択してください。
+
 ### (参考) Windows版のダウンロード
 
 Windows版は以下のリンクから同様の手順でダウンロードできます。  
