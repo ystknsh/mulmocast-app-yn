@@ -44,9 +44,10 @@
       />
       <div
         v-if="isRunning"
-        class="bg-muted text-muted-foreground block max-w-md rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
+        class="bg-muted text-muted-foreground flex max-w-md items-center rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
       >
         {{ t("ui.actions.runningThing", { thing: `${currentRunningAgent}/${currentRunningNode}` }) }}
+        <Loader2 class="h-3 w-3 animate-spin" />
       </div>
     </div>
 
@@ -129,7 +130,7 @@
 <script setup lang="ts">
 // vue
 import { ref, computed, useTemplateRef } from "vue";
-import { Send } from "lucide-vue-next";
+import { Send, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 // graphai
