@@ -7,7 +7,7 @@
         <div class="text-muted-foreground mb-2 text-xs">{{ t("parameters.captionParams.languageDescription") }}</div>
         <Select :model-value="props.captionParams?.lang || ''" @update:model-value="handleLangInput">
           <SelectTrigger>
-            <SelectValue placeholder="None" />
+            <SelectValue :placeholder="t('parameters.captionParams.noLanguage')" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="__undefined__">{{ t("parameters.captionParams.noLanguage") }}</SelectItem>
