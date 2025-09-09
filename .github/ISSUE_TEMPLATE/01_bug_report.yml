@@ -66,7 +66,12 @@ body:
     id: screenshots
     attributes:
       label: Screenshots
-      description: If applicable, add screenshots to help explain your problem.
+      description: |
+        If applicable, add screenshots to help explain your problem.
+        You can drag and drop images directly into this text area after creating the issue.
+      placeholder: |
+        Screenshots will help us understand the issue better.
+        After creating this issue, you can drag and drop image files here.
     validations:
       required: false
 
