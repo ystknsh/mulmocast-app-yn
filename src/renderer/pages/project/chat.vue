@@ -110,21 +110,21 @@
         </div>
       </div>
     </div>
+    <ConfirmDialog
+      :open="isClearChatDialogOpen"
+      dialogTitleKey="project.chat.confirmClear"
+      dialogDescriptionKey="ui.messages.cannotUndo"
+      confirmVariant="destructive"
+      confirmLabelKey="ui.actions.clearChat"
+      @update:open="(v) => (isClearChatDialogOpen = v)"
+      @confirm="
+        () => {
+          clearChat();
+          isClearChatDialogOpen = false;
+        }
+      "
+    />
   </div>
-  <ConfirmDialog
-    :open="isClearChatDialogOpen"
-    dialogTitleKey="project.chat.confirmClear"
-    dialogDescriptionKey="ui.messages.cannotUndo"
-    confirmVariant="destructive"
-    confirmLabelKey="ui.actions.clearChat"
-    @update:open="(v) => (isClearChatDialogOpen = v)"
-    @confirm="
-      () => {
-        clearChat();
-        isClearChatDialogOpen = false;
-      }
-    "
-  />
 </template>
 
 <script setup lang="ts">
