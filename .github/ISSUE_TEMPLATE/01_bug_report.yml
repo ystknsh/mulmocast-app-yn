@@ -1,7 +1,7 @@
 name: Bug report
 description: Create a report to help us improve
 title: "[Bug]: "
-labels: ["type: bug", "source: community"]
+labels: ["bug", "source: community"]
 projects: ["receptron/3"]
 body:
   - type: markdown
