@@ -2,6 +2,7 @@ name: Bug report
 description: Create a report to help us improve
 title: "[Bug]: "
 labels: ["bug"]
+projects: ["https://github.com/orgs/receptron/projects/3"] 
 body:
   - type: markdown
     attributes:

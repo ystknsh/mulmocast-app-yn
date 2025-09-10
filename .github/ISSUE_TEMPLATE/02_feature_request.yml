@@ -2,6 +2,7 @@ name: Feature request
 description: Suggest an idea for MulmoCast
 title: "[Feature]: "
 labels: ["enhancement"]
+projects: ["https://github.com/orgs/receptron/projects/3"] 
 body:
   - type: markdown
     attributes:
