@@ -7435,10 +7435,15 @@ globals@^14.0.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-14.0.0.tgz#898d7413c29babcf6bafe56fcadded858ada724e"
   integrity sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==
 
-globals@^16.0.0, globals@^16.3.0:
+globals@^16.0.0:
   version "16.3.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-16.3.0.tgz#66118e765ddaf9e2d880f7e17658543f93f1f667"
   integrity sha512-bqWEnJ1Nt3neqx2q5SFfGS8r/ahumIakg3HcwtNlrVlwXIeNumWn/c7Pn/wKzGhf6SaW6H6uWXLqC30STCMchQ==
+
+globals@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-16.4.0.tgz#574bc7e72993d40cf27cf6c241f324ee77808e51"
+  integrity sha512-ob/2LcVVaVGCYN+r14cnwnoDPUufjiYgSqRhiFD0Q1iI4Odora5RE8Iv1D24hAz5oMophRGkGz+yuvQmmUMnMw==
 
 globalthis@^1.0.1, globalthis@^1.0.4:
   version "1.0.4"
@@ -9315,10 +9320,10 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.0.9.tgz#ef57d29ea422bfd71a221a3ce1b0965c719c26fa"
-  integrity sha512-RjnR5nCWMGJwMyZ6ap/y/0iy3aM6ePV9jZXCw5l2lmxhVS7F65ZHuBqrQxH+N6dYj1hKh5kM2cBZDq/F5ifqOw==
+mulmocast-vision@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-0.1.1.tgz#ba58c36dd295d442ccf4d0328dbd619450c0bebb"
+  integrity sha512-fRjl9ZDwYdaR28u4oZm53avAYliO6RuGbEDUgUBKQ+s7ga00KTdjr+0SgEPMUXm0KJkB3XJBUEbE/455VOwjfw==
   dependencies:
     "@graphai/openai_agent" "^2.0.7"
     "@graphai/vanilla" "^2.0.12"
@@ -9329,10 +9334,10 @@ mulmocast-vision@^0.0.9:
     pdfkit "^0.17.2"
     puppeteer "^24.19.0"
 
-mulmocast@^1.2.26:
-  version "1.2.26"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.26.tgz#472e86595c866eef6c0038f582583a688e03083f"
-  integrity sha512-hPVuAn2A66d/JJvKd9qUC/ej/+uR5TQToa47a7N57wARNCHms2KbwW21+4MxeE6jTIk7XJaw4VuZbNgkS9GfWg==
+mulmocast@^1.2.28:
+  version "1.2.28"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.28.tgz#c3852e61083008f5e29586e03c47a29566bac6e5"
+  integrity sha512-CLEQqgT5s+ibbQyatGM0KurjGDjgSwsVF2L+MgKkYJSPtRVM6Drakx5EalAHNfoh98QwNOa9Ods8T1f6ESzNWA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.3.0"
     "@google/genai" "^1.17.0"
@@ -9356,7 +9361,7 @@ mulmocast@^1.2.26:
     graphai "^2.0.14"
     jsdom "^26.1.0"
     marked "^16.2.1"
-    mulmocast-vision "^0.0.9"
+    mulmocast-vision "^0.1.1"
     ora "^8.2.0"
     puppeteer "^24.19.0"
     replicate "^1.1.0"
@@ -12221,6 +12226,14 @@ tinyglobby@0.2.14, tinyglobby@^0.2.14:
     fdir "^6.4.4"
     picomatch "^4.0.2"
 
+tinyglobby@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
+  integrity sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==
+  dependencies:
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+
 tldts-core@^6.1.86:
   version "6.1.86"
   resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-6.1.86.tgz#a93e6ed9d505cb54c542ce43feb14c73913265d8"
@@ -12860,17 +12873,17 @@ vite-plugin-vue-tracer@^1.0.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vite@^7.1.4:
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.4.tgz#354944affb55e1aff0157406b74e0d0a3232df9a"
-  integrity sha512-X5QFK4SGynAeeIt+A7ZWnApdUyHYm+pzv/8/A57LqSGcI88U6R6ipOs3uCesdc6yl7nl+zNO0t8LmqAdXcQihw==
+vite@^7.1.5:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.5.tgz#4dbcb48c6313116689be540466fc80faa377be38"
+  integrity sha512-4cKBO9wR75r0BeIWWWId9XK9Lj6La5X846Zw9dFfzMRw38IlTk2iCcUt6hsyiDRcPidc55ZParFYDXi0nXOeLQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
     picomatch "^4.0.3"
     postcss "^8.5.6"
     rollup "^4.43.0"
-    tinyglobby "^0.2.14"
+    tinyglobby "^0.2.15"
   optionalDependencies:
     fsevents "~2.3.3"
 
