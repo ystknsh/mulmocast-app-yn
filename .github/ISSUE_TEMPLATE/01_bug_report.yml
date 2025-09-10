@@ -18,6 +18,43 @@ body:
       required: true
 
   - type: textarea
+    id: project-files
+    attributes:
+      label: Project Files
+      description: If relevant, paste your project script or configuration inside the provided template below
+      value: |
+        <details>
+        <summary>Project Script/Configuration (click to expand)</summary>
+        
+        ```json
+        {
+          "title": "Replace this with your project script",
+          "beats": [...]
+        }
+        ```
+        
+        </details>
+    validations:
+      required: false
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error Output
+      description: Paste error messages, console logs, or error dialogs inside the provided template below
+      value: |
+        <details>
+        <summary>Error logs/dialogs (click to expand)</summary>
+        
+        ```
+        Replace this with your error output or error dialog text
+        ```
+        
+        </details>
+    validations:
+      required: false
+
+  - type: textarea
     id: reproduction
     attributes:
       label: To Reproduce
@@ -62,19 +99,6 @@ body:
     validations:
       required: true
 
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots
-      description: |
-        If applicable, add screenshots to help explain your problem.
-        You can drag and drop images directly into this text area after creating the issue.
-      placeholder: |
-        Screenshots will help us understand the issue better.
-        After creating this issue, you can drag and drop image files here.
-    validations:
-      required: false
-
   - type: dropdown
     id: os
     attributes:
@@ -94,44 +118,6 @@ body:
       label: OS Version
       description: e.g., macOS 14.0, Windows 11, Ubuntu 22.04
       placeholder: "Version"
-    validations:
-      required: false
-
-
-  - type: textarea
-    id: project-files
-    attributes:
-      label: Project Files
-      description: If relevant, paste your project script or configuration inside the provided template below
-      value: |
-        <details>
-        <summary>Project Script/Configuration (click to expand)</summary>
-        
-        ```json
-        {
-          "title": "Replace this with your project script",
-          "beats": [...]
-        }
-        ```
-        
-        </details>
-    validations:
-      required: false
-
-  - type: textarea
-    id: error-output
-    attributes:
-      label: Error Output
-      description: Paste error messages, console logs, or error dialogs inside the provided template below
-      value: |
-        <details>
-        <summary>Error logs/dialogs (click to expand)</summary>
-        
-        ```
-        Replace this with your error output or error dialog text
-        ```
-        
-        </details>
     validations:
       required: false
 
