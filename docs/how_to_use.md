@@ -56,7 +56,7 @@ https://github.com/receptron/mulmocast-app/actions/workflows/ci-ms.yml
 アプリケーションを起動すると、オンボーディングが始まります。
 オンボーディングに従い、以下の設定を行います。
 
-![on boarding](<images/howtouse_onboarging.png>)
+![on boarding](images/howtouse_onboarging_resized.png)
 
 #### 1. 表示言語の設定
 - 日本語または英語から選択できます
