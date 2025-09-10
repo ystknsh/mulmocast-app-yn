@@ -66,6 +66,8 @@ const lang = {
       noLang: "Not translated",
       noMedia: "No Media",
       noAudio: "音声なし",
+
+      error: "An error occurred",
     },
 
     // Common actions (placeholder pairs)
@@ -464,6 +466,7 @@ const lang = {
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
+      confirmClear: "Are you sure you want to clear the chat?",
       undoChat: "Cancel Editing",
       createButtonDescription: 'To create a script, select a template, "Copy to Message", modify content, and send.',
       copyScript: "Copy to Message",

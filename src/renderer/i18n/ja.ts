@@ -66,6 +66,8 @@ const lang = {
       noLang: "翻訳されていません",
       noMedia: "No Media",
       noAudio: "音声なし",
+
+      error: "エラーが発生しました",
     },
 
     // Common actions (placeholder pairs)
@@ -463,6 +465,7 @@ const lang = {
       advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
       enterMessage: "メッセージを入力してください:",
       clearChat: "チャットをリセット",
+      confirmClear: "チャットをリセットしますか？",
       undoChat: "編集をやめる",
       createButtonDescription:
         "スクリプトを作成するには、テンプレートを選んで「入力欄にコピー」し、内容を修正して送信してください。",

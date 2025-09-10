@@ -472,7 +472,6 @@ const addBeat = (beat: MulmoBeat, index: number) => {
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   emit("updateMulmoScript", {
-    ...props.mulmoScript,
     ...removeEmptyValues(style),
   });
 };

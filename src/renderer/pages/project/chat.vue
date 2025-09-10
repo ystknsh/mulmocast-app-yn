@@ -44,9 +44,10 @@
       />
       <div
         v-if="isRunning"
-        class="bg-muted text-muted-foreground block max-w-md rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
+        class="bg-muted text-muted-foreground flex max-w-md items-center rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
       >
         {{ t("ui.actions.runningThing", { thing: `${currentRunningAgent}/${currentRunningNode}` }) }}
+        <Loader2 class="h-3 w-3 animate-spin" />
       </div>
     </div>
 
@@ -78,7 +79,9 @@
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
           {{ t("project.chat.undoChat") }}
         </Button>
-        <Button @click="clearChat" variant="outline" size="xs"> {{ t("project.chat.clearChat") }} </Button>
+        <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
+          {{ t("project.chat.clearChat") }}
+        </Button>
       </div>
 
       <!-- Template selection section -->
@@ -108,12 +111,26 @@
       </div>
     </div>
   </div>
+  <ConfirmDialog
+    :open="isClearChatDialogOpen"
+    dialogTitleKey="project.chat.confirmClear"
+    dialogDescriptionKey="ui.messages.cannotUndo"
+    confirmVariant="destructive"
+    confirmLabelKey="ui.actions.clearChat"
+    @update:open="(v) => (isClearChatDialogOpen = v)"
+    @confirm="
+      () => {
+        clearChat();
+        isClearChatDialogOpen = false;
+      }
+    "
+  />
 </template>
 
 <script setup lang="ts">
 // vue
 import { ref, computed, useTemplateRef } from "vue";
-import { Send } from "lucide-vue-next";
+import { Send, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 // graphai
@@ -135,6 +152,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ConfirmDialog from "@/components/ui/confirm-dialog/ConfirmDialog.vue";
 
 import { ChatMessage } from "@/types";
 import { useStreamData } from "@/lib/stream";
@@ -161,6 +179,7 @@ import {
   LLM_DEFAULT_AGENT,
   LLM_GROQ_DEFAULT_MODEL,
 } from "../../../shared/constants";
+import { notifyError } from "@/lib/notification";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -180,6 +199,7 @@ const emit = defineEmits<{
 }>();
 
 const selectedTemplateIndex = ref(0);
+const isClearChatDialogOpen = ref(false);
 
 const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 
@@ -353,7 +373,9 @@ const run = async () => {
       emit("updateMulmoScript", script);
     }
   } catch (error) {
-    console.log(error);
+    const message = error instanceof Error ? error.message : String(error);
+    notifyError(t("ui.common.error"), message);
+    console.error(error);
   }
   isRunning.value = false;
 };
