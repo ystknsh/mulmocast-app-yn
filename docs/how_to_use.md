@@ -32,7 +32,7 @@ MulmoCast アプリは適宜更新しております。
 
 この時、`“MulmoCast.app”という名前の項目がすでにこの場所にあります。現在移動中の項目で置き換えますか?` とポップアップが出ますので、「置き換える」を選択してください。  
 
-![alert replace](images/howtouse_replace_alert.png)
+![alert replace](images/howtouse_replace_alert2.png)
 
 ### (参考) Windows版のダウンロード
 
