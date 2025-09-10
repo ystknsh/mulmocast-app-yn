@@ -23,14 +23,16 @@ https://github.com/receptron/mulmocast-app/actions/workflows/ci-mac.yml
 5. `MulmoCast.app` をアプリケーションフォルダにドラッグ&ドロップしてインストールします
    ![アプリケーションフォルダへのドラッグ&ドロップ](images/howtouse-drag-drop-applications.png)
 
-6. 初回起動時は以下のポップアップが出ますので、「開く」を選択してください。
+6. 初回起動時は以下のポップアップが出ますので、「開く」を選択してください。  
     ![pop up at open app](<images/howtouse_popup_alert_first_time.png>)
 
 ### Mac版 アプリの更新方法
 MulmoCast アプリは適宜更新しております。  
 更新版を利用するには、上記と同様の方法でアプリケーションをダウンロードし、アプリケーションフォルダにドラッグ&ドロップしてください。
 
-この時、`“MulmoCast.app”という名前の項目がすでにこの場所にあります。現在移動中の項目で置き換えますか?` とポップアップが出ますので、「置き換える」を選択してください。
+この時、`“MulmoCast.app”という名前の項目がすでにこの場所にあります。現在移動中の項目で置き換えますか?` とポップアップが出ますので、「置き換える」を選択してください。  
+
+![alert replace](images/howtouse_replace_alert2.png)
 
 ### (参考) Windows版のダウンロード
 
@@ -54,7 +56,7 @@ https://github.com/receptron/mulmocast-app/actions/workflows/ci-ms.yml
 アプリケーションを起動すると、オンボーディングが始まります。
 オンボーディングに従い、以下の設定を行います。
 
-![on boarding](<images/howtouse_onboarging.png>)
+![on boarding](images/howtouse_onboarging_resized.png)
 
 #### 1. 表示言語の設定
 - 日本語または英語から選択できます
@@ -91,7 +93,7 @@ AI機能を使用するために、各種サービス（画像/動画/音声生�
 
 ### プロジェクト編集画面
 プロジェクト編集画面は4つのエリアに分かれています。
-![プロジェクト](images/howtouse-dashboard-new-project.png)
+![プロジェクト](images/common_project.png)
 
 **構成・基本的な制作フロー**
 1.  **AIチャット**: AIと相談しながらスクリプトを作成します。
