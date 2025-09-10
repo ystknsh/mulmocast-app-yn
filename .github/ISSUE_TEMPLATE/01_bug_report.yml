@@ -41,12 +41,12 @@ body:
   - type: dropdown
     id: install-method
     attributes:
-      label: Installation Method
-      description: How did you install MulmoCast App?
+      label: How did you get the app?
+      description: How did you install or run the MulmoCast App?
       options:
-        - GitHub Actions macOS build (DMG download)
-        - GitHub Actions Windows build (installer download)
-        - Development build (yarn start from source)
+        - Downloaded from GitHub (macOS)
+        - Downloaded from GitHub (Windows)
+        - Built from source (yarn start / yarn package)
         - Other
     validations:
       required: true
