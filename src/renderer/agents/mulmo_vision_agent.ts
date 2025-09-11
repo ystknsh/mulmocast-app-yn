@@ -19,7 +19,7 @@ const mulmoVisionAgent: AgentFunction = async ({ namedInputs }) => {
   };
 
   return {
-    content: "ok",
+    content: "Successfully created",
     data: beat,
   };
 };
