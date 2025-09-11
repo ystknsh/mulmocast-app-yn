@@ -5,7 +5,7 @@ const mulmoVisionTools = convertTools(tools);
 
 const mulmoVisionAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg, func } = namedInputs;
-  const { talkTrack } = arg;
+  const { talkTrack, ...newArg } = arg;
 
   const beat = {
     id: crypto.randomUUID(),
@@ -14,7 +14,7 @@ const mulmoVisionAgent: AgentFunction = async ({ namedInputs }) => {
     image: {
       type: "vision",
       style: functionNameToTemplateName(func),
-      data: arg,
+      data: newArg,
     },
   };
 
