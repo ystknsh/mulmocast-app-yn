@@ -290,6 +290,13 @@ const getGraphConfig = async () => {
 const hasExa =
   !!globalStore.settings?.APIKEY?.EXA_API_KEY && (llmAgent === "openAIAgent" || llmAgent === "anthropicAgent");
 
+
+const anthropicSystemPrompt = [
+  "<use_parallel_tool_calls>",
+  "For maximum efficiency, whenever you perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially. Prioritize calling tools in parallel whenever possible. For example, when reading 3 files, run 3 tool calls in parallel to read all 3 files into context at the same time. When running multiple read-only commands like `ls` or `list_dir`, always run all of the commands in parallel. Err on the side of maximizing parallel tool calls rather than running too many tools sequentially.",
+  "</use_parallel_tool_calls>"
+].join("\n")
+
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -302,10 +309,12 @@ const run = async () => {
     const llmModel = config[llmAgent]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
     const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools, ...mulmoVisionAgent.tools];
+    const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
+    
     const postMessages = [
       {
         role: "system",
-        content: `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`,
+        content: llmAgent === "anthropicAgent" ? [systemMessage, anthropicSystemPrompt].join("\n") : systemMessage,
       },
       ...messages
         .map(filterMessage())
