@@ -1,5 +1,5 @@
-# MulmoCast App 使い方
-この資料では具体的な使い方を説明します。使い方の概要は [MulmoCast App 使用方法ガイド](./how_to_use.md) を参照してください。
+# MulmoCast 使用方法ガイド その2
+この資料では具体的な使い方を説明します。基本的な使い方等は [MulmoCast App 使用方法ガイド](./how_to_use.md) を参照してください。
 
 ## 準備するもの
 - macOS が動作するパソコン（Windows、Linux での動作は未確認のため）
@@ -24,6 +24,8 @@
   - 言語設定
     - スクリプトの主言語: 日本語
 
+    ![dashboard](images/onboard_dashboard.png)
+
 - ここまで完了すると以下の設定になっています。
   - 表示言語: 日本語
   - APIキー設定: OpenAI API Key 設定済み
@@ -33,8 +35,6 @@
   - LLM設定
     - LLM設定: OpenAI
     - モデル: gpt-5
-
-![dashboard](images/onboard_dashboard.png)
 
 
 ## プロジェクト作成
@@ -54,22 +54,25 @@
 
     ![aichat1](images/onboarding_aichat_01.png)
 
-2. AI アシスタントチャットにて、先ほど設定したLLMを活用して、ユーザーからの依頼に応えます。必要に応じて、Web検索、Web閲覧等も行います。
+2. 先ほど設定したLLM (今回は OpenAI GPT-5) を活用して、ユーザーからの依頼に応えます。必要に応じて、Web検索、Web閲覧等も行います。(Web 検索には EXA API が必要です)
 
     ![aichat2](images/onboarding_aichat_02.png)
     ![aichat3](images/onboarding_aichat_03.png)
     ![aichat4](images/onboarding_aichat_04.png)
 
-3. テンプレート選択して、「入力欄へコピー」を押します。入力欄にスクリプト生成用のプロンプトが反映されます。確認後送信ボタンを押します。なお、テンプレートの `Generate a Japanese presentation script for this topic or story and pass it to tool 'pushScript.'` を Generate a Japanese presentation script **in 5 beats** for this topic or story and pass it to tool 'pushScript.' のようにプロンプトを変更して送信もできます。
-
+3. テンプレート選択して、「入力欄へコピー」を押します。
     ![aichat5](images/onboarding_aichat_05.png)
     ![aichat6](images/onboarding_aichat_06.png)
 
-4. スクリプト生成が終わると、プロジェクトのタイトル、編集エリアに反映されます。
+4. 入力欄にスクリプト生成用のプロンプトが反映されます。確認後送信ボタンを押します。なお、テンプレートの `Generate a Japanese presentation script for this topic or story and pass it to tool 'pushScript.'` を Generate a Japanese presentation script **in 5 beats** for this topic or story and pass it to tool 'pushScript.' のようにプロンプトを変更して送信もできます。
+
+5. スクリプト生成が終わると、プロジェクトのタイトル、編集エリアに反映されます。
     ![aichat7](images/onboarding_aichat_script.png)
 
 ### 編集エリア
-OpenAI の **Verifications** が完了していない方は以下の通り変更します。`dall-e-3` の画像生成能力は低いため、ジブリ風の画像出力はできません。ジブリ風を楽しみたい場合はOpenAI の **Verifications** を済ませてください。
+OpenAI の **Verifications** が完了していない方は以下の通り変更します。  
+`dall-e-3` は画像生成能力が低いため、ジブリ風の画像出力はできません。ジブリ風を楽しみたい方はOpenAI の **Verifications** を済ませてください。
+
 1. Style タブを選択します
 2. 画像設定のモデルを `dall-e-3` に変更します。 
 
@@ -89,7 +92,7 @@ OpenAI の **Verifications** が完了していない方は以下の通り変更
     ![prodcut](images/onboarding_product.png)
 
 ### 成果物
-- 各形式（動画、PDF、音声）でダウンロードできます
+- 各形式（動画、PDF、音声）をダウンロードできます
 - 右上の拡大ボタンを押すと Mulmo Viewer が開きます
 
 ### Mulmo Viewer
@@ -98,9 +101,9 @@ OpenAI の **Verifications** が完了していない方は以下の通り変更
   - 画像/動画（この資料のコンテンツだと画像のみ）
   - 音声
   - テキスト
-- 視聴開始には再生ボタンを押してください
+- 視聴開始には再生ボタン（画像/動画にポインターを合わせると再生ボタンが表示されます）を押してください
 - 視聴中でもページ送りは可能です
-![mulmo viewer](images/onboarding_mulmoviewer_01.png)
+    ![mulmo viewer](images/onboarding_mulmoviewer_01.png)
 
 - テキストを英語で読みたい時
   -  `文章` を `英語` に変更してください
