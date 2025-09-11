@@ -1405,9 +1405,9 @@
   integrity sha512-S45q/cnzc8s2FTOUUcCCvMTOW7M7H1En10lKI5YCgH7UhmIeM3aP4x43fxTazeX9mqAC6od01wYIIDBvK/B2yA==
 
 "@graphai/tools_agent@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-1.0.4.tgz#2c4f4dbf43b91017bd7906bd22addffa07f1ac63"
-  integrity sha512-3pSdO5ZyDDTPQpsASxlKrX/ZSRll9jvZp2f7mgu3+ZFntm/C+DFfDOFERiYoSXmDWo1XNXQbh5aWZn51HjdBsQ==
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-1.0.5.tgz#a8e09c3dc0c7cd5ecca96126a11ffed64a3f7854"
+  integrity sha512-pOCPNfqYGhiWcHXbLCeOHfaI7DyC+XAfLhVZFWSmAGlCVL//bYkRKEiyQZxqrNy2slniK8txieFH6aOZKus7jw==
 
 "@graphai/vanilla@^2.0.12":
   version "2.0.12"
