@@ -129,7 +129,7 @@ AI機能を使用するために、各種サービス（画像/動画/音声生�
     - Markdown、Chart.js、Mermaid、HTML（Tailwind CSS）でスライドを作成します。
     - HTML プロンプト: スライド用 HTMLを生成します。
 
-    > **注**: スライドのテンプレート機能（Vision）は現在開発中です。JSONファイルでテンプレートを指定する方法については、こちらのドキュメントを参考にしてください。
+    > **注**: スライドのテンプレート機能（Vision）は現在開発中です。JSONファイルでテンプレートを指定する方法については、[こちら](https://github.com/receptron/mulmocast-vision/tree/main/html/html) を参考にしてください。
     > 例えば、`html/html/sectionDividerPage.html` を利用する場合、以下のように指定することで、定義済みのテンプレートに基づいたスライドが生成されます。
 
     ![スライドテンプレート設定例](images/howtouse-slide-template-example.png)
