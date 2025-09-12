@@ -61,25 +61,27 @@ jobs:
         with:
           gemini_cli_version: '${{ vars.GEMINI_CLI_VERSION }}'
           gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          gemini_debug: true  # デバッグモードを有効化
           settings: |-
             {
               "mcpServers": {
                 "github": {
                   "command": "docker",
-                  "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+                  "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}", "ghcr.io/github/github-mcp-server"],
                   "includeTools": [
                     "create_pull_request",
                     "create_branch", 
                     "update_file",
-                    "get_repository"
-                  ],
-                  "env": {
-                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-                  }
+                    "get_repository",
+                    "list_directory"
+                  ]
                 }
               },
               "coreTools": [
                 "run_shell_command(cat)",
+                "run_shell_command(ls)",
+                "run_shell_command(echo)",
+                "run_shell_command(test)",
                 "run_shell_command(find)",
                 "run_shell_command(wc)",
                 "run_shell_command(head)"
