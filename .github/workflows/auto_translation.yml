@@ -64,13 +64,17 @@ jobs:
           echo "📋 Target files: $TARGET_FILES"
           
           # 処理対象ファイルのリスト作成
-          echo "files_to_process=" > process_list.txt
+          > process_list.txt  # 空ファイルを作成
           
           for file in $TARGET_FILES; do
             if [ -f "$file" ]; then
+              echo "📂 Processing: $file"
+              
               # ファイル名から既存の翻訳サフィックスを除去
               base_file="${file%_en.md}"
               base_file="${base_file%_ja.md}"
+              
+              echo "  Base file: $base_file"
               
               # 既に翻訳サフィックスがついていない元ファイルのみ処理
               if [ "$base_file.md" = "$file" ]; then
@@ -82,21 +86,33 @@ jobs:
                 [ -f "${base_file}_en.md" ] && has_en="true"
                 [ -f "${base_file}_ja.md" ] && has_ja="true"
                 
+                echo "  - English translation exists: $has_en"
+                echo "  - Japanese translation exists: $has_ja"
+                echo "  - Force retranslate: ${{ inputs.force_retranslate }}"
+                
                 # Force retranslateまたは翻訳が存在しない場合のみ処理
                 if [ "${{ inputs.force_retranslate }}" = "true" ] || [ "$has_en" = "false" ] || [ "$has_ja" = "false" ]; then
                   echo "${file}|${has_en}|${has_ja}" >> process_list.txt
-                  echo "  - English translation exists: $has_en"
-                  echo "  - Japanese translation exists: $has_ja"
+                  echo "  ✅ Added to processing list"
                 else
-                  echo "  - Skipping (translations exist)"
+                  echo "  ⏭️ Skipping (translations exist)"
                 fi
+              else
+                echo "  ⏭️ Skipping (already translated file)"
               fi
+            else
+              echo "❌ File not found: $file"
             fi
           done
           
+          # デバッグ: process_list.txtの内容を表示
+          echo "📋 Processing list contents:"
+          cat process_list.txt || echo "Empty file"
+          
           # 処理対象があるか確認
-          if [ -s process_list.txt ] && grep -q "|" process_list.txt; then
+          if [ -s process_list.txt ]; then
             echo "has_files=true" >> $GITHUB_OUTPUT
+            echo "✅ Files to process found"
           else
             echo "has_files=false" >> $GITHUB_OUTPUT
             echo "ℹ️ No files to translate"
