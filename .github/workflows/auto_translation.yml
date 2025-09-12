@@ -70,14 +70,13 @@ jobs:
             if [ -f "$file" ]; then
               echo "📂 Processing: $file"
               
-              # ファイル名から既存の翻訳サフィックスを除去
-              base_file="${file%_en.md}"
-              base_file="${base_file%_ja.md}"
+              # ファイル名から拡張子を除去してベース名を取得
+              base_file="${file%.md}"
               
               echo "  Base file: $base_file"
               
-              # 既に翻訳サフィックスがついていない元ファイルのみ処理
-              if [ "$base_file.md" = "$file" ]; then
+              # 翻訳サフィックスがついていないかチェック
+              if [[ "$file" != *"_en.md" ]] && [[ "$file" != *"_ja.md" ]]; then
                 echo "✅ Found source file: $file"
                 
                 # 既存翻訳のチェック
