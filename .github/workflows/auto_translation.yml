@@ -65,7 +65,14 @@ jobs:
           
           # 処理対象ファイルのリスト作成
           > process_list.txt  # 空ファイルを作成
-          
+
+          # push イベントでは変更がある前提。手動実行は unknown。
+          if [ "${{ github.event_name }}" = "push" ]; then
+            CHANGED_FLAG="true"
+          else
+            CHANGED_FLAG="unknown"
+          fi
+
           for file in $TARGET_FILES; do
             if [ -f "$file" ]; then
               echo "📂 Processing: $file"
@@ -88,13 +95,26 @@ jobs:
                 echo "  - English translation exists: $has_en"
                 echo "  - Japanese translation exists: $has_ja"
                 echo "  - Force retranslate: ${{ inputs.force_retranslate }}"
-                
-                # Force retranslateまたは翻訳が存在しない場合のみ処理
-                if [ "${{ inputs.force_retranslate }}" = "true" ] || [ "$has_en" = "false" ] || [ "$has_ja" = "false" ]; then
-                  echo "${file}|${has_en}|${has_ja}" >> process_list.txt
-                  echo "  ✅ Added to processing list"
+                echo "  - Changed (source): $CHANGED_FLAG"
+
+                # ポリシー適用
+                # - 翻訳先ファイルがなければ全て翻訳
+                # - 翻訳先ファイルがある → pushで変更ありなら update 対象
+                if [ "${{ inputs.force_retranslate }}" = "true" ]; then
+                  echo "${file}|${has_en}|${has_ja}|$CHANGED_FLAG" >> process_list.txt
+                  echo "  ✅ Added (force)"
                 else
-                  echo "  ⏭️ Skipping (translations exist)"
+                  if [ "$has_en" = "false" ] || [ "$has_ja" = "false" ]; then
+                    echo "${file}|${has_en}|${has_ja}|$CHANGED_FLAG" >> process_list.txt
+                    echo "  ✅ Added (missing target)"
+                  else
+                    if [ "$CHANGED_FLAG" = "true" ]; then
+                      echo "${file}|${has_en}|${has_ja}|$CHANGED_FLAG" >> process_list.txt
+                      echo "  ✅ Added (update existing translations)"
+                    else
+                      echo "  ⏭️ Skipping (translations exist and no change detected)"
+                    fi
+                  fi
                 fi
               else
                 echo "  ⏭️ Skipping (already translated file)"
@@ -128,7 +148,7 @@ jobs:
           echo "[" > tasks.json
           
           first=true
-          while IFS='|' read -r file has_en has_ja; do
+          while IFS='|' read -r file has_en has_ja changed; do
             if [ -n "$file" ]; then
               echo "Processing: $file"
               
@@ -141,23 +161,33 @@ jobs:
                 lang="ja"
                 echo "  - Detected: Japanese"
                 
-                # 英訳が必要か確認
-                if [ "$has_en" = "false" ] || [ "${{ inputs.force_retranslate }}" = "true" ]; then
+                # 英訳: full or update or skip
+                if [ "${{ inputs.force_retranslate }}" = "true" ] || [ "$has_en" = "false" ]; then
+                  mode="full"
+                else
+                  if [ "$changed" = "true" ]; then mode="update"; else mode="skip"; fi
+                fi
+                if [ "$mode" != "skip" ]; then
                   [ "$first" = "false" ] && echo "," >> tasks.json
-                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_en.md\", \"direction\": \"ja-en\"}" >> tasks.json
+                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_en.md\", \"direction\": \"ja-en\", \"mode\": \"$mode\"}" >> tasks.json
                   first=false
-                  echo "  ✅ Added task: $file → ${base_file}_en.md"
+                  echo "  ✅ Added task ($mode): $file → ${base_file}_en.md"
                 fi
               else
                 lang="en"
                 echo "  - Detected: English"
                 
-                # 和訳が必要か確認
-                if [ "$has_ja" = "false" ] || [ "${{ inputs.force_retranslate }}" = "true" ]; then
+                # 和訳: full or update or skip
+                if [ "${{ inputs.force_retranslate }}" = "true" ] || [ "$has_ja" = "false" ]; then
+                  mode="full"
+                else
+                  if [ "$changed" = "true" ]; then mode="update"; else mode="skip"; fi
+                fi
+                if [ "$mode" != "skip" ]; then
                   [ "$first" = "false" ] && echo "," >> tasks.json
-                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_ja.md\", \"direction\": \"en-ja\"}" >> tasks.json
+                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_ja.md\", \"direction\": \"en-ja\", \"mode\": \"$mode\"}" >> tasks.json
                   first=false
-                  echo "  ✅ Added task: $file → ${base_file}_ja.md"
+                  echo "  ✅ Added task ($mode): $file → ${base_file}_ja.md"
                 fi
               fi
             fi
@@ -190,46 +220,84 @@ jobs:
       - name: 'Step 3: Execute Translations'
         id: 'translate'
         if: steps.detect_language.outputs.has_tasks == 'true'
-        uses: 'google-github-actions/run-gemini-cli@v0'
-        env:
-          TRANSLATION_TASKS: '${{ steps.detect_language.outputs.task_count }}'
-        with:
-          gemini_cli_version: 'latest'
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
-          gemini_model: 'gemini-1.5-flash'
-          settings: |-
-            {
-              "coreTools": [
-                "run_shell_command(cat)",
-                "run_shell_command(echo)",
-                "run_shell_command(jq)"
-              ]
-            }
-          prompt: |-
-            ## Task: Translate Markdown Files
-            
-            You are a professional translator. Your task is to translate markdown files based on the tasks in `tasks.json`.
-            
-            Instructions:
-            1. Read the translation tasks: `cat tasks.json`
-            2. For each task, read the source file: `cat [source_file]`
-            3. Translate the content:
-               - For ja-en: Translate Japanese to natural, technical English
-               - For en-ja: Translate English to polite, technical Japanese
-            4. Preserve all Markdown formatting, links, and code blocks
-            5. Add `<!-- Generated by Gemini -->` as the first line
-            6. Save each translation: `echo '[translated_content]' > [target_file]`
-            
-            Quality Standards:
-            - Preserve all formatting and structure
-            - Translate alt text in images
-            - Keep code blocks unchanged (only translate comments)
-            - Maintain professional, technical tone
-            
-            After completing all translations, create a summary file:
-            `echo '[summary_json]' > translation_summary.json`
-            
-            The summary should be a JSON array of completed translations.
+        run: |-
+          echo "🔄 Starting translations..."
+          
+          # タスクを1つずつ処理
+          while read -r task; do
+            if [ -n "$task" ] && [ "$task" != "[]" ] && [ "$task" != "[" ] && [ "$task" != "]" ]; then
+              # JSONから情報を抽出
+              source_file=$(echo "$task" | jq -r '.source' 2>/dev/null || echo "")
+              target_file=$(echo "$task" | jq -r '.target' 2>/dev/null || echo "")
+              direction=$(echo "$task" | jq -r '.direction' 2>/dev/null || echo "")
+              mode=$(echo "$task" | jq -r '.mode' 2>/dev/null || echo "full")
+              
+              if [ -n "$source_file" ] && [ -f "$source_file" ]; then
+                echo "📝 Translating: $source_file → $target_file ($direction, $mode)"
+
+                if [ "$mode" = "full" ] || [ ! -f "$target_file" ]; then
+                  # Geminiで翻訳実行（全体翻訳）
+                  if [ "$direction" = "ja-en" ]; then
+                    translation_prompt="Translate this Japanese markdown to natural, professional English. Preserve all formatting, links, and structure. Only translate the text content, not code blocks or URLs. Output the complete translated file."
+                  else
+                    translation_prompt="Translate this English markdown to polite, professional Japanese. Preserve all formatting, links, and structure. Only translate the text content, not code blocks or URLs. Output the complete translated file."
+                  fi
+
+                  {
+                    echo "<!-- Generated by Gemini (full) -->"
+                    echo ""
+                    cat "$source_file" | npx @google/gemini-cli --prompt "$translation_prompt" --api-key "${{ secrets.GEMINI_API_KEY }}" --model gemini-1.5-flash
+                  } > "$target_file"
+
+                  if [ -f "$target_file" ]; then
+                    echo "  ✅ Created/Overwritten: $target_file"
+                  else
+                    echo "  ❌ Failed to create: $target_file"
+                  fi
+                else
+                  # 既存翻訳を diff のみ反映
+                  src_diff=$(git diff --unified=0 HEAD~1 HEAD -- "$source_file" || true)
+
+                  read -r -d '' update_prompt << 'EOF' || true
+You are updating an existing human‑readable translation file.
+
+Task:
+- Given the current source markdown, its unified diff (last commit), and the current target translation markdown, apply ONLY the changes implied by the source diff to the target translation.
+- Preserve existing target phrasing and formatting where the source did not change.
+- Keep code blocks, URLs, and front‑matter untouched and in the same places.
+- Output ONLY the complete updated target file content, no extra commentary.
+EOF
+
+                  {
+                    echo "<!-- Updated by Gemini (diff-based) -->"
+                    echo ""
+                    echo "[SOURCE FILE BEGIN]"
+                    cat "$source_file"
+                    echo "\n[SOURCE FILE END]"
+                    echo "\n[SOURCE DIFF BEGIN]"
+                    echo "$src_diff"
+                    echo "[SOURCE DIFF END]"
+                    echo "\n[CURRENT TARGET BEGIN]"
+                    cat "$target_file"
+                    echo "\n[CURRENT TARGET END]"
+                  } | npx @google/gemini-cli --prompt "$update_prompt" --api-key "${{ secrets.GEMINI_API_KEY }}" --model gemini-1.5-flash > "${target_file}.updated"
+
+                  if [ -s "${target_file}.updated" ]; then
+                    if ! diff -q "$target_file" "${target_file}.updated" >/dev/null 2>&1; then
+                      mv "${target_file}.updated" "$target_file"
+                      echo "  ✅ Updated: $target_file"
+                    else
+                      rm -f "${target_file}.updated"
+                      echo "  ⏭️ No changes needed for: $target_file"
+                    fi
+                  else
+                    echo "  ❌ Failed to generate updated content for: $target_file"
+                    rm -f "${target_file}.updated" || true
+                  fi
+                fi
+              fi
+            fi
+          done < <(cat tasks.json | jq -c '.[]' 2>/dev/null || echo "")
 
       # Step 4: 翻訳結果の確認
       - name: 'Step 4: Verify Translations'
