@@ -45,11 +45,23 @@ jobs:
           echo "🔍 Detecting target files..."
           
           # ターゲットファイルの検出
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.target_file }}" ]; then
-            TARGET_FILES="${{ inputs.target_file }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.target_file }}" ]; then
+              # 特定ファイルが指定された場合
+              TARGET_FILES="${{ inputs.target_file }}"
+            else
+              # 手動実行で指定なしの場合、すべてのMDファイルをチェック
+              TARGET_FILES=$(find docs -name "*.md" -type f | grep -v "_en.md" | grep -v "_ja.md" || true)
+              if [ -z "$TARGET_FILES" ]; then
+                TARGET_FILES=$(find . -maxdepth 1 -name "*.md" -type f | grep -v "_en.md" | grep -v "_ja.md" || true)
+              fi
+            fi
           else
+            # Push時は変更されたファイルのみ
             TARGET_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(md)$' | grep -E '^(docs|content|README)' || true)
           fi
+          
+          echo "📋 Target files: $TARGET_FILES"
           
           # 処理対象ファイルのリスト作成
           echo "files_to_process=" > process_list.txt
