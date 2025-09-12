@@ -220,6 +220,7 @@ jobs:
       - name: 'Step 3: Execute Translations'
         id: 'translate'
         if: steps.detect_language.outputs.has_tasks == 'true'
+        shell: bash
         run: |-
           echo "🔄 Starting translations..."
           
@@ -258,15 +259,7 @@ jobs:
                   # 既存翻訳を diff のみ反映
                   src_diff=$(git diff --unified=0 HEAD~1 HEAD -- "$source_file" || true)
 
-                  read -r -d '' update_prompt << 'EOF' || true
-You are updating an existing human‑readable translation file.
-
-Task:
-- Given the current source markdown, its unified diff (last commit), and the current target translation markdown, apply ONLY the changes implied by the source diff to the target translation.
-- Preserve existing target phrasing and formatting where the source did not change.
-- Keep code blocks, URLs, and front‑matter untouched and in the same places.
-- Output ONLY the complete updated target file content, no extra commentary.
-EOF
+                  update_prompt=$'You are updating an existing human-readable translation file.\n\nTask:\n- Given the current source markdown, its unified diff (last commit), and the current target translation markdown, apply ONLY the changes implied by the source diff to the target translation.\n- Preserve existing target phrasing and formatting where the source did not change.\n- Keep code blocks, URLs, and front-matter untouched and in the same places.\n- Output ONLY the complete updated target file content, no extra commentary.'
 
                   {
                     echo "<!-- Updated by Gemini (diff-based) -->"
