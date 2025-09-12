@@ -123,20 +123,21 @@ jobs:
         if: steps.detect_files.outputs.has_files == 'true'
         run: |-
           echo "🌐 Detecting languages..."
-          echo "translation_tasks=" > tasks.json
-          echo "[" >> tasks.json
+          
+          # JSON配列を作成
+          echo "[" > tasks.json
           
           first=true
           while IFS='|' read -r file has_en has_ja; do
-            if [ -n "$file" ] && [ "$file" != "files_to_process=" ]; then
+            if [ -n "$file" ]; then
               echo "Processing: $file"
               
               # ファイル内容を読み込んで言語判定
               content=$(cat "$file")
               base_file="${file%.md}"
               
-              # 日本語の検出（ひらがな・カタカナ・漢字）
-              if echo "$content" | grep -qE '[ぁ-ん]|[ァ-ヴ]|[一-龯]'; then
+              # 日本語の検出（簡易版）- 日本語文字を含むかチェック
+              if echo "$content" | grep -q "は\|を\|に\|の\|が\|で\|と\|ます\|です"; then
                 lang="ja"
                 echo "  - Detected: Japanese"
                 
@@ -145,6 +146,7 @@ jobs:
                   [ "$first" = "false" ] && echo "," >> tasks.json
                   echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_en.md\", \"direction\": \"ja-en\"}" >> tasks.json
                   first=false
+                  echo "  ✅ Added task: $file → ${base_file}_en.md"
                 fi
               else
                 lang="en"
@@ -155,6 +157,7 @@ jobs:
                   [ "$first" = "false" ] && echo "," >> tasks.json
                   echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_ja.md\", \"direction\": \"en-ja\"}" >> tasks.json
                   first=false
+                  echo "  ✅ Added task: $file → ${base_file}_ja.md"
                 fi
               fi
             fi
@@ -163,15 +166,24 @@ jobs:
           echo "" >> tasks.json
           echo "]" >> tasks.json
           
+          # デバッグ: JSONファイルの内容を確認
+          echo "📋 Generated tasks.json:"
+          cat tasks.json
+          
           # タスクがあるか確認
-          task_count=$(cat tasks.json | jq '. | length')
-          if [ "$task_count" -gt 0 ]; then
-            echo "has_tasks=true" >> $GITHUB_OUTPUT
-            echo "task_count=$task_count" >> $GITHUB_OUTPUT
-            echo "📋 Found $task_count translation task(s)"
+          if [ -s tasks.json ] && [ "$(cat tasks.json)" != "[]" ]; then
+            task_count=$(cat tasks.json | jq '. | length' 2>/dev/null || echo "0")
+            if [ "$task_count" -gt 0 ]; then
+              echo "has_tasks=true" >> $GITHUB_OUTPUT
+              echo "task_count=$task_count" >> $GITHUB_OUTPUT
+              echo "📋 Found $task_count translation task(s)"
+            else
+              echo "has_tasks=false" >> $GITHUB_OUTPUT
+              echo "ℹ️ No translation tasks (empty array)"
+            fi
           else
             echo "has_tasks=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ No translation tasks"
+            echo "ℹ️ No translation tasks (no file or empty)"
           fi
 
       # Step 3: 翻訳実行
