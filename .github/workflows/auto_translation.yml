@@ -31,123 +31,246 @@ jobs:
     permissions:
       contents: 'write'
       pull-requests: 'write'
+      actions: 'write'
     steps:
       - name: 'Checkout repository'
         uses: 'actions/checkout@v4'
         with:
           fetch-depth: 2
 
-      - name: 'Detect translation targets'
-        id: 'detect_targets'
+      # Step 1: ファイルの検出と既存翻訳のチェック
+      - name: 'Step 1: Detect Files and Check Existing Translations'
+        id: 'detect_files'
         run: |-
+          echo "🔍 Detecting target files..."
+          
+          # ターゲットファイルの検出
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.target_file }}" ]; then
-            # Manual execution: specified file
-            echo "files=${{ inputs.target_file }}" >> $GITHUB_OUTPUT
+            TARGET_FILES="${{ inputs.target_file }}"
           else
-            # Automatic execution: changed md files
-            CHANGED_MD_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(md)$' | grep -E '^(docs|content|README)' || true)
-            echo "files<<EOF" >> $GITHUB_OUTPUT
-            echo "$CHANGED_MD_FILES" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            TARGET_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(md)$' | grep -E '^(docs|content|README)' || true)
+          fi
+          
+          # 処理対象ファイルのリスト作成
+          echo "files_to_process=" > process_list.txt
+          
+          for file in $TARGET_FILES; do
+            if [ -f "$file" ]; then
+              # ファイル名から既存の翻訳サフィックスを除去
+              base_file="${file%_en.md}"
+              base_file="${base_file%_ja.md}"
+              
+              # 既に翻訳サフィックスがついていない元ファイルのみ処理
+              if [ "$base_file.md" = "$file" ]; then
+                echo "✅ Found source file: $file"
+                
+                # 既存翻訳のチェック
+                has_en="false"
+                has_ja="false"
+                [ -f "${base_file}_en.md" ] && has_en="true"
+                [ -f "${base_file}_ja.md" ] && has_ja="true"
+                
+                # Force retranslateまたは翻訳が存在しない場合のみ処理
+                if [ "${{ inputs.force_retranslate }}" = "true" ] || [ "$has_en" = "false" ] || [ "$has_ja" = "false" ]; then
+                  echo "${file}|${has_en}|${has_ja}" >> process_list.txt
+                  echo "  - English translation exists: $has_en"
+                  echo "  - Japanese translation exists: $has_ja"
+                else
+                  echo "  - Skipping (translations exist)"
+                fi
+              fi
+            fi
+          done
+          
+          # 処理対象があるか確認
+          if [ -s process_list.txt ] && grep -q "|" process_list.txt; then
+            echo "has_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_files=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No files to translate"
           fi
 
-      - name: 'Run Smart Translation'
-        if: steps.detect_targets.outputs.files != ''
+      # Step 2: 言語判定と翻訳対象の決定
+      - name: 'Step 2: Detect Language and Determine Targets'
+        id: 'detect_language'
+        if: steps.detect_files.outputs.has_files == 'true'
+        run: |-
+          echo "🌐 Detecting languages..."
+          echo "translation_tasks=" > tasks.json
+          echo "[" >> tasks.json
+          
+          first=true
+          while IFS='|' read -r file has_en has_ja; do
+            if [ -n "$file" ] && [ "$file" != "files_to_process=" ]; then
+              echo "Processing: $file"
+              
+              # ファイル内容を読み込んで言語判定
+              content=$(cat "$file")
+              base_file="${file%.md}"
+              
+              # 日本語の検出（ひらがな・カタカナ・漢字）
+              if echo "$content" | grep -qE '[ぁ-ん]|[ァ-ヴ]|[一-龯]'; then
+                lang="ja"
+                echo "  - Detected: Japanese"
+                
+                # 英訳が必要か確認
+                if [ "$has_en" = "false" ] || [ "${{ inputs.force_retranslate }}" = "true" ]; then
+                  [ "$first" = "false" ] && echo "," >> tasks.json
+                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_en.md\", \"direction\": \"ja-en\"}" >> tasks.json
+                  first=false
+                fi
+              else
+                lang="en"
+                echo "  - Detected: English"
+                
+                # 和訳が必要か確認
+                if [ "$has_ja" = "false" ] || [ "${{ inputs.force_retranslate }}" = "true" ]; then
+                  [ "$first" = "false" ] && echo "," >> tasks.json
+                  echo -n "  {\"source\": \"$file\", \"target\": \"${base_file}_ja.md\", \"direction\": \"en-ja\"}" >> tasks.json
+                  first=false
+                fi
+              fi
+            fi
+          done < process_list.txt
+          
+          echo "" >> tasks.json
+          echo "]" >> tasks.json
+          
+          # タスクがあるか確認
+          task_count=$(cat tasks.json | jq '. | length')
+          if [ "$task_count" -gt 0 ]; then
+            echo "has_tasks=true" >> $GITHUB_OUTPUT
+            echo "task_count=$task_count" >> $GITHUB_OUTPUT
+            echo "📋 Found $task_count translation task(s)"
+          else
+            echo "has_tasks=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No translation tasks"
+          fi
+
+      # Step 3: 翻訳実行
+      - name: 'Step 3: Execute Translations'
+        id: 'translate'
+        if: steps.detect_language.outputs.has_tasks == 'true'
+        uses: 'google-github-actions/run-gemini-cli@v0'
+        env:
+          TRANSLATION_TASKS: '${{ steps.detect_language.outputs.task_count }}'
+        with:
+          gemini_cli_version: 'latest'
+          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          gemini_model: 'gemini-1.5-flash'
+          settings: |-
+            {
+              "coreTools": [
+                "run_shell_command(cat)",
+                "run_shell_command(echo)",
+                "run_shell_command(jq)"
+              ]
+            }
+          prompt: |-
+            ## Task: Translate Markdown Files
+            
+            You are a professional translator. Your task is to translate markdown files based on the tasks in `tasks.json`.
+            
+            Instructions:
+            1. Read the translation tasks: `cat tasks.json`
+            2. For each task, read the source file: `cat [source_file]`
+            3. Translate the content:
+               - For ja-en: Translate Japanese to natural, technical English
+               - For en-ja: Translate English to polite, technical Japanese
+            4. Preserve all Markdown formatting, links, and code blocks
+            5. Add `<!-- Generated by Gemini -->` as the first line
+            6. Save each translation: `echo '[translated_content]' > [target_file]`
+            
+            Quality Standards:
+            - Preserve all formatting and structure
+            - Translate alt text in images
+            - Keep code blocks unchanged (only translate comments)
+            - Maintain professional, technical tone
+            
+            After completing all translations, create a summary file:
+            `echo '[summary_json]' > translation_summary.json`
+            
+            The summary should be a JSON array of completed translations.
+
+      # Step 4: 翻訳結果の確認
+      - name: 'Step 4: Verify Translations'
+        id: 'verify'
+        if: steps.translate.outcome == 'success'
+        run: |-
+          echo "✅ Verifying translations..."
+          
+          # 翻訳されたファイルを確認
+          translated_files=""
+          while read -r line; do
+            target=$(echo "$line" | jq -r '.target')
+            if [ -f "$target" ]; then
+              echo "✓ Found: $target"
+              translated_files="${translated_files}${target}\n"
+            else
+              echo "✗ Missing: $target"
+            fi
+          done < <(cat tasks.json | jq -c '.[]')
+          
+          # 翻訳されたファイルがあるか確認
+          if [ -n "$translated_files" ]; then
+            echo "has_translations=true" >> $GITHUB_OUTPUT
+            echo -e "$translated_files" > translated_files.txt
+            
+            # ブランチ名を生成
+            timestamp=$(date +%Y%m%d-%H%M%S)
+            echo "branch_name=translation/auto-${timestamp}" >> $GITHUB_OUTPUT
+          else
+            echo "has_translations=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 5: PR作成
+      - name: 'Step 5: Create Pull Request'
+        if: steps.verify.outputs.has_translations == 'true'
         uses: 'google-github-actions/run-gemini-cli@v0'
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          TARGET_FILES: '${{ steps.detect_targets.outputs.files }}'
-          FORCE_RETRANSLATE: '${{ inputs.force_retranslate || false }}'
           GITHUB_REPOSITORY: '${{ github.repository }}'
-          GITHUB_REPOSITORY_OWNER: '${{ github.repository_owner }}'
+          BRANCH_NAME: '${{ steps.verify.outputs.branch_name }}'
         with:
-          gemini_cli_version: '${{ vars.GEMINI_CLI_VERSION }}'
+          gemini_cli_version: 'latest'
           gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
-          gemini_debug: true  # デバッグモードを有効化
+          gemini_model: 'gemini-1.5-flash'
           settings: |-
             {
               "mcpServers": {
                 "github": {
                   "command": "docker",
-                  "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}", "ghcr.io/github/github-mcp-server"],
+                  "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+                  "env": {
+                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+                  },
                   "includeTools": [
                     "create_pull_request",
-                    "create_branch", 
-                    "update_file",
-                    "get_repository",
-                    "list_directory"
+                    "create_branch",
+                    "update_file"
                   ]
                 }
               },
               "coreTools": [
                 "run_shell_command(cat)",
-                "run_shell_command(ls)",
-                "run_shell_command(echo)",
-                "run_shell_command(test)",
-                "run_shell_command(find)",
-                "run_shell_command(wc)",
-                "run_shell_command(head)"
+                "run_shell_command(wc)"
               ]
             }
           prompt: |-
-            ## Role
-            You are an expert in multilingual document translation. Your task is to automatically determine the language of Markdown files, create appropriate translations, and propose these translations in a GitHub Pull Request.
-
-            ## Environment Variables
-            - `TARGET_FILES`: A list of files to be translated. Current value: `${TARGET_FILES}`
-            - `FORCE_RETRANSLATE`: A boolean to force re-translation even if a translated file exists. Current value: `${FORCE_RETRANSLATE}`
-            - `GITHUB_REPOSITORY`: The repository name in format owner/repo. Current value: `${GITHUB_REPOSITORY}`
-            - `GITHUB_REPOSITORY_OWNER`: The repository owner. Current value: `${GITHUB_REPOSITORY_OWNER}`
-            - The GitHub repository is available for you to interact with via the `mcp__github__` tools.
-
-            ## Execution Plan
-            You must follow these steps precisely. Do not skip any steps.
-
-            ### Step 1: Analyze and Translate Files
-            You will now iterate through each file path provided in the `TARGET_FILES` environment variable. For each file, perform the following actions:
-
-            1.  **Read the file content:** Use the `run_shell_command` tool with `cat` to read the content of the file.
-            2.  **Detect the language:** Analyze the content to determine if it is `japanese` or `english`.
-                *   **Japanese Hint:** Contains hiragana (`[あ-ん]`) or katakana (`[ア-ン]`).
-                *   **English Hint:** Consists of ASCII characters and common English words.
-            3.  **Determine the target path:** Based on the detected language, define the path for the translated file.
-                *   If Japanese, the target file should end with `_en.md`.
-                *   If English, the target file should end with `_ja.md`.
-            4.  **Check for existing translation (and skip if necessary):**
-                *   If `FORCE_RETRANSLATE` is `false`, you must check if the target file already exists. You can use `run_shell_command` with `ls` for this.
-                *   If the file exists and `FORCE_RETRANSLATE` is `false`, print a message that you are skipping the file and move to the next one.
-            5.  **Translate the content:**
-                *   Translate the original content into the target language, adhering to the "Translation Quality Standards" defined below.
-                *   You must perform the translation yourself. Do not use a placeholder function.
-                *   Ensure that code blocks, front matter, and Markdown formatting are preserved perfectly. Translate comments within code blocks and text in `alt` attributes.
-            6.  **Add a header:** Prepend the following line to the beginning of the translated content: `<!-- Generated by Gemini -->`
-            7.  **Store the result:** Keep the `sourceFile`, `targetFile` path, `content`, and `direction` (e.g., `ja→en`) for the next step.
-
-            ### Step 2: Create the Pull Request
-            After processing all the files, if you have generated one or more translations, you must create a single pull request containing all the changes.
-
-            1.  **Create a new branch:** Use the `mcp__github__create_branch` tool. The branch name should be unique, for example `translation/auto-YYYYMMDD-HHMMSS`. Use the repository from `GITHUB_REPOSITORY` environment variable (split it to get owner and repo name).
-            2.  **Commit each translated file:** For each translation you generated in Step 1, use the `mcp__github__update_file` tool to create the new file on the branch you just created. The commit message should be informative.
-            3.  **Create the pull request:** Use the `mcp__github__create_pull_request` tool.
-                *   The **title** should be like: 🌍 Auto-translation: [N] files translated.
-                *   The **base** branch must be `main`.
-                *   The **head** branch is the one you created in Step 2.1.
-                *   The **body** of the pull request must include a formatted checklist and list of translated files.
-
-            ## Translation Quality Standards
+            ## Task: Create Pull Request
             
-            ### Japanese → English
-            - Natural and fluent English expressions.
-            - A formal writing style suitable for technical documents.
-            - Use of standard English technical terminology.
+            Create a pull request with the translated files.
             
-            ### English → Japanese
-            - Easy-to-read, natural Japanese.
-            - Use a moderately polite tone.
-            - Where necessary, include English terms alongside the Japanese.
+            Environment:
+            - Repository: ${GITHUB_REPOSITORY}
+            - Branch name: ${BRANCH_NAME}
             
-            ### Common Rules
-            - Front Matter is to be translated.
-            - Code blocks must be preserved (only comments within them should be translated).
-            - Links must be adjusted appropriately.
-            - Image alt text should also be translated.
+            Steps:
+            1. Parse repository: Split ${GITHUB_REPOSITORY} by "/" to get owner and repo
+            2. Create branch: Use `create_branch` MCP tool with the branch name
+            3. Read each translated file from `translated_files.txt` and commit using `update_file` MCP tool
+            4. Create PR using `create_pull_request` MCP tool:
+               - Title: "🌍 Auto-translation: [N] files"
+               - Base: main
+               - Head: ${BRANCH_NAME}
+               - Body: Include file list and checklist
